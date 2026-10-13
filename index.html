@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>J K Rao Farms, Vetla</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1b5e20">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1b5e20;
+      --primary-light: #2e7d32;
+      --accent: #f57f17;
+      --bg: #f4f7f4;
+      --card: #ffffff;
+      --text: #1f2937;
+      --danger: #d32f2f;
+      --success: #2e7d32;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans Gujarati', sans-serif; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 80px; }
+    
+    /* Header */
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: #fff; padding: 14px 18px; position: sticky; top: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+    }
+    .brand h1 { font-size: 1.2rem; font-weight: 700; }
+    .brand p { font-size: 0.78rem; opacity: 0.9; }
+    .sync-btn {
+      background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4);
+      color: #fff; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer;
+    }
+
+    /* Container & Responsive Grid */
+    .container { max-width: 1100px; margin: 16px auto; padding: 0 12px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin-bottom: 18px; }
+    
+    /* Filter & Action Bar */
+    .action-bar {
+      background: #fff; padding: 12px 16px; border-radius: 12px; margin-bottom: 16px;
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .filter-group { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .filter-group select, .filter-group input {
+      padding: 8px 12px; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 0.9rem; font-weight: 600;
+    }
+    .btn-pdf {
+      background: #b71c1c; color: #fff; border: none; padding: 9px 16px;
+      border-radius: 8px; font-size: 0.88rem; font-weight: 700; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-pdf:hover { background: #d32f2f; }
+    .btn-receipt {
+      background: #1565c0; color: #fff; border: none; padding: 5px 10px;
+      border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer;
+    }
+
+    /* Smart Dashboard Cards */
+    .stat-card {
+      background: var(--card); border-radius: 14px; padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 6px solid var(--primary);
+    }
+    .stat-card.expense { border-left-color: var(--danger); }
+    .stat-card.bhagiya { border-left-color: var(--accent); }
+    .stat-card.profit { border-left-color: #0288d1; }
+    .stat-card h3 { font-size: 0.9rem; color: #555; margin-bottom: 6px; }
+    .stat-card .big-num { font-size: 1.55rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .stat-card .sub-info { font-size: 0.8rem; color: #666; line-height: 1.5; border-top: 1px dashed #e0e0e0; padding-top: 6px; }
+
+    /* Forms & Sections */
+    .tab-section { display: none; }
+    .tab-section.active { display: block; }
+    .card {
+      background: var(--card); border-radius: 14px; padding: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 18px;
+    }
+    .card-header-flex {
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 2px solid #e8f5e9; padding-bottom: 8px; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;
+    }
+    .card h2 { font-size: 1.1rem; color: var(--primary); margin: 0; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .form-group { display: flex; flex-direction: column; }
+    .form-group label { font-size: 0.82rem; font-weight: 600; margin-bottom: 4px; color: #374151; }
+    .form-group input, .form-group select {
+      padding: 10px; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 0.95rem; background: #fff;
+    }
+    .form-group input[readonly] { background: #f3f4f6; font-weight: 700; color: var(--primary); }
+    .btn-row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .btn-submit {
+      flex: 1; background: var(--primary); color: #fff; border: none; padding: 12px 20px;
+      border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer;
+    }
+    .btn-submit:hover { background: var(--primary-light); }
+    .btn-print-save {
+      flex: 1; background: #e65100; color: #fff; border: none; padding: 12px 20px;
+      border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer;
+    }
+
+    /* Table */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th, td { padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: left; white-space: nowrap; }
+    th { background: #e8f5e9; color: var(--primary); font-weight: 700; }
+    .badge-auto { background: #e3f2fd; color: #0d47a1; padding: 2px 7px; border-radius: 12px; font-size: 0.72rem; }
+    .badge-manual { background: #fff3e0; color: #e65100; padding: 2px 7px; border-radius: 12px; font-size: 0.72rem; }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0; background: #fff;
+      display: flex; justify-content: space-around; padding: 8px 4px;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 100;
+    }
+    .nav-item {
+      border: none; background: none; display: flex; flex-direction: column;
+      align-items: center; font-size: 0.72rem; color: #6b7280; cursor: pointer; padding: 4px 8px;
+    }
+    .nav-item.active { color: var(--primary); font-weight: 700; }
+    .nav-item span.icon { font-size: 1.25rem; margin-bottom: 2px; }
+
+    /* Confirmation Modal */
+    .modal-backdrop {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+      z-index: 200; align-items: center; justify-content: center; padding: 16px;
+    }
+    .modal {
+      background: #fff; border-radius: 14px; max-width: 420px; width: 100%; padding: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25); border-top: 6px solid var(--accent);
+    }
+    .modal h3 { color: var(--danger); margin-bottom: 10px; font-size: 1.15rem; }
+    .modal p { margin: 6px 0; font-size: 0.95rem; }
+    .modal .highlight-time {
+      background: #fff8e1; padding: 10px; border-radius: 8px; font-size: 1.1rem;
+      font-weight: 700; color: #b71c1c; margin: 10px 0; text-align: center; border: 1px solid #ffe082;
+    }
+    .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+    .btn-cancel { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #ccc; background: #f5f5f5; font-weight: 700; cursor: pointer; }
+    .btn-confirm { flex: 1; padding: 10px; border-radius: 8px; border: none; background: var(--success); color: #fff; font-weight: 700; cursor: pointer; }
+
+    /* ================= PRINT / PDF AREA ================= */
+    #printArea { display: none; }
+    @media print {
+      body * { visibility: hidden; }
+      header, .container, .bottom-nav, .modal-backdrop { display: none !important; }
+      #printArea, #printArea * { visibility: visible; }
+      #printArea {
+        display: block !important; position: absolute; left: 0; top: 0; width: 100%;
+        padding: 15px; background: #fff; color: #000;
+      }
+    }
+    .pdf-box { border: 2px solid #1b5e20; padding: 20px; border-radius: 8px; max-width: 800px; margin: 0 auto; }
+    .pdf-header { text-align: center; border-bottom: 2px solid #1b5e20; padding-bottom: 12px; margin-bottom: 16px; }
+    .pdf-header h1 { color: #1b5e20; font-size: 1.7rem; margin-bottom: 4px; }
+    .pdf-header p { font-size: 0.95rem; font-weight: 600; color: #333; }
+    .pdf-meta { display: flex; justify-content: space-between; margin-bottom: 14px; font-size: 0.92rem; background: #f9fbe7; padding: 10px; border-radius: 6px; border: 1px solid #dce775; }
+    .pdf-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 0.85rem; }
+    .pdf-table th, .pdf-table td { border: 1px solid #999; padding: 7px 8px; text-align: left; }
+    .pdf-table th { background: #e8f5e9 !important; color: #1b5e20 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .pdf-summary { border: 2px solid #333; padding: 12px; border-radius: 6px; background: #fafafa; margin-top: 12px; }
+    .pdf-signatures { display: flex; justify-content: space-between; margin-top: 55px; padding-top: 10px; font-weight: 700; font-size: 0.95rem; }
+    .sig-line { border-top: 1.5px solid #000; width: 180px; text-align: center; padding-top: 6px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1>🌾 J K Rao Farms, Vetla</h1>
+    <p id="syncStatus">✅ ઓનલાઈન (Google Sheet કનેક્ટેડ)</p>
+  </div>
+  <button class="sync-btn" onclick="fetchAllData()">🔄 રિફ્રેશ</button>
+</header>
+
+<div class="container">
+
+  <!-- ફાર્મ ફિલ્ટર અને PDF પ્રિન્ટ બાર -->
+  <div class="action-bar">
+    <div class="filter-group">
+      <label style="font-size:0.85rem;font-weight:700;">ભાગીદાર:</label>
+      <select id="globalPartner" onchange="updateDashboard()">
+        <option value="ALL">બધા ભાગીદાર</option>
+      </select>
+      <label style="font-size:0.85rem;font-weight:700;">વર્ષ:</label>
+      <input type="text" id="globalYear" value="2026-27" style="width:100px;" oninput="updateDashboard()">
+    </div>
+    <button class="btn-pdf" onclick="printAnnualStatement()">🖨️ વાર્ષિક હિસાબ PDF / પ્રિન્ટ</button>
+  </div>
+
+  <!-- ================= ૧. ડેશબોર્ડ (DASHBOARD) ================= -->
+  <section id="tab-dashboard" class="tab-section active">
+    <div class="grid-4">
+      <div class="stat-card">
+        <h3>🌾 સિઝનની કુલ આવક (વેચાણ)</h3>
+        <div class="big-num" id="dashTotalSales">₹ 0</div>
+        <div class="sub-info">
+          માલિકનો ભાગ: <b id="dashOwnerSales">₹ 0</b><br>
+          ભાગિયાનો ભાગ: <b id="dashBhagiyaSales">₹ 0</b>
+        </div>
+      </div>
+
+      <div class="stat-card expense">
+        <h3>💸 કુલ ખેતી ખર્ચ</h3>
+        <div class="big-num" id="dashTotalExp">₹ 0</div>
+        <div class="sub-info">
+          દવા: <b id="dashMedExp">₹ 0</b> | ખાતર: <b id="dashFertExp">₹ 0</b><br>
+          ટ્રેક્ટર: <b id="dashTracExp">₹ 0</b>
+        </div>
+      </div>
+
+      <div class="stat-card bhagiya">
+        <h3>👨‍🌾 ભાગિયાનો ફાઈનલ હિસાબ</h3>
+        <div class="big-num" id="dashBhagiyaNet">₹ 0</div>
+        <div class="sub-info">
+          કુલ જમા (Credit): <b id="dashBhagiyaCredit">₹ 0</b><br>
+          કુલ ઉધાર + વ્યાજ (Debit): <b id="dashBhagiyaDebit">₹ 0</b>
+        </div>
+      </div>
+
+      <div class="stat-card profit">
+        <h3>🏆 માલિકનો ચોખ્ખો નફો</h3>
+        <div class="big-num" id="dashOwnerProfit">₹ 0</div>
+        <div class="sub-info">
+          માલિકની આવક - માલિકના ભાગનો ખર્ચ
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header-flex">
+        <h2>📊 ભાગીદાર ખાતાવહી (દરેક એન્ટ્રીની પહોંચ સાથે)</h2>
+        <button class="btn-pdf" onclick="printAnnualStatement()">📄 સંપૂર્ણ ખાતાવહી PDF</button>
+      </div>
+      <div class="table-wrap">
+        <table id="recentLedgerTable">
+          <thead>
+            <tr>
+              <th>તારીખ</th><th>ભાગીદાર</th><th>પ્રકાર</th><th>બિલ નં</th><th>ઉપાડ (Debit)</th><th>જમા (Credit)</th><th>વ્યાજ</th><th>સ્ત્રોત</th><th>પહોંચ PDF</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ૨. ઉપજ વેચાણ (SALES) ================= -->
+  <section id="tab-sales" class="tab-section">
+    <div class="card">
+      <div class="card-header-flex"><h2>🌾 ઉપજ વેચાણ બિલ એન્ટ્રી (Sales Ledger)</h2></div>
+      <form id="formSales" onsubmit="saveSales(event)">
+        <div class="form-grid">
+          <div class="form-group"><label>તારીખ</label><input type="date" id="s_date" required></div>
+          <div class="form-group"><label>બિલ નં</label><input type="text" id="s_bill" placeholder="દા.ત. 101" required></div>
+          <div class="form-group">
+            <label>પાકનું નામ (ભાગ %)</label>
+            <select id="s_crop" onchange="calcSales()" required></select>
+          </div>
+          <div class="form-group"><label>વેપારીનું નામ</label><input type="text" id="s_merchant" required></div>
+          <div class="form-group"><label>પાઉચ / નંગ</label><input type="number" id="s_pouch" value="0" required></div>
+          <div class="form-group"><label>કુલ વજન (કિલો)</label><input type="number" step="0.01" id="s_weight" oninput="calcSales()" required></div>
+          <div class="form-group"><label>૧ મણનો ભાવ (20 Kg)</label><input type="number" step="0.01" id="s_man_rate" oninput="calcSales()" required></div>
+          <div class="form-group"><label>ભાવ (પ્રતિ કિલો)</label><input type="number" id="s_kg_rate" readonly></div>
+          <div class="form-group"><label>કુલ બિલ રકમ (₹)</label><input type="number" id="s_total" readonly></div>
+          <div class="form-group">
+            <label>બીલની સ્થિતિ</label>
+            <select id="s_status" onchange="toggleSalesCollectedBy()">
+              <option value="બાકી">બાકી</option>
+              <option value="જમા">જમા</option>
+            </select>
+          </div>
+          <div class="form-group" id="s_collected_wrap" style="display:none;">
+            <label>પૈસા કોણે લીધા? (જો જમા હોય)</label>
+            <select id="s_collected_by">
+              <option value="માલિકે">માલિકે</option>
+              <option value="ભાગિયાએ">ભાગિયાએ</option>
+            </select>
+          </div>
+          <div class="form-group"><label>ભાગિયાનો ભાગ (₹)</label><input type="number" id="s_bhagiya_share" readonly></div>
+        </div>
+        <div class="btn-row">
+          <button type="submit" class="btn-submit">✅ વેચાણ બિલ સેવ કરો</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ================= ૩. દવા ખર્ચ (MEDICINE) ================= -->
+  <section id="tab-medicine" class="tab-section">
+    <div class="card">
+      <div class="card-header-flex"><h2>🧪 દવા ખર્ચ એન્ટ્રી (Medicine Expense)</h2></div>
+      <form id="formMed" onsubmit="saveMedicine(event)">
+        <div class="form-grid">
+          <div class="form-group"><label>તારીખ</label><input type="date" id="m_date" required></div>
+          <div class="form-group"><label>બિલ નં</label><input type="text" id="m_bill" required></div>
+          <div class="form-group"><label>દુકાન/એગ્રોનું નામ</label><input type="text" id="m_shop" required></div>
+          <div class="form-group"><label>પાકનું નામ</label><select id="m_crop" onchange="calcMed()" required></select></div>
+          <div class="form-group"><label>દવાનું નામ</label><select id="m_item" onchange="onMedChange()" required></select></div>
+          <div class="form-group"><label>દવાનો પ્રકાર (Auto)</label><input type="text" id="m_type" readonly></div>
+          <div class="form-group"><label>વજન / માપ (1-9 કે 10-900)</label><input type="number" step="0.01" id="m_weight" oninput="calcMed()" required></div>
+          <div class="form-group"><label>પેકિંગ (Auto)</label><input type="text" id="m_packing" readonly></div>
+          <div class="form-group"><label>નંગ (Qty)</label><input type="number" id="m_qty" oninput="calcMed()" required></div>
+          <div class="form-group"><label>ભાવ (પ્રતિ નંગ)</label><input type="number" step="0.01" id="m_rate" oninput="calcMed()" required></div>
+          <div class="form-group"><label>મૂળ રકમ</label><input type="number" id="m_base" readonly></div>
+          <div class="form-group"><label>GST (%)</label><input type="number" step="0.01" id="m_gst_p" value="0" oninput="calcMed()"></div>
+          <div class="form-group"><label>GST રકમ</label><input type="number" id="m_gst_amt" readonly></div>
+          <div class="form-group"><label>CST (%)</label><input type="number" step="0.01" id="m_cst_p" value="0" oninput="calcMed()"></div>
+          <div class="form-group"><label>CST રકમ</label><input type="number" id="m_cst_amt" readonly></div>
+          <div class="form-group"><label>કુલ બિલ રકમ (₹)</label><input type="number" id="m_total" readonly></div>
+          <div class="form-group"><label>બીલની સ્થિતિ</label><select id="m_status"><option value="બાકી">બાકી</option><option value="રોકડા">રોકડા</option></select></div>
+          <div class="form-group"><label>હસ્તે (કોણે આપ્યા?)</label><select id="m_paidby"><option value="માલિકે">માલિકે</option><option value="ભાગિયાએ">ભાગિયાએ</option></select></div>
+          <div class="form-group"><label>ભાગિયાના ભાગનો ખર્ચ (₹)</label><input type="number" id="m_bhagiya_exp" readonly></div>
+        </div>
+        <div class="btn-row">
+          <button type="submit" class="btn-submit">✅ દવા બિલ સેવ કરો</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ================= ૪. ખાતર ખર્ચ (FERTILIZER) ================= -->
+  <section id="tab-fertilizer" class="tab-section">
+    <div class="card">
+      <div class="card-header-flex"><h2>🌱 ખાતર ખર્ચ એન્ટ્રી (Fertilizer Expense)</h2></div>
+      <form id="formFert" onsubmit="saveFertilizer(event)">
+        <div class="form-grid">
+          <div class="form-group"><label>તારીખ</label><input type="date" id="f_date" required></div>
+          <div class="form-group"><label>બિલ નં</label><input type="text" id="f_bill" required></div>
+          <div class="form-group"><label>દુકાન/મંડળીનું નામ</label><input type="text" id="f_shop" required></div>
+          <div class="form-group"><label>પાકનું નામ</label><select id="f_crop" onchange="calcFert()" required></select></div>
+          <div class="form-group"><label>ખાતરનું નામ</label><select id="f_item" required></select></div>
+          <div class="form-group"><label>વજન / માપ</label><input type="number" step="0.01" id="f_weight" oninput="calcFert()" required></div>
+          <div class="form-group"><label>પેકિંગ (Auto)</label><input type="text" id="f_packing" readonly></div>
+          <div class="form-group"><label>નંગ (થેલી)</label><input type="number" id="f_qty" oninput="calcFert()" required></div>
+          <div class="form-group"><label>ભાવ (પ્રતિ થેલી)</label><input type="number" step="0.01" id="f_rate" oninput="calcFert()" required></div>
+          <div class="form-group"><label>મૂળ રકમ</label><input type="number" id="f_base" readonly></div>
+          <div class="form-group"><label>GST (%)</label><input type="number" step="0.01" id="f_gst_p" value="0" oninput="calcFert()"></div>
+          <div class="form-group"><label>GST રકમ</label><input type="number" id="f_gst_amt" readonly></div>
+          <div class="form-group"><label>CST (%)</label><input type="number" step="0.01" id="f_cst_p" value="0" oninput="calcFert()"></div>
+          <div class="form-group"><label>CST રકમ</label><input type="number" id="f_cst_amt" readonly></div>
+          <div class="form-group"><label>કુલ બિલ રકમ (₹)</label><input type="number" id="f_total" readonly></div>
+          <div class="form-group"><label>બીલની સ્થિતિ</label><select id="f_status"><option value="બાકી">બાકી</option><option value="રોકડા">રોકડા</option></select></div>
+          <div class="form-group"><label>હસ્તે</label><select id="f_paidby"><option value="માલિકે">માલિકે</option><option value="ભાગિયાએ">ભાગિયાએ</option></select></div>
+          <div class="form-group"><label>ભાગિયાના ભાગનો ખર્ચ (₹)</label><input type="number" id="f_bhagiya_exp" readonly></div>
+        </div>
+        <div class="btn-row">
+          <button type="submit" class="btn-submit">✅ ખાતર બિલ સેવ કરો</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ================= ૫. ટ્રેક્ટર ખર્ચ (TRACTOR) ================= -->
+  <section

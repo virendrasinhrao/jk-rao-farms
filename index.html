@@ -309,12 +309,13 @@
   
   async function saveSales(e) {
     e.preventDefault(); const crop = getSelectedCropInfo('s_crop'); const date = document.getElementById('s_date').value; const bill = document.getElementById('s_bill').value; const total = parseFloat(document.getElementById('s_total').value) || 0; const bhagiyaShare = parseFloat(document.getElementById('s_bhagiya_share').value) || 0; const status = document.getElementById('s_status').value; const collectedBy = status === 'જમા' ? document.getElementById('s_collected_by').value : ""; const yearStr = document.getElementById('globalYear').value || "2026-27";
+    
     const row = [yearStr, "SL" + Date.now(), date, bill, document.getElementById('s_merchant').value, crop.name, document.getElementById('s_pouch').value, document.getElementById('s_weight').value, document.getElementById('s_man_rate').value, document.getElementById('s_kg_rate').value, total, crop.share * 100 + "%", bhagiyaShare, collectedBy === 'ભાગિયાએ' ? 'Yes' : 'No', collectedBy, "-", status];
     const ledgerRows = bhagiyaShare > 0 ? [[yearStr, (db.Bhagiya_Ledger||[]).length + 1, date, crop.partner, "વેચાણ બીલ જમા", "માલિક", bhagiyaShare, "Cash/Bill", "", 0, bhagiyaShare, bill, total, "વેચાણ", crop.name + " વેચાણ ભાગ", 0, 0, "Cleared", "", "No", 0, 0, "", ""]] : [];
     await sendToSheet("Sales_Ledger", row, ledgerRows); e.target.reset();
   }
 
-  // ================= Pesticide (ઓટો-માસ્ટર સેવ સાથે) =================
+  // ================= Pesticide =================
   function onMedChange() {
     const val = document.getElementById('m_item').value;
     const exist = (db.Medicine_Master || []).find(m => m['દવાનું_નામ'] === val);
@@ -331,19 +332,19 @@
     const medName = document.getElementById('m_item').value;
     const medType = document.getElementById('m_type').value;
     
-    // નવી Pesticide હોય તો માસ્ટરમાં પાછળથી સેવ કરો
     if (!(db.Medicine_Master || []).find(m => m['દવાનું_નામ'] === medName)) {
       fetch(API_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain" }, body: JSON.stringify({ table: "Medicine_Master", rowValues: [medName, medType] }) });
       db.Medicine_Master.push({'દવાનું_નામ': medName, 'દવાનો_પ્રકાર': medType});
     }
 
     const crop = getSelectedCropInfo('m_crop'); const date = document.getElementById('m_date').value; const bill = document.getElementById('m_bill').value; const total = parseFloat(document.getElementById('m_total').value) || 0; const bhagiyaExp = parseFloat(document.getElementById('m_bhagiya_exp').value) || 0; const yearStr = document.getElementById('globalYear').value || "2026-27"; const baseAmt = parseFloat(document.getElementById('m_base').value) || 0; const gstP = parseFloat(document.getElementById('m_gst_p').value) || 0; const gstAmt = +(baseAmt * (gstP / 100)).toFixed(2); 
-    const row = [yearStr, "MD" + Date.now(), bill, date, document.getElementById('m_shop').value, crop.name, baseAmt, gstAmt, 0, total, (crop.share * 100) + "%", bhagiyaExp, document.getElementById('m_paidby').value, "-", document.getElementById('m_status').value, "-"];
-    const ledgerRows = bhagiyaExp > 0 ? [[yearStr, (db.Bhagiya_Ledger||[]).length + 1, date, crop.partner, "Pesticide ખરીદી", "માલિક", bhagiyaExp, "Bill", "", bhagiyaExp, 0, bill, total, "Pesticide", document.getElementById('m_item').value, 0, 0, "Cleared", "", "No", 0, 0, "", ""]] : [];
+    
+    const row = [yearStr, "MD" + Date.now(), bill, date, document.getElementById('m_shop').value, crop.name, medName, baseAmt, gstAmt, 0, total, (crop.share * 100) + "%", bhagiyaExp, document.getElementById('m_paidby').value, "-", document.getElementById('m_status').value, "-"];
+    const ledgerRows = bhagiyaExp > 0 ? [[yearStr, (db.Bhagiya_Ledger||[]).length + 1, date, crop.partner, "Pesticide ખરીદી", "માલિક", bhagiyaExp, "Bill", "", bhagiyaExp, 0, bill, total, "Pesticide", medName, 0, 0, "Cleared", "", "No", 0, 0, "", ""]] : [];
     await sendToSheet("Medicine_Expense", row, ledgerRows); e.target.reset(); onMedChange();
   }
 
-  // ================= ખાતર (ઓટો-માસ્ટર સેવ સાથે) =================
+  // ================= ખાતર =================
   function calcFert() { const total = +((parseFloat(document.getElementById('f_qty').value)||0) * (parseFloat(document.getElementById('f_rate').value)||0)).toFixed(2); const crop = getSelectedCropInfo('f_crop'); document.getElementById('f_base').value = total; document.getElementById('f_total').value = total; document.getElementById('f_bhagiya_exp').value = (crop.share === 0.2) ? 0 : +(total * crop.share).toFixed(2); }
   
   async function saveFertilizer(e) {
@@ -356,8 +357,9 @@
     }
 
     const crop = getSelectedCropInfo('f_crop'); const date = document.getElementById('f_date').value; const bill = document.getElementById('f_bill').value; const total = parseFloat(document.getElementById('f_total').value) || 0; const bhagiyaExp = parseFloat(document.getElementById('f_bhagiya_exp').value) || 0; const yearStr = document.getElementById('globalYear').value || "2026-27"; const baseAmt = parseFloat(document.getElementById('f_base').value) || 0; const gstP = parseFloat(document.getElementById('f_gst_p').value) || 0; const gstAmt = +(baseAmt * (gstP / 100)).toFixed(2); 
-    const row = [yearStr, "FT" + Date.now(), bill, date, document.getElementById('f_shop').value, crop.name, baseAmt, gstP + "%", gstAmt, 0, total, (crop.share * 100) + "%", bhagiyaExp, document.getElementById('f_paidby').value, document.getElementById('f_status').value, "-"];
-    const ledgerRows = bhagiyaExp > 0 ? [[yearStr, (db.Bhagiya_Ledger||[]).length + 1, date, crop.partner, "ખાતર ખરીદી", "માલિક", bhagiyaExp, "Bill", "", bhagiyaExp, 0, bill, total, "ખાતર", document.getElementById('f_item').value, 0, 0, "Cleared", "", "No", 0, 0, "", ""]] : [];
+    
+    const row = [yearStr, "FT" + Date.now(), bill, date, document.getElementById('f_shop').value, crop.name, fertName, baseAmt, gstP + "%", gstAmt, 0, total, (crop.share * 100) + "%", bhagiyaExp, document.getElementById('f_paidby').value, document.getElementById('f_status').value, "-"];
+    const ledgerRows = bhagiyaExp > 0 ? [[yearStr, (db.Bhagiya_Ledger||[]).length + 1, date, crop.partner, "ખાતર ખરીદી", "માલિક", bhagiyaExp, "Bill", "", bhagiyaExp, 0, bill, total, "ખાતર", fertName, 0, 0, "Cleared", "", "No", 0, 0, "", ""]] : [];
     await sendToSheet("Fertilizer_Expense", row, ledgerRows); e.target.reset();
   }
 
@@ -369,9 +371,7 @@
   async function executeSaveTractor() {
     closeTractorModal(); const crop = getSelectedCropInfo('t_crop'); const date = document.getElementById('t_date').value; const total = parseFloat(document.getElementById('t_total').value) || 0; const bhagiyaExp = parseFloat(document.getElementById('t_bhagiya_exp').value) || 0; const work = document.getElementById('t_work').value; const yearStr = document.getElementById('globalYear').value || "2026-27";
     
-    // આ નવી લાઈનમાં વર્ષ અને 14 કોલમ બરાબર સેટ કરેલા છે
     const row = [yearStr, "TR" + Date.now(), date, document.getElementById('t_owner').value, crop.name, work, document.getElementById('t_hours').value, document.getElementById('t_mins').value, document.getElementById('t_hr_rate').value, document.getElementById('t_min_rate').value, total, document.getElementById('t_status').value, document.getElementById('t_paidby').value, bhagiyaExp];
-    
     const ledgerRows = bhagiyaExp > 0 ? [[yearStr, (db.Bhagiya_Ledger||[]).length + 1, date, crop.partner, "ટ્રેક્ટર ખર્ચ", "માલિક", bhagiyaExp, "Bill", "", bhagiyaExp, 0, "-", total, "ટ્રેક્ટર", work, 0, 0, "Cleared", "", "No", 0, 0, "", ""]] : [];
     await sendToSheet("Tractor_Expense", row, ledgerRows); document.getElementById('formTractor').reset();
   }
@@ -395,19 +395,19 @@
   
   function updateDashboard() {
     const sum = (arr, key) => (arr || []).reduce((a, b) => a + (parseFloat(b[key]) || 0), 0);
-    const totalSales = sum(db.Sales_Ledger, "કુલ_રકમ"), bhagiyaSales = sum(db.Sales_Ledger, "ખેડૂ_રકમ");
-    const totalExp = sum(db.Medicine_Expense, "બીલની રકમ") + sum(db.Fertilizer_Expense, "બીલની રકમ") + sum(db.Tractor_Expense, "કુલ_બિલ_રકમ");
-    const bhagiyaExp = sum(db.Medicine_Expense, "ખેડૂ રકમ") + sum(db.Fertilizer_Expense, "ખેડૂ રકમ") + sum(db.Tractor_Expense, "ભાગિયાનો_ખર્ચ");
+    const totalSales = sum(db.Sales_Ledger, "કુલ રકમ"), bhagiyaSales = sum(db.Sales_Ledger, "ખેડૂ રકમ");
+    const totalExp = sum(db.Medicine_Expense, "બીલની રકમ") + sum(db.Fertilizer_Expense, "બીલની રકમ") + sum(db.Tractor_Expense, "કુલ બિલ રકમ");
+    const bhagiyaExp = sum(db.Medicine_Expense, "ખેડૂ રકમ") + sum(db.Fertilizer_Expense, "ખેડૂ રકમ") + sum(db.Tractor_Expense, "ભાગિયાનો ખર્ચ");
     
     const filteredLedger = getFilteredLedger();
     const totDebit = sum(filteredLedger, "ઉપાડ (Debit)") + sum(filteredLedger, "વ્યાજની રકમ (3%/M)");
     const totCredit = sum(filteredLedger, "જમા (Credit)");
     
     document.getElementById('dashTotalSales').innerText = "₹ " + totalSales.toLocaleString('en-IN'); document.getElementById('dashOwnerSales').innerText = "₹ " + (totalSales - bhagiyaSales).toLocaleString('en-IN'); document.getElementById('dashBhagiyaSales').innerText = "₹ " + bhagiyaSales.toLocaleString('en-IN');
-    document.getElementById('dashTotalExp').innerText = "₹ " + totalExp.toLocaleString('en-IN'); document.getElementById('dashMedExp').innerText = "₹ " + sum(db.Medicine_Expense, "બીલની રકમ").toLocaleString('en-IN'); document.getElementById('dashFertExp').innerText = "₹ " + sum(db.Fertilizer_Expense, "બીલની રકમ").toLocaleString('en-IN'); document.getElementById('dashTracExp').innerText = "₹ " + sum(db.Tractor_Expense, "કુલ_બિલ_રકમ").toLocaleString('en-IN');
+    document.getElementById('dashTotalExp').innerText = "₹ " + totalExp.toLocaleString('en-IN'); document.getElementById('dashMedExp').innerText = "₹ " + sum(db.Medicine_Expense, "બીલની રકમ").toLocaleString('en-IN'); document.getElementById('dashFertExp').innerText = "₹ " + sum(db.Fertilizer_Expense, "બીલની રકમ").toLocaleString('en-IN'); document.getElementById('dashTracExp').innerText = "₹ " + sum(db.Tractor_Expense, "કુલ બિલ રકમ").toLocaleString('en-IN');
     document.getElementById('dashBhagiyaCredit').innerText = "₹ " + totCredit.toLocaleString('en-IN'); document.getElementById('dashBhagiyaDebit').innerText = "₹ " + totDebit.toLocaleString('en-IN'); document.getElementById('dashBhagiyaNet').innerText = "₹ " + Math.abs(totCredit - totDebit).toLocaleString('en-IN'); document.getElementById('dashOwnerProfit').innerText = "₹ " + (totalSales - bhagiyaSales - (totalExp - bhagiyaExp)).toLocaleString('en-IN');
     
-    document.querySelector('#recentLedgerTable tbody').innerHTML = filteredLedger.slice().reverse().map(r => `<tr><td>${r['તારીખ'] ? String(r['તારીખ']).split('T')[0] : ''}</td><td>${r['ભાગીદાર'] || ''}</td><td>${r['એન્ટ્રી_પ્રકાર'] || ''}</td><td style="color:#d32f2f;">₹ ${r['ઉપાડ (Debit)'] || 0}</td><td style="color:#2e7d32;">₹ ${r['જમા (Credit)'] || 0}</td><td><button class="btn-receipt">🖨️</button></td></tr>`).join('');
+    document.querySelector('#recentLedgerTable tbody').innerHTML = filteredLedger.slice().reverse().map(r => `<tr><td>${r['તારીખ'] ? String(r['તારીખ']).split('T')[0] : ''}</td><td>${r['ભાગીદાર'] || ''}</td><td>${r['એન્ટ્રી પ્રકાર'] || ''}</td><td style="color:#d32f2f;">₹ ${r['ઉપાડ (Debit)'] || 0}</td><td style="color:#2e7d32;">₹ ${r['જમા (Credit)'] || 0}</td><td><button class="btn-receipt">🖨️</button></td></tr>`).join('');
   }
   function printAnnualStatement() { window.print(); }
 </script>

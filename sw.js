@@ -1,4 +1,4 @@
-const CACHE_NAME = "jk-rao-farms-v1";
+const CACHE_NAME = "jk-rao-farms-v2";
 const ASSETS = ["./", "./index.html", "./manifest.json"];
 
 self.addEventListener("install", e => {

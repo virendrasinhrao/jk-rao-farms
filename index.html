@@ -368,7 +368,10 @@
   
   async function executeSaveTractor() {
     closeTractorModal(); const crop = getSelectedCropInfo('t_crop'); const date = document.getElementById('t_date').value; const total = parseFloat(document.getElementById('t_total').value) || 0; const bhagiyaExp = parseFloat(document.getElementById('t_bhagiya_exp').value) || 0; const work = document.getElementById('t_work').value; const yearStr = document.getElementById('globalYear').value || "2026-27";
-    const row = ["TR" + Date.now(), date, document.getElementById('t_owner').value, crop.name, work, document.getElementById('t_hours').value, document.getElementById('t_mins').value, document.getElementById('t_hr_rate').value, document.getElementById('t_min_rate').value, total, document.getElementById('t_status').value, document.getElementById('t_paidby').value, bhagiyaExp];
+    
+    // આ નવી લાઈનમાં વર્ષ અને 14 કોલમ બરાબર સેટ કરેલા છે
+    const row = [yearStr, "TR" + Date.now(), date, document.getElementById('t_owner').value, crop.name, work, document.getElementById('t_hours').value, document.getElementById('t_mins').value, document.getElementById('t_hr_rate').value, document.getElementById('t_min_rate').value, total, document.getElementById('t_status').value, document.getElementById('t_paidby').value, bhagiyaExp];
+    
     const ledgerRows = bhagiyaExp > 0 ? [[yearStr, (db.Bhagiya_Ledger||[]).length + 1, date, crop.partner, "ટ્રેક્ટર ખર્ચ", "માલિક", bhagiyaExp, "Bill", "", bhagiyaExp, 0, "-", total, "ટ્રેક્ટર", work, 0, 0, "Cleared", "", "No", 0, 0, "", ""]] : [];
     await sendToSheet("Tractor_Expense", row, ledgerRows); document.getElementById('formTractor').reset();
   }

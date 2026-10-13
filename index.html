@@ -8,76 +8,30 @@
   <meta name="theme-color" content="#1b5e20">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --primary: #1b5e20;
-      --primary-light: #2e7d32;
-      --accent: #f57f17;
-      --bg: #f4f7f4;
-      --card: #ffffff;
-      --text: #1f2937;
-      --danger: #d32f2f;
-      --success: #2e7d32;
-    }
+    :root { --primary: #1b5e20; --primary-light: #2e7d32; --accent: #f57f17; --bg: #f4f7f4; --card: #ffffff; --text: #1f2937; --danger: #d32f2f; --success: #2e7d32; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans Gujarati', sans-serif; }
     body { background: var(--bg); color: var(--text); padding-bottom: 120px; padding-top: env(safe-area-inset-top); }
-    
-    /* Header */
-    header {
-      background: linear-gradient(135deg, var(--primary), var(--primary-light));
-      color: #fff; padding: 14px 18px; position: sticky; top: 0; z-index: 100;
-      display: flex; justify-content: space-between; align-items: center;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.18);
-    }
+    header { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff; padding: 14px 18px; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 3px 10px rgba(0,0,0,0.18); }
     .brand h1 { font-size: 1.2rem; font-weight: 700; }
     .brand p { font-size: 0.78rem; opacity: 0.9; margin-top:2px; }
-    .sync-btn {
-      background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4);
-      color: #fff; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer;
-    }
-
-    /* Container & Responsive Grid */
+    .sync-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: #fff; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; }
     .container { max-width: 1100px; margin: 16px auto; padding: 0 12px; }
     .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin-bottom: 18px; }
-    
-    /* Filter & Action Bar */
-    .action-bar {
-      background: #fff; padding: 12px 16px; border-radius: 12px; margin-bottom: 16px;
-      display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    }
+    .action-bar { background: #fff; padding: 12px 16px; border-radius: 12px; margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
     .filter-group { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-    .filter-group select, .filter-group input {
-      padding: 8px 12px; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 0.9rem; font-weight: 600;
-    }
-    .btn-pdf {
-      background: #b71c1c; color: #fff; border: none; padding: 9px 16px;
-      border-radius: 8px; font-size: 0.88rem; font-weight: 700; cursor: pointer;
-      display: inline-flex; align-items: center; gap: 6px;
-    }
-    .btn-receipt {
-      background: #1565c0; color: #fff; border: none; padding: 5px 10px;
-      border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer;
-    }
-
-    /* Smart Dashboard Cards */
-    .stat-card {
-      background: var(--card); border-radius: 14px; padding: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 6px solid var(--primary);
-    }
+    .filter-group select, .filter-group input { padding: 8px 12px; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 0.9rem; font-weight: 600; }
+    .btn-pdf { background: #b71c1c; color: #fff; border: none; padding: 9px 16px; border-radius: 8px; font-size: 0.88rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-receipt { background: #1565c0; color: #fff; border: none; padding: 5px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+    .stat-card { background: var(--card); border-radius: 14px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 6px solid var(--primary); }
     .stat-card.expense { border-left-color: var(--danger); }
     .stat-card.bhagiya { border-left-color: var(--accent); }
     .stat-card.profit { border-left-color: #0288d1; }
     .stat-card h3 { font-size: 0.9rem; color: #555; margin-bottom: 6px; }
     .stat-card .big-num { font-size: 1.55rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
     .stat-card .sub-info { font-size: 0.8rem; color: #666; line-height: 1.5; border-top: 1px dashed #e0e0e0; padding-top: 6px; }
-
-    /* Forms & Sections */
     .tab-section { display: none; }
     .tab-section.active { display: block; }
-    .card {
-      background: var(--card); border-radius: 14px; padding: 18px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 18px;
-    }
+    .card { background: var(--card); border-radius: 14px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 18px; }
     .card-header-flex { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e8f5e9; padding-bottom: 8px; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
     .card h2 { font-size: 1.1rem; color: var(--primary); margin: 0; }
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
@@ -88,38 +42,16 @@
     .btn-row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
     .btn-submit { flex: 1; background: var(--primary); color: #fff; border: none; padding: 12px 20px; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; }
     .btn-print-save { flex: 1; background: #e65100; color: #fff; border: none; padding: 12px 20px; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; }
-
-    /* Table */
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
     th, td { padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: left; white-space: nowrap; }
     th { background: #e8f5e9; color: var(--primary); font-weight: 700; }
     .badge-auto { background: #e3f2fd; color: #0d47a1; padding: 2px 7px; border-radius: 12px; font-size: 0.72rem; }
     .badge-manual { background: #fff3e0; color: #e65100; padding: 2px 7px; border-radius: 12px; font-size: 0.72rem; }
-
-    /* Bottom Navigation - FIXED FOR MOBILE */
-    .bottom-nav {
-      position: fixed; 
-      bottom: 0; 
-      left: 0; 
-      right: 0; 
-      background: #fff;
-      display: flex; 
-      justify-content: space-around; 
-      padding: 10px 4px;
-      padding-bottom: calc(10px + env(safe-area-inset-bottom));
-      box-shadow: 0 -4px 15px rgba(0,0,0,0.15); 
-      z-index: 9999;
-      border-top: 1px solid #eee;
-    }
-    .nav-item {
-      border: none; background: none; display: flex; flex-direction: column;
-      align-items: center; font-size: 0.75rem; color: #6b7280; cursor: pointer; padding: 4px 8px;
-    }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; display: flex; justify-content: space-around; padding: 10px 4px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); box-shadow: 0 -4px 15px rgba(0,0,0,0.15); z-index: 9999; border-top: 1px solid #eee; }
+    .nav-item { border: none; background: none; display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #6b7280; cursor: pointer; padding: 4px 8px; }
     .nav-item.active { color: var(--primary); font-weight: 700; }
     .nav-item span.icon { font-size: 1.4rem; margin-bottom: 4px; }
-    
-    /* Confirmation Modal */
     .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
     .modal { background: #fff; border-radius: 14px; max-width: 420px; width: 100%; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); border-top: 6px solid var(--accent); }
     .modal h3 { color: var(--danger); margin-bottom: 10px; font-size: 1.15rem; }
@@ -128,15 +60,8 @@
     .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
     .btn-cancel { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #ccc; background: #f5f5f5; font-weight: 700; cursor: pointer; }
     .btn-confirm { flex: 1; padding: 10px; border-radius: 8px; border: none; background: var(--success); color: #fff; font-weight: 700; cursor: pointer; }
-
-    /* ================= PRINT / PDF AREA ================= */
     #printArea { display: none; }
-    @media print {
-      body * { visibility: hidden; }
-      header, .container, .bottom-nav, .modal-backdrop { display: none !important; }
-      #printArea, #printArea * { visibility: visible; }
-      #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; padding: 15px; background: #fff; color: #000; }
-    }
+    @media print { body * { visibility: hidden; } header, .container, .bottom-nav, .modal-backdrop { display: none !important; } #printArea, #printArea * { visibility: visible; } #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; padding: 15px; background: #fff; color: #000; } }
     .pdf-box { border: 2px solid #1b5e20; padding: 20px; border-radius: 8px; max-width: 800px; margin: 0 auto; }
     .pdf-header { text-align: center; border-bottom: 2px solid #1b5e20; padding-bottom: 12px; margin-bottom: 16px; }
     .pdf-header h1 { color: #1b5e20; font-size: 1.7rem; margin-bottom: 4px; }
@@ -307,216 +232,10 @@
           <div class="form-group"><label>કલાક (0-12)</label><input type="number" id="t_hours" min="0" max="12" value="0" oninput="calcTractor()" required></div>
           <div class="form-group"><label>મિનિટ (0-59)</label><input type="number" id="t_mins" min="0" max="59" value="0" oninput="calcTractor()" required></div>
           <div class="form-group"><label>ભાવ (પ્રતિ કલાક)</label><input type="number" id="t_hr_rate" oninput="calcTractor()" required></div>
+          <div class="form-group"><label>ભાવ (પ્રતિ મિનિટ)</label><input type="number" id="t_min_rate" readonly></div>
           <div class="form-group"><label>કુલ બિલ રકમ (₹)</label><input type="number" id="t_total" readonly></div>
           <div class="form-group"><label>બીલની સ્થિતિ</label><select id="t_status"><option value="બાકી">બાકી</option><option value="રોકડા">રોકડા</option></select></div>
           <div class="form-group"><label>હસ્તે</label><select id="t_paidby"><option value="માલિકે">માલિકે</option><option value="ભાગિયાએ">ભાગિયાએ</option></select></div>
           <div class="form-group"><label>ભાગિયાનો ખર્ચ (₹)</label><input type="number" id="t_bhagiya_exp" readonly></div>
         </div>
-        <div class="btn-row"><button type="submit" class="btn-submit">⚠️ ચકાસો અને સેવ કરો</button></div>
-      </form>
-    </div>
-  </section>
-
-  <!-- ================= ૬. ભાગીદાર લેજર (LEDGER) ================= -->
-  <section id="tab-ledger" class="tab-section">
-    <div class="card">
-      <div class="card-header-flex"><h2>📒 રોકડ ઉપાડ / જમા એન્ટ્રી</h2></div>
-      <form id="formLedger" onsubmit="saveManualLedger(event, false)">
-        <div class="form-grid">
-          <div class="form-group"><label>તારીખ</label><input type="date" id="l_date" required></div>
-          <div class="form-group"><label>ભાગીદાર</label><input type="text" id="l_partner" value="રમેશભાઈ" required></div>
-          <div class="form-group"><label>પ્રકાર</label><select id="l_type"><option value="એડવાન્સ પેટે">એડવાન્સ પેટે (ઉપાડ)</option><option value="વાર્ષિક હિસાબ જમા">હિસાબ જમા</option></select></div>
-          <div class="form-group"><label>રકમ (₹)</label><input type="number" id="l_amount" oninput="calcLedgerInterest()" required></div>
-          <div class="form-group"><label>ટ્રાન્ઝેક્શન</label><select id="l_tx_mode"><option value="Cash">રોકડા</option><option value="UPI">UPI/Bank</option></select></div>
-          <div class="form-group"><label>વ્યાજપાત્ર રકમ</label><input type="number" id="l_int_principal" value="0" oninput="calcLedgerInterest()"></div>
-          <div class="form-group"><label>મહિના</label><input type="number" id="l_months" value="0" oninput="calcLedgerInterest()"></div>
-          <div class="form-group"><label>વ્યાજ (3%)</label><input type="number" id="l_int_amt" readonly></div>
-          <div class="form-group"><label>વિગત</label><input type="text" id="l_note" placeholder="દા.ત. ઘરખર્ચ"></div>
-        </div>
-        <div class="btn-row">
-          <button type="submit" class="btn-submit">✅ સેવ કરો</button>
-          <button type="button" class="btn-print-save" onclick="saveManualLedger(event, true)">🖨️ પહોંચ કાઢો</button>
-        </div>
-      </form>
-    </div>
-  </section>
-
-</div>
-
-<!-- મોડલ અને પ્રિન્ટ એરિયા (સરળ) -->
-<div class="modal-backdrop" id="tractorModal">
-  <div class="modal">
-    <h3>⚠️ ચકાસો</h3>
-    <p>કલાક: <b id="conf_hrs"></b>, મિનિટ: <b id="conf_mins"></b></p>
-    <p>કુલ: <b>₹ <span id="conf_total"></span></b></p>
-    <div class="modal-actions">
-      <button type="button" class="btn-cancel" onclick="closeTractorModal()">❌ ના</button>
-      <button type="button" class="btn-confirm" onclick="executeSaveTractor()">✅ હા</button>
-    </div>
-  </div>
-</div>
-<div id="printArea"></div>
-
-<!-- Bottom Navigation -->
-<nav class="bottom-nav">
-  <button class="nav-item active" onclick="switchTab('dashboard', this)"><span class="icon">📊</span>ડેશબોર્ડ</button>
-  <button class="nav-item" onclick="switchTab('sales', this)"><span class="icon">🌾</span>વેચાણ</button>
-  <button class="nav-item" onclick="switchTab('medicine', this)"><span class="icon">🧪</span>દવા</button>
-  <button class="nav-item" onclick="switchTab('fertilizer', this)"><span class="icon">🌱</span>ખાતર</button>
-  <button class="nav-item" onclick="switchTab('tractor', this)"><span class="icon">🚜</span>ટ્રેક્ટર</button>
-  <button class="nav-item" onclick="switchTab('ledger', this)"><span class="icon">📒</span>ઉપાડ</button>
-</nav>
-
-<script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbwdHjfSzSz-uIXc7SDdaAkuLGb7b3jPIEcJlLpF-pP9HbXAe7DC3_O9WJAF9ghNxYSRxw/exec";
-
-  let db = {
-    Crop_Master: [ { Crop_ID: "C1", "પાકનું_નામ": "વાલોળ (0.5)", "ભાગ_ટકા": 0.5, "ભાગીદારનું_નામ": "રમેશભાઈ" } ],
-    Medicine_Master: [ { "દવાનું_નામ": "કોરાજન", "દવાનો_પ્રકાર": "જંતુ નાશક" } ],
-    Fertilizer_Master: [ { "ખાતરનું_નામ": "યુરિયા" } ],
-    Sales_Ledger: [], Medicine_Expense: [], Fertilizer_Expense: [], Tractor_Expense: [], Bhagiya_Ledger: []
-  };
-
-  window.onload = () => {
-    const today = new Date().toISOString().split('T')[0];
-    ['s_date','m_date','f_date','t_date','l_date'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = today; });
-    const cached = localStorage.getItem("jk_rao_farms_db");
-    if (cached) { db = JSON.parse(cached); populateDropdowns(); updateDashboard(); }
-    fetchAllData();
-  };
-
-  function switchTab(tab, btn) {
-    document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
-    document.getElementById('tab-' + tab).classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    window.scrollTo(0,0);
-  }
-
-  async function fetchAllData() {
-    try {
-      const res = await fetch(API_URL);
-      const json = await res.json();
-      if (json.status === "success") {
-        db = { ...db, ...json.data };
-        localStorage.setItem("jk_rao_farms_db", JSON.stringify(db));
-        populateDropdowns(); updateDashboard();
-        document.getElementById('syncStatus').innerText = "✅ ઓનલાઈન";
-      }
-    } catch (e) { document.getElementById('syncStatus').innerText = "📴 ઓફલાઈન"; }
-  }
-
-  function populateDropdowns() {
-    const cropOpts = db.Crop_Master.map(c => `<option value="${c['પાકનું_નામ']}" data-share="${c['ભાગ_ટકા']}" data-partner="${c['ભાગીદારનું_નામ']}">${c['પાકનું_નામ']}</option>`).join('');
-    ['s_crop','m_crop','f_crop','t_crop'].forEach(id => document.getElementById(id).innerHTML = cropOpts);
-    document.getElementById('m_item').innerHTML = db.Medicine_Master.map(m => `<option value="${m['દવાનું_નામ']}" data-type="${m['દવાનો_પ્રકાર']}">${m['દવાનું_નામ']}</option>`).join('');
-    document.getElementById('f_item').innerHTML = db.Fertilizer_Master.map(f => `<option value="${f['ખાતરનું_નામ']}">${f['ખાતરનું_નામ']}</option>`).join('');
-  }
-
-  function getSelectedCropInfo(selectId) {
-    const sel = document.getElementById(selectId);
-    const opt = sel.options[sel.selectedIndex];
-    return { name: sel.value, share: parseFloat(opt ? opt.getAttribute('data-share') : 0.5), partner: opt ? opt.getAttribute('data-partner') : "રમેશભાઈ" };
-  }
-
-  function calcSales() {
-    const w = parseFloat(document.getElementById('s_weight').value) || 0;
-    const man = parseFloat(document.getElementById('s_man_rate').value) || 0;
-    const kgRate = +(man / 20).toFixed(2);
-    const total = +(w * kgRate).toFixed(2);
-    const crop = getSelectedCropInfo('s_crop');
-    document.getElementById('s_kg_rate').value = kgRate;
-    document.getElementById('s_total').value = total;
-    document.getElementById('s_bhagiya_share').value = +(total * crop.share).toFixed(2);
-  }
-  async function saveSales(e) { e.preventDefault(); alert("સેવ કરવાનું કામ ચાલુ છે..."); }
-
-  function onMedChange() {
-    const sel = document.getElementById('m_item');
-    document.getElementById('m_type').value = sel.options[sel.selectedIndex]?.getAttribute('data-type') || "";
-    calcMed();
-  }
-  function calcMed() {
-    const w = parseFloat(document.getElementById('m_weight').value) || 0;
-    document.getElementById('m_packing').value = (w >= 1 && w <= 9) ? "લીટર / કિલો" : "ગ્રામ / મિલી";
-    const qty = parseFloat(document.getElementById('m_qty').value) || 0;
-    const rate = parseFloat(document.getElementById('m_rate').value) || 0;
-    const base = +(qty * rate).toFixed(2);
-    const gstAmt = +(base * ((parseFloat(document.getElementById('m_gst_p').value)||0) / 100)).toFixed(2);
-    const total = +(base + gstAmt).toFixed(2);
-    const crop = getSelectedCropInfo('m_crop');
-    document.getElementById('m_base').value = base;
-    document.getElementById('m_total').value = total;
-    document.getElementById('m_bhagiya_exp').value = document.getElementById('m_type').value === "નિંદામણ" ? total : +(total * crop.share).toFixed(2);
-  }
-  async function saveMedicine(e) { e.preventDefault(); alert("સેવ કરવાનું કામ ચાલુ છે..."); }
-
-  function calcFert() {
-    const qty = parseFloat(document.getElementById('f_qty').value) || 0;
-    const rate = parseFloat(document.getElementById('f_rate').value) || 0;
-    const total = +(qty * rate).toFixed(2);
-    const crop = getSelectedCropInfo('f_crop');
-    document.getElementById('f_base').value = total;
-    document.getElementById('f_total').value = total;
-    document.getElementById('f_bhagiya_exp').value = (crop.share === 0.2) ? 0 : +(total * crop.share).toFixed(2);
-  }
-  async function saveFertilizer(e) { e.preventDefault(); alert("સેવ કરવાનું કામ ચાલુ છે..."); }
-
-  function calcTractor() {
-    const hrs = parseInt(document.getElementById('t_hours').value) || 0;
-    const mins = parseInt(document.getElementById('t_mins').value) || 0;
-    const hrRate = parseFloat(document.getElementById('t_hr_rate').value) || 0;
-    const total = +((hrs * hrRate) + (mins * (hrRate / 60))).toFixed(2);
-    const work = document.getElementById('t_work').value;
-    document.getElementById('t_total').value = total;
-    document.getElementById('t_bhagiya_exp').value = work.includes("ખેડ") ? 0 : total;
-  }
-  function confirmTractorEntry(e) {
-    e.preventDefault();
-    document.getElementById('conf_hrs').innerText = document.getElementById('t_hours').value;
-    document.getElementById('conf_mins').innerText = document.getElementById('t_mins').value;
-    document.getElementById('conf_total').innerText = document.getElementById('t_total').value;
-    document.getElementById('tractorModal').style.display = 'flex';
-  }
-  function closeTractorModal() { document.getElementById('tractorModal').style.display = 'none'; }
-  async function executeSaveTractor() { closeTractorModal(); alert("સેવ કરવાનું કામ ચાલુ છે..."); }
-
-  function calcLedgerInterest() {
-    const p = parseFloat(document.getElementById('l_int_principal').value) || 0;
-    const m = parseFloat(document.getElementById('l_months').value) || 0;
-    document.getElementById('l_int_amt').value = +(p * 0.03 * m).toFixed(2);
-  }
-  async function saveManualLedger(e, shouldPrint) { e.preventDefault(); alert("સેવ કરવાનું કામ ચાલુ છે..."); }
-
-  function getFilteredLedger() {
-    const p = document.getElementById('globalPartner').value;
-    return db.Bhagiya_Ledger.filter(r => p === "ALL" || r['ભાગીદાર'] === p);
-  }
-
-  function updateDashboard() {
-    const sum = (arr, key) => arr.reduce((a, b) => a + (parseFloat(b[key]) || 0), 0);
-    const totalSales = sum(db.Sales_Ledger, "કુલ_બિલ_રકમ");
-    const bhagiyaSales = sum(db.Sales_Ledger, "ભાગિયાનો_ભાગ");
-    const totalExp = sum(db.Medicine_Expense, "કુલ_બિલ_રકમ") + sum(db.Fertilizer_Expense, "કુલ_બિલ_રકમ") + sum(db.Tractor_Expense, "કુલ_બિલ_રકમ");
-    
-    document.getElementById('dashTotalSales').innerText = "₹ " + totalSales.toLocaleString('en-IN');
-    document.getElementById('dashOwnerSales').innerText = "₹ " + (totalSales - bhagiyaSales).toLocaleString('en-IN');
-    document.getElementById('dashBhagiyaSales').innerText = "₹ " + bhagiyaSales.toLocaleString('en-IN');
-    document.getElementById('dashTotalExp').innerText = "₹ " + totalExp.toLocaleString('en-IN');
-    
-    const filteredLedger = getFilteredLedger();
-    document.querySelector('#recentLedgerTable tbody').innerHTML = filteredLedger.slice().reverse().map(r => `
-      <tr>
-        <td>${r['તારીખ'] ? String(r['તારીખ']).split('T')[0] : ''}</td>
-        <td>${r['ભાગીદાર'] || ''}</td>
-        <td>${r['એન્ટ્રી_પ્રકાર'] || ''}</td>
-        <td style="color:#d32f2f;">₹ ${r['ઉપાડ_Debit'] || 0}</td>
-        <td style="color:#2e7d32;">₹ ${r['જમા_Credit'] || 0}</td>
-        <td><button class="btn-receipt">🖨️</button></td>
-      </tr>
-    `).join('');
-  }
-  function printAnnualStatement() { window.print(); }
-</script>
-</body>
-</html>
+        <div cla

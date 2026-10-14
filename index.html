@@ -184,20 +184,25 @@
     else if(val >= 10) input.value = val + " ગ્રામ/મિલી";
   }
 
-    function getCropShare(cropName) {
+      function getCropShare(cropName) {
     if (!appData.Crop_Master) return 0;
     
     let crop = appData.Crop_Master.find(c => c["પાકનું નામ"] == cropName);
-    if (!crop) return 0;
-    
-    // તમારી શીટમાં આમાંથી જે પણ હેડિંગ હશે, તે જાતે પકડી લેશે
-    let share = crop["હિસ્સો"] || crop["ખેડૂ હિસ્સો"] || crop["ભાગ"] || crop["ટકા"] || crop["Share"] || crop["ખેડૂત હિસ્સો"] || 0;
-    
-    if (share !== undefined && share !== null && share !== "") {
-      return parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
+    if (!crop) {
+      alert("ભૂલ: આ નામનો પાક Crop_Master માં મળ્યો નથી: " + cropName);
+      return 0;
     }
-    return 0;
+    
+    // આનાથી ખબર પડી જશે કે શીટમાંથી કયા હેડિંગમાં શું ડેટા આવે છે
+    console.log("Found Crop Row:", crop);
+    
+    let share = crop["હિસ્સો"] || crop["ખેડૂ હિસ્સો"] || crop["ભાગ"] || crop["ટકા"] || crop["Share"] || crop["ખેડૂત હિસ્સો"] || 0;
+    let parsedShare = parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
+    
+    console.log("Extracted Share:", parsedShare);
+    return parsedShare;
   }
+
 
 
   // ગણતરીઓ

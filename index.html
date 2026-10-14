@@ -184,10 +184,21 @@
     else if(val >= 10) input.value = val + " ગ્રામ/મિલી";
   }
 
-  function getCropShare(cropName) {
+    function getCropShare(cropName) {
+    if (!appData.Crop_Master) return 0;
+    
     let crop = appData.Crop_Master.find(c => c["પાકનું નામ"] == cropName);
-    return crop ? parseFloat(crop["હિસ્સો"].toString().replace(/[^0-9.]/g, '')) : 0;
+    if (!crop) return 0;
+    
+    // તમારી શીટમાં આમાંથી જે પણ હેડિંગ હશે, તે જાતે પકડી લેશે
+    let share = crop["હિસ્સો"] || crop["ખેડૂ હિસ્સો"] || crop["ભાગ"] || crop["ટકા"] || crop["Share"] || crop["ખેડૂત હિસ્સો"] || 0;
+    
+    if (share !== undefined && share !== null && share !== "") {
+      return parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
+    }
+    return 0;
   }
+
 
   // ગણતરીઓ
   function calcSales() {

@@ -40,7 +40,8 @@
       <div class="flex-row"><div class="form-group"><label>તારીખ:</label><input type="date" id="sDate" required></div><div class="form-group"><label>બિલ નં:</label><input type="text" id="sBill" required></div></div>
       <div class="form-group"><label>ભાગીદાર:</label><select id="sBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
       <div class="form-group"><label>વેપારી:</label><select id="sVepari" class="vepariList" required onchange="checkVepariNew(this)"></select></div>
-      <div class="form-group"><label>પાક:</label><select id="sPak" class="pakList" required onchange="calcSales()"><option value="">-- પસંદ કરો --</option></select></div>
+      <!-- અહી onchange માં checkCropNew(this) ઉમેર્યું છે -->
+      <div class="form-group"><label>પાક:</label><select id="sPak" class="pakList" required onchange="checkCropNew(this); calcSales();"></select></div>
       <div class="flex-row"><div class="form-group"><label>પાઉચ/નંગ:</label><input type="number" id="sPauch" value="0"></div><div class="form-group"><label>વજન (કિલો):</label><input type="number" id="sWeight" step="0.01" oninput="calcSales()" required></div></div>
       <div class="flex-row"><div class="form-group"><label>૧ મણનો ભાવ:</label><input type="number" id="sBhav20" step="0.01" oninput="calcSales()" required></div><div class="form-group"><label>૧ કિલોનો ભાવ:</label><input type="text" id="sBhav1" class="readonly-bg" readonly></div></div>
       <div class="form-group"><label>કુલ રકમ (₹):</label><input type="text" id="sTotal" class="readonly-bg" readonly></div>
@@ -58,7 +59,8 @@
       <div class="flex-row"><div class="form-group"><label>તારીખ:</label><input type="date" id="mDate" required></div><div class="form-group"><label>બિલ નં:</label><input type="text" id="mBill" required></div></div>
       <div class="form-group"><label>ભાગીદાર:</label><select id="mBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
       <div class="form-group"><label>વેપારી:</label><input type="text" id="mVepari" required></div>
-      <div class="form-group"><label>પાક:</label><select id="mPak" class="pakList" required onchange="calcMed()"><option value="">-- પસંદ કરો --</option></select></div>
+      <!-- અહી onchange માં checkCropNew(this) ઉમેર્યું છે -->
+      <div class="form-group"><label>પાક:</label><select id="mPak" class="pakList" required onchange="checkCropNew(this); calcMed();"></select></div>
       <div class="flex-row"><div class="form-group"><label>દવાનું નામ:</label><input type="text" id="mDava" required></div><div class="form-group"><label>પ્રકાર:</label><select id="mType" required onchange="calcMed()"><option value="જંતુનાશક">જંતુનાશક</option><option value="નિંદામણ">નિંદામણ (ઘાસ)</option><option value="ફૂગનાશક">ફૂગનાશક</option></select></div></div>
       <div class="flex-row"><div class="form-group"><label>પેકિંગ:</label><input type="text" id="mPack" placeholder="દા.ત. 250" onblur="formatPacking(this)" required></div><div class="form-group"><label>ભાવ (પ્રતિ પેકિંગ):</label><input type="number" id="mBhav" oninput="calcMed()" required></div></div>
       <div class="form-group"><label>કુલ રકમ (₹):</label><input type="number" id="mTotal" oninput="calcMed()" required></div>
@@ -75,7 +77,8 @@
       <div class="flex-row"><div class="form-group"><label>તારીખ:</label><input type="date" id="fDate" required></div><div class="form-group"><label>બિલ નં:</label><input type="text" id="fBill" required></div></div>
       <div class="form-group"><label>ભાગીદાર:</label><select id="fBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
       <div class="form-group"><label>વેપારી:</label><input type="text" id="fVepari" required></div>
-      <div class="form-group"><label>પાક:</label><select id="fPak" class="pakList" required onchange="calcFert()"><option value="">-- પસંદ કરો --</option></select></div>
+      <!-- અહી onchange માં checkCropNew(this) ઉમેર્યું છે -->
+      <div class="form-group"><label>પાક:</label><select id="fPak" class="pakList" required onchange="checkCropNew(this); calcFert();"></select></div>
       <div class="flex-row"><div class="form-group"><label>ખાતરનું નામ:</label><input type="text" id="fKhatar" required></div><div class="form-group"><label>થેલી / વજન:</label><input type="text" id="fQty" onblur="formatPacking(this)" required></div></div>
       <div class="flex-row"><div class="form-group"><label>ભાવ:</label><input type="number" id="fBhav" oninput="calcFert()" required></div><div class="form-group"><label>કુલ રકમ (₹):</label><input type="number" id="fTotal" oninput="calcFert()" required></div></div>
       <div class="flex-row"><div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" id="fKShare" class="readonly-bg" readonly></div><div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" id="fKRakam" class="readonly-bg" readonly></div></div>
@@ -93,7 +96,8 @@
       <div class="form-group"><label>ભાગીદાર:</label><select id="tBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
       <div class="form-group"><label>ડ્રાઈવર/માલિક:</label><input type="text" id="tDriver" required></div>
       <div class="flex-row">
-        <div class="form-group"><label>પાક:</label><select id="tPak" class="pakList" required onchange="calcTrac()"><option value="">-- પસંદ કરો --</option></select></div>
+        <!-- અહી onchange માં checkCropNew(this) ઉમેર્યું છે -->
+        <div class="form-group"><label>પાક:</label><select id="tPak" class="pakList" required onchange="checkCropNew(this); calcTrac();"></select></div>
         <div class="form-group"><label>કામ:</label><select id="tWork" required onchange="calcTrac()"><option>હળામણ</option><option>દાંતી</option><option>રોટાવેટર</option><option>પાળા</option><option>નિકો</option><option>દવા છાંટવી</option><option>અન્ય</option></select></div>
       </div>
       <div class="flex-row"><div class="form-group"><label>કુલ કલાક:</label><input type="number" id="tHrs" step="0.5" oninput="calcTrac()" required></div><div class="form-group"><label>ભાવ (કલાકના):</label><input type="number" id="tRate" oninput="calcTrac()" required></div></div>
@@ -106,13 +110,17 @@
   </div>
 </div>
 
-<!-- Pop-ups (ID સુધારેલા છે) -->
+<!-- Pop-ups -->
 <div id="modalBhagiya" class="modal"><div class="modal-content"><h3>➕ નવો ભાગીદાર</h3><input type="text" id="nbName" placeholder="નામ" class="form-group"><input type="number" id="nbPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nbAdd" placeholder="ગામ" class="form-group"><button type="button" class="btn-submit" onclick="saveB()">સેવ</button><button type="button" onclick="document.getElementById('modalBhagiya').style.display='none'" style="margin-top:10px; width:100%; padding:10px;">કેન્સલ</button></div></div>
+
 <div id="modalVepari" class="modal"><div class="modal-content"><h3>➕ નવો વેપારી</h3><input type="text" id="nvName" placeholder="નામ" class="form-group"><input type="number" id="nvPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nvCity" placeholder="ગામ" class="form-group"><button type="button" class="btn-submit" onclick="saveV()">સેવ</button><button type="button" onclick="document.getElementById('modalVepari').style.display='none'" style="margin-top:10px; width:100%; padding:10px;">કેન્સલ</button></div></div>
+
+<!-- નવો પાક ઉમેરવા માટેનું પોપ-અપ -->
+<div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક ઉમેરો</h3><input type="text" id="ncName" placeholder="પાકનું નામ (દા.ત. જીરું)" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%) દા.ત. 50" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:10px;">કેન્સલ</button></div></div>
 
 <script>
   // 🔴 અહીં તમારી Apps Script ની નવી ડેપ્લોય લિંક મૂકો 🔴
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw4DZ16E09Mpx1e-7_aVcM4UTe5dhvqE_oIzNhijWlJOHXl947BjNyWplwhJNcmXzHxIg/exec"; 
+  const SCRIPT_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL"; 
   
   let appData = {};
 
@@ -134,7 +142,7 @@
   function populateData() {
     if(!appData.Bhagiya_Master) return;
     
-    // ભાગીદાર ડ્રોપડાઉન સેટઅપ (બધા ફોર્મ માટે)
+    // ભાગીદાર ડ્રોપડાઉન સેટઅપ
     let bhagiyas = appData.Bhagiya_Master.map(r => r["નામ"]).filter(String);
     document.querySelectorAll('.bhagiyaList').forEach(sel => { 
       sel.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
@@ -148,26 +156,24 @@
       veparis.forEach(v => sel.add(new Option(v, v)));
     });
 
-    // પાક ડ્રોપડાઉન સેટઅપ
+    // પાક ડ્રોપડાઉન સેટઅપ (અહીં NEW ઓપ્શન ઉમેર્યું છે)
     let crops = appData.Crop_Master.map(r => r["પાકનું નામ"]).filter(String);
     document.querySelectorAll('.pakList').forEach(sel => { 
-      sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
+      sel.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો પાક ઉમેરો</option>';
       crops.forEach(c => sel.add(new Option(c, c))); 
     });
   }
 
   // પોપ-અપ ખોલવાના ફંક્શન
   function checkBhagiyaNew(sel) { 
-    if(sel.value === "NEW") {
-      document.getElementById("modalBhagiya").style.display = "block"; 
-      sel.value = ""; // જેથી કેન્સલ કરે તો ફરી સિલેક્ટ કરી શકે
-    } 
+    if(sel.value === "NEW") { document.getElementById("modalBhagiya").style.display = "block"; sel.value = ""; } 
   }
   function checkVepariNew(sel) { 
-    if(sel.value === "NEW") {
-      document.getElementById("modalVepari").style.display = "block"; 
-      sel.value = "";
-    } 
+    if(sel.value === "NEW") { document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } 
+  }
+  // નવો પાક પોપ-અપ ખોલવાનું ફંક્શન
+  function checkCropNew(sel) { 
+    if(sel.value === "NEW") { document.getElementById("modalCrop").style.display = "block"; sel.value = ""; } 
   }
 
   // પેકિંગ લોજિક
@@ -281,6 +287,7 @@
     saveData("saveTractor", row, ledgerRow);
   }
 
+  // પોપ-અપ સેવ ફંક્શન્સ
   function saveB() {
     let row = [ getYear(v("sDate")), v("nbName"), v("nbPhone"), v("nbAdd") ];
     saveData("saveBhagiya", row); document.getElementById("modalBhagiya").style.display = "none";
@@ -288,6 +295,13 @@
   function saveV() {
     let row = [ v("nvName"), v("nvPhone"), v("nvCity"), "Vegitable" ];
     saveData("saveVepari", row); document.getElementById("modalVepari").style.display = "none";
+  }
+  // નવો પાક સેવ કરવાનું ફંક્શન
+  function saveC() {
+    let name = v("ncName"), share = v("ncShare");
+    if(name == "") return alert("પાકનું નામ જરૂરી છે!");
+    let row = [ name, share + "%" ];
+    saveData("saveCrop", row); document.getElementById("modalCrop").style.display = "none";
   }
 
   function saveData(action, rowValues, ledgerRow = null) {

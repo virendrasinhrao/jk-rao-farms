@@ -184,24 +184,20 @@
     else if(val >= 10) input.value = val + " ગ્રામ/મિલી";
   }
 
-      function getCropShare(cropName) {
+        function getCropShare(cropName) {
     if (!appData.Crop_Master) return 0;
     
+    // પાકનું નામ મેચ કરવા માટે
     let crop = appData.Crop_Master.find(c => c["પાકનું નામ"] == cropName);
-    if (!crop) {
-      alert("ભૂલ: આ નામનો પાક Crop_Master માં મળ્યો નથી: " + cropName);
-      return 0;
-    }
+    if (!crop) return 0;
     
-    // આનાથી ખબર પડી જશે કે શીટમાંથી કયા હેડિંગમાં શું ડેટા આવે છે
-    console.log("Found Crop Row:", crop);
+    // હવે અહીં આપણે શીટનું સાચું હેડિંગ "ભાગ_ટકા" સેટ કરી દીધું છે
+    let share = crop["ભાગ_ટકા"] || crop["હિસ્સો"] || 0;
     
-    let share = crop["હિસ્સો"] || crop["ખેડૂ હિસ્સો"] || crop["ભાગ"] || crop["ટકા"] || crop["Share"] || crop["ખેડૂત હિસ્સો"] || 0;
     let parsedShare = parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
-    
-    console.log("Extracted Share:", parsedShare);
     return parsedShare;
   }
+
 
 
 

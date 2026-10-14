@@ -132,14 +132,36 @@
   }
 
   function populateData() {
-  // ૧. ભાગીદારનું લિસ્ટ (Bhagiya_Master માંથી 'નામ')
-  if(appData.Bhagiya_Master) {
-    let bhagiyas = appData.Bhagiya_Master.map(r => r["નામ"]).filter(String);
+  // ૧. ભાગીદારનું લિસ્ટ (સ્માર્ટ ચેકિંગ સાથે)
+  if(appData.Bhagiya_Master && appData.Bhagiya_Master.length > 0) {
+    
+    // જો હેડિંગમાં કોઈ સ્પેસ રહી ગઈ હોય, તો પણ આ કોડ તેને પકડી લેશે
+    let bhagiyas = appData.Bhagiya_Master.map(r => r["નામ"] || r[" નામ"] || r["નામ "] || r["ભાગીદારનું નામ"]).filter(String);
+    
+    // જો તો પણ નામ ન મળે, તો સ્ક્રીન પર એરર બતાવશે કે શીટમાં કયા હેડિંગ છે!
+    if(bhagiyas.length === 0) {
+      alert("ભૂલ: Bhagiya_Master માં હેડિંગ મેચ નથી થતું. શીટમાં આ હેડિંગ દેખાય છે: \n" + Object.keys(appData.Bhagiya_Master[0]).join(", "));
+    }
+
     document.querySelectorAll('.bhagiyaList').forEach(sel => { 
       sel.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>'; 
       bhagiyas.forEach(b => sel.add(new Option(b, b))); 
     });
+  } else {
+    // જો શીટનું નામ જ ખોટું હશે, તો આ મેસેજ આવશે
+    alert("Bhagiya_Master શીટમાંથી કોઈ ડેટા નથી આવતો. શું શીટનું નામ બરાબર છે?");
   }
+
+  // ૨. પાકનું લિસ્ટ (આ તો બરાબર ચાલે જ છે)
+  if(appData.Crop_Master) {
+    let crops = appData.Crop_Master.map(r => r["પાકનું નામ"]).filter(String);
+    document.querySelectorAll('.pakList').forEach(sel => { 
+      sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
+      crops.forEach(c => sel.add(new Option(c, c))); 
+    });
+  }
+}
+
 
   // ૨. પાકનું લિસ્ટ (Crop_Master માંથી 'પાકનું નામ')
   if(appData.Crop_Master) {

@@ -132,20 +132,24 @@
   }
 
   function populateData() {
-    if(!appData.Bhagiya_Master) return;
+  // ૧. ભાગીદારનું લિસ્ટ (Bhagiya_Master માંથી 'નામ')
+  if(appData.Bhagiya_Master) {
     let bhagiyas = appData.Bhagiya_Master.map(r => r["નામ"]).filter(String);
-    document.querySelectorAll('.bhagiyaList').forEach(sel => { bhagiyas.forEach(b => sel.add(new Option(b, b))); if(bhagiyas.length==1) sel.value = bhagiyas[0]; });
-    
-    let veparis = appData.Merchant_Master.filter(r => r["પ્રકાર"] === "Vegitable").map(r => r["વેપારીનું_નામ"]);
-    let vList = document.getElementById('sVepari');
-    veparis.forEach(v => vList.add(new Option(v, v)));
-
-    let crops = appData.Crop_Master.map(r => r["પાકનું નામ"]).filter(String);
-    document.querySelectorAll('.pakList').forEach(sel => { crops.forEach(c => sel.add(new Option(c, c))); });
+    document.querySelectorAll('.bhagiyaList').forEach(sel => { 
+      sel.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>'; 
+      bhagiyas.forEach(b => sel.add(new Option(b, b))); 
+    });
   }
 
-  function checkBhagiyaNew(sel) { if(sel.value === "NEW") document.getElementById("mBhagiya").style.display = "block"; }
-  function checkVepariNew(sel) { if(sel.value === "NEW") document.getElementById("mVepari").style.display = "block"; }
+  // ૨. પાકનું લિસ્ટ (Crop_Master માંથી 'પાકનું નામ')
+  if(appData.Crop_Master) {
+    let crops = appData.Crop_Master.map(r => r["પાકનું નામ"]).filter(String);
+    document.querySelectorAll('.pakList').forEach(sel => { 
+      sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
+      crops.forEach(c => sel.add(new Option(c, c))); 
+    });
+  }
+}
 
   // પેકિંગ લોજિક
   function formatPacking(input) {

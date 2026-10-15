@@ -32,6 +32,7 @@
     .dash-box { background: #e8f8f5; border-left: 5px solid #27ae60; padding: 12px; margin-bottom: 10px; border-radius: 4px; }
     .dash-box h4 { margin: 0 0 5px 0; color: #2c3e50; font-size: 14px; }
     .dash-box p { margin: 0; font-size: 18px; font-weight: bold; color: #16a085; }
+    .bill-summary { background: #fef9e7; border: 1px solid #f39c12; padding: 15px; border-radius: 6px; margin-bottom: 15px; }
   </style>
 </head>
 <body>
@@ -143,6 +144,23 @@
       <h4>ખાતરની આઇટમ્સ (Items List):</h4>
       <button type="button" class="btn-add-item" onclick="addFertItemRow()">➕ ખાતર ઉમેરો</button>
       <div id="fertItemsContainer"></div>
+
+      <!-- Bill Level Tax & Total Summary -->
+      <div class="bill-summary">
+        <h4 style="margin:0 0 10px 0; color:#d35400;">📋 બિલ ટેક્સ અને કુલ ગણતરી</h4>
+        <div class="flex-row">
+          <div class="form-group"><label>કુલ આઇટમ રકમ:</label><input type="text" id="fSubTotal" class="readonly-bg" readonly value="0.00"></div>
+          <div class="form-group"><label>ટેક્સ %:</label><input type="number" id="fTax" step="0.01" value="0" oninput="calcFertBill()" required></div>
+        </div>
+        <div class="flex-row">
+          <div class="form-group"><label>જી.એસ.ટી. રકમ:</label><input type="text" id="fGst" class="readonly-bg" readonly value="0.00"></div>
+          <div class="form-group"><label>સી.એસ.ટી. રકમ:</label><input type="text" id="fCst" class="readonly-bg" readonly value="0.00"></div>
+        </div>
+        <div class="form-group">
+          <label>બિલની કુલ રકમ (₹):</label>
+          <input type="text" id="fTotalBill" class="readonly-bg" readonly style="font-size:18px; font-weight:bold; color:#d35400;" value="0.00">
+        </div>
+      </div>
 
       <div class="flex-row" style="margin-top:15px;">
         <div class="form-group"><label>હસ્તે:</label><input type="text" id="fHastak" required></div>
@@ -374,27 +392,16 @@
     let div = document.createElement("div");
     div.className = "item-row";
     div.innerHTML = `
-      <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcFertRow(this);"></select></div>
+      <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcFertBill();"></select></div>
       <div class="flex-row">
         <div class="form-group"><label>ખાતરનું નામ:</label><select class="khatarList" required></select></div>
-        <div class="form-group"><label>રકમ:</label><input type="number" class="fAmt" step="0.01" oninput="calcFertRow(this)" required></div>
+        <div class="form-group"><label>રકમ:</label><input type="number" class="fAmt" step="0.01" oninput="calcFertBill()" required></div>
       </div>
-      <div class="flex-row">
-        <div class="form-group"><label>ટેક્સ %:</label><input type="number" class="fTax" step="0.01" value="0" oninput="calcFertRow(this)"></div>
-        <div class="form-group"><label>જી.એસ.ટી. રકમ:</label><input type="text" class="fGst readonly-bg" readonly></div>
-      </div>
-      <div class="flex-row">
-        <div class="form-group"><label>સી.એસ.ટી. રકમ:</label><input type="text" class="fCst readonly-bg" readonly></div>
-        <div class="form-group"><label>કુલ રકમ (₹):</label><input type="text" class="fTotal readonly-bg" readonly></div>
-      </div>
-      <div class="flex-row">
-        <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="fKShare readonly-bg" readonly></div>
-        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="fKRakam readonly-bg" readonly></div>
-      </div>
-      <button type="button" class="btn-delete" onclick="this.parentElement.remove()">ખાતર હટાવો</button>
+      <button type="button" class="btn-delete" onclick="this.parentElement.remove(); calcFertBill();">ખાતર હટાવો</button>
     `;
     container.appendChild(div);
     populateData();
+    calcFertBill();
   }
 
   function addTracItemRow() {
@@ -468,26 +475,24 @@
     row.querySelector('.mKRakam').value = (total * (s/100)).toFixed(2);
   }
 
-  function calcFertRow(el) {
-    let row = el.closest('.item-row');
-    let amt = parseFloat(row.querySelector('.fAmt').value) || 0;
-    let tax = parseFloat(row.querySelector('.fTax').value) || 0;
-    
-    // GST = (Tax / 2) * Amt / 100  (Formula: ટેક્સ % ને 2 વડે ભાગી રકમ થી ગુણવાનાં)
-    let gstAmt = ((tax / 2) * amt) / 100;
-    row.querySelector('.fGst').value = gstAmt.toFixed(2);
+  function calcFertBill() {
+    let rows = document.querySelectorAll("#fertItemsContainer .item-row");
+    let subTotal = 0;
+    rows.forEach(row => {
+      let amt = parseFloat(row.querySelector('.fAmt').value) || 0;
+      subTotal += amt;
+    });
 
-    // CST = same as GST
-    let cstAmt = ((tax / 2) * amt) / 100;
-    row.querySelector('.fCst').value = cstAmt.toFixed(2);
+    document.getElementById("fSubTotal").value = subTotal.toFixed(2);
 
-    // Total Bill = Amt + GST + CST
-    let totalBill = amt + gstAmt + cstAmt;
-    row.querySelector('.fTotal').value = totalBill.toFixed(2);
+    let tax = parseFloat(document.getElementById("fTax").value) || 0;
+    let gstAmt = ((tax / 2) * subTotal) / 100;
+    let cstAmt = ((tax / 2) * subTotal) / 100;
+    let totalBill = subTotal + gstAmt + cstAmt;
 
-    let s = getCropShare(row.querySelector('.pakList').value);
-    row.querySelector('.fKShare').value = s;
-    row.querySelector('.fKRakam').value = (totalBill * (s/100)).toFixed(2);
+    document.getElementById("fGst").value = gstAmt.toFixed(2);
+    document.getElementById("fCst").value = cstAmt.toFixed(2);
+    document.getElementById("fTotalBill").value = totalBill.toFixed(2);
   }
 
   function calcTracRow(el) {
@@ -688,51 +693,60 @@
     let date = v("fDate"), billNo = v("fBill") || "N/A", bhagiya = v("fBhagiya"), year = getYear(date);
     let mainEntryId = "FE-" + Date.now();
 
+    let subTotal = parseFloat(document.getElementById("fSubTotal").value) || 0;
+    let tax = parseFloat(document.getElementById("fTax").value) || 0;
+    let gstTotal = parseFloat(document.getElementById("fGst").value) || 0;
+    let cstTotal = parseFloat(document.getElementById("fCst").value) || 0;
+    let grandTotal = parseFloat(document.getElementById("fTotalBill").value) || 0;
+
     handlePhotoUpload("fPhoto", function(photoBase64) {
       if(photoBase64) {
         let photoRow = [ year, mainEntryId, date, billNo, bhagiya, "ખાતર ખર્ચ", photoBase64 ];
         fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "savePhoto", rowValues: photoRow }) });
       }
 
-      let totalBillAmt = 0;
-      let rowDataArray = [];
-
+      let savedCount = 0;
       rows.forEach((row, index) => {
         let entryId = mainEntryId + "-" + (index + 1);
-        let total = parseFloat(row.querySelector(".fTotal").value) || 0;
-        totalBillAmt += total;
+        let amt = parseFloat(row.querySelector(".fAmt").value) || 0;
+        
+        // пропорциона ભાગ વહેંચણી (Proportional tax distribution per item)
+        let proportion = subTotal > 0 ? (amt / subTotal) : (1 / rows.length);
+        let itemGst = gstTotal * proportion;
+        let itemCst = cstTotal * proportion;
+        let itemTotal = amt + itemGst + itemCst;
+
+        let cropName = row.querySelector(".pakList").value;
+        let s = getCropShare(cropName);
+        let kRakam = itemTotal * (s / 100);
 
         let rowData = [
           year, entryId, billNo, date,
           v("fVepari"),
-          row.querySelector(".pakList").value,
+          cropName,
           row.querySelector(".khatarList").value,
-          row.querySelector(".fAmt").value,
-          row.querySelector(".fTax").value,
-          row.querySelector(".fGst").value,
-          row.querySelector(".fCst").value,
-          total,
-          row.querySelector(".fKShare").value,
-          row.querySelector(".fKRakam").value,
+          amt,
+          tax,
+          itemGst.toFixed(2),
+          itemCst.toFixed(2),
+          itemTotal.toFixed(2),
+          s,
+          kRakam.toFixed(2),
           v("fHastak"),
           v("fStatus"),
           v("fDetails"),
           photoBase64
         ];
-        rowDataArray.push(rowData);
-      });
 
-      let ledgerRow = [ year, mainEntryId, date, bhagiya, "ખાતર ખર્ચ", totalBillAmt, v("fStatus"), v("fVepari") ];
+        let ledgerRow = (index === 0) ? [ year, mainEntryId, date, bhagiya, "ખાતર ખર્ચ", grandTotal, v("fStatus"), v("fVepari") ] : null;
 
-      let savedCount = 0;
-      rowDataArray.forEach(rowData => {
         fetch(SCRIPT_URL, {
           method: "POST",
-          body: JSON.stringify({ action: "saveFertilizer", rowValues: rowData, ledgerRow: (savedCount === 0 ? ledgerRow : null) })
+          body: JSON.stringify({ action: "saveFertilizer", rowValues: rowData, ledgerRow: ledgerRow })
         }).then(() => {
           savedCount++;
-          if(savedCount === rowDataArray.length) {
-            alert("ખાતરની બધી આઇટમ્સ સફળતાપૂર્વક સેવ થઈ ગઈ!");
+          if(savedCount === rows.length) {
+            alert("ખાતરનું બિલ સફળતાપૂર્વક સેવ થઈ ગયું!");
             fetchData();
             switchTab('Dash');
           }

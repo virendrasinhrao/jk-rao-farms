@@ -107,7 +107,7 @@
     </form>
   </div>
 
-  <!-- 2. MEDICINE FORM (Fully Corrected) -->
+  <!-- 2. MEDICINE FORM -->
   <div id="formMed" class="section">
     <h3 style="text-align:center; color:#2980b9;">🧪 દવા ખર્ચ (Medicine)</h3>
     <form onsubmit="submitMed(event)">
@@ -116,15 +116,15 @@
         <div class="form-group"><label>બિલ નં (ઓપ્શનલ):</label><input type="text" id="mBill"></div>
       </div>
       <div class="form-group"><label>ભાગીદાર:</label><select id="mBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
-      <div class="form-group"><label>દુકાન / વેપારી:</label><select id="mVepari" class="vepariList" required onchange="checkVepariNew(this)"></select></div>
+      <div class="form-group"><label>દુકાન / વેપારી (દવા):</label><select id="mVepari" required onchange="checkMedVepariNew(this)"></select></div>
       <div class="form-group"><label>પાક:</label><select id="mPak" class="pakList" required onchange="checkCropNew(this); calcMed();"></select></div>
       <div class="flex-row">
         <div class="form-group"><label>દવાનું નામ:</label><select id="mDava" required onchange="onMedicineSelect(this)"></select></div>
         <div class="form-group"><label>દવાનો પ્રકાર:</label><select id="mType" required onchange="calcMed()"><option value="જંતુનાશક">જંતુનાશક</option><option value="નિંદામણ">નિંદામણ (ઘાસ)</option><option value="ફૂગનાશક">ફૂગનાશક</option></select></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>વજન / નંગ:</label><input type="number" id="mWeight" step="0.01" oninput="calcMed()" required></div>
-        <div class="form-group"><label>પેકિંગ:</label><input type="text" id="mPack" placeholder="દા.ત. 250" onblur="formatPacking(this)" required></div>
+        <div class="form-group"><label>વજન:</label><input type="number" id="mWeight" step="0.01" oninput="onWeightInput(this); calcMed();" required></div>
+        <div class="form-group"><label>પેકિંગ:</label><input type="text" id="mPack" class="readonly-bg" readonly required></div>
       </div>
       <div class="flex-row">
         <div class="form-group"><label>ભાવ (પ્રતિ નંગ/કિલો):</label><input type="number" id="mBhav" step="0.01" oninput="calcMed()" required></div>
@@ -169,7 +169,7 @@
         <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" id="fKRakam" class="readonly-bg" readonly></div>
       </div>
       <div class="form-group"><label>સ્થિતિ:</label><select id="fStatus"><option>રોકડા</option><option>બાકી</option></select></div>
-      <div class="form-group"><label>કોણે આપ્યાຊີ:</label><input type="text" id="fHastak" required></div>
+      <div class="form-group"><label>કોણે આપ્યા:</label><input type="text" id="fHastak" required></div>
       <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="fPhoto" accept="image/*" capture="environment"></div>
       <button type="submit" id="btnFert" class="btn-submit">સેવ કરો</button>
     </form>
@@ -219,7 +219,7 @@
 
 <!-- Pop-ups -->
 <div id="modalBhagiya" class="modal"><div class="modal-content"><h3>➕ નવો ભાગીદાર</h3><input type="text" id="nbName" placeholder="નામ" class="form-group"><input type="number" id="nbPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nbAdd" placeholder="ગામ" class="form-group"><button type="button" class="btn-submit" onclick="saveB()">સેવ</button><button type="button" onclick="document.getElementById('modalBhagiya').style.display='none'" style="margin-top:10px; width:100%; padding:10px;">કેન્સલ</button></div></div>
-<div id="modalVepari" class="modal"><div class="modal-content"><h3>➕ નવો વેપારી</h3><input type="text" id="nvName" placeholder="નામ" class="form-group"><input type="number" id="nvPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nvCity" placeholder="ગામ" class="form-group"><button type="button" class="btn-submit" onclick="saveV()">સેવ</button><button type="button" onclick="document.getElementById('modalVepari').style.display='none'" style="margin-top:10px; width:100%; padding:10px;">કેન્સલ</button></div></div>
+<div id="modalVepari" class="modal"><div class="modal-content"><h3>➕ નવો વેપારી</h3><input type="text" id="nvName" placeholder="નામ" class="form-group"><input type="number" id="nvPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nvCity" placeholder="ગામ" class="form-group"><select id="nvCategory" class="form-group"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="Medicine">દવા</option><option value="Fertilizer">ખાતર</option></select><button type="button" class="btn-submit" onclick="saveV()">સેવ</button><button type="button" onclick="document.getElementById('modalVepari').style.display='none'" style="margin-top:10px; width:100%; padding:10px;">કેન્સલ</button></div></div>
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક ઉમેરો</h3><input type="text" id="ncName" placeholder="પાકનું નામ (દા.ત. જીરું)" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%) દા.ત. 50" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:10px;">કેન્સલ</button></div></div>
 
 <script>
@@ -268,11 +268,21 @@
       bhagiyas.forEach(b => sel.add(new Option(b, b))); 
     });
     
-    let veparis = appData.Merchant_Master ? appData.Merchant_Master.map(r => r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"]).filter(String) : [];
-    document.querySelectorAll('.vepariList').forEach(sel => {
-      sel.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
-      veparis.forEach(v => sel.add(new Option(v, v)));
-    });
+    // Vegitable merchants for Sales
+    let veparis = appData.Merchant_Master ? appData.Merchant_Master.filter(r => String(r["પ્રકાર"] || "").trim() === "Vegitable").map(r => r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"]) : [];
+    let sVepari = document.getElementById("sVepari");
+    if(sVepari) {
+      sVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
+      veparis.forEach(v => sVepari.add(new Option(v, v)));
+    }
+
+    // Medicine merchants for Medicine Form
+    let medVeparis = appData.Merchant_Master ? appData.Merchant_Master.filter(r => String(r["પ્રકાર"] || "").trim() === "Medicine").map(r => r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"]) : [];
+    let mVepari = document.getElementById("mVepari");
+    if(mVepari) {
+      mVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
+      medVeparis.forEach(v => mVepari.add(new Option(v, v)));
+    }
 
     let crops = appData.Crop_Master ? appData.Crop_Master.map(r => r["પાકનું નામ"]).filter(String) : [];
     document.querySelectorAll('.pakList').forEach(sel => { 
@@ -302,6 +312,22 @@
     calcMed();
   }
 
+  function onWeightInput(input) {
+    let val = parseFloat(input.value);
+    let packInput = document.getElementById("mPack");
+    if(isNaN(val) || !packInput) {
+      if(packInput) packInput.value = "";
+      return;
+    }
+    if(val > 0 && val <= 9) {
+      packInput.value = val + " લિટર/કિલો";
+    } else if(val >= 10) {
+      packInput.value = val + " ગ્રામ/મિલી";
+    } else {
+      packInput.value = "";
+    }
+  }
+
   function updateDashboard() {
     let totalSales = 0, farmerSales = 0;
     if(appData.Sales_Ledger) {
@@ -329,14 +355,8 @@
 
   function checkBhagiyaNew(sel) { if(sel.value === "NEW") { document.getElementById("modalBhagiya").style.display = "block"; sel.value = ""; } }
   function checkVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
+  function checkMedVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
   function checkCropNew(sel) { if(sel.value === "NEW") { document.getElementById("modalCrop").style.display = "block"; sel.value = ""; } }
-
-  function formatPacking(input) {
-    let val = parseFloat(input.value);
-    if(isNaN(val)) return;
-    if(val > 0 && val <= 9) input.value = val + " લિટર/કિલો";
-    else if(val >= 10) input.value = val + " ગ્રામ/મિલી";
-  }
 
   function getCropShare(cropName) {
     if (!cropName) return 0;
@@ -441,7 +461,7 @@
       
       fetch(SCRIPT_URL, {
         method: "POST",
-        body: JSON.stringify({ action: "saveMedicine", rowValues: rowValues, ledgerRow: ledgerRow })
+        body: JSON.stringify({ action: "saveMedicine", rowValues: row, ledgerRow: ledgerRow })
       }).then(res => res.json()).then(res => {
         alert("સફળતાપૂર્વક સેવ થઈ ગયું!");
         fetchData();
@@ -465,7 +485,7 @@
       
       fetch(SCRIPT_URL, {
         method: "POST",
-        body: JSON.stringify({ action: "saveFertilizer", rowValues: rowValues, ledgerRow: ledgerRow })
+        body: JSON.stringify({ action: "saveFertilizer", rowValues: row, ledgerRow: ledgerRow })
       }).then(res => res.json()).then(res => {
         alert("સફળતાપૂર્વક સેવ થઈ ગયું!");
         fetchData();
@@ -489,7 +509,7 @@
       
       fetch(SCRIPT_URL, {
         method: "POST",
-        body: JSON.stringify({ action: "saveTractor", rowValues: rowValues, ledgerRow: ledgerRow })
+        body: JSON.stringify({ action: "saveTractor", rowValues: row, ledgerRow: ledgerRow })
       }).then(res => res.json()).then(res => {
         alert("સફળતાપૂર્વક સેવ થઈ ગયું!");
         fetchData();
@@ -510,11 +530,12 @@
 
   function saveV() {
     let name = v("nvName").trim();
+    let cat = v("nvCategory");
     if(name == "") return alert("વેપારીનું નામ જરૂરી છે!");
-    if(appData.Merchant_Master && appData.Merchant_Master.some(m => String(m["વેપારીનું_નામ"] || m["વેપારીનું નામ"] || "").trim().toLowerCase() === name.toLowerCase())) {
+    if(appData.Merchant_Master && appData.Merchant_Master.some(m => String(m["વેપારીનું_નામ"] || m["વેપારીનું નામ"] || m["નામ"] || "").trim().toLowerCase() === name.toLowerCase())) {
       return alert("ભૂલ: આ નામના વેપારી પહેલેથી જ હાજર છે!");
     }
-    let row = [ name, v("nvPhone"), v("nvCity"), "Vegitable" ];
+    let row = [ name, v("nvPhone"), v("nvCity"), cat ];
     saveData("saveVepari", row); document.getElementById("modalVepari").style.display = "none";
   }
 
@@ -583,7 +604,7 @@
 
     fetch(SCRIPT_URL, {
       method: "POST",
-      body: JSON.stringify({ action: "deleteRecord", entryId: entryId, sheetName: sheetName })
+      body: JSON.stringify({ action: "deleteRecord", entryId:entryId, sheetName: sheetName })
     }).then(res => res.json()).then(res => {
       alert("રેકોર્ડ ડિલીટ થઈ ગયો!");
       fetchData();

@@ -208,7 +208,6 @@
     });
     fetchData();
     
-    // Initial 1 row for each form
     addSalesItemRow();
     addMedItemRow();
     addFertItemRow();
@@ -280,7 +279,7 @@
       fertVeparis.forEach(v => fVepari.add(new Option(v, v)));
     }
 
-    // Refresh crop dropdowns inside dynamic rows
+    // Refresh crop dropdowns
     document.querySelectorAll('.pakList').forEach(sel => {
       let currentVal = sel.value;
       sel.innerHTML = '<option value="">-- પાક પસંદ કરો --</option><option value="NEW">➕ નવો પાક ઉમેરો</option>';
@@ -293,6 +292,7 @@
       sel.value = currentVal;
     });
 
+    // Refresh medicine dropdowns
     document.querySelectorAll('.davaList').forEach(sel => {
       let currentVal = sel.value;
       sel.innerHTML = '<option value="">-- દવા પસંદ કરો --</option>';
@@ -300,6 +300,19 @@
         appData.Medicine_Master.forEach(m => {
           let medName = m["દવાનું_નામ"] || m["દવાનું નામ"] || m["નામ"] || "";
           if(medName) sel.add(new Option(medName, medName));
+        });
+      }
+      sel.value = currentVal;
+    });
+
+    // Refresh fertilizer item dropdowns
+    document.querySelectorAll('.khatarList').forEach(sel => {
+      let currentVal = sel.value;
+      sel.innerHTML = '<option value="">-- ખાતર પસંદ કરો --</option>';
+      if(appData.Medicine_Master) {
+        appData.Medicine_Master.forEach(m => {
+          let fName = m["દવાનું_નામ"] || m["દવાનું નામ"] || m["નામ"] || m["ખાતરનું નામ"] || "";
+          if(fName) sel.add(new Option(fName, fName));
         });
       }
       sel.value = currentVal;
@@ -368,7 +381,7 @@
     div.innerHTML = `
       <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcFertRow(this);"></select></div>
       <div class="flex-row">
-        <div class="form-group"><label>ખાતરનું નામ:</label><input type="text" class="fKhatar" required></div>
+        <div class="form-group"><label>ખાતરનું નામ:</label><select class="khatarList" required></select></div>
         <div class="form-group"><label>રકમ:</label><input type="number" class="fAmt" step="0.01" oninput="calcFertRow(this)" required></div>
       </div>
       <div class="flex-row">
@@ -552,7 +565,6 @@
     }
   }
 
-  // --- SUBMIT FUNCTIONS FOR MULTI-ITEMS ---
   function submitSales(e) {
     e.preventDefault();
     let rows = document.querySelectorAll("#salesItemsContainer .item-row");
@@ -631,7 +643,7 @@
           year, entryId, date, billNo, bhagiya,
           v("mVepari"),
           row.querySelector(".pakList").value,
-          row.querySelector(".mDava").value,
+          row.querySelector(".davaList").value,
           row.querySelector(".mType").value,
           row.querySelector(".mWeight").value,
           row.querySelector(".mPack").value,
@@ -649,7 +661,6 @@
 
       let ledgerRow = [ year, mainEntryId, date, bhagiya, "દવા ખર્ચ", totalBillAmt, v("mStatus"), v("mVepari") ];
 
-      // Save each item & ledger
       let savedCount = 0;
       rowDataArray.forEach(rowData => {
         fetch(SCRIPT_URL, {
@@ -695,7 +706,7 @@
           year, entryId, billNo, date,
           v("fVepari"),
           row.querySelector(".pakList").value,
-          row.querySelector(".fKhatar").value,
+          row.querySelector(".khatarList").value,
           row.querySelector(".fAmt").value,
           row.querySelector(".fTax").value,
           row.querySelector(".fGst").value,
@@ -735,144 +746,4 @@
     let rows = document.querySelectorAll("#tracItemsContainer .item-row");
     if(rows.length === 0) return alert("કમ સે કમ એક કામ ઉમેરો!");
 
-    let date = v("tDate"), billNo = v("tBill") || "N/A", bhagiya = v("tBhagiya"), year = getYear(date);
-    let mainEntryId = "TE-" + Date.now();
-
-    handlePhotoUpload("tPhoto", function(photoBase64) {
-      if(photoBase64) {
-        let photoRow = [ year, mainEntryId, date, billNo, bhagiya, "ટ્રેક્ટર ખર્ચ", photoBase64 ];
-        fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "savePhoto", rowValues: photoRow }) });
-      }
-
-      let totalBillAmt = 0;
-      let rowDataArray = [];
-
-      rows.forEach((row, index) => {
-        let entryId = mainEntryId + "-" + (index + 1);
-        let total = parseFloat(row.querySelector(".tTotal").value) || 0;
-        totalBillAmt += total;
-
-        let rowData = [
-          year, entryId, date, billNo, bhagiya,
-          v("tDriver"),
-          row.querySelector(".pakList").value,
-          row.querySelector(".tWork").value,
-          row.querySelector(".tHrs").value,
-          row.querySelector(".tRate").value,
-          total,
-          row.querySelector(".tKShare").value,
-          row.querySelector(".tKRakam").value,
-          v("tStatus"),
-          v("tHastak"),
-          "No",
-          photoBase64
-        ];
-        rowDataArray.push(rowData);
-      });
-
-      let ledgerRow = [ year, mainEntryId, date, bhagiya, "ટ્રેક્ટર ખર્ચ", totalBillAmt, v("tStatus"), v("tDriver") ];
-
-      let savedCount = 0;
-      rowDataArray.forEach(rowData => {
-        fetch(SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "saveTractor", rowValues: rowData, ledgerRow: (savedCount === 0 ? ledgerRow : null) })
-        }).then(() => {
-          savedCount++;
-          if(savedCount === rowDataArray.length) {
-            alert("ટ્રેક્ટરના બધા કામો સફળતાપૂર્વક સેવ થઈ ગયા!");
-            fetchData();
-            switchTab('Dash');
-          }
-        });
-      });
-    });
-  }
-
-  function saveB() {
-    let name = v("nbName").trim();
-    if(name == "") return alert("નામ જરૂરી છે!");
-    let row = [ getYear(v("sDate")), name, v("nbPhone"), v("nbAdd") ];
-    saveData("saveBhagiya", row); document.getElementById("modalBhagiya").style.display = "none";
-  }
-
-  function saveV() {
-    let name = v("nvName").trim();
-    let cat = v("nvCategory");
-    if(name == "") return alert("વેપારીનું નામ જરૂરી છે!");
-    let row = [ name, v("nvPhone"), v("nvCity"), cat ];
-    saveData("saveVepari", row); document.getElementById("modalVepari").style.display = "none";
-  }
-
-  function saveC() {
-    let name = v("ncName").trim(), share = v("ncShare");
-    if(name == "") return alert("પાકનું નામ જરૂરી છે!");
-    let row = [ name, share + "%" ];
-    saveData("saveCrop", row); document.getElementById("modalCrop").style.display = "none";
-  }
-
-  function saveData(action, rowValues) {
-    fetch(SCRIPT_URL, {
-      method: "POST",
-      body: JSON.stringify({ action: action, rowValues: rowValues })
-    }).then(res => res.json()).then(res => {
-      alert("સફળતાપૂર્વક સેવ થઈ ગયું!");
-      fetchData();
-      switchTab('Dash');
-    }).catch(err => { alert("ભૂલ આવી: " + err); });
-  }
-
-  function renderGallery() {
-    let container = document.getElementById("galleryContainer");
-    let photos = appData.Photo_Gallery || [];
-    
-    if(photos.length === 0) {
-      container.innerHTML = "<p style='text-align:center; color:#7f8c8d; margin-top:20px;'>કોઈ બિલ કે ફોટો ઉપલબ્ધ નથી.</p>";
-      return;
-    }
-
-    let html = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>પ્રકાર</th><th>ફોટો</th><th>ક્રિયા</th></tr>`;
-    photos.forEach(p => {
-      let imgTag = p["Photo_Link"] ? `<a href="${p["Photo_Link"]}" target="_blank"><img src="${p["Photo_Link"]}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;"></a>` : "કોઈ ફોટો નથી";
-      html += `<tr>
-        <td>${p["Date"] || ''}</td>
-        <td>${p["Bill_No"] || ''}</td>
-        <td>${p["Bhagiya"] || ''}</td>
-        <td>${p["Category"] || ''}</td>
-        <td>${imgTag}</td>
-        <td><button class="btn-delete" onclick="deleteRecord('${p["Entry_ID"]}', '${p["Category"]}')">ડિલિટ</button></td>
-      </tr>`;
-    });
-    html += `</table>`;
-    container.innerHTML = html;
-  }
-
-  function filterGallery() {
-    let query = document.getElementById("searchGallery").value.toLowerCase();
-    let rows = document.querySelectorAll("#galleryContainer tr");
-    rows.forEach((row, index) => {
-      if(index === 0) return;
-      let text = row.innerText.toLowerCase();
-      row.style.display = text.includes(query) ? "" : "none";
-    });
-  }
-
-  function deleteRecord(entryId, category) {
-    if(!confirm("શું તમે ખરેખર આ રેકોર્ડ ડિલીટ કરવા માંગો છો?")) return;
-    
-    let sheetName = "Sales_Ledger";
-    if(category === "દવા ખર્ચ") sheetName = "Medicine_Expense";
-    else if(category === "ખાતર ખર્ચ") sheetName = "Fertilizer_Expense";
-    else if(category === "ટ્રેક્ટર ખર્ચ") sheetName = "Tractor_Expense";
-
-    fetch(SCRIPT_URL, {
-      method: "POST",
-      body: JSON.stringify({ action: "deleteRecord", entryId: entryId, sheetName: sheetName })
-    }).then(res => res.json()).then(res => {
-      alert("રેકોર્ડ ડિલીટ થઈ ગયો!");
-      fetchData();
-    }).catch(err => { alert("ભૂલ આવી: " + err); });
-  }
-</script>
-</body>
-</html>
+    let date = v("tDate"), billNo = v("tBill") ||

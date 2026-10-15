@@ -107,7 +107,7 @@
     </form>
   </div>
 
-  <!-- 2. MEDICINE FORM (Updated) -->
+  <!-- 2. MEDICINE FORM (Fully Corrected) -->
   <div id="formMed" class="section">
     <h3 style="text-align:center; color:#2980b9;">🧪 દવા ખર્ચ (Medicine)</h3>
     <form onsubmit="submitMed(event)">
@@ -123,10 +123,13 @@
         <div class="form-group"><label>દવાનો પ્રકાર:</label><select id="mType" required onchange="calcMed()"><option value="જંતુનાશક">જંતુનાશક</option><option value="નિંદામણ">નિંદામણ (ઘાસ)</option><option value="ફૂગનાશક">ફૂગનાશક</option></select></div>
       </div>
       <div class="flex-row">
+        <div class="form-group"><label>વજન / નંગ:</label><input type="number" id="mWeight" step="0.01" oninput="calcMed()" required></div>
         <div class="form-group"><label>પેકિંગ:</label><input type="text" id="mPack" placeholder="દા.ત. 250" onblur="formatPacking(this)" required></div>
-        <div class="form-group"><label>ભાવ (પ્રતિ નંગ/કિલો):</label><input type="number" id="mBhav" oninput="calcMed()" required></div>
       </div>
-      <div class="form-group"><label>કુલ રકમ (₹):</label><input type="number" id="mTotal" oninput="calcMed()" required></div>
+      <div class="flex-row">
+        <div class="form-group"><label>ભાવ (પ્રતિ નંગ/કિલો):</label><input type="number" id="mBhav" step="0.01" oninput="calcMed()" required></div>
+        <div class="form-group"><label>કુલ રકમ (₹):</label><input type="text" id="mTotal" class="readonly-bg" readonly></div>
+      </div>
       <div class="flex-row">
         <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" id="mKShare" class="readonly-bg" readonly></div>
         <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" id="mKRakam" class="readonly-bg" readonly></div>
@@ -166,7 +169,7 @@
         <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" id="fKRakam" class="readonly-bg" readonly></div>
       </div>
       <div class="form-group"><label>સ્થિતિ:</label><select id="fStatus"><option>રોકડા</option><option>બાકી</option></select></div>
-      <div class="form-group"><label>કોણે આપ્યા?</label><input type="text" id="fHastak" required></div>
+      <div class="form-group"><label>કોણે આપ્યાຊີ:</label><input type="text" id="fHastak" required></div>
       <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="fPhoto" accept="image/*" capture="environment"></div>
       <button type="submit" id="btnFert" class="btn-submit">સેવ કરો</button>
     </form>
@@ -196,7 +199,7 @@
         <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" id="tKRakam" class="readonly-bg" readonly></div>
       </div>
       <div class="form-group"><label>સ્થિતિ:</label><select id="tStatus"><option>રોકડા</option><option>બાકી</option></select></div>
-      <div class="form-group"><label>કોણે આપ્યા?</label><input type="text" id="tHastak" required></div>
+      <div class="form-group"><label>કોણે આપ્યા:</label><input type="text" id="tHastak" required></div>
       <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="tPhoto" accept="image/*" capture="environment"></div>
       <button type="submit" id="btnTrac" class="btn-submit">સેવ કરો</button>
     </form>
@@ -277,7 +280,6 @@
       crops.forEach(c => sel.add(new Option(c, c))); 
     });
 
-    // Populate Medicine Master Dropdown
     let medSelect = document.getElementById("mDava");
     if(medSelect && appData.Medicine_Master) {
       medSelect.innerHTML = '<option value="">-- દવા પસંદ કરો --</option>';
@@ -295,9 +297,7 @@
     if(found) {
       let type = found["પ્રકાર"] || found["દવાનો_પ્રકાર"] || found["દવાનો પ્રકાર"] || "";
       let typeSel = document.getElementById("mType");
-      if(type && typeSel) {
-        typeSel.value = type;
-      }
+      if(type && typeSel) typeSel.value = type;
     }
     calcMed();
   }
@@ -327,15 +327,9 @@
     document.getElementById("dashFarmerExpense").innerText = "₹ " + farmerExp.toFixed(2);
   }
 
-  function checkBhagiyaNew(sel) { 
-    if(sel.value === "NEW") { document.getElementById("modalBhagiya").style.display = "block"; sel.value = ""; } 
-  }
-  function checkVepariNew(sel) { 
-    if(sel.value === "NEW") { document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } 
-  }
-  function checkCropNew(sel) { 
-    if(sel.value === "NEW") { document.getElementById("modalCrop").style.display = "block"; sel.value = ""; } 
-  }
+  function checkBhagiyaNew(sel) { if(sel.value === "NEW") { document.getElementById("modalBhagiya").style.display = "block"; sel.value = ""; } }
+  function checkVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
+  function checkCropNew(sel) { if(sel.value === "NEW") { document.getElementById("modalCrop").style.display = "block"; sel.value = ""; } }
 
   function formatPacking(input) {
     let val = parseFloat(input.value);
@@ -366,12 +360,16 @@
   }
 
   function calcMed() {
-    let t = parseFloat(document.getElementById("mTotal").value)||0;
+    let wt = parseFloat(document.getElementById("mWeight").value) || 0;
+    let bhav = parseFloat(document.getElementById("mBhav").value) || 0;
+    let total = wt * bhav;
+    document.getElementById("mTotal").value = total.toFixed(2);
+
     let type = document.getElementById("mType").value;
     let s = getCropShare(document.getElementById("mPak").value);
     if(type === "નિંદામણ") s = 100;
     document.getElementById("mKShare").value = s; 
-    document.getElementById("mKRakam").value = (t * (s/100)).toFixed(2);
+    document.getElementById("mKRakam").value = (total * (s/100)).toFixed(2);
   }
 
   function calcFert() {
@@ -432,12 +430,23 @@
     let bhagiya = v("mBhagiya"), amt = v("mTotal"), entryId = "ME-" + Date.now(), billNo = v("mBill") || "N/A", date = v("mDate"), year = getYear(date);
     
     handlePhotoUpload("mPhoto", function(photoBase64) {
-      let row = [ year, entryId, date, billNo, bhagiya, v("mVepari"), v("mPak"), v("mDava"), v("mType"), v("mPack"), v("mBhav"), amt, v("mKShare"), v("mKRakam"), v("mStatus"), v("mHastak"), photoBase64 ];
+      let row = [ year, entryId, date, billNo, bhagiya, v("mVepari"), v("mPak"), v("mDava"), v("mType"), v("mWeight"), v("mPack"), v("mBhav"), amt, v("mKShare"), v("mKRakam"), v("mStatus"), v("mHastak"), photoBase64 ];
+      
+      let ledgerRow = [ year, entryId, date, bhagiya, "દવા ખર્ચ", amt, v("mStatus"), v("mVepari") ];
+
       if(photoBase64) {
         let photoRow = [ year, entryId, date, billNo, bhagiya, "દવા ખર્ચ", photoBase64 ];
         fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "savePhoto", rowValues: photoRow }) });
       }
-      saveData("saveMedicine", row);
+      
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "saveMedicine", rowValues: rowValues, ledgerRow: ledgerRow })
+      }).then(res => res.json()).then(res => {
+        alert("સફળતાપૂર્વક સેવ થઈ ગયું!");
+        fetchData();
+        switchTab('Dash');
+      }).catch(err => { alert("ભૂલ આવી: " + err); });
     });
   }
 
@@ -447,11 +456,21 @@
     
     handlePhotoUpload("fPhoto", function(photoBase64) {
       let row = [ year, entryId, date, billNo, bhagiya, v("fVepari"), v("fPak"), v("fKhatar"), v("fQty"), v("fBhav"), amt, v("fKShare"), v("fKRakam"), v("fStatus"), v("fHastak"), photoBase64 ];
+      let ledgerRow = [ year, entryId, date, bhagiya, "ખાતર ખર્ચ", amt, v("fStatus"), v("fVepari") ];
+
       if(photoBase64) {
         let photoRow = [ year, entryId, date, billNo, bhagiya, "ખાતર ખર્ચ", photoBase64 ];
         fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "savePhoto", rowValues: photoRow }) });
       }
-      saveData("saveFertilizer", row);
+      
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "saveFertilizer", rowValues: rowValues, ledgerRow: ledgerRow })
+      }).then(res => res.json()).then(res => {
+        alert("સફળતાપૂર્વક સેવ થઈ ગયું!");
+        fetchData();
+        switchTab('Dash');
+      }).catch(err => { alert("ભૂલ આવી: " + err); });
     });
   }
 
@@ -461,11 +480,21 @@
     
     handlePhotoUpload("tPhoto", function(photoBase64) {
       let row = [ year, entryId, date, billNo, bhagiya, v("tDriver"), v("tPak"), v("tWork"), v("tHrs"), v("tRate"), amt, v("tKShare"), v("tKRakam"), v("tStatus"), v("tHastak"), "No", photoBase64 ];
+      let ledgerRow = [ year, entryId, date, bhagiya, "ટ્રેક્ટર ખર્ચ", amt, v("tStatus"), v("tDriver") ];
+
       if(photoBase64) {
         let photoRow = [ year, entryId, date, billNo, bhagiya, "ટ્રેક્ટર ખર્ચ", photoBase64 ];
         fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "savePhoto", rowValues: photoRow }) });
       }
-      saveData("saveTractor", row);
+      
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "saveTractor", rowValues: rowValues, ledgerRow: ledgerRow })
+      }).then(res => res.json()).then(res => {
+        alert("સફળતાપૂર્વક સેવ થઈ ગયું!");
+        fetchData();
+        switchTab('Dash');
+      }).catch(err => { alert("ભૂલ આવી: " + err); });
     });
   }
 

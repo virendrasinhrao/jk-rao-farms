@@ -184,16 +184,28 @@
     else if(val >= 10) input.value = val + " ગ્રામ/મિલી";
   }
 
-          function getCropShare(cropName) {
-    if (!appData.Crop_Master) return 0;
+  function getCropShare(cropName) {
+    if (!cropName) return 0;
     
+    // જો ડ્રોપડાઉનના નામમાં કૌંસમાં હિસ્સો લખેલો હોય (દા.ત. વાલોળ(0.5) કે વાલોળ(50)), તો ત્યાંથી જ ટકા કે પોઈન્ટ કાઢી લેશે
+    let match = cropName.match(/\((.*?)\)/);
+    if (match) {
+      let val = parseFloat(match[1]);
+      if (!isNaN(val)) {
+        // જો 0 થી 1 ની વચ્ચે હોય (દા.ત. 0.5) તો તેને 100 માં ફેરવી નાખશે (એટલે કે 50%), બાકી સીધા ટકા ગણશે
+        return val <= 1 ? val * 100 : val;
+      }
+    }
+    
+    // નહીંતર ગુગલ શીટમાંથી "ભાગ_ટકા" શોધી લેશે
+    if (!appData.Crop_Master) return 0;
     let crop = appData.Crop_Master.find(c => String(c["પાકનું નામ"]).trim() === String(cropName).trim());
     if (!crop) return 0;
     
     let share = crop["ભાગ_ટકા"] || 0;
-    let parsedShare = parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
-    return parsedShare;
+    return parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
   }
+
   // ગણતરીઓ
   function calcSales() {
     let w = parseFloat(document.getElementById("sWeight").value)||0, b20 = parseFloat(document.getElementById("sBhav20").value)||0;

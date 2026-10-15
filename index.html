@@ -473,11 +473,11 @@
     let amt = parseFloat(row.querySelector('.fAmt').value) || 0;
     let tax = parseFloat(row.querySelector('.fTax').value) || 0;
     
-    // GST = (Amt * Tax) / 100
-    let gstAmt = (amt * tax) / 100;
+    // GST = (Tax / 2) * Amt / 100  (Formula: ટેક્સ % ને 2 વડે ભાગી રકમ થી ગુણવાનાં)
+    let gstAmt = ((tax / 2) * amt) / 100;
     row.querySelector('.fGst').value = gstAmt.toFixed(2);
 
-    // CST = (Tax / 2) * Amt / 100  (Formula: ટેક્સ % / 2 * રકમ)
+    // CST = same as GST
     let cstAmt = ((tax / 2) * amt) / 100;
     row.querySelector('.fCst').value = cstAmt.toFixed(2);
 

@@ -277,8 +277,18 @@
       veparis.forEach(v => sVepari.add(new Option(v, v)));
     }
 
-    // Medicine merchants for Medicine Form (filtered by "દવા" type)
-    let medVeparis = appData.Merchant_Master ? appData.Merchant_Master.filter(r => String(r["પ્રકાર"] || "").trim() === "દવા").map(r => r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"]) : [];
+    // Medicine merchants for Medicine Form (flexible matching for "દવા" or "Medicine")
+    let medVeparis = [];
+    if(appData.Merchant_Master) {
+      appData.Merchant_Master.forEach(r => {
+        let type = String(r["પ્રકાર"] || "").trim().toLowerCase();
+        if(type === "દવા" || type === "medicine" || type.includes("દવા")) {
+          let name = r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"];
+          if(name) medVeparis.push(name);
+        }
+      });
+    }
+
     let mVepari = document.getElementById("mVepari");
     if(mVepari) {
       mVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';

@@ -7,7 +7,9 @@
   <style>
     body { font-family: Arial, sans-serif; background-color: #f4f7f6; padding: 10px; margin:0; }
     .header-bar { display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin: auto auto 10px auto; }
-    .refresh-btn { background: #16a085; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; }
+    .refresh-btn { background: #16a085; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; display: flex; align-items: center; gap: 5px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .spin { animation: spin 1s linear infinite; display: inline-block; }
     .nav { display: flex; gap: 4px; margin-bottom: 15px; overflow-x: auto; }
     .nav button { flex: 1; padding: 10px; cursor: pointer; border: none; background: #bdc3c7; border-radius: 4px; font-weight: bold; font-size: 12px; white-space: nowrap; }
     .nav button.active { background: #27ae60; color: white; }
@@ -39,7 +41,7 @@
 
 <div class="header-bar">
   <h2 style="margin:0; color:#2c3e50; font-size: 18px;">🌾 J K Rao Farms</h2>
-  <button class="refresh-btn" onclick="fetchData()">🔄 ડેટા રીફ્રેશ</button>
+  <button class="refresh-btn" onclick="fetchData()"><span id="refreshIcon">🔄</span> ડેટા રીફ્રેશ</button>
 </div>
 
 <div class="card">
@@ -145,7 +147,6 @@
       <button type="button" class="btn-add-item" onclick="addFertItemRow()">➕ ખાતર ઉમેરો</button>
       <div id="fertItemsContainer"></div>
 
-      <!-- Bill Level Tax & Total Summary -->
       <div class="bill-summary">
         <h4 style="margin:0 0 10px 0; color:#d35400;">📋 બિલ ટેક્સ અને કુલ ગણતરી</h4>
         <div class="flex-row">
@@ -233,17 +234,17 @@
   };
 
   function fetchData() {
-    let btn = document.querySelector('.refresh-btn');
-    if(btn) btn.innerText = "🔄 લોડ થાય છે...";
+    let icon = document.getElementById("refreshIcon");
+    if(icon) icon.className = "spin";
     
     fetch(SCRIPT_URL).then(res => res.json()).then(res => {
       appData = res.data;
       populateData();
       updateDashboard();
       renderGallery();
-      if(btn) btn.innerText = "🔄 ડેટા રીફ્રેશ";
+      if(icon) icon.className = "";
     }).catch(err => {
-      if(btn) btn.innerText = "🔄 ડેટા રીફ્રેશ";
+      if(icon) icon.className = "";
       alert("ડેટા લોડ કરવામાં ભૂલ: " + err);
     });
   }
@@ -523,8 +524,10 @@
     ['Medicine_Expense', 'Fertilizer_Expense', 'Tractor_Expense'].forEach(sheet => {
       if(appData[sheet]) {
         appData[sheet].forEach(r => {
-          totalExp += parseFloat(r["બીલની_રકમ"] || r["બીલની રકમ"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || r["કુલ_ભાડું"] || r["કુલ ભાડું"] || 0);
-          farmerExp += parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0);
+          let billAmt = parseFloat(r["બીલની_રકમ"] || r["બીલની રકમ"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || r["કુલ_ભાડું"] || r["કુલ ભાડું"] || 0);
+          let farmerAmt = parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0);
+          if(!isNaN(billAmt)) totalExp += billAmt;
+          if(!isNaN(farmerAmt)) farmerExp += farmerAmt;
         });
       }
     });
@@ -710,7 +713,6 @@
         let entryId = mainEntryId + "-" + (index + 1);
         let amt = parseFloat(row.querySelector(".fAmt").value) || 0;
         
-        // пропорциона ભાગ વહેંચણી (Proportional tax distribution per item)
         let proportion = subTotal > 0 ? (amt / subTotal) : (1 / rows.length);
         let itemGst = gstTotal * proportion;
         let itemCst = cstTotal * proportion;

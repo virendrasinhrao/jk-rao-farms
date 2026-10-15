@@ -269,7 +269,6 @@
       bhagiyas.forEach(b => sel.add(new Option(b, b))); 
     });
     
-    // Vegitable merchants for Sales
     let veparis = appData.Merchant_Master ? appData.Merchant_Master.filter(r => String(r["પ્રકાર"] || "").trim() === "Vegitable").map(r => r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"]) : [];
     let sVepari = document.getElementById("sVepari");
     if(sVepari) {
@@ -277,7 +276,6 @@
       veparis.forEach(v => sVepari.add(new Option(v, v)));
     }
 
-    // Medicine merchants for Medicine Form (flexible matching for "દવા" or "Medicine")
     let medVeparis = [];
     if(appData.Merchant_Master) {
       appData.Merchant_Master.forEach(r => {

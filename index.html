@@ -120,16 +120,17 @@
       <div class="form-group"><label>પાક:</label><select id="mPak" class="pakList" required onchange="checkCropNew(this); calcMed();"></select></div>
       <div class="flex-row">
         <div class="form-group"><label>દવાનું નામ:</label><select id="mDava" required onchange="onMedicineSelect(this)"></select></div>
-        <div class="form-group"><label>દવાનો પ્રકાર:</label><select id="mType" required onchange="calcMed()"><option value="જંતુનાશક">જંતુનાશક</option><option value="નિંદામણ">નિંદામણ (ઘાસ)</option><option value="ફૂગનાશક">ફૂગનાશક</option></select></div>
+        <div class="form-group"><label>દવાનો પ્રકાર:</label><input type="text" id="mType" class="readonly-bg" readonly required></div>
       </div>
       <div class="flex-row">
         <div class="form-group"><label>વજન:</label><input type="number" id="mWeight" step="0.01" oninput="onWeightInput(this); calcMed();" required></div>
         <div class="form-group"><label>પેકિંગ:</label><input type="text" id="mPack" class="readonly-bg" readonly required></div>
       </div>
       <div class="flex-row">
+        <div class="form-group"><label>નંગ:</label><input type="number" id="mQty" value="1" min="1" oninput="calcMed()" required></div>
         <div class="form-group"><label>ભાવ (પ્રતિ નંગ/કિલો):</label><input type="number" id="mBhav" step="0.01" oninput="calcMed()" required></div>
-        <div class="form-group"><label>કુલ રકમ (₹):</label><input type="text" id="mTotal" class="readonly-bg" readonly></div>
       </div>
+      <div class="form-group"><label>કુલ રકમ (₹):</label><input type="text" id="mTotal" class="readonly-bg" readonly></div>
       <div class="flex-row">
         <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" id="mKShare" class="readonly-bg" readonly></div>
         <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" id="mKRakam" class="readonly-bg" readonly></div>
@@ -276,7 +277,7 @@
       veparis.forEach(v => sVepari.add(new Option(v, v)));
     }
 
-    // Medicine merchants for Medicine Form
+    // Medicine merchants for Medicine Form (filtered by Medicine type)
     let medVeparis = appData.Merchant_Master ? appData.Merchant_Master.filter(r => String(r["પ્રકાર"] || "").trim() === "Medicine").map(r => r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"]) : [];
     let mVepari = document.getElementById("mVepari");
     if(mVepari) {
@@ -306,8 +307,8 @@
     let found = appData.Medicine_Master.find(m => String(m["દવાનું_નામ"] || m["દવાનું નામ"] || m["નામ"] || "").trim() === medName.trim());
     if(found) {
       let type = found["પ્રકાર"] || found["દવાનો_પ્રકાર"] || found["દવાનો પ્રકાર"] || "";
-      let typeSel = document.getElementById("mType");
-      if(type && typeSel) typeSel.value = type;
+      let typeInput = document.getElementById("mType");
+      if(type && typeInput) typeInput.value = type;
     }
     calcMed();
   }
@@ -355,7 +356,13 @@
 
   function checkBhagiyaNew(sel) { if(sel.value === "NEW") { document.getElementById("modalBhagiya").style.display = "block"; sel.value = ""; } }
   function checkVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
-  function checkMedVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
+  function checkMedVepariNew(sel) { 
+    if(sel.value === "NEW") { 
+      document.getElementById("nvCategory").value = "Medicine"; 
+      document.getElementById("modalVepari").style.display = "block"; 
+      sel.value = ""; 
+    } 
+  }
   function checkCropNew(sel) { if(sel.value === "NEW") { document.getElementById("modalCrop").style.display = "block"; sel.value = ""; } }
 
   function getCropShare(cropName) {
@@ -380,9 +387,9 @@
   }
 
   function calcMed() {
-    let wt = parseFloat(document.getElementById("mWeight").value) || 0;
     let bhav = parseFloat(document.getElementById("mBhav").value) || 0;
-    let total = wt * bhav;
+    let qty = parseFloat(document.getElementById("mQty").value) || 1;
+    let total = bhav * qty;
     document.getElementById("mTotal").value = total.toFixed(2);
 
     let type = document.getElementById("mType").value;
@@ -450,7 +457,7 @@
     let bhagiya = v("mBhagiya"), amt = v("mTotal"), entryId = "ME-" + Date.now(), billNo = v("mBill") || "N/A", date = v("mDate"), year = getYear(date);
     
     handlePhotoUpload("mPhoto", function(photoBase64) {
-      let row = [ year, entryId, date, billNo, bhagiya, v("mVepari"), v("mPak"), v("mDava"), v("mType"), v("mWeight"), v("mPack"), v("mBhav"), amt, v("mKShare"), v("mKRakam"), v("mStatus"), v("mHastak"), photoBase64 ];
+      let row = [ year, entryId, date, billNo, bhagiya, v("mVepari"), v("mPak"), v("mDava"), v("mType"), v("mWeight"), v("mPack"), v("mQty"), v("mBhav"), amt, v("mKShare"), v("mKRakam"), v("mStatus"), v("mHastak"), photoBase64 ];
       
       let ledgerRow = [ year, entryId, date, bhagiya, "દવા ખર્ચ", amt, v("mStatus"), v("mVepari") ];
 
@@ -604,7 +611,7 @@
 
     fetch(SCRIPT_URL, {
       method: "POST",
-      body: JSON.stringify({ action: "deleteRecord", entryId:entryId, sheetName: sheetName })
+      body: JSON.stringify({ action: "deleteRecord", entryId: entryId, sheetName: sheetName })
     }).then(res => res.json()).then(res => {
       alert("રેકોર્ડ ડિલીટ થઈ ગયો!");
       fetchData();

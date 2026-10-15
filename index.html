@@ -269,7 +269,7 @@
       bhagiyas.forEach(b => sel.add(new Option(b, b))); 
     });
     
-    let veparis = appData.Merchant_Master ? appData.Merchant_Master.filter(r => String(r["પ્રકાર"] || "").trim() === "Vegitable").map(r => r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નાମ"]) : [];
+    let veparis = appData.Merchant_Master ? appData.Merchant_Master.filter(r => String(r["પ્રકાર"] || "").trim() === "Vegitable").map(r => r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"]) : [];
     let sVepari = document.getElementById("sVepari");
     if(sVepari) {
       sVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
@@ -312,11 +312,13 @@
   function onMedicineSelect(sel) {
     let medName = sel.value;
     if(!medName || !appData.Medicine_Master) return;
+    
+    // બધી જ શક્ય કૉલમ્સ ચકાસશે જેથી પ્રકાર ચોક્કસ મળી જાય
     let found = appData.Medicine_Master.find(m => String(m["દવાનું_નામ"] || m["દવાનું નામ"] || m["નામ"] || "").trim() === medName.trim());
     if(found) {
-      let type = found["પ્રકાર"] || found["દવાનો_પ્રકાર"] || found["દવાનો પ્રકાર"] || found["Category"] || "";
+      let type = found["પ્રકાર"] || found["દવાનો_પ્રકાર"] || found["દવાનો પ્રકાર"] || found["Category"] || found["પ્રકાર "] || "";
       let typeInput = document.getElementById("mType");
-      if(type && typeInput) {
+      if(typeInput) {
         typeInput.value = type;
       }
     }

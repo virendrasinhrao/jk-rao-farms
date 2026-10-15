@@ -184,23 +184,16 @@
     else if(val >= 10) input.value = val + " ગ્રામ/મિલી";
   }
 
-        function getCropShare(cropName) {
+          function getCropShare(cropName) {
     if (!appData.Crop_Master) return 0;
     
-    // પાકનું નામ મેચ કરવા માટે
-    let crop = appData.Crop_Master.find(c => c["પાકનું નામ"] == cropName);
+    let crop = appData.Crop_Master.find(c => String(c["પાકનું નામ"]).trim() === String(cropName).trim());
     if (!crop) return 0;
     
-    // હવે અહીં આપણે શીટનું સાચું હેડિંગ "ભાગ_ટકા" સેટ કરી દીધું છે
-    let share = crop["ભાગ_ટકા"] || crop["હિસ્સો"] || 0;
-    
+    let share = crop["ભાગ_ટકા"] || 0;
     let parsedShare = parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
     return parsedShare;
   }
-
-
-
-
   // ગણતરીઓ
   function calcSales() {
     let w = parseFloat(document.getElementById("sWeight").value)||0, b20 = parseFloat(document.getElementById("sBhav20").value)||0;
@@ -309,12 +302,17 @@
     saveData("saveVepari", row); document.getElementById("modalVepari").style.display = "none";
   }
   // નવો પાક સેવ કરવાનું ફંક્શન
-  function saveC() {
-    let name = v("ncName"), share = v("ncShare");
+    function saveC() {
+    let name = v("ncName");
+    let share = v("ncShare");
     if(name == "") return alert("પાકનું નામ જરૂરી છે!");
-    let row = [ name, share + "%" ];
-    saveData("saveCrop", row); document.getElementById("modalCrop").style.display = "none";
+    
+    // શીટમાં હવે માત્ર ૨ જ કોલમ છે: [પાકનું નામ, ભાગ_ટકા]
+    let row = [ name, share ]; 
+    saveData("saveCrop", row); 
+    document.getElementById("modalCrop").style.display = "none";
   }
+
 
   function saveData(action, rowValues, ledgerRow = null) {
     fetch(SCRIPT_URL, {

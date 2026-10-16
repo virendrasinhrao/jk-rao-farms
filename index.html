@@ -6,10 +6,34 @@
   <title>J K Rao Farms</title>
   <style>
     body { font-family: Arial, sans-serif; background-color: #f4f7f6; padding: 10px; margin:0; }
-    .header-bar { display: flex; justify-content: space-between; align-items: center; max-width: 700px; margin: auto auto 10px auto; }
-    .refresh-btn { background: #16a085; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; display: flex; align-items: center; gap: 5px; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .spin { animation: spin 1s linear infinite; display: inline-block; }
+    .header-bar { display: flex; justify-content: space-between; align-items: center; max-width: 700px; margin: auto auto 15px auto; }
+    
+    /* આકર્ષક અને મોટું રિફ્રેશ બટન અને એનિમેશન */
+    .refresh-btn { 
+      background: linear-gradient(135deg, #16a085, #1abc9c); 
+      color: white; 
+      border: none; 
+      padding: 10px 20px; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      font-weight: bold; 
+      font-size: 15px; 
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+      box-shadow: 0 4px 10px rgba(22, 160, 133, 0.3);
+      transition: all 0.3s ease;
+    }
+    .refresh-btn:hover { background: linear-gradient(135deg, #1abc9c, #16a085); transform: translateY(-2px); }
+    
+    @keyframes smoothSpin { 
+      0% { transform: rotate(0deg) scale(1); } 
+      50% { transform: rotate(180deg) scale(1.2); } 
+      100% { transform: rotate(360deg) scale(1); } 
+    }
+    .spin { animation: smoothSpin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite; display: inline-block; }
+    #refreshIcon { font-size: 22px; display: inline-block; }
+
     .nav { display: flex; gap: 4px; margin-bottom: 15px; overflow-x: auto; }
     .nav button { flex: 1; padding: 10px; cursor: pointer; border: none; background: #bdc3c7; border-radius: 4px; font-weight: bold; font-size: 12px; white-space: nowrap; }
     .nav button.active { background: #27ae60; color: white; }
@@ -17,7 +41,7 @@
     .form-group { margin-bottom: 15px; }
     label { font-weight: bold; display: block; margin-bottom: 5px; font-size:14px; }
     input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-    .btn-submit { width: 100%; padding: 12px; background: #2980b9; color: white; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; font-weight:bold;}
+    .btn-submit { width: 100%; padding: 12px; background: #2980b9; color: white; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; font-weight:bold; border-radius: 4px;}
     .btn-delete { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
     .btn-add-item { background: #27ae60; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; margin-bottom: 10px; }
     .readonly-bg { background-color: #e9ecef; }
@@ -41,7 +65,9 @@
 
 <div class="header-bar">
   <h2 style="margin:0; color:#2c3e50; font-size: 18px;">🌾 J K Rao Farms</h2>
-  <button class="refresh-btn" onclick="fetchData()"><span id="refreshIcon">🔄</span> ડેટા રીફ્રેશ</button>
+  <button class="refresh-btn" onclick="fetchData()">
+    <span id="refreshIcon">🔄</span> <span>ડેટા રીફ્રેશ</span>
+  </button>
 </div>
 
 <div class="card">
@@ -104,7 +130,7 @@
     </form>
   </div>
 
-  <!-- 2. MEDICINE FORM (Pesticide Bill & Items) -->
+  <!-- 2. MEDICINE FORM -->
   <div id="formMed" class="section">
     <h3 style="text-align:center; color:#2980b9;">🧪 દવા ખર્ચ (Medicine / Pesticide)</h3>
     <form onsubmit="submitMed(event)">
@@ -147,7 +173,7 @@
     </form>
   </div>
 
-  <!-- 3. FERTILIZER FORM (Fertilizer Bill & Items) -->
+  <!-- 3. FERTILIZER FORM -->
   <div id="formFert" class="section">
     <h3 style="text-align:center; color:#d35400;">🌾 ખાતર ખર્ચ (Fertilizer)</h3>
     <form onsubmit="submitFert(event)">
@@ -250,17 +276,17 @@
   };
 
   function fetchData() {
-    let btn = document.querySelector('.refresh-btn');
-    if(btn) btn.innerText = "🔄 લોડ થાય છે...";
+    let icon = document.getElementById("refreshIcon");
+    if(icon) icon.className = "spin";
     
     fetch(SCRIPT_URL).then(res => res.json()).then(res => {
       appData = res.data;
       populateData();
       updateDashboard();
       renderGallery();
-      if(btn) btn.innerText = "🔄 ડેટા રીફ્રેશ";
+      if(icon) icon.className = "";
     }).catch(err => {
-      if(btn) btn.innerText = "🔄 ડેટા રીફ્રેશ";
+      if(icon) icon.className = "";
       alert("ડેટા લોડ કરવામાં ભૂલ: " + err);
     });
   }
@@ -276,7 +302,15 @@
 
   function populateData() {
     if(!appData.Bhagiya_Master) return;
-    let bhagiyas = appData.Bhagiya_Master.map(r => r["નાମ"]).filter(String);
+    
+    let bhagiyas = [];
+    appData.Bhagiya_Master.forEach(r => {
+      let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
+      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ") {
+        bhagiyas.push(name.trim());
+      }
+    });
+
     document.querySelectorAll('.bhagiyaList').forEach(sel => { 
       sel.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
       bhagiyas.forEach(b => sel.add(new Option(b, b))); 
@@ -490,26 +524,6 @@
     row.querySelector('.mTotal').value = total.toFixed(2);
     calcMedBill();
   }
-
-  function calcMedBill() {
-    let rows = document.querySelectorAll("#medItemsContainer .item-row");
-    let subTotal = 0;
-    rows.forEach(row => {
-      let amt = parseFloat(row.querySelector('.mTotal').value) || 0;
-      subTotal += amt;
-    });
-    document.getElementById("mSubTotal").value = subTotal.toFixed(2);
-
-    let tax = parseFloat(document.getElementById("mTax").value) || 0;
-    let gstAmt = ((tax / 2) * subTotal) / 100;
-    let cstAmt = ((tax / 2) * subTotal) / 100;
-    let totalBill = subTotal + gstAmt + cstAmt;
-
-    document.getElementById("mGst").value = gstAmt.toFixed(2);
-    document.getElementById("mCst").value = cstAmt.toFixed(2);
-    document.getElementById("mTotalBill").value = totalBill.toFixed(2);
-  }
-
   function calcFertBill() {
     let rows = document.querySelectorAll("#fertItemsContainer .item-row");
     let subTotal = 0;
@@ -533,6 +547,7 @@
     document.getElementById("fCst").value = cstAmt.toFixed(2);
     document.getElementById("fTotalBill").value = totalBill.toFixed(2);
   }
+
   function calcTracRow(el) {
     let row = el.closest('.item-row');
     let h = parseFloat(row.querySelector('.tHrs').value) || 0;
@@ -558,7 +573,6 @@
     }
 
     let totalExp = 0, farmerExp = 0;
-    // Updated to use Pesticide_Bill and Fertilizer_Bill instead of old single expense sheets
     ['Pesticide_Bill', 'Fertilizer_Bill', 'Tractor_Expense'].forEach(sheet => {
       if(appData[sheet]) {
         appData[sheet].forEach(r => {
@@ -705,68 +719,6 @@
         switchTab('Dash');
       });
     });
-    
-  }
-  function submitFert(e) {
-    e.preventDefault();
-    let rows = document.querySelectorAll("#fertItemsContainer .item-row");
-    if(rows.length === 0) return alert("કમ સે કમ એક ખાતર આઇટમ ઉમેરો!");
-
-    document.getElementById("btnFert").innerText = "સેવ થઈ રહ્યું છે...";
-    let date = v("fDate"), billNo = v("fBill") || "N/A", bhagiya = v("fBhagiya"), year = getYear(date);
-    let subTotal = parseFloat(document.getElementById("fSubTotal").value) || 0;
-    let tax = parseFloat(document.getElementById("fTax").value) || 0;
-    let gst = parseFloat(document.getElementById("fGst").value) || 0;
-    let cst = parseFloat(document.getElementById("fCst").value) || 0;
-    let totalBill = parseFloat(document.getElementById("fTotalBill").value) || 0;
-
-    handlePhotoUpload("fPhoto", function(photoBase64) {
-      let billRow = [ year, date, billNo, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, "" ];
-      let itemRows = [];
-
-      rows.forEach(row => {
-  function submitMed(e) {
-    e.preventDefault();
-    let rows = document.querySelectorAll("#medItemsContainer .item-row");
-    if(rows.length === 0) return alert("કમ સે કમ એક દવા ઉમેરો!");
-
-    document.getElementById("btnMed").innerText = "સેવ થઈ રહ્યું છે...";
-    let date = v("mDate"), billNo = v("mBill") || "N/A", bhagiya = v("mBhagiya"), year = getYear(date);
-    let subTotal = parseFloat(document.getElementById("mSubTotal").value) || 0;
-    let tax = parseFloat(document.getElementById("mTax").value) || 0;
-    let gst = parseFloat(document.getElementById("mGst").value) || 0;
-    let cst = parseFloat(document.getElementById("mCst").value) || 0;
-    let totalBill = parseFloat(document.getElementById("mTotalBill").value) || 0;
-
-    handlePhotoUpload("mPhoto", function(photoBase64) {
-      let billRow = [ year, date, billNo, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, "" ];
-      let itemRows = [];
-
-      rows.forEach(row => {
-        let amt = parseFloat(row.querySelector(".mTotal").value) || 0;
-        itemRows.push([
-          year, date, billNo,
-          row.querySelector(".davaList").value,
-          row.querySelector(".mWeight").value,
-          row.querySelector(".mPack").value,
-          row.querySelector(".mQty").value,
-          row.querySelector(".mBhav").value,
-          amt
-        ]);
-      });
-
-      let ledgerRow = [ year, "ME-" + Date.now(), date, bhagiya, "દવા ખર્ચ", totalBill, v("mStatus"), v("mVepari") ];
-
-      fetch(SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify({ action: "savePesticideBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow })
-      }).then(res => res.json()).then(() => {
-        alert("દવા બિલ સફળતાપૂર્વક સેવ થઈ ગયું!");
-        document.getElementById("btnMed").innerText = "સેવ કરો";
-        fetchData();
-        switchTab('Dash');
-      });
-    });
   }
 
   function submitFert(e) {
@@ -814,8 +766,6 @@
       });
     });
   }
-
-
   function submitTrac(e) {
     e.preventDefault();
     let rows = document.querySelectorAll("#tracItemsContainer .item-row");
@@ -963,3 +913,5 @@
 </script>
 </body>
 </html
+  
+  

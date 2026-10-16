@@ -81,7 +81,6 @@
   <div id="formSales" class="section">
     <h3 style="text-align:center; color:#27ae60;">🌱 વેચાણ (Sales)</h3>
     <form onsubmit="submitSales(event)">
-      <input type="hidden" id="sEditId">
       <div class="flex-row">
         <div class="form-group"><label>તારીખ:</label><input type="date" id="sDate" required></div>
         <div class="form-group"><label>બિલ નં (ઓપ્શનલ):</label><input type="text" id="sBill"></div>
@@ -116,7 +115,6 @@
   <div id="formMed" class="section">
     <h3 style="text-align:center; color:#2980b9;">🧪 દવા ખર્ચ (Medicine)</h3>
     <form onsubmit="submitMed(event)">
-      <input type="hidden" id="mEditId">
       <div class="flex-row">
         <div class="form-group"><label>તારીખ:</label><input type="date" id="mDate" required></div>
         <div class="form-group"><label>બિલ નં (ઓપ્શનલ):</label><input type="text" id="mBill"></div>
@@ -149,7 +147,6 @@
   <div id="formFert" class="section">
     <h3 style="text-align:center; color:#d35400;">🌾 ખાતર ખર્ચ (Fertilizer)</h3>
     <form onsubmit="submitFert(event)">
-      <input type="hidden" id="fEditId">
       <div class="flex-row">
         <div class="form-group"><label>તારીખ:</label><input type="date" id="fDate" required></div>
         <div class="form-group"><label>બિલ નં (ઓપ્શનલ):</label><input type="text" id="fBill"></div>
@@ -197,7 +194,6 @@
   <div id="formTrac" class="section">
     <h3 style="text-align:center; color:#8e44ad;">🚜 ટ્રેક્ટર ખર્ચ (Tractor)</h3>
     <form onsubmit="submitTrac(event)">
-      <input type="hidden" id="tEditId">
       <div class="flex-row">
         <div class="form-group"><label>તારીખ:</label><input type="date" id="tDate" required></div>
         <div class="form-group"><label>વાઉચર/બિલ (ઓપ્શનલ):</label><input type="text" id="tBill"></div>
@@ -316,7 +312,6 @@
         }
       });
     }
-
     let mVepari = document.getElementById("mVepari");
     if(mVepari) {
       let cur = mVepari.value;
@@ -394,7 +389,6 @@
     populateData();
     if(data.pak) div.querySelector('.pakList').value = data.pak;
   }
-
   function addMedItemRow(data = {}) {
     let container = document.getElementById("medItemsContainer");
     let div = document.createElement("div");
@@ -515,7 +509,9 @@
     if(type === "નિંદામણ") s = 100;
     row.querySelector('.mKShare').value = s;
     row.querySelector('.mKRakam').value = (total * (s/100)).toFixed(2);
-    function calcFertBill() {
+  }
+
+  function calcFertBill() {
     let rows = document.querySelectorAll("#fertItemsContainer .item-row");
     let subTotal = 0;
     rows.forEach(row => {
@@ -549,7 +545,6 @@
     row.querySelector('.tKShare').value = finalS;
     row.querySelector('.tKRakam').value = (t * (finalS/100)).toFixed(2);
   }
-
   function updateDashboard() {
     let totalSales = 0, farmerSales = 0;
     if(appData.Sales_Ledger) {
@@ -578,7 +573,6 @@
   }
 
   function renderTables() {
-    // Sales Table
     let salesData = appData.Sales_Ledger || [];
     let salesHtml = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>વેપારી</th><th>પાક</th><th>કુલ રકમ</th><th>ખેડૂ રકમ</th><th>ક્રિયા</th></tr>`;
     if(salesData.length === 0) salesHtml += `<tr><td colspan="7">કોઈ ડેટા નથી</td></tr>`;
@@ -598,9 +592,7 @@
     });
     salesHtml += `</table>`;
     document.getElementById("salesTableContainer").innerHTML = salesHtml;
-  
-  }
-    // Medicine Table
+
     let medData = appData.Medicine_Expense || [];
     let medHtml = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>વેપારી</th><th>દવા</th><th>કુલ રકમ</th><th>ખેડૂ રકમ</th><th>ક્રિયા</th></tr>`;
     if(medData.length === 0) medHtml += `<tr><td colspan="7">કોઈ ડેટા નથી</td></tr>`;
@@ -621,7 +613,6 @@
     medHtml += `</table>`;
     document.getElementById("medTableContainer").innerHTML = medHtml;
 
-    // Fertilizer Table
     let fertData = appData.Fertilizer_Expense || [];
     let fertHtml = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>વેપારી</th><th>ખાતર</th><th>બિલ રકમ</th><th>ખેડૂ રકમ</th><th>ક્રિયા</th></tr>`;
     if(fertData.length === 0) fertHtml += `<tr><td colspan="7">કોઈ ડેટા નથી</td></tr>`;
@@ -642,7 +633,6 @@
     fertHtml += `</table>`;
     document.getElementById("fertTableContainer").innerHTML = fertHtml;
 
-    // Tractor Table
     let tracData = appData.Tractor_Expense || [];
     let tracHtml = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>ડ્રાઈવર</th><th>કામ</th><th>કુલ ભાડું</th><th>ખેડૂ રકમ</th><th>ક્રિયા</th></tr>`;
     if(tracData.length === 0) tracHtml += `<tr><td colspan="7">કોઈ ડેટા નથી</td></tr>`;
@@ -663,8 +653,6 @@
     tracHtml += `</table>`;
     document.getElementById("tracTableContainer").innerHTML = tracHtml;
   }
-
-  // --- EDIT FUNCTIONS ---
   function editSales(entryId) {
     let r = (appData.Sales_Ledger || []).find(x => (x["Entry_ID"] || x["Sales_ID"]) === entryId);
     if(!r) return alert("રેકોર્ડ મળ્યો નથી!");
@@ -676,7 +664,7 @@
     document.getElementById("sStatus").value = r["સ્થિતિ"] || "";
     document.getElementById("sHastak").value = r["કોણે_લીધા"] || r["કોણે લીધા"] || "";
     
-    document.getElementById("salesItemsContainer.innerHTML = "";
+    document.getElementById("salesItemsContainer").innerHTML = "";
     addSalesItemRow({
       pak: r["પાકનું_નામ"] || r["પાક"] || "",
       pauch: r["પાઉચ_નંગ"] || r["પાઉચ/નંગ"] || 0,
@@ -688,6 +676,7 @@
       kRakam: r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0
     });
   }
+
   function editMed(entryId) {
     let r = (appData.Medicine_Expense || []).find(x => x["Entry_ID"] === entryId);
     if(!r) return alert("રેકોર્ડ મળ્યો નથી!");
@@ -777,12 +766,12 @@
     let share = crop["ભાગ_ટકા"] || 0;
     return parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
   }
-
   function v(id) { return document.getElementById(id).value; }
   function getYear(dateString) {
     let d = new Date(dateString), m = d.getMonth() + 1, y = d.getFullYear();
     return (m >= 5) ? (y + "-" + (y + 1).toString().slice(-2)) : ((y - 1) + "-" + y.toString().slice(-2));
   }
+
   function handlePhotoUpload(fileInputId, callback) {
     let fileInput = document.getElementById(fileInputId);
     if(fileInput && fileInput.files[0]) {
@@ -977,6 +966,7 @@
       });
     });
   }
+
   function submitTrac(e) {
     e.preventDefault();
     let rows = document.querySelectorAll("#tracItemsContainer .item-row");
@@ -1037,13 +1027,13 @@
       });
     });
   }
+
   function saveB() {
     let name = v("nbName").trim();
     if(name == "") return alert("નામ જરૂરી છે!");
     let row = [ getYear(v("sDate")), name, v("nbPhone"), v("nbAdd") ];
     saveData("saveBhagiya", row); document.getElementById("modalBhagiya").style.display = "none";
   }
-
   function saveV() {
     let name = v("nvName").trim();
     let cat = v("nvCategory");

@@ -18,8 +18,7 @@
     label { font-weight: bold; display: block; margin-bottom: 5px; font-size:14px; }
     input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
     .btn-submit { width: 100%; padding: 12px; background: #2980b9; color: white; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; font-weight:bold;}
-    .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; }
-    .btn-edit { background: #f39c12; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-right: 3px; }
+    .btn-delete { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
     .btn-add-item { background: #27ae60; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; margin-bottom: 10px; }
     .readonly-bg { background-color: #e9ecef; }
     .section { display: none; }
@@ -28,15 +27,14 @@
     .flex-row > div { flex: 1; }
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;}
     .modal-content { background: white; margin: 10% auto; padding: 20px; width: 90%; max-width: 400px; border-radius: 8px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; }
-    th, td { border: 1px solid #ddd; padding: 6px; text-align: center; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
     th { background-color: #27ae60; color: white; }
     .item-row { background: #f9f9f9; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px; position: relative; }
     .dash-box { background: #e8f8f5; border-left: 5px solid #27ae60; padding: 12px; margin-bottom: 10px; border-radius: 4px; }
     .dash-box h4 { margin: 0 0 5px 0; color: #2c3e50; font-size: 14px; }
     .dash-box p { margin: 0; font-size: 18px; font-weight: bold; color: #16a085; }
     .bill-summary { background: #fef9e7; border: 1px solid #f39c12; padding: 15px; border-radius: 6px; margin-bottom: 15px; }
-    .table-container { margin-top: 25px; border-top: 2px dashed #ccc; padding-top: 15px; overflow-x: auto; }
   </style>
 </head>
 <body>
@@ -104,16 +102,11 @@
       </div>
       <button type="submit" id="btnSales" class="btn-submit">સેવ કરો</button>
     </form>
-
-    <div class="table-container">
-      <h4 style="color:#27ae60; margin:0 0 10px 0;">📜 વેચાણ રેકોર્ડ્સ ટેબલ વ્યુ</h4>
-      <div id="salesTableContainer">લોડ થઈ રહ્યું છે...</div>
-    </div>
   </div>
 
-  <!-- 2. MEDICINE FORM -->
+  <!-- 2. MEDICINE FORM (Pesticide Bill & Items) -->
   <div id="formMed" class="section">
-    <h3 style="text-align:center; color:#2980b9;">🧪 દવા ખર્ચ (Medicine)</h3>
+    <h3 style="text-align:center; color:#2980b9;">🧪 દવા ખર્ચ (Medicine / Pesticide)</h3>
     <form onsubmit="submitMed(event)">
       <div class="flex-row">
         <div class="form-group"><label>તારીખ:</label><input type="date" id="mDate" required></div>
@@ -127,6 +120,22 @@
       <button type="button" class="btn-add-item" onclick="addMedItemRow()">➕ દવા ઉમેરો</button>
       <div id="medItemsContainer"></div>
 
+      <div class="bill-summary">
+        <h4 style="margin:0 0 10px 0; color:#2980b9;">📋 બિલ ટેક્સ અને કુલ ગણતરી</h4>
+        <div class="flex-row">
+          <div class="form-group"><label>કુલ આઇટમ રકમ:</label><input type="text" id="mSubTotal" class="readonly-bg" readonly value="0.00"></div>
+          <div class="form-group"><label>ટેક્સ %:</label><input type="number" id="mTax" step="0.01" value="0" oninput="calcMedBill()" required></div>
+        </div>
+        <div class="flex-row">
+          <div class="form-group"><label>જી.એસ.ટી. રકમ:</label><input type="text" id="mGst" class="readonly-bg" readonly value="0.00"></div>
+          <div class="form-group"><label>સી.એસ.ટી. રકમ:</label><input type="text" id="mCst" class="readonly-bg" readonly value="0.00"></div>
+        </div>
+        <div class="form-group">
+          <label>બિલની કુલ રકમ (₹):</label>
+          <input type="text" id="mTotalBill" class="readonly-bg" readonly style="font-size:18px; font-weight:bold; color:#2980b9;" value="0.00">
+        </div>
+      </div>
+
       <div class="flex-row" style="margin-top:15px;">
         <div class="form-group"><label>હસ્તે:</label><input type="text" id="mHastak" required></div>
         <div class="form-group"><label>ઉપાડમાં સ્થિતિ:</label><select id="mStatus"><option>જમા</option><option>બાકી</option></select></div>
@@ -136,14 +145,9 @@
       </div>
       <button type="submit" id="btnMed" class="btn-submit">સેવ કરો</button>
     </form>
-
-    <div class="table-container">
-      <h4 style="color:#2980b9; margin:0 0 10px 0;">📜 દવા ખર્ચ રેકોર્ડ્સ ટેબલ વ્યુ</h4>
-      <div id="medTableContainer">લોડ થઈ રહ્યું છે...</div>
-    </div>
   </div>
 
-  <!-- 3. FERTILIZER FORM -->
+  <!-- 3. FERTILIZER FORM (Fertilizer Bill & Items) -->
   <div id="formFert" class="section">
     <h3 style="text-align:center; color:#d35400;">🌾 ખાતર ખર્ચ (Fertilizer)</h3>
     <form onsubmit="submitFert(event)">
@@ -183,11 +187,6 @@
       <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="fPhoto" accept="image/*" capture="environment"></div>
       <button type="submit" id="btnFert" class="btn-submit">સેવ કરો</button>
     </form>
-
-    <div class="table-container">
-      <h4 style="color:#d35400; margin:0 0 10px 0;">📜 ખાતર ખર્ચ રેકોર્ડ્સ ટેબલ વ્યુ</h4>
-      <div id="fertTableContainer">લોડ થઈ રહ્યું છે...</div>
-    </div>
   </div>
 
   <!-- 4. TRACTOR FORM -->
@@ -213,11 +212,6 @@
       <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="tPhoto" accept="image/*" capture="environment"></div>
       <button type="submit" id="btnTrac" class="btn-submit">સેવ કરો</button>
     </form>
-
-    <div class="table-container">
-      <h4 style="color:#8e44ad; margin:0 0 10px 0;">📜 ટ્રેક્ટર ખર્ચ રેકોર્ડ્સ ટેબલ વ્યુ</h4>
-      <div id="tracTableContainer">લોડ થઈ રહ્યું છે...</div>
-    </div>
   </div>
 
   <!-- 5. GALLERY SECTION -->
@@ -238,7 +232,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક ઉમેરો</h3><input type="text" id="ncName" placeholder="પાકનું નામ (દા.ત. જીરું)" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%) દા.ત. 50" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:10px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjDgRC6Cy0yayT2pYEC4YqGozMy_ZnIEZqLvSdPm22rSznmgf7uHgMyfYmK6B4RwYoyg/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxBYP5Pu9jhFvJul8TFFfb_MstQIrWhlXOIwXqPeWNoCCwrtnfj1muy7xUD31-a06Q7BQ/exec";
   let appData = {};
 
   window.onload = function() {
@@ -256,18 +250,17 @@
   };
 
   function fetchData() {
-    let icon = document.getElementById("refreshIcon");
-    if(icon) icon.className = "spin";
+    let btn = document.querySelector('.refresh-btn');
+    if(btn) btn.innerText = "🔄 લોડ થાય છે...";
     
     fetch(SCRIPT_URL).then(res => res.json()).then(res => {
       appData = res.data;
       populateData();
       updateDashboard();
-      renderTables();
       renderGallery();
-      if(icon) icon.className = "";
+      if(btn) btn.innerText = "🔄 ડેટા રીફ્રેશ";
     }).catch(err => {
-      if(icon) icon.className = "";
+      if(btn) btn.innerText = "🔄 ડેટા રીફ્રેશ";
       alert("ડેટા લોડ કરવામાં ભૂલ: " + err);
     });
   }
@@ -283,21 +276,17 @@
 
   function populateData() {
     if(!appData.Bhagiya_Master) return;
-    let bhagiyas = appData.Bhagiya_Master.map(r => r["નામ"]).filter(String);
+    let bhagiyas = appData.Bhagiya_Master.map(r => r["નાମ"]).filter(String);
     document.querySelectorAll('.bhagiyaList').forEach(sel => { 
-      let cur = sel.value;
       sel.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
       bhagiyas.forEach(b => sel.add(new Option(b, b))); 
-      sel.value = cur;
     });
     
     let veparis = appData.Merchant_Master ? appData.Merchant_Master.filter(r => String(r["પ્રકાર"] || "").trim() === "Vegitable").map(r => r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"]) : [];
     let sVepari = document.getElementById("sVepari");
     if(sVepari) {
-      let cur = sVepari.value;
       sVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
       veparis.forEach(v => sVepari.add(new Option(v, v)));
-      sVepari.value = cur;
     }
 
     let medVeparis = [];
@@ -312,20 +301,17 @@
         }
       });
     }
+
     let mVepari = document.getElementById("mVepari");
     if(mVepari) {
-      let cur = mVepari.value;
       mVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
       medVeparis.forEach(v => mVepari.add(new Option(v, v)));
-      mVepari.value = cur;
     }
 
     let fVepari = document.querySelector(".fertVepariList");
     if(fVepari) {
-      let cur = fVepari.value;
       fVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
       fertVeparis.forEach(v => fVepari.add(new Option(v, v)));
-      fVepari.value = cur;
     }
 
     document.querySelectorAll('.pakList').forEach(sel => {
@@ -364,82 +350,81 @@
     });
   }
 
-  function addSalesItemRow(data = {}) {
+  function addSalesItemRow() {
     let container = document.getElementById("salesItemsContainer");
     let div = document.createElement("div");
     div.className = "item-row";
     div.innerHTML = `
       <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcSalesRow(this);"></select></div>
       <div class="flex-row">
-        <div class="form-group"><label>પાઉચ/નંગ:</label><input type="number" class="sPauch" value="${data.pauch || 0}"></div>
-        <div class="form-group"><label>વજન (કિલો):</label><input type="number" class="sWeight" step="0.01" oninput="calcSalesRow(this)" value="${data.weight || ''}" required></div>
+        <div class="form-group"><label>પાઉચ/નંગ:</label><input type="number" class="sPauch" value="0"></div>
+        <div class="form-group"><label>વજન (કિલો):</label><input type="number" class="sWeight" step="0.01" oninput="calcSalesRow(this)" required></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>૧ મણનો ભાવ:</label><input type="number" class="sBhav20" step="0.01" oninput="calcSalesRow(this)" value="${data.bhav20 || ''}" required></div>
-        <div class="form-group"><label>૧ કિલોનો ભાવ:</label><input type="text" class="sBhav1 readonly-bg" readonly value="${data.bhav1 || ''}"></div>
+        <div class="form-group"><label>૧ મણનો ભાવ:</label><input type="number" class="sBhav20" step="0.01" oninput="calcSalesRow(this)" required></div>
+        <div class="form-group"><label>૧ કિલોનો ભાવ:</label><input type="text" class="sBhav1 readonly-bg" readonly></div>
       </div>
-      <div class="form-group"><label>કુલ રકમ (₹):</label><input type="text" class="sTotal readonly-bg" readonly value="${data.total || ''}"></div>
+      <div class="form-group"><label>કુલ રકમ (₹):</label><input type="text" class="sTotal readonly-bg" readonly></div>
       <div class="flex-row">
-        <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKShare readonly-bg" readonly value="${data.kShare || ''}"></div>
-        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam readonly-bg" readonly value="${data.kRakam || ''}"></div>
+        <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKShare readonly-bg" readonly></div>
+        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam readonly-bg" readonly></div>
       </div>
       <button type="button" class="btn-delete" onclick="this.parentElement.remove()">આઇટમ હટાવો</button>
     `;
     container.appendChild(div);
     populateData();
-    if(data.pak) div.querySelector('.pakList').value = data.pak;
   }
-  function addMedItemRow(data = {}) {
+
+  function addMedItemRow() {
     let container = document.getElementById("medItemsContainer");
     let div = document.createElement("div");
     div.className = "item-row";
     div.innerHTML = `
-      <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcMedRow(this);"></select></div>
       <div class="flex-row">
         <div class="form-group"><label>દવાનું નામ:</label><select class="davaList" required onchange="onMedSelectRow(this)"></select></div>
-        <div class="form-group"><label>દવાનો પ્રકાર:</label><input type="text" class="mType readonly-bg" readonly required value="${data.type || ''}"></div>
+        <div class="form-group"><label>દવાનો પ્રકાર:</label><input type="text" class="mType readonly-bg" readonly required></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>વજન:</label><input type="number" class="mWeight" step="0.01" oninput="onWeightInputRow(this); calcMedRow(this);" value="${data.weight || ''}" required></div>
-        <div class="form-group"><label>પેકિંગ:</label><input type="text" class="mPack readonly-bg" readonly required value="${data.pack || ''}"></div>
+        <div class="form-group"><label>વજન:</label><input type="number" class="mWeight" step="0.01" oninput="onWeightInputRow(this); calcMedRow(this);" required></div>
+        <div class="form-group"><label>પેકિંગ:</label><input type="text" class="mPack readonly-bg" readonly required></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>નંગ:</label><input type="number" class="mQty" value="${data.qty || 1}" min="1" oninput="calcMedRow(this)" required></div>
-        <div class="form-group"><label>ભાવ:</label><input type="number" class="mBhav" step="0.01" oninput="calcMedRow(this)" value="${data.bhav || ''}" required></div>
+        <div class="form-group"><label>નંગ:</label><input type="number" class="mQty" value="1" min="1" oninput="calcMedRow(this)" required></div>
+        <div class="form-group"><label>ભાવ:</label><input type="number" class="mBhav" step="0.01" oninput="calcMedRow(this)" required></div>
       </div>
-      <div class="form-group"><label>કુલ રકમ (₹):</label><input type="text" class="mTotal readonly-bg" readonly value="${data.total || ''}"></div>
-      <div class="flex-row">
-        <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="mKShare readonly-bg" readonly value="${data.kShare || ''}"></div>
-        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="mKRakam readonly-bg" readonly value="${data.kRakam || ''}"></div>
-      </div>
-      <button type="button" class="btn-delete" onclick="this.parentElement.remove()">દવા હટાવો</button>
+      <div class="form-group"><label>રકમ (₹):</label><input type="text" class="mTotal readonly-bg" readonly></div>
+      <button type="button" class="btn-delete" onclick="this.parentElement.remove(); calcMedBill();">દવા હટાવો</button>
     `;
     container.appendChild(div);
     populateData();
-    if(data.pak) div.querySelector('.pakList').value = data.pak;
-    if(data.dava) div.querySelector('.davaList').value = data.dava;
+    calcMedBill();
   }
 
-  function addFertItemRow(data = {}) {
+  function addFertItemRow() {
     let container = document.getElementById("fertItemsContainer");
     let div = document.createElement("div");
     div.className = "item-row";
     div.innerHTML = `
-      <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcFertBill();"></select></div>
       <div class="flex-row">
         <div class="form-group"><label>ખાતરનું નામ:</label><select class="khatarList" required></select></div>
-        <div class="form-group"><label>રકમ:</label><input type="number" class="fAmt" step="0.01" oninput="calcFertBill()" value="${data.amt || ''}" required></div>
+        <div class="form-group"><label>વજન:</label><input type="text" class="fWeight" placeholder="વજન"></div>
+      </div>
+      <div class="flex-row">
+        <div class="form-group"><label>પેકિંગ:</label><input type="text" class="fPack" placeholder="પેકિંગ"></div>
+        <div class="form-group"><label>નંગ:</label><input type="number" class="fQty" value="1" min="1" oninput="calcFertBill()"></div>
+      </div>
+      <div class="flex-row">
+        <div class="form-group"><label>ભાવ:</label><input type="number" class="fBhav" step="0.01" oninput="calcFertBill()"></div>
+        <div class="form-group"><label>રકમ (₹):</label><input type="number" class="fAmt" step="0.01" oninput="calcFertBill()" required></div>
       </div>
       <button type="button" class="btn-delete" onclick="this.parentElement.remove(); calcFertBill();">ખાતર હટાવો</button>
     `;
     container.appendChild(div);
     populateData();
-    if(data.pak) div.querySelector('.pakList').value = data.pak;
-    if(data.khatar) div.querySelector('.khatarList').value = data.khatar;
     calcFertBill();
   }
 
-  function addTracItemRow(data = {}) {
+  function addTracItemRow() {
     let container = document.getElementById("tracItemsContainer");
     let div = document.createElement("div");
     div.className = "item-row";
@@ -449,21 +434,20 @@
         <div class="form-group"><label>કામ:</label><select class="tWork" required onchange="calcTracRow(this)"><option>હળામણ</option><option>દાંતી</option><option>રોટાવેટર</option><option>પાળા</option><option>નિકો</option><option>દવા છાંટવી</option><option>અન્ય</option></select></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>કુલ કલાક:</label><input type="number" class="tHrs" step="0.5" oninput="calcTracRow(this)" value="${data.hrs || ''}" required></div>
-        <div class="form-group"><label>ભાવ (કલાકના):</label><input type="number" class="tRate" oninput="calcTracRow(this)" value="${data.rate || ''}" required></div>
+        <div class="form-group"><label>કુલ કલાક:</label><input type="number" class="tHrs" step="0.5" oninput="calcTracRow(this)" required></div>
+        <div class="form-group"><label>ભાવ (કલાકના):</label><input type="number" class="tRate" oninput="calcTracRow(this)" required></div>
       </div>
-      <div class="form-group"><label>કુલ ભાડું (₹):</label><input type="text" class="tTotal readonly-bg" readonly value="${data.total || ''}"></div>
+      <div class="form-group"><label>કુલ ભાડું (₹):</label><input type="text" class="tTotal readonly-bg" readonly></div>
       <div class="flex-row">
-        <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="tKShare readonly-bg" readonly value="${data.kShare || ''}"></div>
-        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="tKRakam readonly-bg" readonly value="${data.kRakam || ''}"></div>
+        <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="tKShare readonly-bg" readonly></div>
+        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="tKRakam readonly-bg" readonly></div>
       </div>
       <button type="button" class="btn-delete" onclick="this.parentElement.remove()">કામ હટાવો</button>
     `;
     container.appendChild(div);
     populateData();
-    if(data.pak) div.querySelector('.pakList').value = data.pak;
-    if(data.work) div.querySelector('.tWork').value = data.work;
   }
+
   function calcSalesRow(el) {
     let row = el.closest('.item-row');
     let w = parseFloat(row.querySelector('.sWeight').value) || 0;
@@ -504,18 +488,37 @@
     let qty = parseFloat(row.querySelector('.mQty').value) || 1;
     let total = bhav * qty;
     row.querySelector('.mTotal').value = total.toFixed(2);
-    let type = row.querySelector('.mType').value;
-    let s = getCropShare(row.querySelector('.pakList').value);
-    if(type === "નિંદામણ") s = 100;
-    row.querySelector('.mKShare').value = s;
-    row.querySelector('.mKRakam').value = (total * (s/100)).toFixed(2);
+    calcMedBill();
+  }
+
+  function calcMedBill() {
+    let rows = document.querySelectorAll("#medItemsContainer .item-row");
+    let subTotal = 0;
+    rows.forEach(row => {
+      let amt = parseFloat(row.querySelector('.mTotal').value) || 0;
+      subTotal += amt;
+    });
+    document.getElementById("mSubTotal").value = subTotal.toFixed(2);
+
+    let tax = parseFloat(document.getElementById("mTax").value) || 0;
+    let gstAmt = ((tax / 2) * subTotal) / 100;
+    let cstAmt = ((tax / 2) * subTotal) / 100;
+    let totalBill = subTotal + gstAmt + cstAmt;
+
+    document.getElementById("mGst").value = gstAmt.toFixed(2);
+    document.getElementById("mCst").value = cstAmt.toFixed(2);
+    document.getElementById("mTotalBill").value = totalBill.toFixed(2);
   }
 
   function calcFertBill() {
     let rows = document.querySelectorAll("#fertItemsContainer .item-row");
     let subTotal = 0;
     rows.forEach(row => {
-      let amt = parseFloat(row.querySelector('.fAmt').value) || 0;
+      let qty = parseFloat(row.querySelector('.fQty').value) || 1;
+      let bhav = parseFloat(row.querySelector('.fBhav').value) || 0;
+      let amtField = row.querySelector('.fAmt');
+      let amt = parseFloat(amtField.value) || (qty * bhav);
+      if(bhav > 0 && qty > 0 && !amtField.value) amt = qty * bhav;
       subTotal += amt;
     });
 
@@ -530,7 +533,6 @@
     document.getElementById("fCst").value = cstAmt.toFixed(2);
     document.getElementById("fTotalBill").value = totalBill.toFixed(2);
   }
-
   function calcTracRow(el) {
     let row = el.closest('.item-row');
     let h = parseFloat(row.querySelector('.tHrs').value) || 0;
@@ -545,6 +547,7 @@
     row.querySelector('.tKShare').value = finalS;
     row.querySelector('.tKRakam').value = (t * (finalS/100)).toFixed(2);
   }
+
   function updateDashboard() {
     let totalSales = 0, farmerSales = 0;
     if(appData.Sales_Ledger) {
@@ -555,10 +558,11 @@
     }
 
     let totalExp = 0, farmerExp = 0;
-    ['Medicine_Expense', 'Fertilizer_Expense', 'Tractor_Expense'].forEach(sheet => {
+    // Updated to use Pesticide_Bill and Fertilizer_Bill instead of old single expense sheets
+    ['Pesticide_Bill', 'Fertilizer_Bill', 'Tractor_Expense'].forEach(sheet => {
       if(appData[sheet]) {
         appData[sheet].forEach(r => {
-          let billAmt = parseFloat(r["બીલની_રકમ"] || r["બીલની રકમ"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || r["કુલ_ભાડું"] || r["કુલ ભાડું"] || 0);
+          let billAmt = parseFloat(r["બીલની_કુલ_રકમ"] || r["બીલની કુલ રકમ"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || r["કુલ_ભાડું"] || r["કુલ ભાડું"] || 0);
           let farmerAmt = parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0);
           if(!isNaN(billAmt)) totalExp += billAmt;
           if(!isNaN(farmerAmt)) farmerExp += farmerAmt;
@@ -570,181 +574,6 @@
     document.getElementById("dashFarmerSales").innerText = "₹ " + farmerSales.toFixed(2);
     document.getElementById("dashTotalExpense").innerText = "₹ " + totalExp.toFixed(2);
     document.getElementById("dashFarmerExpense").innerText = "₹ " + farmerExp.toFixed(2);
-  }
-
-  function renderTables() {
-    let salesData = appData.Sales_Ledger || [];
-    let salesHtml = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>વેપારી</th><th>પાક</th><th>કુલ રકમ</th><th>ખેડૂ રકમ</th><th>ક્રિયા</th></tr>`;
-    if(salesData.length === 0) salesHtml += `<tr><td colspan="7">કોઈ ડેટા નથી</td></tr>`;
-    salesData.forEach(r => {
-      salesHtml += `<tr>
-        <td>${r["તારીખ"] || r["Date"] || ''}</td>
-        <td>${r["બીલ_નં"] || r["Bill_No"] || ''}</td>
-        <td>${r["વેપારી"] || ''}</td>
-        <td>${r["પાકનું_નામ"] || r["પાક"] || ''}</td>
-        <td>₹ ${r["કુલ_રકમ"] || r["કુલ રકમ"] || 0}</td>
-        <td>₹ ${r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0}</td>
-        <td>
-          <button class="btn-edit" onclick="editSales('${r["Entry_ID"] || r["Sales_ID"]}')">એડિટ</button>
-          <button class="btn-delete" onclick="deleteRecord('${r["Entry_ID"] || r["Sales_ID"]}', 'Sales_Ledger')">ડિલિટ</button>
-        </td>
-      </tr>`;
-    });
-    salesHtml += `</table>`;
-    document.getElementById("salesTableContainer").innerHTML = salesHtml;
-
-    let medData = appData.Medicine_Expense || [];
-    let medHtml = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>વેપારી</th><th>દવા</th><th>કુલ રકમ</th><th>ખેડૂ રકમ</th><th>ક્રિયા</th></tr>`;
-    if(medData.length === 0) medHtml += `<tr><td colspan="7">કોઈ ડેટા નથી</td></tr>`;
-    medData.forEach(r => {
-      medHtml += `<tr>
-        <td>${r["તારીખ"] || r["Date"] || ''}</td>
-        <td>${r["બીલ_નં"] || r["Bill_No"] || ''}</td>
-        <td>${r["વેપારી"] || ''}</td>
-        <td>${r["દવાનું_નામ"] || ''}</td>
-        <td>₹ ${r["કુલ_રકમ"] || r["કુલ રકમ"] || 0}</td>
-        <td>₹ ${r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0}</td>
-        <td>
-          <button class="btn-edit" onclick="editMed('${r["Entry_ID"]}')">એડિટ</button>
-          <button class="btn-delete" onclick="deleteRecord('${r["Entry_ID"]}', 'Medicine_Expense')">ડિલિટ</button>
-        </td>
-      </tr>`;
-    });
-    medHtml += `</table>`;
-    document.getElementById("medTableContainer").innerHTML = medHtml;
-
-    let fertData = appData.Fertilizer_Expense || [];
-    let fertHtml = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>વેપારી</th><th>ખાતર</th><th>બિલ રકમ</th><th>ખેડૂ રકમ</th><th>ક્રિયા</th></tr>`;
-    if(fertData.length === 0) fertHtml += `<tr><td colspan="7">કોઈ ડેટા નથી</td></tr>`;
-    fertData.forEach(r => {
-      fertHtml += `<tr>
-        <td>${r["તારીખ"] || r["Date"] || ''}</td>
-        <td>${r["બીલ_નં"] || r["Bill_No"] || ''}</td>
-        <td>${r["વેપારી"] || ''}</td>
-        <td>${r["ખાતરનું_નામ"] || ''}</td>
-        <td>₹ ${r["બીલની_રકમ"] || r["બીલની રકમ"] || 0}</td>
-        <td>₹ ${r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0}</td>
-        <td>
-          <button class="btn-edit" onclick="editFert('${r["Entry_ID"]}')">એડિટ</button>
-          <button class="btn-delete" onclick="deleteRecord('${r["Entry_ID"]}', 'Fertilizer_Expense')">ડિલિટ</button>
-        </td>
-      </tr>`;
-    });
-    fertHtml += `</table>`;
-    document.getElementById("fertTableContainer").innerHTML = fertHtml;
-
-    let tracData = appData.Tractor_Expense || [];
-    let tracHtml = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>ડ્રાઈવર</th><th>કામ</th><th>કુલ ભાડું</th><th>ખેડૂ રકમ</th><th>ક્રિયા</th></tr>`;
-    if(tracData.length === 0) tracHtml += `<tr><td colspan="7">કોઈ ડેટા નથી</td></tr>`;
-    tracData.forEach(r => {
-      tracHtml += `<tr>
-        <td>${r["તારીખ"] || r["Date"] || ''}</td>
-        <td>${r["બીલ_નં"] || r["Bill_No"] || ''}</td>
-        <td>${r["ડ્રાઈવર"] || ''}</td>
-        <td>${r["કામ"] || ''}</td>
-        <td>₹ ${r["કુલ_ભાડું"] || r["કુલ ભાડું"] || 0}</td>
-        <td>₹ ${r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0}</td>
-        <td>
-          <button class="btn-edit" onclick="editTrac('${r["Entry_ID"]}')">એડિટ</button>
-          <button class="btn-delete" onclick="deleteRecord('${r["Entry_ID"]}', 'Tractor_Expense')">ડિલિટ</button>
-        </td>
-      </tr>`;
-    });
-    tracHtml += `</table>`;
-    document.getElementById("tracTableContainer").innerHTML = tracHtml;
-  }
-  function editSales(entryId) {
-    let r = (appData.Sales_Ledger || []).find(x => (x["Entry_ID"] || x["Sales_ID"]) === entryId);
-    if(!r) return alert("રેકોર્ડ મળ્યો નથી!");
-    switchTab('Sales');
-    document.getElementById("sDate").value = r["તારીખ"] || r["Date"] || "";
-    document.getElementById("sBill").value = r["બીલ_નં"] || r["Bill_No"] || "";
-    document.getElementById("sBhagiya").value = r["ભાગીદાર"] || "";
-    document.getElementById("sVepari").value = r["વેપારી"] || "";
-    document.getElementById("sStatus").value = r["સ્થિતિ"] || "";
-    document.getElementById("sHastak").value = r["કોણે_લીધા"] || r["કોણે લીધા"] || "";
-    
-    document.getElementById("salesItemsContainer").innerHTML = "";
-    addSalesItemRow({
-      pak: r["પાકનું_નામ"] || r["પાક"] || "",
-      pauch: r["પાઉચ_નંગ"] || r["પાઉચ/નંગ"] || 0,
-      weight: r["વજન"] || 0,
-      bhav20: r["મણનો_ભાવ"] || r["૧ મણનો ભાવ"] || 0,
-      bhav1: r["કિલો_ભાવ"] || r["૧ કિલોનો ભાવ"] || 0,
-      total: r["કુલ_રકમ"] || r["કુલ રકમ"] || 0,
-      kShare: r["ખેડૂ_હિસ્સો"] || r["ખેડૂ હિસ્સો (%)"] || 0,
-      kRakam: r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0
-    });
-  }
-
-  function editMed(entryId) {
-    let r = (appData.Medicine_Expense || []).find(x => x["Entry_ID"] === entryId);
-    if(!r) return alert("રેકોર્ડ મળ્યો નથી!");
-    switchTab('Med');
-    document.getElementById("mDate").value = r["તારીખ"] || r["Date"] || "";
-    document.getElementById("mBill").value = r["બીલ_નં"] || r["Bill_No"] || "";
-    document.getElementById("mBhagiya").value = r["ભાગીદાર"] || "";
-    document.getElementById("mVepari").value = r["વેપારી"] || "";
-    document.getElementById("mStatus").value = r["ઉપાડ_સ્થિતિ"] || r["સ્થિતિ"] || "";
-    document.getElementById("mHastak").value = r["હસ્તે"] || "";
-
-    document.getElementById("medItemsContainer").innerHTML = "";
-    addMedItemRow({
-      pak: r["પાકનું_નામ"] || r["પાક"] || "",
-      dava: r["દવાનું_નામ"] || "",
-      type: r["દવાનો_પ્રકાર"] || r["પ્રકાર"] || "",
-      weight: r["વજન"] || "",
-      pack: r["પેકિંગ"] || "",
-      qty: r["નંગ"] || 1,
-      bhav: r["ભાવ"] || 0,
-      total: r["કુલ_રકમ"] || r["બીલની_રકમ"] || 0,
-      kShare: r["ખેડૂ_હિસ્સો"] || 0,
-      kRakam: r["ખેડૂ_રકમ"] || 0
-    });
-  }
-
-  function editFert(entryId) {
-    let r = (appData.Fertilizer_Expense || []).find(x => x["Entry_ID"] === entryId);
-    if(!r) return alert("રેકોર્ડ મળ્યો નથી!");
-    switchTab('Fert');
-    document.getElementById("fDate").value = r["તારીખ"] || r["Date"] || "";
-    document.getElementById("fBill").value = r["બીલ_નં"] || r["Bill_No"] || "";
-    document.getElementById("fBhagiya").value = r["ભાગીદાર"] || "";
-    document.getElementById("fVepari").value = r["વેપારી"] || "";
-    document.getElementById("fTax").value = r["ટેક્સ_%"] || r["ટેક્સ %"] || 0;
-    document.getElementById("fHastak").value = r["હસ્તે"] || "";
-    document.getElementById("fStatus").value = r["ઉપાડ_જમા"] || r["સ્થિતિ"] || "";
-    document.getElementById("fDetails").value = r["Transaction_details"] || "";
-
-    document.getElementById("fertItemsContainer").innerHTML = "";
-    addFertItemRow({
-      pak: r["પાકનું_નામ"] || r["પાક"] || "",
-      khatar: r["ખાતરનું_નામ"] || "",
-      amt: r["રકમ"] || r["મૂળ રકમ"] || 0
-    });
-  }
-
-  function editTrac(entryId) {
-    let r = (appData.Tractor_Expense || []).find(x => x["Entry_ID"] === entryId);
-    if(!r) return alert("રેકોર્ડ મળ્યો નથી!");
-    switchTab('Trac');
-    document.getElementById("tDate").value = r["તારીખ"] || r["Date"] || "";
-    document.getElementById("tBill").value = r["બીલ_નં"] || r["Bill_No"] || "";
-    document.getElementById("tBhagiya").value = r["ભાગીદાર"] || "";
-    document.getElementById("tDriver").value = r["ડ્રાઈવર"] || "";
-    document.getElementById("tStatus").value = r["સ્થિતિ"] || "";
-    document.getElementById("tHastak").value = r["કોણે_આપ્યા"] || r["હસ્તે"] || "";
-
-    document.getElementById("tracItemsContainer").innerHTML = "";
-    addTracItemRow({
-      pak: r["પાકનું_નામ"] || r["પાક"] || "",
-      work: r["કામ"] || "",
-      hrs: r["કુલ_કલાક"] || r["કલાક"] || 0,
-      rate: r["ભાવ"] || 0,
-      total: r["કુલ_ભાડું"] || 0,
-      kShare: r["ખેડૂ_હિસ્સો"] || 0,
-      kRakam: r["ખેડૂ_રકમ"] || 0
-    });
   }
 
   function checkBhagiyaNew(sel) { if(sel.value === "NEW") { document.getElementById("modalBhagiya").style.display = "block"; sel.value = ""; } }
@@ -766,6 +595,7 @@
     let share = crop["ભાગ_ટકા"] || 0;
     return parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
   }
+
   function v(id) { return document.getElementById(id).value; }
   function getYear(dateString) {
     let d = new Date(dateString), m = d.getMonth() + 1, y = d.getFullYear();
@@ -825,9 +655,8 @@
           count++;
           if(count === rows.length) {
             alert("બધી આઇટમ્સ સફળતાપૂર્વક સેવ થઈ ગઈ!");
-            document.getElementById("btnSales").innerText = "સેવ કરો";
             fetchData();
-            switchTab('Sales');
+            switchTab('Dash');
           }
         });
       });
@@ -841,60 +670,42 @@
 
     document.getElementById("btnMed").innerText = "સેવ થઈ રહ્યું છે...";
     let date = v("mDate"), billNo = v("mBill") || "N/A", bhagiya = v("mBhagiya"), year = getYear(date);
-    let mainEntryId = "ME-" + Date.now();
+    let subTotal = parseFloat(document.getElementById("mSubTotal").value) || 0;
+    let tax = parseFloat(document.getElementById("mTax").value) || 0;
+    let gst = parseFloat(document.getElementById("mGst").value) || 0;
+    let cst = parseFloat(document.getElementById("mCst").value) || 0;
+    let totalBill = parseFloat(document.getElementById("mTotalBill").value) || 0;
 
     handlePhotoUpload("mPhoto", function(photoBase64) {
-      if(photoBase64) {
-        let photoRow = [ year, mainEntryId, date, billNo, bhagiya, "દવા ખર્ચ", photoBase64 ];
-        fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "savePhoto", rowValues: photoRow }) });
-      }
+      let billRow = [ year, date, billNo, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, "" ];
+      let itemRows = [];
 
-      let totalBillAmt = 0;
-      let rowDataArray = [];
-
-      rows.forEach((row, index) => {
-        let entryId = mainEntryId + "-" + (index + 1);
+      rows.forEach(row => {
         let amt = parseFloat(row.querySelector(".mTotal").value) || 0;
-        totalBillAmt += amt;
-
-        let rowData = [
-          year, entryId, date, billNo, bhagiya,
-          v("mVepari"),
-          row.querySelector(".pakList").value,
+        itemRows.push([
+          year, date, billNo,
           row.querySelector(".davaList").value,
-          row.querySelector(".mType").value,
           row.querySelector(".mWeight").value,
           row.querySelector(".mPack").value,
           row.querySelector(".mQty").value,
           row.querySelector(".mBhav").value,
-          amt,
-          row.querySelector(".mKShare").value,
-          row.querySelector(".mKRakam").value,
-          v("mStatus"),
-          v("mHastak"),
-          photoBase64
-        ];
-        rowDataArray.push(rowData);
+          amt
+        ]);
       });
 
-      let ledgerRow = [ year, mainEntryId, date, bhagiya, "દવા ખર્ચ", totalBillAmt, v("mStatus"), v("mVepari") ];
+      let ledgerRow = [ year, "ME-" + Date.now(), date, bhagiya, "દવા ખર્ચ", totalBill, v("mStatus"), v("mVepari") ];
 
-      let savedCount = 0;
-      rowDataArray.forEach(rowData => {
-        fetch(SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "saveMedicine", rowValues: rowData, ledgerRow: (savedCount === 0 ? ledgerRow : null) })
-        }).then(() => {
-          savedCount++;
-          if(savedCount === rowDataArray.length) {
-            alert("દવાની બધી આઇટમ્સ સફળતાપૂર્વક સેવ થઈ ગઈ!");
-            document.getElementById("btnMed").innerText = "સેવ કરો";
-            fetchData();
-            switchTab('Med');
-          }
-        });
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "savePesticideBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow })
+      }).then(res => res.json()).then(() => {
+        alert("દવા બિલ સફળતાપૂર્વક સેવ થઈ ગયું!");
+        document.getElementById("btnMed").innerText = "સેવ કરો";
+        fetchData();
+        switchTab('Dash');
       });
     });
+    
   }
   function submitFert(e) {
     e.preventDefault();
@@ -903,66 +714,41 @@
 
     document.getElementById("btnFert").innerText = "સેવ થઈ રહ્યું છે...";
     let date = v("fDate"), billNo = v("fBill") || "N/A", bhagiya = v("fBhagiya"), year = getYear(date);
-    let mainEntryId = "FE-" + Date.now();
-
     let subTotal = parseFloat(document.getElementById("fSubTotal").value) || 0;
     let tax = parseFloat(document.getElementById("fTax").value) || 0;
-    let gstTotal = parseFloat(document.getElementById("fGst").value) || 0;
-    let cstTotal = parseFloat(document.getElementById("fCst").value) || 0;
-    let grandTotal = parseFloat(document.getElementById("fTotalBill").value) || 0;
+    let gst = parseFloat(document.getElementById("fGst").value) || 0;
+    let cst = parseFloat(document.getElementById("fCst").value) || 0;
+    let totalBill = parseFloat(document.getElementById("fTotalBill").value) || 0;
 
     handlePhotoUpload("fPhoto", function(photoBase64) {
-      if(photoBase64) {
-        let photoRow = [ year, mainEntryId, date, billNo, bhagiya, "ખાતર ખર્ચ", photoBase64 ];
-        fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "savePhoto", rowValues: photoRow }) });
-      }
+      let billRow = [ year, date, billNo, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, "" ];
+      let itemRows = [];
 
-      let savedCount = 0;
-      rows.forEach((row, index) => {
-        let entryId = mainEntryId + "-" + (index + 1);
-        let amt = parseFloat(row.querySelector(".fAmt").value) || 0;
-        
-        let proportion = subTotal > 0 ? (amt / subTotal) : (1 / rows.length);
-        let itemGst = gstTotal * proportion;
-        let itemCst = cstTotal * proportion;
-        let itemTotal = amt + itemGst + itemCst;
-
-        let cropName = row.querySelector(".pakList").value;
-        let s = getCropShare(cropName);
-        let kRakam = itemTotal * (s / 100);
-
-        let rowData = [
-          year, entryId, billNo, date,
-          v("fVepari"),
-          cropName,
+      rows.forEach(row => {
+        let qty = parseFloat(row.querySelector(".fQty").value) || 1;
+        let bhav = parseFloat(row.querySelector(".fBhav").value) || 0;
+        let amt = parseFloat(row.querySelector(".fAmt").value) || (qty * bhav);
+        itemRows.push([
+          year, date, billNo,
           row.querySelector(".khatarList").value,
-          amt,
-          tax,
-          itemGst.toFixed(2),
-          itemCst.toFixed(2),
-          itemTotal.toFixed(2),
-          s,
-          kRakam.toFixed(2),
-          v("fHastak"),
-          v("fStatus"),
-          v("fDetails"),
-          photoBase64
-        ];
+          row.querySelector(".fWeight").value,
+          row.querySelector(".fPack").value,
+          qty,
+          bhav,
+          amt
+        ]);
+      });
 
-        let ledgerRow = (index === 0) ? [ year, mainEntryId, date, bhagiya, "ખાતર ખર્ચ", grandTotal, v("fStatus"), v("fVepari") ] : null;
+      let ledgerRow = [ year, "FE-" + Date.now(), date, bhagiya, "ખાતર ખર્ચ", totalBill, v("fStatus"), v("fVepari") ];
 
-        fetch(SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "saveFertilizer", rowValues: rowData, ledgerRow: ledgerRow })
-        }).then(() => {
-          savedCount++;
-          if(savedCount === rows.length) {
-            alert("ખાતરનું બિલ સફળતાપૂર્વક સેવ થઈ ગયું!");
-            document.getElementById("btnFert").innerText = "સેવ કરો";
-            fetchData();
-            switchTab('Fert');
-          }
-        });
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "saveFertilizerBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow })
+      }).then(res => res.json()).then(() => {
+        alert("ખાતર બિલ સફળતાપૂર્વક સેવ થઈ ગયું!");
+        document.getElementById("btnFert").innerText = "સેવ કરો";
+        fetchData();
+        switchTab('Dash');
       });
     });
   }
@@ -1019,9 +805,8 @@
           savedCount++;
           if(savedCount === rowDataArray.length) {
             alert("ટ્રેક્ટરના બધા કામો સફળતાપૂર્વક સેવ થઈ ગયા!");
-            document.getElementById("btnTrac").innerText = "સેવ કરો";
             fetchData();
-            switchTab('Trac');
+            switchTab('Dash');
           }
         });
       });
@@ -1034,6 +819,7 @@
     let row = [ getYear(v("sDate")), name, v("nbPhone"), v("nbAdd") ];
     saveData("saveBhagiya", row); document.getElementById("modalBhagiya").style.display = "none";
   }
+
   function saveV() {
     let name = v("nvName").trim();
     let cat = v("nvCategory");
@@ -1099,8 +885,8 @@
     if(!confirm("શું તમે ખરેખર આ રેકોર્ડ ડિલીટ કરવા માંગો છો?")) return;
     
     let sheetName = "Sales_Ledger";
-    if(category === "દવા ખર્ચ") sheetName = "Medicine_Expense";
-    else if(category === "ખાતર ખર્ચ") sheetName = "Fertilizer_Expense";
+    if(category === "દવા ખર્ચ") sheetName = "Pesticide_Bill";
+    else if(category === "ખાતર ખર્ચ") sheetName = "Fertilizer_Bill";
     else if(category === "ટ્રેક્ટર ખર્ચ") sheetName = "Tractor_Expense";
 
     fetch(SCRIPT_URL, {
@@ -1113,5 +899,4 @@
   }
 </script>
 </body>
-</html>
-  
+</html

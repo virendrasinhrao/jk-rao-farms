@@ -7,8 +7,6 @@
   <style>
     body { font-family: Arial, sans-serif; background-color: #f4f7f6; padding: 10px; margin:0; }
     .header-bar { display: flex; justify-content: space-between; align-items: center; max-width: 700px; margin: auto auto 15px auto; }
-    
-    /* આકર્ષક અને મોટું રિફ્રેશ બટન અને એનિમેશન */
     .refresh-btn { 
       background: linear-gradient(135deg, #16a085, #1abc9c); 
       color: white; 
@@ -25,7 +23,6 @@
       transition: all 0.3s ease;
     }
     .refresh-btn:hover { background: linear-gradient(135deg, #1abc9c, #16a085); transform: translateY(-2px); }
-    
     @keyframes smoothSpin { 
       0% { transform: rotate(0deg) scale(1); } 
       50% { transform: rotate(180deg) scale(1.2); } 
@@ -104,7 +101,7 @@
   <!-- 1. SALES FORM -->
   <div id="formSales" class="section">
     <h3 style="text-align:center; color:#27ae60;">🌱 વેચાણ (Sales)</h3>
-    <form onsubmit="submitSales(event)">
+    <form id="salesForm" onsubmit="submitSales(event)">
       <div class="flex-row">
         <div class="form-group"><label>તારીખ:</label><input type="date" id="sDate" required></div>
         <div class="form-group"><label>બિલ નં (ઓપ્શનલ):</label><input type="text" id="sBill"></div>
@@ -133,7 +130,7 @@
   <!-- 2. MEDICINE FORM -->
   <div id="formMed" class="section">
     <h3 style="text-align:center; color:#2980b9;">🧪 દવા ખર્ચ (Medicine / Pesticide)</h3>
-    <form onsubmit="submitMed(event)">
+    <form id="medForm" onsubmit="submitMed(event)">
       <div class="flex-row">
         <div class="form-group"><label>તારીખ:</label><input type="date" id="mDate" required></div>
         <div class="form-group"><label>બિલ નં (ઓપ્શનલ):</label><input type="text" id="mBill"></div>
@@ -176,7 +173,7 @@
   <!-- 3. FERTILIZER FORM -->
   <div id="formFert" class="section">
     <h3 style="text-align:center; color:#d35400;">🌾 ખાતર ખર્ચ (Fertilizer)</h3>
-    <form onsubmit="submitFert(event)">
+    <form id="fertForm" onsubmit="submitFert(event)">
       <div class="flex-row">
         <div class="form-group"><label>તારીખ:</label><input type="date" id="fDate" required></div>
         <div class="form-group"><label>બિલ નં (ઓપ્શનલ):</label><input type="text" id="fBill"></div>
@@ -218,7 +215,7 @@
   <!-- 4. TRACTOR FORM -->
   <div id="formTrac" class="section">
     <h3 style="text-align:center; color:#8e44ad;">🚜 ટ્રેક્ટર ખર્ચ (Tractor)</h3>
-    <form onsubmit="submitTrac(event)">
+    <form id="tracForm" onsubmit="submitTrac(event)">
       <div class="flex-row">
         <div class="form-group"><label>તારીખ:</label><input type="date" id="tDate" required></div>
         <div class="form-group"><label>વાઉચર/બિલ (ઓપ્શનલ):</label><input type="text" id="tBill"></div>
@@ -312,15 +309,19 @@
     });
 
     document.querySelectorAll('.bhagiyaList').forEach(sel => { 
+      let cur = sel.value;
       sel.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
       bhagiyas.forEach(b => sel.add(new Option(b, b))); 
+      sel.value = cur;
     });
     
     let veparis = appData.Merchant_Master ? appData.Merchant_Master.filter(r => String(r["પ્રકાર"] || "").trim() === "Vegitable").map(r => r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"]) : [];
     let sVepari = document.getElementById("sVepari");
     if(sVepari) {
+      let cur = sVepari.value;
       sVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
       veparis.forEach(v => sVepari.add(new Option(v, v)));
+      sVepari.value = cur;
     }
 
     let medVeparis = [];
@@ -338,17 +339,20 @@
 
     let mVepari = document.getElementById("mVepari");
     if(mVepari) {
+      let cur = mVepari.value;
       mVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
       medVeparis.forEach(v => mVepari.add(new Option(v, v)));
+      mVepari.value = cur;
     }
 
     let fVepari = document.querySelector(".fertVepariList");
     if(fVepari) {
+      let cur = fVepari.value;
       fVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
       fertVeparis.forEach(v => fVepari.add(new Option(v, v)));
+      fVepari.value = cur;
     }
-
-    document.querySelectorAll('.pakList').forEach(sel => {
+ document.querySelectorAll('.pakList').forEach(sel => {
       let currentVal = sel.value;
       sel.innerHTML = '<option value="">-- પાક પસંદ કરો --</option><option value="NEW">➕ નવો પાક ઉમેરો</option>';
       if(appData.Crop_Master) {
@@ -524,6 +528,26 @@
     row.querySelector('.mTotal').value = total.toFixed(2);
     calcMedBill();
   }
+
+  function calcMedBill() {
+    let rows = document.querySelectorAll("#medItemsContainer .item-row");
+    let subTotal = 0;
+    rows.forEach(row => {
+      let amt = parseFloat(row.querySelector('.mTotal').value) || 0;
+      subTotal += amt;
+    });
+    document.getElementById("mSubTotal").value = subTotal.toFixed(2);
+
+    let tax = parseFloat(document.getElementById("mTax").value) || 0;
+    let gstAmt = ((tax / 2) * subTotal) / 100;
+    let cstAmt = ((tax / 2) * subTotal) / 100;
+    let totalBill = subTotal + gstAmt + cstAmt;
+
+    document.getElementById("mGst").value = gstAmt.toFixed(2);
+    document.getElementById("mCst").value = cstAmt.toFixed(2);
+    document.getElementById("mTotalBill").value = totalBill.toFixed(2);
+  }
+
   function calcFertBill() {
     let rows = document.querySelectorAll("#fertItemsContainer .item-row");
     let subTotal = 0;
@@ -532,7 +556,10 @@
       let bhav = parseFloat(row.querySelector('.fBhav').value) || 0;
       let amtField = row.querySelector('.fAmt');
       let amt = parseFloat(amtField.value) || (qty * bhav);
-      if(bhav > 0 && qty > 0 && !amtField.value) amt = qty * bhav;
+      if(bhav > 0 && qty > 0 && !amtField.value) {
+        amt = qty * bhav;
+        amtField.value = amt.toFixed(2);
+      }
       subTotal += amt;
     });
 
@@ -609,7 +636,6 @@
     let share = crop["ભાગ_ટકા"] || 0;
     return parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
   }
-
   function v(id) { return document.getElementById(id).value; }
   function getYear(dateString) {
     let d = new Date(dateString), m = d.getMonth() + 1, y = d.getFullYear();
@@ -669,6 +695,12 @@
           count++;
           if(count === rows.length) {
             alert("બધી આઇટમ્સ સફળતાપૂર્વક સેવ થઈ ગઈ!");
+            document.getElementById("btnSales").innerText = "સેવ કરો";
+            document.getElementById("salesForm").reset();
+            document.getElementById("salesItemsContainer").innerHTML = "";
+            addSalesItemRow();
+            let today = new Date().toISOString().split('T')[0];
+            document.getElementById("sDate").value = today;
             fetchData();
             switchTab('Dash');
           }
@@ -715,6 +747,19 @@
       }).then(res => res.json()).then(() => {
         alert("દવા બિલ સફળતાપૂર્વક સેવ થઈ ગયું!");
         document.getElementById("btnMed").innerText = "સેવ કરો";
+        
+        // ફોર્મ રીસેટ (બધું જ ખાલી થશે જ્યારે Save થશે ત્યારે જ)
+        document.getElementById("medForm").reset();
+        document.getElementById("medItemsContainer").innerHTML = "";
+        addMedItemRow();
+        document.getElementById("mSubTotal").value = "0.00";
+        document.getElementById("mTax").value = "0";
+        document.getElementById("mGst").value = "0.00";
+        document.getElementById("mCst").value = "0.00";
+        document.getElementById("mTotalBill").value = "0.00";
+        let today = new Date().toISOString().split('T')[0];
+        document.getElementById("mDate").value = today;
+
         fetchData();
         switchTab('Dash');
       });
@@ -761,11 +806,25 @@
       }).then(res => res.json()).then(() => {
         alert("ખાતર બિલ સફળતાપૂર્વક સેવ થઈ ગયું!");
         document.getElementById("btnFert").innerText = "સેવ કરો";
+        
+        // ફોર્મ રીસેટ (બધું જ ખાલી થશે જ્યારે Save થશે ત્યારે જ)
+        document.getElementById("fertForm").reset();
+        document.getElementById("fertItemsContainer").innerHTML = "";
+        addFertItemRow();
+        document.getElementById("fSubTotal").value = "0.00";
+        document.getElementById("fTax").value = "0";
+        document.getElementById("fGst").value = "0.00";
+        document.getElementById("fCst").value = "0.00";
+        document.getElementById("fTotalBill").value = "0.00";
+        let today = new Date().toISOString().split('T')[0];
+        document.getElementById("fDate").value = today;
+
         fetchData();
         switchTab('Dash');
       });
     });
   }
+
   function submitTrac(e) {
     e.preventDefault();
     let rows = document.querySelectorAll("#tracItemsContainer .item-row");
@@ -818,6 +877,12 @@
           savedCount++;
           if(savedCount === rowDataArray.length) {
             alert("ટ્રેક્ટરના બધા કામો સફળતાપૂર્વક સેવ થઈ ગયા!");
+            document.getElementById("btnTrac").innerText = "સેવ કરો";
+            document.getElementById("tracForm").reset();
+            document.getElementById("tracItemsContainer").innerHTML = "";
+            addTracItemRow();
+            let today = new Date().toISOString().split('T')[0];
+            document.getElementById("tDate").value = today;
             fetchData();
             switchTab('Dash');
           }
@@ -825,7 +890,6 @@
       });
     });
   }
-
   function saveB() {
     let name = v("nbName").trim();
     if(name == "") return alert("નામ જરૂરી છે!");
@@ -912,6 +976,6 @@
   }
 </script>
 </body>
-</html
+</html>
   
-  
+    

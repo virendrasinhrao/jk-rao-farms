@@ -725,6 +725,68 @@
       let itemRows = [];
 
       rows.forEach(row => {
+  function submitMed(e) {
+    e.preventDefault();
+    let rows = document.querySelectorAll("#medItemsContainer .item-row");
+    if(rows.length === 0) return alert("કમ સે કમ એક દવા ઉમેરો!");
+
+    document.getElementById("btnMed").innerText = "સેવ થઈ રહ્યું છે...";
+    let date = v("mDate"), billNo = v("mBill") || "N/A", bhagiya = v("mBhagiya"), year = getYear(date);
+    let subTotal = parseFloat(document.getElementById("mSubTotal").value) || 0;
+    let tax = parseFloat(document.getElementById("mTax").value) || 0;
+    let gst = parseFloat(document.getElementById("mGst").value) || 0;
+    let cst = parseFloat(document.getElementById("mCst").value) || 0;
+    let totalBill = parseFloat(document.getElementById("mTotalBill").value) || 0;
+
+    handlePhotoUpload("mPhoto", function(photoBase64) {
+      let billRow = [ year, date, billNo, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, "" ];
+      let itemRows = [];
+
+      rows.forEach(row => {
+        let amt = parseFloat(row.querySelector(".mTotal").value) || 0;
+        itemRows.push([
+          year, date, billNo,
+          row.querySelector(".davaList").value,
+          row.querySelector(".mWeight").value,
+          row.querySelector(".mPack").value,
+          row.querySelector(".mQty").value,
+          row.querySelector(".mBhav").value,
+          amt
+        ]);
+      });
+
+      let ledgerRow = [ year, "ME-" + Date.now(), date, bhagiya, "દવા ખર્ચ", totalBill, v("mStatus"), v("mVepari") ];
+
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "savePesticideBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow })
+      }).then(res => res.json()).then(() => {
+        alert("દવા બિલ સફળતાપૂર્વક સેવ થઈ ગયું!");
+        document.getElementById("btnMed").innerText = "સેવ કરો";
+        fetchData();
+        switchTab('Dash');
+      });
+    });
+  }
+
+  function submitFert(e) {
+    e.preventDefault();
+    let rows = document.querySelectorAll("#fertItemsContainer .item-row");
+    if(rows.length === 0) return alert("કમ સે કમ એક ખાતર આઇટમ ઉમેરો!");
+
+    document.getElementById("btnFert").innerText = "સેવ થઈ રહ્યું છે...";
+    let date = v("fDate"), billNo = v("fBill") || "N/A", bhagiya = v("fBhagiya"), year = getYear(date);
+    let subTotal = parseFloat(document.getElementById("fSubTotal").value) || 0;
+    let tax = parseFloat(document.getElementById("fTax").value) || 0;
+    let gst = parseFloat(document.getElementById("fGst").value) || 0;
+    let cst = parseFloat(document.getElementById("fCst").value) || 0;
+    let totalBill = parseFloat(document.getElementById("fTotalBill").value) || 0;
+
+    handlePhotoUpload("fPhoto", function(photoBase64) {
+      let billRow = [ year, date, billNo, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, "" ];
+      let itemRows = [];
+
+      rows.forEach(row => {
         let qty = parseFloat(row.querySelector(".fQty").value) || 1;
         let bhav = parseFloat(row.querySelector(".fBhav").value) || 0;
         let amt = parseFloat(row.querySelector(".fAmt").value) || (qty * bhav);
@@ -752,6 +814,7 @@
       });
     });
   }
+
 
   function submitTrac(e) {
     e.preventDefault();

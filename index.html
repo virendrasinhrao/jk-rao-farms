@@ -506,17 +506,26 @@
     row.querySelector('.sKRakam').value = (total * (s/100)).toFixed(2);
   }
 
-  function onMedSelectRow(sel) {
+    function onMedSelectRow(sel) {
     let row = sel.closest('.item-row');
     let medName = sel.value;
     if(!medName || !appData.Medicine_Master) return;
-    let found = appData.Medicine_Master.find(m => String(m["દવાનું_નામ"] || m["દવાનું નામ"] || m["નામ"] || "").trim() === medName.trim());
+    
+    // Medicine_Master માંથી દવાનું નામ શોધીને તેનો પ્રકાર (Type) મેળવવો
+    let found = appData.Medicine_Master.find(m => {
+      let mName = m["દવાનું_નામ"] || m["દવાનું નામ"] || m["નામ"] || m["Name"] || "";
+      return String(mName).trim() === String(medName).trim();
+    });
+
     if(found) {
-      let type = found["પ્રકાર"] || found["દવાનો_પ્રકાર"] || found["દવાનો પ્રકાર"] || found["Category"] || "";
+      let type = found["પ્રકાર"] || found["પ્રકાર "] || found["દવાનો_પ્રકાર"] || found["દવાનો પ્રકાર"] || found["Category"] || found["category"] || "";
       row.querySelector('.mType').value = type;
+    } else {
+      row.querySelector('.mType').value = "";
     }
     calcMedRow(sel);
   }
+
 
   function onWeightInputRow(input) {
     let row = input.closest('.item-row');

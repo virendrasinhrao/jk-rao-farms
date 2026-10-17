@@ -43,7 +43,6 @@
     .btn-add-item { background: #27ae60; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; margin-bottom: 10px; }
     .readonly-bg { background-color: #e9ecef; }
     
-    /* લીલી બેકગ્રાઉન્ડ, સફેદ બોલ્ડ મોટા અક્ષરોવાળી કુલ રકમ માટેની સ્ટાઇલ */
     .highlight-total { 
       background-color: #27ae60 !important; 
       color: #ffffff !important; 
@@ -171,7 +170,7 @@
       </div>
 
       <div class="flex-row" style="margin-top:15px;">
-        <div class="form-group"><label>હસ્તે (માલિક અથવા ખેડૂ):</label><input type="text" id="mHastak" placeholder="માલિક અથવા ખેડૂ" required></div>
+        <div class="form-group"><label>હસ્તે (માલિક અથવા ખેડૂ):</label><select id="mHastak" class="bhagiyaList" required></select></div>
         <div class="form-group"><label>ઉપાડમાં સ્થિતિ:</label><select id="mStatus"><option>જમા</option><option>બાકી</option></select></div>
       </div>
       <div class="form-group">
@@ -208,13 +207,12 @@
           <div class="form-group"><label>સી.એસ.ટી. રકમ:</label><input type="text" id="fCst" class="readonly-bg" readonly value="0.00"></div>
         </div>
         <div class="form-group">
-          <label style="color: #d35400; font-size: 15px;">બિલની કુલ રકમ (₹):</label>
-          <input type="text" id="fTotalBill" class="highlight-total" readonly value="0.00">
+          <label style="color: #d35400; font-size: 15px;">બિલની કુલ રકમ (₹):</label><input type="text" id="fTotalBill" class="highlight-total" readonly value="0.00">
         </div>
       </div>
 
       <div class="flex-row" style="margin-top:15px;">
-        <div class="form-group"><label>હસ્તે (માલિક અથવા ખેડૂ):</label><input type="text" id="fHastak" placeholder="માલિક અથવા ખેડૂ" required></div>
+        <div class="form-group"><label>હસ્તે (માલિક અથવા ખેડૂ):</label><select id="fHastak" class="bhagiyaList" required></select></div>
         <div class="form-group"><label>ઉપાડ જમા:</label><select id="fStatus"><option>જમા</option><option>બાકી</option></select></div>
       </div>
       <div class="form-group"><label>Transaction details:</label><input type="text" id="fDetails" placeholder="વિગત (ઓપ્શનલ)"></div>
@@ -241,7 +239,7 @@
 
       <div class="flex-row" style="margin-top:15px;">
         <div class="form-group"><label>સ્થિતિ:</label><select id="tStatus"><option>રોકડા</option><option>બાકી</option></select></div>
-        <div class="form-group"><label>કોણે આપ્યા (માલિક અથવા ખેડૂ):</label><input type="text" id="tHastak" placeholder="માલિક અથવા ખેડૂ" required></div>
+        <div class="form-group"><label>કોણે આપ્યા (માલિક અથવા ખેડૂ):</label><select id="tHastak" class="bhagiyaList" required></select></div>
       </div>
       <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="tPhoto" accept="image/*" capture="environment"></div>
       <button type="submit" id="btnTrac" class="btn-submit">સેવ કરો</button>
@@ -355,8 +353,7 @@
       medVeparis.forEach(v => mVepari.add(new Option(v, v)));
       mVepari.value = cur;
     }
-
-    let fVepari = document.querySelector(".fertVepariList");
+   let fVepari = document.querySelector(".fertVepariList");
     if(fVepari) {
       let cur = fVepari.value;
       fVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
@@ -424,7 +421,6 @@
     container.appendChild(div);
     populateData();
   }
-
   function addMedItemRow() {
     let container = document.getElementById("medItemsContainer");
     let div = document.createElement("div");
@@ -665,7 +661,6 @@
       callback("");
     }
   }
-
   function submitSales(e) {
     e.preventDefault();
     let rows = document.querySelectorAll("#salesItemsContainer .item-row");
@@ -700,7 +695,8 @@
           v("sBLidha"), 
           photoBase64
         ];
-fetch(SCRIPT_URL, {
+
+        fetch(SCRIPT_URL, {
           method: "POST",
           body: JSON.stringify({ action: "saveSales", rowValues: rowData })
         }).then(() => {
@@ -900,7 +896,6 @@ fetch(SCRIPT_URL, {
       });
     });
   }
-
   function saveB() {
     let name = v("nbName").trim();
     if(name == "") return alert("નામ જરૂરી છે!");

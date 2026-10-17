@@ -8,7 +8,6 @@
     body { font-family: Arial, sans-serif; background-color: #f4f7f6; padding: 10px; margin:0; }
     .header-bar { display: flex; justify-content: space-between; align-items: center; max-width: 700px; margin: auto auto 15px auto; }
     
-    /* આકર્ષક અને મોટું રિફ્રેશ બટન અને બ્લૂ ગ્લોઇંગ એનિમેશન */
     .refresh-btn { 
       background: linear-gradient(135deg, #16a085, #1abc9c); 
       color: white; 
@@ -266,7 +265,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક ઉમેરો</h3><input type="text" id="ncName" placeholder="પાકનું નામ (દા.ત. જીરું)" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%) દા.ત. 50" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:10px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzLne54CjsJXFhMgx0nu2wjvoW1QiT6QH_msqxuEO7BQxLXg8DZTZETqQaOuwEZjF-VCQ/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwhF6wPq1DesSA4ZGzYffg2BDhWlk2FGtHNfFRn_sWX0yWngrepEy-vuuFOc39856p6jQ/exec";
   let appData = {};
 
   window.onload = function() {
@@ -489,8 +488,8 @@
       </div>
       <div class="form-group"><label>કુલ ભાડું (₹):</label><input type="text" class="tTotal readonly-bg" readonly></div>
       <div class="flex-row">
-        <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="tKShare readonly-bg" readonly></div>
-        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="tKRakam readonly-bg" readonly></div>
+        <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKShare readonly-bg" readonly></div>
+        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam readonly-bg" readonly></div>
       </div>
       <button type="button" class="btn-delete" onclick="this.parentElement.remove()">કામ હટાવો</button>
     `;
@@ -739,26 +738,24 @@
     let gst = parseFloat(document.getElementById("mGst").value) || 0;
     let cst = parseFloat(document.getElementById("mCst").value) || 0;
     let totalBill = parseFloat(document.getElementById("mTotalBill").value) || 0;
+    let inWords = totalBill.toFixed(2) + " રૂપિયા પૂરા";
 
     handlePhotoUpload("mPhoto", function(photoBase64) {
-      // બિલ હેડર (Pesticide_Bill માટે)
-      let billRow = [ year, date, billNo, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, "" ];
+      // અહીં ઇન્ડેક્સ ક્રમ: [0:વર્ષ, 1:તારીખ, 2:બિલનં, 3:વેપારી, 4:ભાગીદાર, 5:સબકુલ, 6:ટેક્સ, 7:જીએસટી, 8:સીએસટી, 9:કુલરકમ(J), 10:ફોટો(K), 11:અંકેરૂપિયા(L)]
+      let billRow = [ year, date, billNo, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
       let itemRows = [];
 
-      // Pesticide_Items માટે કૉલમનો સાચો ક્રમ (વજન પહેલાં દવા પ્રકાર આવશે)
       rows.forEach(row => {
         let amt = parseFloat(row.querySelector(".mTotal").value) || 0;
         itemRows.push([
-          year,                                     // 1. વર્ષ
-          date,                                     // 2. તારીખ
-          billNo,                                   // 3. બિલ નં
-          row.querySelector(".davaList").value,     // 4. દવાનું નામ
-          row.querySelector(".mType").value,        // 5. દવા પ્રકાર (બરાબર જગ્યાએ)
-          row.querySelector(".mWeight").value,      // 6. વજન
-          row.querySelector(".mPack").value,        // 7. પેકિંગ
-          row.querySelector(".mQty").value,         // 8. નંગ
-          row.querySelector(".mBhav").value,        // 9. ભાવ
-          amt                                       // 10. રકમ
+          year, date, billNo,
+          row.querySelector(".davaList").value,
+          row.querySelector(".mType").value,
+          row.querySelector(".mWeight").value,
+          row.querySelector(".mPack").value,
+          row.querySelector(".mQty").value,
+          row.querySelector(".mBhav").value,
+          amt
         ]);
       });
 
@@ -770,7 +767,6 @@
       }).then(res => res.json()).then(() => {
         alert("દવા બિલ સફળતાપૂર્વક સેવ થઈ ગયું!");
         document.getElementById("btnMed").innerText = "સેવ કરો";
-        
         document.getElementById("medForm").reset();
         document.getElementById("medItemsContainer").innerHTML = "";
         addMedItemRow();
@@ -781,7 +777,6 @@
         document.getElementById("mTotalBill").value = "0.00";
         let today = new Date().toISOString().split('T')[0];
         document.getElementById("mDate").value = today;
-
         fetchData();
         switchTab('Dash');
       });
@@ -800,9 +795,10 @@
     let gst = parseFloat(document.getElementById("fGst").value) || 0;
     let cst = parseFloat(document.getElementById("fCst").value) || 0;
     let totalBill = parseFloat(document.getElementById("fTotalBill").value) || 0;
+    let inWords = totalBill.toFixed(2) + " રૂપિયા પૂરા";
 
     handlePhotoUpload("fPhoto", function(photoBase64) {
-      let billRow = [ year, date, billNo, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, "" ];
+      let billRow = [ year, date, billNo, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
       let itemRows = [];
 
       rows.forEach(row => {
@@ -828,7 +824,6 @@
       }).then(res => res.json()).then(() => {
         alert("ખાતર બિલ સફળતાપૂર્વક સેવ થઈ ગયું!");
         document.getElementById("btnFert").innerText = "સેવ કરો";
-        
         document.getElementById("fertForm").reset();
         document.getElementById("fertItemsContainer").innerHTML = "";
         addFertItemRow();
@@ -839,7 +834,6 @@
         document.getElementById("fTotalBill").value = "0.00";
         let today = new Date().toISOString().split('T')[0];
         document.getElementById("fDate").value = today;
-
         fetchData();
         switchTab('Dash');
       });

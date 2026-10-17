@@ -170,7 +170,7 @@
         </div>
         <div class="form-group" style="margin-top: 10px;">
           <label>અંકે રૂપિયા (શબ્દોમાં):</label>
-          <input type="text" id="mTotalWords" class="readonly-bg" readonly value="સૂન પૂરા">
+          <input type="text" id="mTotalWords" class="readonly-bg" readonly value="અંકે સૂન રૂપિયા પૂરા">
         </div>
       </div>
 
@@ -216,7 +216,7 @@
         </div>
         <div class="form-group" style="margin-top: 10px;">
           <label>અંકે રૂપિયા (શબ્દોમાં):</label>
-          <input type="text" id="fTotalWords" class="readonly-bg" readonly value="સૂન પૂરા">
+          <input type="text" id="fTotalWords" class="readonly-bg" readonly value="અંકે સૂન રૂપિયા પૂરા">
         </div>
       </div>
 
@@ -313,6 +313,36 @@
     document.getElementById('tab' + tab).classList.add('active');
     if(tab === 'Dash') updateDashboard();
     if(tab === 'Gallery') renderGallery();
+  }
+
+  function convertToGujaratiWords(amount) {
+    let units = ['', 'એક', 'બે', 'ત્રણ', 'ચાર', 'પાંચ', 'છ', 'સાત', 'આઠ', 'નવ', 'દસ', 'અગિયાર', 'બાર', 'તેર', 'ચોદ', 'પંદર', 'સોળ', 'સત્તર', 'અઢાર', 'ઓગણીસ'];
+    let tens = ['', '', 'વીસ', 'ત્રીસ', 'ચાલીસ', 'પચાસ', 'સાઈઠ', 'સિત્તેર', 'અંશી', 'નવું'];
+    
+    let intPart = Math.floor(amount);
+    if (intPart === 0) return "અંકે સૂન રૂપિયા પૂરા";
+    let words = "";
+    
+    if (intPart >= 1000) {
+      let th = Math.floor(intPart / 1000);
+      words += units[th] + " હજાર ";
+      intPart %= 1000;
+    }
+    if (intPart >= 100) {
+      let hu = Math.floor(intPart / 100);
+      words += units[hu] + "સો ";
+      intPart %= 100;
+    }
+    if (intPart > 0) {
+      if (intPart < 20) {
+        words += units[intPart] + " ";
+      } else {
+        let t = Math.floor(intPart / 10);
+        let u = intPart % 10;
+        words += (units[u] ? units[u] + " " : "") + tens[t] + " ";
+      }
+    }
+    return "અંકે " + words.trim() + " રૂપિયા પૂરા";
   }
 
   function populateData() {
@@ -570,7 +600,7 @@
     document.getElementById("mGst").value = gstAmt.toFixed(2);
     document.getElementById("mCst").value = cstAmt.toFixed(2);
     document.getElementById("mTotalBill").value = totalBill.toFixed(2);
-    document.getElementById("mTotalWords").value = totalBill.toFixed(2) + " રૂપિયા પૂરા";
+    document.getElementById("mTotalWords").value = convertToGujaratiWords(totalBill);
   }
 
   function calcFertBill() {
@@ -598,7 +628,7 @@
     document.getElementById("fGst").value = gstAmt.toFixed(2);
     document.getElementById("fCst").value = cstAmt.toFixed(2);
     document.getElementById("fTotalBill").value = totalBill.toFixed(2);
-    document.getElementById("fTotalWords").value = totalBill.toFixed(2) + " રૂપિયા પૂરા";
+    document.getElementById("fTotalWords").value = convertToGujaratiWords(totalBill);
   }
 
   function calcTracRow(el) {
@@ -748,7 +778,7 @@
     let gst = parseFloat(document.getElementById("mGst").value) || 0;
     let cst = parseFloat(document.getElementById("mCst").value) || 0;
     let totalBill = parseFloat(document.getElementById("mTotalBill").value) || 0;
-    let inWords = totalBill.toFixed(2) + " રૂપિયા પૂરા";
+    let inWords = convertToGujaratiWords(totalBill);
 
     handlePhotoUpload("mPhoto", function(photoBase64) {
       let billRow = [ year, date, billNo, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
@@ -784,7 +814,7 @@
         document.getElementById("mGst").value = "0.00";
         document.getElementById("mCst").value = "0.00";
         document.getElementById("mTotalBill").value = "0.00";
-        document.getElementById("mTotalWords").value = "સૂન પૂરા";
+        document.getElementById("mTotalWords").value = "અંકે સૂન રૂપિયા પૂરા";
         let today = new Date().toISOString().split('T')[0];
         document.getElementById("mDate").value = today;
         fetchData();
@@ -805,7 +835,7 @@
     let gst = parseFloat(document.getElementById("fGst").value) || 0;
     let cst = parseFloat(document.getElementById("fCst").value) || 0;
     let totalBill = parseFloat(document.getElementById("fTotalBill").value) || 0;
-    let inWords = totalBill.toFixed(2) + " રૂપિયા પૂરા";
+    let inWords = convertToGujaratiWords(totalBill);
 
     handlePhotoUpload("fPhoto", function(photoBase64) {
       let billRow = [ year, date, billNo, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
@@ -842,7 +872,7 @@
         document.getElementById("fGst").value = "0.00";
         document.getElementById("fCst").value = "0.00";
         document.getElementById("fTotalBill").value = "0.00";
-        document.getElementById("fTotalWords").value = "સૂન પૂરા";
+        document.getElementById("fTotalWords").value = "અંકે સૂન રૂપિયા પૂરા";
         let today = new Date().toISOString().split('T')[0];
         document.getElementById("fDate").value = today;
         fetchData();

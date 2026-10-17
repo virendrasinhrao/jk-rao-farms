@@ -170,7 +170,7 @@
         </div>
         <div class="form-group" style="margin-top: 10px;">
           <label>અંકે રૂપિયા (શબ્દોમાં):</label>
-          <input type="text" id="mTotalWords" class="readonly-bg" readonly value=કે "અંકે રૂપિયા શૂન્ય પૂરા">
+          <input type="text" id="mTotalWords" class="readonly-bg" readonly value="અંકે રૂપિયા શૂન્ય પૂરા">
         </div>
       </div>
 
@@ -320,7 +320,7 @@
     let tens = ['', '', 'વીસ', 'ત્રીસ', 'ચાલીસ', 'પચાસ', 'સાઈઠ', 'સિત્તેર', 'અંશી', 'નવું'];
     
     let intPart = Math.floor(amount);
-    if (intPart === 0) return "અંકે સૂન રૂપિયા પૂરા";
+    if (intPart === 0) return "અંકે રૂપિયા શૂન્ય પૂરા";
     let words = "";
     
     if (intPart >= 1000) {
@@ -342,7 +342,7 @@
         words += (units[u] ? units[u] + " " : "") + tens[t] + " ";
       }
     }
-    return "અંકે " + words.trim() + " રૂપિયા પૂરા";
+    return "અંકે રૂપિયા " + words.trim() + " પૂરા";
   }
 
   function populateData() {
@@ -814,7 +814,7 @@
         document.getElementById("mGst").value = "0.00";
         document.getElementById("mCst").value = "0.00";
         document.getElementById("mTotalBill").value = "0.00";
-        document.getElementById("mTotalWords").value = "અંકે સૂન રૂપિયા પૂરા";
+        document.getElementById("mTotalWords").value = "અંકે રૂપિયા શૂન્ય પૂરા";
         let today = new Date().toISOString().split('T')[0];
         document.getElementById("mDate").value = today;
         fetchData();
@@ -872,7 +872,7 @@
         document.getElementById("fGst").value = "0.00";
         document.getElementById("fCst").value = "0.00";
         document.getElementById("fTotalBill").value = "0.00";
-        document.getElementById("fTotalWords").value = "અંકે સૂન રૂપિયા પૂરા";
+        document.getElementById("fTotalWords").value = "અંકે રૂપિયા શૂન્ય પૂરા";
         let today = new Date().toISOString().split('T')[0];
         document.getElementById("fDate").value = today;
         fetchData();

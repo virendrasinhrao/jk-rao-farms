@@ -27,12 +27,11 @@
     
     .btn-submit { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; font-size: 15px; cursor: pointer; margin-top: 10px; font-weight: bold; border-radius: 3px; }
     .btn-submit:hover { background: #219653; }
-    .btn-delete { background: #c0392b; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 11px; }
+    .btn-delete { background: #c0392b; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; }
     .btn-add-item { background: #2980b9; color: white; border: none; padding: 6px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; margin-bottom: 8px; }
     
     .readonly-bg { background-color: #f1f2f6; }
     
-    /* પીસી અને મોબાઇલ બંને માટે પ્રોફેશનલ સોફ્ટવેર જેવું ગ્રાન્ડ ટોટલ અને શબ્દોનું બૉક્સ */
     .highlight-total { 
       background-color: #27ae60 !important; 
       color: #ffffff !important; 
@@ -194,7 +193,7 @@
   </div>
 
   <!-- 3. FERTILIZER FORM -->
-  <div id="formFert" class="section">
+  <div id="formFert" class="section active">
     <h3 style="text-align:center; color:#d35400; margin-top:0;">🌾 ખાતર ખર્ચ (Fertilizer)</h3>
     <form id="fertForm" onsubmit="submitFert(event)">
       <div class="flex-row">
@@ -218,8 +217,8 @@
           <div class="form-group"><label>ટેક્સ %:</label><input type="number" id="fTax" step="0.01" value="0" oninput="calcFertBill()" required></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>જી.એસ.ટી. રકમ:</label><input type="text" id="fGst" class="readonly-bg" readonly value="0.00"></div>
-          <div class="form-group"><label>સી.એસ.ટી. રકમ:</label><input type="text" id="fCst" class="readonly-bg" readonly value="0.00"></div>
+          <div class="form-group"><label>જી.એસ.ટી. રકમ:</label><input type="text" id="mGst2" class="readonly-bg" readonly value="0.00"></div>
+          <div class="form-group"><label>સી.એસ.ટી. રકમ:</label><input type="text" id="mCst2" class="readonly-bg" readonly value="0.00"></div>
         </div>
         <div class="form-group">
           <label style="color: #d35400; font-size: 14px;">બિલની કુલ રકમ (₹):</label><input type="text" id="fTotalBill" class="highlight-total" readonly value="0.00">
@@ -280,8 +279,10 @@
 </div>
 
 <!-- Pop-ups -->
-<div id="modalBhagiya" class="modal"><div class="modal-content"><h3>➕ નવો ભાગીદાર</h3><input type="text" id="nbName" placeholder="નામ" class="form-group"><input type="number" id="nbPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nbAdd" placeholder="ગામ" class="form-group"><button type="button" class="btn-submit" onclick="saveB()">સેવ</button><button type="button" onclick="document.getElementById('modalBhagiya').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
-<div id="modalVepari" class="modal"><div class="modal-content"><h3>➕ નવો વેપારી</h3><input type="text" id="nvName" placeholder="નામ" class="form-group"><input type="number" id="nvPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nvCity" placeholder="ગામ" class="form-group"><select id="nvCategory" class="form-group"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="દવા">દવા</option><option value="ખાતર">ખાતર</option></select><button type="button" class="btn-submit" onclick="saveV()">સેવ</button><button type="button" onclick="document.getElementById('modalVepari').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
+<div id="modalBhagiya" class="modal"><div class="modal-content"><h3>➕ ભાગીદાર મેનેજમેન્ટ</h3><input type="text" id="nbName" placeholder="નામ" class="form-group"><input type="number" id="nbPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nbAdd" placeholder="ગામ" class="form-group"><button type="button" class="btn-submit" onclick="saveB()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="deleteMasterItem('Bhagiya_Master')">પસંદ કરેલ ભાગીદાર ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalBhagiya').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
+
+<div id="modalVepari" class="modal"><div class="modal-content"><h3>➕ વેપારી મેનેજમેન્ટ</h3><input type="text" id="nvName" placeholder="નામ" class="form-group"><input type="number" id="nvPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nvCity" placeholder="ગામ" class="form-group"><select id="nvCategory" class="form-group"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="દવા">દવા</option><option value="ખાતર">ખાતર</option></select><button type="button" class="btn-submit" onclick="saveV()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="deleteMasterItem('Merchant_Master')">પસંદ કરેલ વેપારી ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalVepari').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
+
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
@@ -318,7 +319,7 @@
 
   function convertToGujaratiWords(amount) {
     let units = ['', 'એક', 'બે', 'ત્રણ', 'ચાર', 'પાંચ', 'છ', 'સાત', 'આઠ', 'નવ', 'દસ', 'અગિયાર', 'બાર', 'તેર', 'ચોદ', 'પંદર', 'સોળ', 'સત્તર', 'અઢાર', 'ઓગણીસ'];
-    let tens = ['', '', 'વીસ', 'ત્રીસ', 'ચાલીસ', 'પચાસ', 'સાઈઠ', 'સિત્તેર', 'અંશી', 'નવું'];
+    let tens = ['', '', 'વીး', 'ત્રીસ', 'ચાલીસ', 'પચાસ', 'સાઈઠ', 'સિત્તેર', 'અંશી', 'નવું'];
     let intPart = Math.floor(amount);
     if (intPart === 0) return "અંકે રૂપિયા શૂન્ય પૂરા";
     let words = "";
@@ -326,7 +327,7 @@
     if (intPart >= 100) { let hu = Math.floor(intPart / 100); words += units[hu] + "સો "; intPart %= 100; }
     if (intPart > 0) {
       if (intPart < 20) { words += units[intPart] + " "; }
-      else { let t = Math.floor(intPart / 10); let u = intPart % 10; words += (units[u] ? units[u] + " " : "") + tens[t] + " "; }
+      else { let t = Math.floor(intPart / 10); let u = intPart % 10; words += (units[u] ? units[u] + " " : "") + (tens[t] || '') + " "; }
     }
     return "અંકે રૂપિયા " + words.trim() + " પૂરા";
   }
@@ -445,17 +446,27 @@
     div.innerHTML = `
       <div class="flex-row">
         <div class="form-group"><label>ખાતરનું નામ:</label><select class="khatarList" required></select></div>
-        <div class="form-group"><label>વજન:</label><input type="text" class="fWeight" placeholder="વજન"></div>
-        <div class="form-group"><label>પેકિંગ:</label><input type="text" class="fPack" placeholder="પેકિંગ"></div>
+        <div class="form-group"><label>વજન (ઓપ્શનલ):</label><input type="number" class="fWeight" step="0.01" placeholder="વજન" oninput="onFertWeightInput(this)"></div>
+        <div class="form-group"><label>પેકિંગ:</label><input type="text" class="fPack readonly-bg" readonly placeholder="પેકિંગ"></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>નંગ:</label><input type="number" class="fQty" value="1" min="1" oninput="calcFertBill()"></div>
-        <div class="form-group"><label>ભાવ:</label><input type="number" class="fBhav" step="0.01" oninput="calcFertBill()"></div>
-        <div class="form-group"><label>રકમ (₹):</label><input type="number" class="fAmt" step="0.01" oninput="calcFertBill()" required></div>
+        <div class="form-group"><label>નંગ/થેલી:</label><input type="number" class="fQty" value="1" min="1" oninput="calcFertBill()" required></div>
+        <div class="form-group"><label>ભાવ:</label><input type="number" class="fBhav" step="0.01" oninput="calcFertBill()" required></div>
+        <div class="form-group"><label>રકમ (₹):</label><input type="text" class="fAmt readonly-bg" readonly required></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcFertBill();">ડિલિટ</button></div>
       </div>
     `;
     container.appendChild(div); populateData(); calcFertBill();
+  }
+
+  function onFertWeightInput(input) {
+    let row = input.closest('.item-row');
+    let val = parseFloat(input.value);
+    let packInput = row.querySelector('.fPack');
+    if(isNaN(val) || input.value === "") { packInput.value = ""; return; }
+    if(val > 0 && val <= 9) packInput.value = val + " કિલો";
+    else if(val >= 10) packInput.value = val + " કિલો";
+    else packInput.value = "";
   }
 
   function addTracItemRow() {
@@ -537,19 +548,18 @@
     let rows = document.querySelectorAll("#fertItemsContainer .item-row");
     let subTotal = 0;
     rows.forEach(row => {
-      let qty = parseFloat(row.querySelector('.fQty').value) || 1;
+      let qty = parseFloat(row.querySelector('.fQty').value) || 0;
       let bhav = parseFloat(row.querySelector('.fBhav').value) || 0;
-      let amtField = row.querySelector('.fAmt');
-      let amt = parseFloat(amtField.value) || (qty * bhav);
-      if(bhav > 0 && qty > 0 && !amtField.value) { amt = qty * bhav; amtField.value = amt.toFixed(2); }
+      let amt = qty * bhav;
+      row.querySelector('.fAmt').value = amt.toFixed(2);
       subTotal += amt;
     });
     document.getElementById("fSubTotal").value = subTotal.toFixed(2);
     let tax = parseFloat(document.getElementById("fTax").value) || 0;
     let gstAmt = ((tax / 2) * subTotal) / 100, cstAmt = ((tax / 2) * subTotal) / 100;
     let totalBill = subTotal + gstAmt + cstAmt;
-    document.getElementById("fGst").value = gstAmt.toFixed(2);
-    document.getElementById("fCst").value = cstAmt.toFixed(2);
+    document.getElementById("mGst2").value = gstAmt.toFixed(2);
+    document.getElementById("mCst2").value = cstAmt.toFixed(2);
     document.getElementById("fTotalBill").value = totalBill.toFixed(2);
     document.getElementById("fTotalWords").value = convertToGujaratiWords(totalBill);
   }
@@ -598,6 +608,25 @@
   function checkMedVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("nvCategory").value = "દવા"; document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
   function checkFertVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("nvCategory").value = "ખાતર"; document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
   function checkCropNew(sel) { if(sel.value === "NEW") { document.getElementById("modalCrop").style.display = "block"; sel.value = ""; } }
+
+  function deleteMasterItem(sheetName) {
+    let nameToDelete = "";
+    if(sheetName === 'Bhagiya_Master') nameToDelete = document.getElementById("sBhagiya").value || document.getElementById("mBhagiya").value;
+    else nameToDelete = document.getElementById("sVepari").value || document.getElementById("mVepari").value;
+    
+    if(!nameToDelete || nameToDelete === "NEW") { alert("કૃપા કરીને ડિલિટ કરવા માટે નામ પસંદ કરો!"); return; }
+    if(!confirm("શું તમે '" + nameToDelete + "' ને ડિલિટ કરવા માંગો છો?")) return;
+
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "deleteRecord", entryId: nameToDelete, sheetName: sheetName })
+    }).then(res => res.json()).then(() => {
+      alert("સફળતાપૂર્વક ડિલિટ થઈ ગયું!");
+      document.getElementById('modalBhagiya').style.display = 'none';
+      document.getElementById('modalVepari').style.display = 'none';
+      fetchData();
+    }).catch(err => alert("ભૂલ: " + err));
+  }
 
   function getCropShare(cropName) {
     if (!cropName) return 0;
@@ -705,8 +734,8 @@
     let date = v("fDate"), billNo = v("fBill") || "N/A", bhagiya = v("fBhagiya"), year = getYear(date);
     let subTotal = parseFloat(document.getElementById("fSubTotal").value) || 0;
     let tax = parseFloat(document.getElementById("fTax").value) || 0;
-    let gst = parseFloat(document.getElementById("fGst").value) || 0;
-    let cst = parseFloat(document.getElementById("fCst").value) || 0;
+    let gst = parseFloat(document.getElementById("mGst2").value) || 0;
+    let cst = parseFloat(document.getElementById("mCst2").value) || 0;
     let totalBill = parseFloat(document.getElementById("fTotalBill").value) || 0;
     let inWords = convertToGujaratiWords(totalBill);
     handlePhotoUpload("fPhoto", function(photoBase64) {
@@ -725,7 +754,7 @@
         alert("ખાતર બિલ સફળતાપૂર્વક સેવ થઈ ગયું!"); document.getElementById("btnFert").innerText = "સેવ કરો";
         document.getElementById("fertForm").reset(); document.getElementById("fertItemsContainer").innerHTML = "";
         addFertItemRow(); document.getElementById("fSubTotal").value = "0.00"; document.getElementById("fTax").value = "0";
-        document.getElementById("fGst").value = "0.00"; document.getElementById("fCst").value = "0.00";
+        document.getElementById("mGst2").value = "0.00"; document.getElementById("mCst2").value = "0.00";
         document.getElementById("fTotalBill").value = "0.00"; document.getElementById("fTotalWords").value = "અંકે રૂપિયા શૂન્ય પૂરા";
         document.getElementById("fDate").value = new Date().toISOString().split('T')[0];
         fetchData(); switchTab('Dash');

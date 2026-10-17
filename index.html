@@ -8,6 +8,7 @@
     body { font-family: Arial, sans-serif; background-color: #f4f7f6; padding: 10px; margin:0; }
     .header-bar { display: flex; justify-content: space-between; align-items: center; max-width: 700px; margin: auto auto 15px auto; }
     
+    /* આકર્ષક અને મોટું રિફ્રેશ બટન અને બ્લૂ ગ્લોઇંગ એનિમેશન */
     .refresh-btn { 
       background: linear-gradient(135deg, #16a085, #1abc9c); 
       color: white; 
@@ -669,6 +670,7 @@
       callback("");
     }
   }
+
   function submitSales(e) {
     e.preventDefault();
     let rows = document.querySelectorAll("#salesItemsContainer .item-row");
@@ -739,9 +741,11 @@
     let totalBill = parseFloat(document.getElementById("mTotalBill").value) || 0;
 
     handlePhotoUpload("mPhoto", function(photoBase64) {
+      // બિલ હેડર (Pesticide_Bill માટે)
       let billRow = [ year, date, billNo, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, "" ];
       let itemRows = [];
 
+      // Pesticide_Items માટે કૉલમનો સાચો ક્રમ (વજન પહેલાં દવા પ્રકાર આવશે)
       rows.forEach(row => {
         let amt = parseFloat(row.querySelector(".mTotal").value) || 0;
         itemRows.push([
@@ -929,6 +933,7 @@
     let row = [ name, share + "%" ];
     saveData("saveCrop", row); document.getElementById("modalCrop").style.display = "none";
   }
+
   function saveData(action, rowValues) {
     fetch(SCRIPT_URL, {
       method: "POST",

@@ -168,6 +168,10 @@
           <label style="color: #27ae60; font-size: 15px;">બિલની કુલ રકમ (₹):</label>
           <input type="text" id="mTotalBill" class="highlight-total" readonly value="0.00">
         </div>
+        <div class="form-group" style="margin-top: 10px;">
+          <label>અંકે રૂપિયા (શબ્દોમાં):</label>
+          <input type="text" id="mTotalWords" class="readonly-bg" readonly value="સૂન પૂરા">
+        </div>
       </div>
 
       <div class="flex-row" style="margin-top:15px;">
@@ -209,6 +213,10 @@
         </div>
         <div class="form-group">
           <label style="color: #d35400; font-size: 15px;">બિલની કુલ રકમ (₹):</label><input type="text" id="fTotalBill" class="highlight-total" readonly value="0.00">
+        </div>
+        <div class="form-group" style="margin-top: 10px;">
+          <label>અંકે રૂપિયા (શબ્દોમાં):</label>
+          <input type="text" id="fTotalWords" class="readonly-bg" readonly value="સૂન પૂરા">
         </div>
       </div>
 
@@ -265,7 +273,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક ઉમેરો</h3><input type="text" id="ncName" placeholder="પાકનું નામ (દા.ત. જીરું)" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%) દા.ત. 50" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:10px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxo0128I6cMfPxExDij2g7UQ6B4y4WMEo9q7jSxOO4-CCy28axiYTXSa5I57KxR5w2oDg/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwhF6wPq1DesSA4ZGzYffg2BDhWlk2FGtHNfFRn_sWX0yWngrepEy-vuuFOc39856p6jQ/exec";
   let appData = {};
 
   window.onload = function() {
@@ -562,6 +570,7 @@
     document.getElementById("mGst").value = gstAmt.toFixed(2);
     document.getElementById("mCst").value = cstAmt.toFixed(2);
     document.getElementById("mTotalBill").value = totalBill.toFixed(2);
+    document.getElementById("mTotalWords").value = totalBill.toFixed(2) + " રૂપિયા પૂરા";
   }
 
   function calcFertBill() {
@@ -589,6 +598,7 @@
     document.getElementById("fGst").value = gstAmt.toFixed(2);
     document.getElementById("fCst").value = cstAmt.toFixed(2);
     document.getElementById("fTotalBill").value = totalBill.toFixed(2);
+    document.getElementById("fTotalWords").value = totalBill.toFixed(2) + " રૂપિયા પૂરા";
   }
 
   function calcTracRow(el) {
@@ -741,7 +751,6 @@
     let inWords = totalBill.toFixed(2) + " રૂપિયા પૂરા";
 
     handlePhotoUpload("mPhoto", function(photoBase64) {
-      // અહીં ઇન્ડેક્સ ક્રમ: [0:વર્ષ, 1:તારીખ, 2:બિલનં, 3:વેપારી, 4:ભાગીદાર, 5:સબકુલ, 6:ટેક્સ, 7:જીએસટી, 8:સીએસટી, 9:કુલરકમ(J), 10:ફોટો(K), 11:અંકેરૂપિયા(L)]
       let billRow = [ year, date, billNo, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
       let itemRows = [];
 
@@ -775,6 +784,7 @@
         document.getElementById("mGst").value = "0.00";
         document.getElementById("mCst").value = "0.00";
         document.getElementById("mTotalBill").value = "0.00";
+        document.getElementById("mTotalWords").value = "સૂન પૂરા";
         let today = new Date().toISOString().split('T')[0];
         document.getElementById("mDate").value = today;
         fetchData();
@@ -832,6 +842,7 @@
         document.getElementById("fGst").value = "0.00";
         document.getElementById("fCst").value = "0.00";
         document.getElementById("fTotalBill").value = "0.00";
+        document.getElementById("fTotalWords").value = "સૂન પૂરા";
         let today = new Date().toISOString().split('T')[0];
         document.getElementById("fDate").value = today;
         fetchData();

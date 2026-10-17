@@ -7,6 +7,7 @@
   <style>
     body { font-family: Arial, sans-serif; background-color: #f4f7f6; padding: 10px; margin:0; }
     .header-bar { display: flex; justify-content: space-between; align-items: center; max-width: 700px; margin: auto auto 15px auto; }
+    
     .refresh-btn { 
       background: linear-gradient(135deg, #16a085, #1abc9c); 
       color: white; 
@@ -23,13 +24,13 @@
       transition: all 0.3s ease;
     }
     .refresh-btn:hover { background: linear-gradient(135deg, #1abc9c, #16a085); transform: translateY(-2px); }
+    
     @keyframes smoothSpin { 
-      0% { transform: rotate(0deg) scale(1); } 
-      50% { transform: rotate(180deg) scale(1.2); } 
-      100% { transform: rotate(360deg) scale(1); } 
+      0% { transform: rotate(0deg); } 
+      100% { transform: rotate(360deg); } 
     }
-    .spin { animation: smoothSpin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite; display: inline-block; }
-    #refreshIcon { font-size: 22px; display: inline-block; }
+    .spin { animation: smoothSpin 0.8s linear infinite !important; }
+    #refreshIcon { font-size: 22px; display: inline-block; text-shadow: 0 0 8px #00ffff; }
 
     .nav { display: flex; gap: 4px; margin-bottom: 15px; overflow-x: auto; }
     .nav button { flex: 1; padding: 10px; cursor: pointer; border: none; background: #bdc3c7; border-radius: 4px; font-weight: bold; font-size: 12px; white-space: nowrap; }
@@ -73,7 +74,7 @@
 <div class="header-bar">
   <h2 style="margin:0; color:#2c3e50; font-size: 18px;">🌾 J K Rao Farms</h2>
   <button class="refresh-btn" onclick="fetchData()">
-    <span id="refreshIcon">🔄</span> <span>ડેટા રીફ્રેશ</span>
+    <span id="refreshIcon">⟳</span> <span>ડેટા રીફ્રેશ</span>
   </button>
 </div>
 
@@ -264,7 +265,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક ઉમેરો</h3><input type="text" id="ncName" placeholder="પાકનું નામ (દા.ત. જીરું)" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%) દા.ત. 50" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:10px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwdqrvd_G0zEzws7mLwEZQ06_4zMFZ6BpA4G2rSAhfPNR3HtBBXSNR6qTGJhHqviHDiqw/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw69KsSs6CCIz-Irs6-jLD1EdAU1sTAce9MlGCAHnAbW8yrAoXkaCeraO443rlN57HuMw/exec";
   let appData = {};
 
   window.onload = function() {
@@ -353,7 +354,8 @@
       medVeparis.forEach(v => mVepari.add(new Option(v, v)));
       mVepari.value = cur;
     }
-   let fVepari = document.querySelector(".fertVepariList");
+
+    let fVepari = document.querySelector(".fertVepariList");
     if(fVepari) {
       let cur = fVepari.value;
       fVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
@@ -421,6 +423,7 @@
     container.appendChild(div);
     populateData();
   }
+
   function addMedItemRow() {
     let container = document.getElementById("medItemsContainer");
     let div = document.createElement("div");
@@ -506,17 +509,14 @@
     row.querySelector('.sKRakam').value = (total * (s/100)).toFixed(2);
   }
 
-    function onMedSelectRow(sel) {
+  function onMedSelectRow(sel) {
     let row = sel.closest('.item-row');
     let medName = sel.value;
     if(!medName || !appData.Medicine_Master) return;
-    
-    // Medicine_Master માંથી દવાનું નામ શોધીને તેનો પ્રકાર (Type) મેળવવો
     let found = appData.Medicine_Master.find(m => {
       let mName = m["દવાનું_નામ"] || m["દવાનું નામ"] || m["નામ"] || m["Name"] || "";
       return String(mName).trim() === String(medName).trim();
     });
-
     if(found) {
       let type = found["પ્રકાર"] || found["પ્રકાર "] || found["દવાનો_પ્રકાર"] || found["દવાનો પ્રકાર"] || found["Category"] || found["category"] || "";
       row.querySelector('.mType').value = type;
@@ -525,7 +525,6 @@
     }
     calcMedRow(sel);
   }
-
 
   function onWeightInputRow(input) {
     let row = input.closest('.item-row');
@@ -746,13 +745,16 @@
       rows.forEach(row => {
         let amt = parseFloat(row.querySelector(".mTotal").value) || 0;
         itemRows.push([
-          year, date, billNo,
-          row.querySelector(".davaList").value,
-          row.querySelector(".mWeight").value,
-          row.querySelector(".mPack").value,
-          row.querySelector(".mQty").value,
-          row.querySelector(".mBhav").value,
-          amt
+          year,                                     // 1. વર્ષ
+          date,                                     // 2. તારીખ
+          billNo,                                   // 3. બિલ નં
+          row.querySelector(".davaList").value,     // 4. દવાનું નામ
+          row.querySelector(".mType").value,        // 5. દવા પ્રકાર (બરાબર જગ્યાએ)
+          row.querySelector(".mWeight").value,      // 6. વજન
+          row.querySelector(".mPack").value,        // 7. પેકિંગ
+          row.querySelector(".mQty").value,         // 8. નંગ
+          row.querySelector(".mBhav").value,        // 9. ભાવ
+          amt                                       // 10. રકમ
         ]);
       });
 
@@ -905,6 +907,7 @@
       });
     });
   }
+
   function saveB() {
     let name = v("nbName").trim();
     if(name == "") return alert("નામ જરૂરી છે!");
@@ -926,7 +929,6 @@
     let row = [ name, share + "%" ];
     saveData("saveCrop", row); document.getElementById("modalCrop").style.display = "none";
   }
-
   function saveData(action, rowValues) {
     fetch(SCRIPT_URL, {
       method: "POST",

@@ -42,6 +42,17 @@
     .btn-delete { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
     .btn-add-item { background: #27ae60; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; margin-bottom: 10px; }
     .readonly-bg { background-color: #e9ecef; }
+    
+    /* લીલી બેકગ્રાઉન્ડ, સફેદ બોલ્ડ મોટા અક્ષરોવાળી કુલ રકમ માટેની સ્ટાઇલ */
+    .highlight-total { 
+      background-color: #27ae60 !important; 
+      color: #ffffff !important; 
+      font-size: 22px !important; 
+      font-weight: bold !important; 
+      text-align: center; 
+      border: 2px solid #1e8449 !important; 
+    }
+
     .section { display: none; }
     .section.active { display: block; }
     .flex-row { display: flex; gap: 10px; }
@@ -154,13 +165,13 @@
           <div class="form-group"><label>સી.એસ.ટી. રકમ:</label><input type="text" id="mCst" class="readonly-bg" readonly value="0.00"></div>
         </div>
         <div class="form-group">
-          <label>બિલની કુલ રકમ (₹):</label>
-          <input type="text" id="mTotalBill" class="readonly-bg" readonly style="font-size:18px; font-weight:bold; color:#2980b9;" value="0.00">
+          <label style="color: #27ae60; font-size: 15px;">બિલની કુલ રકમ (₹):</label>
+          <input type="text" id="mTotalBill" class="highlight-total" readonly value="0.00">
         </div>
       </div>
 
       <div class="flex-row" style="margin-top:15px;">
-        <div class="form-group"><label>હસ્તે:</label><input type="text" id="mHastak" required></div>
+        <div class="form-group"><label>હસ્તે (માલિક અથવા ખેડૂ):</label><input type="text" id="mHastak" placeholder="માલિક અથવા ખેડૂ" required></div>
         <div class="form-group"><label>ઉપાડમાં સ્થિતિ:</label><select id="mStatus"><option>જમા</option><option>બાકી</option></select></div>
       </div>
       <div class="form-group">
@@ -197,13 +208,13 @@
           <div class="form-group"><label>સી.એસ.ટી. રકમ:</label><input type="text" id="fCst" class="readonly-bg" readonly value="0.00"></div>
         </div>
         <div class="form-group">
-          <label>બિલની કુલ રકમ (₹):</label>
-          <input type="text" id="fTotalBill" class="readonly-bg" readonly style="font-size:18px; font-weight:bold; color:#d35400;" value="0.00">
+          <label style="color: #d35400; font-size: 15px;">બિલની કુલ રકમ (₹):</label>
+          <input type="text" id="fTotalBill" class="highlight-total" readonly value="0.00">
         </div>
       </div>
 
       <div class="flex-row" style="margin-top:15px;">
-        <div class="form-group"><label>હસ્તે:</label><input type="text" id="fHastak" required></div>
+        <div class="form-group"><label>હસ્તે (માલિક અથવા ખેડૂ):</label><input type="text" id="fHastak" placeholder="માલિક અથવા ખેડૂ" required></div>
         <div class="form-group"><label>ઉપાડ જમા:</label><select id="fStatus"><option>જમા</option><option>બાકી</option></select></div>
       </div>
       <div class="form-group"><label>Transaction details:</label><input type="text" id="fDetails" placeholder="વિગત (ઓપ્શનલ)"></div>
@@ -230,7 +241,7 @@
 
       <div class="flex-row" style="margin-top:15px;">
         <div class="form-group"><label>સ્થિતિ:</label><select id="tStatus"><option>રોકડા</option><option>બાકી</option></select></div>
-        <div class="form-group"><label>કોણે આપ્યા:</label><input type="text" id="tHastak" required></div>
+        <div class="form-group"><label>કોણે આપ્યા (માલિક અથવા ખેડૂ):</label><input type="text" id="tHastak" placeholder="માલિક અથવા ખેડૂ" required></div>
       </div>
       <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="tPhoto" accept="image/*" capture="environment"></div>
       <button type="submit" id="btnTrac" class="btn-submit">સેવ કરો</button>
@@ -255,7 +266,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક ઉમેરો</h3><input type="text" id="ncName" placeholder="પાકનું નામ (દા.ત. જીરું)" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%) દા.ત. 50" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:10px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxBYP5Pu9jhFvJul8TFFfb_MstQIrWhlXOIwXqPeWNoCCwrtnfj1muy7xUD31-a06Q7BQ/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwdqrvd_G0zEzws7mLwEZQ06_4zMFZ6BpA4G2rSAhfPNR3HtBBXSNR6qTGJhHqviHDiqw/exec";
   let appData = {};
 
   window.onload = function() {
@@ -689,8 +700,7 @@
           v("sBLidha"), 
           photoBase64
         ];
-
-        fetch(SCRIPT_URL, {
+fetch(SCRIPT_URL, {
           method: "POST",
           body: JSON.stringify({ action: "saveSales", rowValues: rowData })
         }).then(() => {
@@ -766,6 +776,7 @@
       });
     });
   }
+
   function submitFert(e) {
     e.preventDefault();
     let rows = document.querySelectorAll("#fertItemsContainer .item-row");

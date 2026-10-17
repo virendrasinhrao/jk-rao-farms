@@ -352,7 +352,8 @@
       fertVeparis.forEach(v => fVepari.add(new Option(v, v)));
       fVepari.value = cur;
     }
- document.querySelectorAll('.pakList').forEach(sel => {
+
+    document.querySelectorAll('.pakList').forEach(sel => {
       let currentVal = sel.value;
       sel.innerHTML = '<option value="">-- પાક પસંદ કરો --</option><option value="NEW">➕ નવો પાક ઉમેરો</option>';
       if(appData.Crop_Master) {
@@ -636,6 +637,7 @@
     let share = crop["ભાગ_ટકા"] || 0;
     return parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
   }
+
   function v(id) { return document.getElementById(id).value; }
   function getYear(dateString) {
     let d = new Date(dateString), m = d.getMonth() + 1, y = d.getFullYear();
@@ -748,7 +750,6 @@
         alert("દવા બિલ સફળતાપૂર્વક સેવ થઈ ગયું!");
         document.getElementById("btnMed").innerText = "સેવ કરો";
         
-        // ફોર્મ રીસેટ (બધું જ ખાલી થશે જ્યારે Save થશે ત્યારે જ)
         document.getElementById("medForm").reset();
         document.getElementById("medItemsContainer").innerHTML = "";
         addMedItemRow();
@@ -765,7 +766,6 @@
       });
     });
   }
-
   function submitFert(e) {
     e.preventDefault();
     let rows = document.querySelectorAll("#fertItemsContainer .item-row");
@@ -807,7 +807,6 @@
         alert("ખાતર બિલ સફળતાપૂર્વક સેવ થઈ ગયું!");
         document.getElementById("btnFert").innerText = "સેવ કરો";
         
-        // ફોર્મ રીસેટ (બધું જ ખાલી થશે જ્યારે Save થશે ત્યારે જ)
         document.getElementById("fertForm").reset();
         document.getElementById("fertItemsContainer").innerHTML = "";
         addFertItemRow();
@@ -890,6 +889,7 @@
       });
     });
   }
+
   function saveB() {
     let name = v("nbName").trim();
     if(name == "") return alert("નામ જરૂરી છે!");
@@ -977,5 +977,3 @@
 </script>
 </body>
 </html>
-  
-    

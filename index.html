@@ -551,4 +551,347 @@
     document.getElementById("mGst").value = gstAmt.toFixed(2);
     document.getElementById("mCst").value = cstAmt.toFixed(2);
     document.getElementById("mTotalBill").value = totalBill.toFixed(2);
-    document.getElementById("mTotalWords").value = convertToGujaratiWords(totalBill
+    document.getElementById("mTotalWords").value = convertToGujaratiWords(totalBill);
+  }
+
+  function calcFertBill() {
+    let rows = document.querySelectorAll("#fertItemsContainer .item-row");
+    let subTotal = 0;
+    rows.forEach(row => {
+      let qty = parseFloat(row.querySelector('.fQty').value) || 0;
+      let bhav = parseFloat(row.querySelector('.fBhav').value) || 0;
+      let amt = qty * bhav;
+      row.querySelector('.fAmt').value = amt.toFixed(2);
+      subTotal += amt;
+    });
+    document.getElementById("fSubTotal").value = subTotal.toFixed(2);
+    let tax = parseFloat(document.getElementById("fTax").value) || 0;
+    let gstAmt = ((tax / 2) * subTotal) / 100, cstAmt = ((tax / 2) * subTotal) / 100;
+    let totalBill = subTotal + gstAmt + cstAmt;
+    document.getElementById("mGst2").value = gstAmt.toFixed(2);
+    document.getElementById("mCst2").value = cstAmt.toFixed(2);
+    document.getElementById("fTotalBill").value = totalBill.toFixed(2);
+    document.getElementById("fTotalWords").value = convertToGujaratiWords(totalBill);
+  }
+
+  function calcTracRow(el) {
+    let row = el.closest('.item-row');
+    let h = parseFloat(row.querySelector('.tHrs').value) || 0;
+    let r = parseFloat(row.querySelector('.tRate').value) || 0;
+    let t = h * r; row.querySelector('.tTotal').value = t.toFixed(2);
+    let work = row.querySelector('.tWork').value;
+    let s = getCropShare(row.querySelector('.pakList').value);
+    let finalS = s;
+    if(s == 20) finalS = 0;
+    else if(s == 50 && (work=="પાળા" || work=="નિકો" || work=="હળામણ")) finalS = 100;
+    row.querySelector('.sKShare').value = finalS;
+    row.querySelector('.sKRakam').value = (t * (finalS/100)).toFixed(2);
+  }
+
+  function updateDashboard() {
+    let totalSales = 0, farmerSales = 0;
+    if(appData.Sales_Ledger) {
+      appData.Sales_Ledger.forEach(r => {
+        totalSales += parseFloat(r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
+        farmerSales += parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0);
+      });
+    }
+    let totalExp = 0, farmerExp = 0;
+    ['Pesticide_Bill', 'Fertilizer_Bill', 'Tractor_Expense'].forEach(sheet => {
+      if(appData[sheet]) {
+        appData[sheet].forEach(r => {
+          let billAmt = parseFloat(r["બીલની_કુલ_રકમ"] || r["બીલની કુલ રકમ"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || r["કુલ_ભાડું"] || r["કુલ ભાડું"] || 0);
+          let farmerAmt = parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0);
+          if(!isNaN(billAmt)) totalExp += billAmt;
+          if(!isNaN(farmerAmt)) farmerExp += farmerAmt;
+        });
+      }
+    });
+    document.getElementById("dashTotalSales").innerText = "₹ " + totalSales.toFixed(2);
+    document.getElementById("dashFarmerSales").innerText = "₹ " + farmerSales.toFixed(2);
+    document.getElementById("dashTotalExpense").innerText = "₹ " + totalExp.toFixed(2);
+    document.getElementById("dashFarmerExpense").innerText = "₹ " + farmerExp.toFixed(2);
+  }
+
+  function checkBhagiyaNew(sel) { if(sel.value === "NEW") { document.getElementById("modalBhagiya").style.display = "block"; sel.value = ""; } }
+  function checkVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
+  function checkMedVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("nvCategory").value = "દવા"; document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
+  function checkFertVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("nvCategory").value = "ખાતર"; document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
+  function checkCropNew(sel) { if(sel.value === "NEW") { document.getElementById("modalCrop").style.display = "block"; sel.value = ""; } }
+
+  function deleteMasterItem(sheetName) {
+    let nameToDelete = "";
+    if(sheetName === 'Bhagiya_Master') nameToDelete = document.getElementById("sBhagiya").value || document.getElementById("mBhagiya").value;
+    else nameToDelete = document.getElementById("sVepari").value || document.getElementById("mVepari").value;
+    
+    if(!nameToDelete || nameToDelete === "NEW") { alert("કૃપા કરીને ડિલિટ કરવા માટે નામ પસંદ કરો!"); return; }
+    if(!confirm("શું તમે '" + nameToDelete + "' ને ડિલિટ કરવા માંગો છો?")) return;
+
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "deleteRecord", entryId: nameToDelete, sheetName: sheetName })
+    }).then(res => res.json()).then(() => {
+      alert("સફળતાપૂર્વક ડિલિટ થઈ ગયું!");
+      document.getElementById('modalBhagiya').style.display = 'none';
+      document.getElementById('modalVepari').style.display = 'none';
+      fetchData();
+    }).catch(err => alert("ભૂલ: " + err));
+  }
+
+  function saveFertilizerMaster() {
+    let name = document.getElementById("nfName").value.trim();
+    if(!name) return alert("ખાતરનું નામ જરૂરી છે!");
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "saveFertilizer", rowValues: [name] })
+    }).then(() => {
+      alert("ખાતર સફળતાપૂર્વક ઉમેરાઈ ગયું!");
+      document.getElementById("modalFertilizer").style.display = "none";
+      document.getElementById("nfName").value = "";
+      fetchData();
+    }).catch(err => alert("ભૂલ: " + err));
+  }
+
+  function deleteFertilizerMaster() {
+    let activeSelects = document.querySelectorAll(".khatarList");
+    let nameToDelete = "";
+    activeSelects.forEach(sel => { if(sel.value && sel.value !== "NEW") nameToDelete = sel.value; });
+    
+    if(!nameToDelete) return alert("કૃપા કરીને ડિલિટ કરવા માટે ખાતર પસંદ કરો!");
+    if(!confirm("શું તમે '" + nameToDelete + "' ખાતર ડિલિટ કરવા માંગો છો?")) return;
+
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "deleteRecord", entryId: nameToDelete, sheetName: "Fertilizer_Master" })
+    }).then(res => res.json()).then(() => {
+      alert("ડિલિટ થઈ ગયું!");
+      document.getElementById('modalFertilizer').style.display = 'none';
+      fetchData();
+    }).catch(err => alert("ભૂલ: " + err));
+  }
+
+  function getCropShare(cropName) {
+    if (!cropName) return 0;
+    let match = cropName.match(/\((.*?)\)/);
+    if (match) { let val = parseFloat(match[1]); if (!isNaN(val)) return val <= 1 ? val * 100 : val; }
+    if (!appData.Crop_Master) return 0;
+    let crop = appData.Crop_Master.find(c => String(c["પાકનું નામ"]).trim() === String(cropName).trim());
+    if (!crop) return 0;
+    let share = crop["ભાગ_ટકા"] || 0;
+    return parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
+  }
+
+  function v(id) { return document.getElementById(id).value; }
+  function getYear(dateString) {
+    let d = new Date(dateString), m = d.getMonth() + 1, y = d.getFullYear();
+    return (m >= 5) ? (y + "-" + (y + 1).toString().slice(-2)) : ((y - 1) + "-" + y.toString().slice(-2));
+  }
+
+  function handlePhotoUpload(fileInputId, callback) {
+    let fileInput = document.getElementById(fileInputId);
+    if(fileInput && fileInput.files[0]) {
+      let reader = new FileReader();
+      reader.onload = function(e) { callback(e.target.result); };
+      reader.readAsDataURL(fileInput.files[0]);
+    } else { callback(""); }
+  }
+
+  function submitSales(e) {
+    e.preventDefault();
+    let rows = document.querySelectorAll("#salesItemsContainer .item-row");
+    if(rows.length === 0) return alert("કમ સે કમ એક આઇટમ ઉમેરો!");
+    document.getElementById("btnSales").innerText = "સેવ થઈ રહ્યું છે...";
+    let date = v("sDate"), billNo = v("sBill") || "N/A", bhagiya = v("sBhagiya"), year = getYear(date);
+    let mainEntryId = "SL-" + Date.now();
+    handlePhotoUpload("sPhoto", function(photoBase64) {
+      if(photoBase64) {
+        let photoRow = [ year, mainEntryId, date, billNo, bhagiya, "વેચાણ", photoBase64 ];
+        fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "savePhoto", rowValues: photoRow }) });
+      }
+      let count = 0;
+      rows.forEach((row, index) => {
+        let entryId = mainEntryId + "-" + (index + 1);
+        let rowData = [
+          year, entryId, date, billNo, bhagiya, v("sVepari"), row.querySelector(".pakList").value, 
+          row.querySelector(".sPauch").value, row.querySelector(".sWeight").value, row.querySelector(".sBhav20").value, 
+          row.querySelector(".sBhav1").value, row.querySelector(".sTotal").value, row.querySelector(".sKShare").value, 
+          row.querySelector(".sKRakam").value, v("sStatus"), v("sHastak"), v("sBLidha"), photoBase64
+        ];
+        fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "saveSales", rowValues: rowData }) }).then(() => {
+          count++;
+          if(count === rows.length) {
+            alert("વેચાણ સફળતાપૂર્વક સેવ થઈ ગયું!"); document.getElementById("btnSales").innerText = "સેવ કરો";
+            document.getElementById("salesForm").reset(); document.getElementById("salesItemsContainer").innerHTML = "";
+            addSalesItemRow(); document.getElementById("sDate").value = new Date().toISOString().split('T')[0];
+            fetchData(); switchTab('Dash');
+          }
+        });
+      });
+    });
+  }
+
+  function submitMed(e) {
+    e.preventDefault();
+    let rows = document.querySelectorAll("#medItemsContainer .item-row");
+    if(rows.length === 0) return alert("કમ સે કમ એક દવા ઉમેરો!");
+    document.getElementById("btnMed").innerText = "સેવ થઈ રહ્યું છે...";
+    let date = v("mDate"), billNo = v("mBill") || "N/A", bhagiya = v("mBhagiya"), year = getYear(date);
+    let subTotal = parseFloat(document.getElementById("mSubTotal").value) || 0;
+    let tax = parseFloat(document.getElementById("mTax").value) || 0;
+    let gst = parseFloat(document.getElementById("mGst").value) || 0;
+    let cst = parseFloat(document.getElementById("mCst").value) || 0;
+    let totalBill = parseFloat(document.getElementById("mTotalBill").value) || 0;
+    let inWords = convertToGujaratiWords(totalBill);
+    handlePhotoUpload("mPhoto", function(photoBase64) {
+      let billRow = [ year, date, billNo, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
+      let itemRows = [];
+      rows.forEach(row => {
+        itemRows.push([
+          year, date, billNo, row.querySelector(".davaList").value, row.querySelector(".mType").value,
+          row.querySelector(".mWeight").value, row.querySelector(".mPack").value, row.querySelector(".mQty").value,
+          row.querySelector(".mBhav").value, parseFloat(row.querySelector(".mTotal").value) || 0
+        ]);
+      });
+      let ledgerRow = [ year, "ME-" + Date.now(), date, bhagiya, "દવા ખર્ચ", totalBill, v("mStatus"), v("mVepari") ];
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "savePesticideBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow })
+      }).then(res => res.json()).then(() => {
+        alert("દવા બિલ સફળતાપૂર્વક સેવ થઈ ગયું!"); document.getElementById("btnMed").innerText = "સેવ કરો";
+        document.getElementById("medForm").reset(); document.getElementById("medItemsContainer").innerHTML = "";
+        addMedItemRow(); document.getElementById("mSubTotal").value = "0.00"; document.getElementById("mTax").value = "0";
+        document.getElementById("mGst").value = "0.00"; document.getElementById("mCst").value = "0.00";
+        document.getElementById("mTotalBill").value = "0.00"; document.getElementById("mTotalWords").value = "અંકે રૂપિયા શૂન્ય પૂરા";
+        document.getElementById("mDate").value = new Date().toISOString().split('T')[0];
+        fetchData(); switchTab('Dash');
+      });
+    });
+  }
+
+  function submitFert(e) {
+    e.preventDefault();
+    let rows = document.querySelectorAll("#fertItemsContainer .item-row");
+    if(rows.length === 0) return alert("કમ સે કમ એક ખાતર આઇટમ ઉમેરો!");
+    document.getElementById("btnFert").innerText = "સેવ થઈ રહ્યું છે...";
+    let date = v("fDate"), billNo = v("fBill") || "N/A", bhagiya = v("fBhagiya"), year = getYear(date);
+    let subTotal = parseFloat(document.getElementById("fSubTotal").value) || 0;
+    let tax = parseFloat(document.getElementById("fTax").value) || 0;
+    let gst = parseFloat(document.getElementById("mGst2").value) || 0;
+    let cst = parseFloat(document.getElementById("mCst2").value) || 0;
+    let totalBill = parseFloat(document.getElementById("fTotalBill").value) || 0;
+    let inWords = convertToGujaratiWords(totalBill);
+    handlePhotoUpload("fPhoto", function(photoBase64) {
+      let billRow = [ year, date, billNo, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
+      let itemRows = [];
+      rows.forEach(row => {
+        let qty = parseFloat(row.querySelector(".fQty").value) || 1, bhav = parseFloat(row.querySelector(".fBhav").value) || 0;
+        let amt = parseFloat(row.querySelector(".fAmt").value) || (qty * bhav);
+        itemRows.push([ year, date, billNo, row.querySelector(".khatarList").value, row.querySelector(".fWeight").value, row.querySelector(".fPack").value, qty, bhav, amt ]);
+      });
+      let ledgerRow = [ year, "FE-" + Date.now(), date, bhagiya, "ખાતર ખર્ચ", totalBill, v("fStatus"), v("fVepari") ];
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "saveFertilizerBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow })
+      }).then(res => res.json()).then(() => {
+        alert("ખાતર બિલ સફળતાપૂર્વક સેવ થઈ ગયું!"); document.getElementById("btnFert").innerText = "સેવ કરો";
+        document.getElementById("fertForm").reset(); document.getElementById("fertItemsContainer").innerHTML = "";
+        addFertItemRow(); document.getElementById("fSubTotal").value = "0.00"; document.getElementById("fTax").value = "0";
+        document.getElementById("mGst2").value = "0.00"; document.getElementById("mCst2").value = "0.00";
+        document.getElementById("fTotalBill").value = "0.00"; document.getElementById("fTotalWords").value = "અંકે રૂપિયા શૂન્ય પૂરા";
+        document.getElementById("fDate").value = new Date().toISOString().split('T')[0];
+        fetchData(); switchTab('Dash');
+      });
+    });
+  }
+
+  function submitTrac(e) {
+    e.preventDefault();
+    let rows = document.querySelectorAll("#tracItemsContainer .item-row");
+    if(rows.length === 0) return alert("કમ સે કમ એક કામ ઉમેરો!");
+    document.getElementById("btnTrac").innerText = "સેવ થઈ રહ્યું છે...";
+    let date = v("tDate"), billNo = v("tBill") || "N/A", bhagiya = v("tBhagiya"), year = getYear(date);
+    let mainEntryId = "TE-" + Date.now();
+    handlePhotoUpload("tPhoto", function(photoBase64) {
+      if(photoBase64) {
+        let photoRow = [ year, mainEntryId, date, billNo, bhagiya, "ટ્રેક્ટર ખર્ચ", photoBase64 ];
+        fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "savePhoto", rowValues: photoRow }) });
+      }
+      let totalBillAmt = 0, rowDataArray = [];
+      rows.forEach((row, index) => {
+        let entryId = mainEntryId + "-" + (index + 1);
+        let total = parseFloat(row.querySelector(".tTotal").value) || 0; totalBillAmt += total;
+        rowDataArray.push([
+          year, entryId, date, billNo, bhagiya, v("tDriver"), row.querySelector(".pakList").value,
+          row.querySelector(".tWork").value, row.querySelector(".tHrs").value, row.querySelector(".tRate").value,
+          total, row.querySelector(".sKShare").value, row.querySelector(".sKRakam").value, v("tStatus"), v("tHastak"), "No", photoBase64
+        ]);
+      });
+      let ledgerRow = [ year, mainEntryId, date, bhagiya, "ટ્રેક્ટર ખર્ચ", totalBillAmt, v("tStatus"), v("tDriver") ];
+      let savedCount = 0;
+      rowDataArray.forEach(rowData => {
+        fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "saveTractor", rowValues: rowData, ledgerRow: (savedCount === 0 ? ledgerRow : null) })
+        }).then(() => {
+          savedCount++;
+          if(savedCount === rowDataArray.length) {
+            alert("ટ્રેક્ટર ખર્ચ સેવ થઈ ગયો!"); document.getElementById("btnTrac").innerText = "સેવ કરો";
+            document.getElementById("tracForm").reset(); document.getElementById("tracItemsContainer").innerHTML = "";
+            addTracItemRow(); document.getElementById("tDate").value = new Date().toISOString().split('T')[0];
+            fetchData(); switchTab('Dash');
+          }
+        });
+      });
+    });
+  }
+
+  function saveB() {
+    let name = v("nbName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
+    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone"), v("nbAdd") ]);
+    document.getElementById("modalBhagiya").style.display = "none";
+  }
+  function saveV() {
+    let name = v("nvName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
+    saveData("saveVepari", [ name, v("nvPhone"), v("nvCity"), v("nvCategory") ]);
+    document.getElementById("modalVepari").style.display = "none";
+  }
+  function saveC() {
+    let name = v("ncName").trim(), share = v("ncShare"); if(name == "") return alert("નામ જરૂરી છે!");
+    saveData("saveCrop", [ name, share + "%" ]);
+    document.getElementById("modalCrop").style.display = "none";
+  }
+  function saveData(action, rowValues) {
+    fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: action, rowValues: rowValues }) })
+    .then(res => res.json()).then(() => { alert("સફળ!"); fetchData(); switchTab('Dash'); }).catch(err => alert("ભૂલ: " + err));
+  }
+
+  function renderGallery() {
+    let container = document.getElementById("galleryContainer"), photos = appData.Photo_Gallery || [];
+    if(photos.length === 0) { container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ ફોટો નથી.</p>"; return; }
+    let html = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>પ્રકાર</th><th>ફોટો</th><th>ક્રિયા</th></tr>`;
+    photos.forEach(p => {
+      let imgTag = p["Photo_Link"] ? `<a href="${p["Photo_Link"]}" target="_blank"><img src="${p["Photo_Link"]}" style="width:40px; height:40px; object-fit:cover;"></a>` : "ના";
+      html += `<tr><td>${p["Date"]||''}</td><td>${p["Bill_No"]||''}</td><td>${p["Bhagiya"]||''}</td><td>${p["Category"]||''}</td><td>${imgTag}</td><td><button class="btn-delete" onclick="deleteRecord('${p["Entry_ID"]}', '${p["Category"]}')">ડિલિટ</button></td></tr>`;
+    });
+    container.innerHTML = html + `</table>`;
+  }
+
+  function filterGallery() {
+    let query = document.getElementById("searchGallery").value.toLowerCase();
+    document.querySelectorAll("#galleryContainer tr").forEach((row, i) => {
+      if(i === 0) return; row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
+    });
+  }
+
+  function deleteRecord(entryId, category) {
+    if(!confirm("ડિલિટ કરવું છે?")) return;
+    let sheetName = "Sales_Ledger";
+    if(category === "દવા ખર્ચ") sheetName = "Pesticide_Bill";
+    else if(category === "ખાતર ખર્ચ") sheetName = "Fertilizer_Bill";
+    else if(category === "ટ્રેક્ટર ખર્ચ") sheetName = "Tractor_Expense";
+    fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "deleteRecord", entryId: entryId, sheetName: sheetName }) })
+    .then(() => { alert("ડિલિટ થઈ ગયું!"); fetchData(); });
+  }
+</script>
+</body>
+</html>

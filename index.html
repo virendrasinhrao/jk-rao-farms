@@ -347,7 +347,7 @@
           <div class="form-group"><label>સ્થિતિ:</label><select id="tStatus"><option>રોકડા</option><option>બાકી</option></select></div>
           <div class="form-group"><label>કોણે આપ્યા:</label><select id="tHastak" class="bhagiyaList" required></select></div>
         </div>
-       <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="tPhoto" accept="image/*" capture="environment"></div>
+        <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="tPhoto" accept="image/*" capture="environment"></div>
         <button type="submit" id="btnTrac" class="btn-submit">સેવ કરો</button>
       </form>
     </div>
@@ -391,7 +391,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-WExnG6crI4RFH4i9CAinkhtHEASnlEezemRM0yKUvZUYRYEFwheRdfdN01F6fZrGfw/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGrp2DYecLKktHp5dOUI0itYGPibhzuduEh2d39RfWEeGB-6pj8GDlEFlFAcODYfo2EA/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -432,6 +432,13 @@
 
     if(subType === 'New') {
       document.getElementById('editEntryId').value = "";
+      if(tabName === 'Sales') {
+        document.getElementById('salesForm').reset();
+        document.getElementById('salesItemsContainer').innerHTML = "";
+        addSalesItemRow();
+        document.getElementById('sDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('btnSales').innerText = "સેવ કરો";
+      }
       document.getElementById('subContent' + tabName + 'New').style.display = 'block';
       document.getElementById('subBtn' + tabName + 'New').classList.add('active-sub');
     } else {
@@ -660,7 +667,7 @@
         <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcFertBill();"></select></div>
         <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="fKShare readonly-bg" readonly value="0"></div>
         <div class="form-group" style="flex: 2;"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="fKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
-       <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcFertBill();">ડિલિટ</button></div>
+        <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcFertBill();">ડિલિટ</button></div>
       </div>
     `;
     container.appendChild(div); populateData(); calcFertBill();
@@ -872,12 +879,10 @@
         let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
         let entryId = r["વેચાણ બિલ ID"] || r["Entry_ID"] || "";
         
-        // ડેટા રીડ કરવા માટે મલ્ટિપલ કૉલમ ઓપ્શન્સ
         let pauchVal = r["પાઉચ / નંગ"] !== undefined ? r["પાઉચ / નંગ"] : (r["પાઉચ / કુલ વજન"] !== undefined ? r["પાઉચ / કુલ વજન"] : (r["પાઉચ"] || 0));
         let weightVal = r["કુલ વજન (કિલો)"] !== undefined ? r["કુલ વજન (કિલો)"] : (r["વજન (કિલો)"] !== undefined ? r["વજન (કિલો)"] : (r["વજન"] || 0));
         let bhav20Val = r[". ૧ મણનો ભાવ (20 Kg)"] !== undefined ? r[". ૧ મણનો ભાવ (20 Kg)"] : (r["૧_મણ_ભાવ"] || 0);
         
-        // જો શીટમાં ભાવ (પ્રતિ કિલો) સીધો ન હોય તો મણના ભાવ પરથી ગણતરી કરવી
         let bhav1Val = r["ભાવ (પ્રતિ કિલો)"] !== undefined && !isNaN(parseFloat(r["ભાવ (પ્રતિ કિલો)"])) 
                        ? parseFloat(r["ભાવ (પ્રતિ કિલો)"]) 
                        : (parseFloat(bhav20Val) / 20);
@@ -977,12 +982,12 @@
     document.getElementById("modalMpin").style.display = "block";
   }
 
-  function askMpinForDeleteRecord(sheetName, entryId) {
+  function askMpinForDeleteRecord(sheetKey, entryId) {
     pendingActionCallback = () => {
       if(!confirm("શું તમે આ રેકોર્ડ ડિલિટ કરવા માંગો છો?")) return;
       fetch(SCRIPT_URL, {
         method: "POST",
-        body: JSON.stringify({ action: "deleteRecord", entryId: entryId, sheetName: sheetName })
+        body: JSON.stringify({ action: "deleteRecord", entryId: entryId, sheetName: sheetKey })
       }).then(res => res.json()).then(() => {
         alert("સફળતાપૂર્વક ડિલિટ થઈ ગયું!");
         fetchData();
@@ -1102,6 +1107,7 @@
       });
     });
   }
+
   function submitMed(e) {
     let rows = document.querySelectorAll("#medItemsContainer .item-row");
     if(rows.length === 0) return alert("કમ સે કમ એક દવા ઉમેરો!");
@@ -1271,4 +1277,3 @@
 </script>
 </body>
 </html>
-  

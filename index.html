@@ -34,16 +34,16 @@
     .readonly-bg { background-color: #f1f2f6; }
     .hidden-field { display: none !important; }
     
-    /* વેચાણ કુલ રકમ માટે આકર્ષક ગ્રીન બૉક્સ */
+    /* દવા ખર્ચ જેવું આકર્ષક ગ્રીન બેકગ્રાઉન્ડ કુલ રકમ બોક્સ */
     .highlight-total { 
-      background: linear-gradient(135deg, #27ae60, #2ecc71) !important; 
+      background-color: #27ae60 !important; 
       color: #ffffff !important; 
       font-size: 18px !important; 
       font-weight: bold !important; 
       text-align: right; 
       border: 2px solid #1e8449 !important; 
-      border-radius: 6px !important; 
-      padding: 6px 12px;
+      border-radius: 3px; 
+      padding: 5px 10px;
     }
 
     .farmer-amount-box { 
@@ -623,17 +623,17 @@
     banner.style.display = 'block';
   }
 
-  function addSalesItemRow() {
+  function addSalesItemRow(pauch=0, weight="", bhav20="", pak="", kRakam="") {
     let container = document.getElementById("salesItemsContainer");
     let div = document.createElement("div"); div.className = "item-row";
     div.innerHTML = `
       <div class="flex-row">
         <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcSalesRow(this);"></select></div>
-        <div class="form-group"><label>પાઉચ / નંગ:</label><input type="number" class="sPauch" value="0"></div>
-        <div class="form-group"><label>કુલ વજન (કિલો):</label><input type="number" class="sWeight" step="0.01" oninput="calcSalesRow(this)" required></div>
+        <div class="form-group"><label>પાઉચ / નંગ:</label><input type="number" class="sPauch" value="${pauch}"></div>
+        <div class="form-group"><label>કુલ વજન (કિલો):</label><input type="number" class="sWeight" step="0.01" value="${weight}" oninput="calcSalesRow(this)" required></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>૧ મણનો ભાવ (20 Kg):</label><input type="number" class="sBhav20" step="0.01" oninput="calcSalesRow(this)" required></div>
+        <div class="form-group"><label>૧ મણનો ભાવ (20 Kg):</label><input type="number" class="sBhav20" step="0.01" value="${bhav20}" oninput="calcSalesRow(this)" required></div>
         <div class="form-group"><label>ભાવ (પ્રતિ કિલો):</label><input type="text" class="sBhav1 readonly-bg" readonly value="₹ 0.00"></div>
         <div class="form-group"><label>કુલ રકમ (₹):</label><input type="text" class="sTotal readonly-bg highlight-total" readonly value="₹ 0.00"></div>
       </div>
@@ -643,10 +643,13 @@
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove()">ડિલિટ</button></div>
       </div>
     `;
-    container.appendChild(div); populateData();
+    container.appendChild(div); 
+    populateData(); 
+    if(pak) div.querySelector('.pakList').value = pak;
+    if(weight && bhav20) calcSalesRow(div.querySelector('.sWeight'));
   }
 
-  function addMedItemRow() {
+  function addMedItemRow(dava="", weight="", pack="", qty=1, bhav="", pak="") {
     let container = document.getElementById("medItemsContainer");
     let div = document.createElement("div"); div.className = "item-row";
     div.innerHTML = `
@@ -655,12 +658,12 @@
         <div class="form-group"><label>પ્રકાર:</label><input type="text" class="mType readonly-bg" readonly required></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>વજન:</label><input type="number" class="mWeight" step="0.01" oninput="onWeightInputRow(this); calcMedRow(this);" required></div>
-        <div class="form-group"><label>પેકિંગ:</label><input type="text" class="mPack readonly-bg" readonly required></div>
-        <div class="form-group"><label>નંગ:</label><input type="number" class="mQty" value="1" min="1" oninput="calcMedRow(this)" required></div>
+        <div class="form-group"><label>વજન:</label><input type="number" class="mWeight" step="0.01" value="${weight}" oninput="onWeightInputRow(this); calcMedRow(this);" required></div>
+        <div class="form-group"><label>પેકિંગ:</label><input type="text" class="mPack readonly-bg" value="${pack}" readonly required></div>
+        <div class="form-group"><label>નંગ:</label><input type="number" class="mQty" value="${qty}" min="1" oninput="calcMedRow(this)" required></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>ભાવ:</label><input type="number" class="mBhav" step="0.01" oninput="calcMedRow(this)" required></div>
+        <div class="form-group"><label>ભાવ:</label><input type="number" class="mBhav" step="0.01" value="${bhav}" oninput="calcMedRow(this)" required></div>
         <div class="form-group"><label>રકમ (₹):</label><input type="text" class="mTotal readonly-bg" readonly value="₹ 0.00"></div>
       </div>
       <div class="flex-row">
@@ -670,21 +673,25 @@
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcMedBill();">ડિલિટ</button></div>
       </div>
     `;
-    container.appendChild(div); populateData(); calcMedBill();
+    container.appendChild(div); 
+    populateData(); 
+    if(dava) { div.querySelector('.davaList').value = dava; onMedSelectRow(div.querySelector('.davaList')); }
+    if(pak) div.querySelector('.pakList').value = pak;
+    if(bhav) calcMedRow(div.querySelector('.mBhav'));
   }
 
-  function addFertItemRow() {
+  function addFertItemRow(khatar="", weight="", pack="", qty=1, bhav="", pak="") {
     let container = document.getElementById("fertItemsContainer");
     let div = document.createElement("div"); div.className = "item-row";
     div.innerHTML = `
       <div class="flex-row">
         <div class="form-group"><label>ખાતરનું નામ:</label><select class="khatarList" required onchange="checkFertilizerNew(this)"></select></div>
-        <div class="form-group"><label>વજન (ઓપ્શનલ):</label><input type="number" class="fWeight" step="0.01" placeholder="વજન" oninput="onFertWeightInput(this)"></div>
-        <div class="form-group"><label>પેકિંગ:</label><input type="text" class="fPack readonly-bg" readonly placeholder="પેકિંગ"></div>
+        <div class="form-group"><label>વજન (ઓપ્શનલ):</label><input type="number" class="fWeight" step="0.01" value="${weight}" placeholder="વજન" oninput="onFertWeightInput(this)"></div>
+        <div class="form-group"><label>પેકિંગ:</label><input type="text" class="fPack readonly-bg" value="${pack}" readonly placeholder="પેકિંગ"></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>નંગ/થેલી:</label><input type="number" class="fQty" value="1" min="1" oninput="calcFertBill()" required></div>
-        <div class="form-group"><label>ભાવ:</label><input type="number" class="fBhav" step="0.01" oninput="calcFertBill()" required></div>
+        <div class="form-group"><label>નંગ/થેલી:</label><input type="number" class="fQty" value="${qty}" min="1" oninput="calcFertBill()" required></div>
+        <div class="form-group"><label>ભાવ:</label><input type="number" class="fBhav" step="0.01" value="${bhav}" oninput="calcFertBill()" required></div>
         <div class="form-group"><label>રકમ (₹):</label><input type="text" class="fAmt readonly-bg" readonly required value="₹ 0.00"></div>
       </div>
       <div class="flex-row">
@@ -694,20 +701,15 @@
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcFertBill();">ડિલિટ</button></div>
       </div>
     `;
-    container.appendChild(div); populateData(); calcFertBill();
+    container.appendChild(div); 
+    populateData(); 
+    if(khatar) div.querySelector('.khatarList').value = khatar;
+    if(pak) div.querySelector('.fPack').value = pack;
+    if(pak) div.querySelector('.pakList').value = pak;
+    if(bhav) calcFertBill();
   }
 
-  function onFertWeightInput(input) {
-    let row = input.closest('.item-row');
-    let val = parseFloat(input.value);
-    let packInput = row.querySelector('.fPack');
-    if(isNaN(val) || input.value === "") { packInput.value = ""; return; }
-    if(val > 0 && val <= 9) packInput.value = val + " કિલો";
-    else if(val >= 10) packInput.value = val + " કિલો";
-    else packInput.value = "";
-  }
-
-  function addTracItemRow() {
+  function addTracItemRow(pak="", work="હળામણ", hrs="", rate="") {
     let container = document.getElementById("tracItemsContainer");
     let div = document.createElement("div"); div.className = "item-row";
     div.innerHTML = `
@@ -716,8 +718,8 @@
         <div class="form-group"><label>કામ:</label><select class="tWork" required onchange="calcTracRow(this)"><option>હળામણ</option><option>દાંતી</option><option>રોટાવેટર</option><option>પાળા</option><option>નિકો</option><option>દવા છાંટવી</option><option>અન્ય</option></select></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>કલાક:</label><input type="number" class="tHrs" step="0.5" oninput="calcTracRow(this)" required></div>
-        <div class="form-group"><label>ભાવ:</label><input type="number" class="tRate" oninput="calcTracRow(this)" required></div>
+        <div class="form-group"><label>કલાક:</label><input type="number" class="tHrs" step="0.5" value="${hrs}" oninput="calcTracRow(this)" required></div>
+        <div class="form-group"><label>ભાવ:</label><input type="number" class="tRate" value="${rate}" oninput="calcTracRow(this)" required></div>
         <div class="form-group"><label>કુલ ભાડું (₹):</label><input type="text" class="tTotal readonly-bg" readonly value="₹ 0.00"></div>
       </div>
       <div class="flex-row">
@@ -726,7 +728,11 @@
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove()">ડિલિટ</button></div>
       </div>
     `;
-    container.appendChild(div); populateData();
+    container.appendChild(div); 
+    populateData(); 
+    if(pak) div.querySelector('.pakList').value = pak;
+    if(work) div.querySelector('.tWork').value = work;
+    if(hrs && rate) calcTracRow(div.querySelector('.tHrs'));
   }
 
   function calcSalesRow(el) {
@@ -971,6 +977,7 @@
     });
   }
 
+  // એડિટ કરતી વખતે ઓરિજિનલ ડેટા આખા ફોર્મમાં લોડ કરવા માટે
   function askMpinForEdit(tabName, entryId) {
     askMpinAndExecute(() => {
       if(tabName === 'Sales') {
@@ -986,6 +993,9 @@
           document.getElementById("sBLidha").value = found["ભાગિયાએ લીધા? (Yes/No)"] || "No";
           document.getElementById("editEntryId").value = entryId;
           document.getElementById("btnSales").innerText = "અપડેટ કરો";
+          
+          document.getElementById("salesItemsContainer").innerHTML = "";
+          addSalesItemRow(found["પાઉચ / નંગ"] || 0, found["કુલ વજન (કિલો)"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
           updatePartnerSummary('Sales');
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
@@ -997,8 +1007,12 @@
           document.getElementById("mBill").value = found["બિલ નં"] || "";
           document.getElementById("mBhagiya").value = found["ભાગીદાર"] || "";
           document.getElementById("mVepari").value = found["વેપારી"] || "";
+          document.getElementById("mTax").value = found["ટેક્સ"] || 0;
           document.getElementById("editMedId").value = entryId;
           document.getElementById("btnMed").innerText = "અપડેટ કરો";
+          
+          document.getElementById("medItemsContainer").innerHTML = "";
+          addMedItemRow(found["દવાનું નામ"] || "", found["વજન"] || "", found["પેકિંગ"] || "", found["નંગ/થેલી"] || 1, found["ભાવ"] || "", found["પાકનું નામ"] || "");
           updatePartnerSummary('Med');
           alert("દવા એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
@@ -1012,6 +1026,9 @@
           document.getElementById("fVepari").value = found["વેપારી"] || "";
           document.getElementById("editFertId").value = entryId;
           document.getElementById("btnFert").innerText = "અપડેટ કરો";
+          
+          document.getElementById("fertItemsContainer").innerHTML = "";
+          addFertItemRow(found["ખાતરનું નામ"] || "", found["વજન"] || "", found["પેકિંગ"] || "", found["નંગ/થેલી"] || 1, found["ભાવ"] || "", found["પાકનું નામ"] || "");
           updatePartnerSummary('Fert');
           alert("ખાતર એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
@@ -1025,6 +1042,9 @@
           document.getElementById("tDriver").value = found["ડ્રાઈવર/માલિક"] || "";
           document.getElementById("editTracId").value = entryId;
           document.getElementById("btnTrac").innerText = "અપડેટ કરો";
+          
+          document.getElementById("tracItemsContainer").innerHTML = "";
+          addTracItemRow(found["પાકનું નામ"] || "", found["કામ"] || "", found["કલાક"] || "", found["ભાવ"] || "");
           updatePartnerSummary('Trac');
           alert("ટ્રેક્ટર એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
@@ -1152,6 +1172,10 @@
     let cst = parseFloat((document.getElementById("mCst").value || "").replace("₹", "")) || 0;
     let totalBill = parseFloat((document.getElementById("mTotalBill").value || "").replace("₹", "")) || 0;
     let inWords = convertToGujaratiWords(totalBill);
+    
+    let existingId = document.getElementById("editMedId").value;
+    let mainEntryId = existingId ? existingId : "ME-" + Math.floor(100000 + Math.random() * 900000);
+
     handlePhotoUpload("mPhoto", function(photoBase64) {
       let billRow = [ year, date, billNo, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
       let itemRows = [];
@@ -1162,18 +1186,19 @@
         totalFarmerAmt += mFarmVal;
 
         itemRows.push([
-          year, "ME-" + Math.floor(100000 + Math.random() * 900000), date, billNo, row.querySelector(".davaList").value, row.querySelector(".mType").value,
+          year, mainEntryId, date, billNo, row.querySelector(".davaList").value, row.querySelector(".mType").value,
           row.querySelector(".mWeight").value, row.querySelector(".mPack").value, row.querySelector(".mQty").value,
           row.querySelector(".mBhav").value, mTotVal,
           row.querySelector(".pakList").value, row.querySelector(".mKShare").value, mFarmVal
         ]);
       });
-      let ledgerRow = [ year, "ME-" + Math.floor(100000 + Math.random() * 900000), date, bhagiya, "દવા ખર્ચ", totalFarmerAmt, v("mStatus"), v("mVepari") ];
+      let ledgerRow = [ year, mainEntryId, date, bhagiya, "દવા ખર્ચ", totalFarmerAmt, v("mStatus"), v("mVepari") ];
       fetch(SCRIPT_URL, {
         method: "POST",
-        body: JSON.stringify({ action: "savePesticideBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow })
+        body: JSON.stringify({ action: "savePesticideBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow, editEntryId: existingId })
       }).then(res => res.json()).then(() => {
         alert("દવા બિલ સફળતાપૂર્વક સેવ થઈ ગયું!"); document.getElementById("btnMed").innerText = "સેવ કરો";
+        document.getElementById("editMedId").value = "";
         document.getElementById("medForm").reset(); document.getElementById("medItemsContainer").innerHTML = "";
         addMedItemRow(); document.getElementById("mSubTotal").value = "₹ 0.00"; document.getElementById("mTax").value = "0";
         document.getElementById("mGst").value = "₹ 0.00"; document.getElementById("mCst").value = "₹ 0.00";
@@ -1196,6 +1221,10 @@
     let cst = parseFloat((document.getElementById("mCst2").value || "").replace("₹", "")) || 0;
     let totalBill = parseFloat((document.getElementById("fTotalBill").value || "").replace("₹", "")) || 0;
     let inWords = convertToGujaratiWords(totalBill);
+
+    let existingId = document.getElementById("editFertId").value;
+    let mainEntryId = existingId ? existingId : "FE-" + Math.floor(100000 + Math.random() * 900000);
+
     handlePhotoUpload("fPhoto", function(photoBase64) {
       let billRow = [ year, date, billNo, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
       let itemRows = [];
@@ -1207,17 +1236,18 @@
         totalFarmerAmt += fFarmVal;
 
         itemRows.push([ 
-          year, "FE-" + Math.floor(100000 + Math.random() * 900000), date, billNo, row.querySelector(".khatarList").value, row.querySelector(".fWeight").value, 
+          year, mainEntryId, date, billNo, row.querySelector(".khatarList").value, row.querySelector(".fWeight").value, 
           row.querySelector(".fPack").value, qty, bhav, amt,
           row.querySelector(".pakList").value, row.querySelector(".fKShare").value, fFarmVal
         ]);
       });
-      let ledgerRow = [ year, "FE-" + Math.floor(100000 + Math.random() * 900000), date, bhagiya, "ખાતર ખર્ચ", totalFarmerAmt, v("fStatus"), v("fVepari") ];
+      let ledgerRow = [ year, mainEntryId, date, bhagiya, "ખાતર ખર્ચ", totalFarmerAmt, v("fStatus"), v("fVepari") ];
       fetch(SCRIPT_URL, {
         method: "POST",
-        body: JSON.stringify({ action: "saveFertilizerBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow })
+        body: JSON.stringify({ action: "saveFertilizerBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow, editEntryId: existingId })
       }).then(res => res.json()).then(() => {
         alert("ખાતર બિલ સફળતાપૂર્વક સેવ થઈ ગયું!"); document.getElementById("btnFert").innerText = "સેવ કરો";
+        document.getElementById("editFertId").value = "";
         document.getElementById("fertForm").reset(); document.getElementById("fertItemsContainer").innerHTML = "";
         addFertItemRow(); document.getElementById("fSubTotal").value = "₹ 0.00"; document.getElementById("fTax").value = "0";
         document.getElementById("mGst2").value = "₹ 0.00"; document.getElementById("mCst2").value = "₹ 0.00";
@@ -1234,7 +1264,10 @@
     if(rows.length === 0) return alert("કમ સે કમ એક કામ ઉમેરો!");
     document.getElementById("btnTrac").innerText = "સેવ થઈ રહ્યું છે...";
     let date = v("tDate"), billNo = v("tBill") || "N/A", bhagiya = v("tBhagiya"), year = getYear(date);
-    let mainEntryId = "TE-" + Math.floor(100000 + Math.random() * 900000);
+    
+    let existingId = document.getElementById("editTracId").value;
+    let mainEntryId = existingId ? existingId : "TE-" + Math.floor(100000 + Math.random() * 900000);
+
     handlePhotoUpload("tPhoto", function(photoBase64) {
       if(photoBase64) {
         let photoRow = [ year, mainEntryId, date, billNo, bhagiya, "ટ્રેક્ટર ખર્ચ", photoBase64 ];
@@ -1258,11 +1291,12 @@
       rowDataArray.forEach(rowData => {
         fetch(SCRIPT_URL, {
           method: "POST",
-          body: JSON.stringify({ action: "saveTractor", rowValues: rowData, ledgerRow: (savedCount === 0 ? ledgerRow : null) })
+          body: JSON.stringify({ action: "saveTractor", rowValues: rowData, ledgerRow: (savedCount === 0 ? ledgerRow : null), editEntryId: existingId })
         }).then(() => {
           savedCount++;
           if(savedCount === rowDataArray.length) {
             alert("ટ્રેક્ટર ખર્ચ સેવ થઈ ગયો!"); document.getElementById("btnTrac").innerText = "સેવ કરો";
+            document.getElementById("editTracId").value = "";
             document.getElementById("tracForm").reset(); document.getElementById("tracItemsContainer").innerHTML = "";
             addTracItemRow(); document.getElementById("tDate").value = new Date().toISOString().split('T')[0];
             fetchData(); switchTab('Dash');
@@ -1274,7 +1308,7 @@
 
   function saveB() {
     let name = v("nbName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
-    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone"), v("nbAdd") ]);
+    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone", v("nbAdd")) ]);
     document.getElementById("modalBhagiya").style.display = "none";
   }
   function saveV() {

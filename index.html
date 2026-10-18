@@ -28,21 +28,22 @@
     .btn-submit { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; font-size: 15px; cursor: pointer; margin-top: 10px; font-weight: bold; border-radius: 3px; }
     .btn-submit:hover { background: #219653; }
     .btn-delete { background: #c0392b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
-    .btn-edit { background: #f39c12; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; }
+    .btn-edit { background: #f39c12; color: white; border-radius: 4px; border: none; padding: 5px 10px; cursor: pointer; font-size: 12px; font-weight: bold; }
     .btn-add-item { background: #2980b9; color: white; border: none; padding: 6px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; margin-bottom: 8px; }
     
     .readonly-bg { background-color: #f1f2f6; }
     .hidden-field { display: none !important; }
     
+    /* વેચાણ કુલ રકમ માટે આકર્ષક ગ્રીન બૉક્સ */
     .highlight-total { 
-      background-color: #27ae60 !important; 
+      background: linear-gradient(135deg, #27ae60, #2ecc71) !important; 
       color: #ffffff !important; 
-      font-size: 20px !important; 
+      font-size: 18px !important; 
       font-weight: bold !important; 
       text-align: right; 
       border: 2px solid #1e8449 !important; 
-      border-radius: 3px; 
-      padding: 5px 10px;
+      border-radius: 6px !important; 
+      padding: 6px 12px;
     }
 
     .farmer-amount-box { 
@@ -176,7 +177,7 @@
         <div id="salesItemsContainer"></div>
         <div class="flex-row" style="margin-top:10px;">
           <div class="form-group"><label>બીલની સ્થિતિ (બાકી/જમા):</label><select id="sStatus"><option>રોકડા / જમા</option><option>બાકી</option></select></div>
-          <div class="form-group"><label>પૈસા કોણે લીધા (હસ્તે):</label><input type="text" id="sHastak" required></div>
+          <div class="form-group"><label>પૈસા કોણે લીધા (હસ્તે):</label><select id="sHastak" class="bhagiyaList" required></select></div>
           <div class="form-group"><label>ભાગિયાએ લીધા? (Yes/No):</label><select id="sBLidha"><option>No</option><option>Yes</option></select></div>
         </div>
         <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="sPhoto" accept="image/*" capture="environment"></div>
@@ -394,7 +395,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz8Tyav_VEWOYaGzLoUSahblwnUigs6uwKdU1-fO-TBwGODnSgHP_xYYhHzT6ajHL_ZYA/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGrp2DYecLKktHp5dOUI0itYGPibhzuduEh2d39RfWEeGB-6pj8GDlEFlFAcODYfo2EA/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -634,7 +635,7 @@
       <div class="flex-row">
         <div class="form-group"><label>૧ મણનો ભાવ (20 Kg):</label><input type="number" class="sBhav20" step="0.01" oninput="calcSalesRow(this)" required></div>
         <div class="form-group"><label>ભાવ (પ્રતિ કિલો):</label><input type="text" class="sBhav1 readonly-bg" readonly value="₹ 0.00"></div>
-        <div class="form-group"><label>કુલ રકમ (₹):</label><input type="text" class="sTotal readonly-bg" readonly value="₹ 0.00"></div>
+        <div class="form-group"><label>કુલ રકમ (₹):</label><input type="text" class="sTotal readonly-bg highlight-total" readonly value="₹ 0.00"></div>
       </div>
       <div class="flex-row">
         <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKShare readonly-bg" readonly value="0"></div>
@@ -897,7 +898,6 @@
       <button class="btn-delete" onclick="askMpinForDeleteSelected('${sheetKey}')">🗑️ પસંદ કરેલ (✓) ડિલીટ કરો</button>
     </div>`;
 
-    // ટેબલ હેડરમાં "એન્ટ્રી Id" ઉમેર્યું છે
     let html = deleteBtnHtml + `<table><tr>
       <th><input type="checkbox" id="selectAll_${tabName}" onclick="toggleSelectAll(this, '${tabName}')"></th>
       <th>એન્ટ્રી Id</th><th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>વિગત/નામ</th><th>કુલ રકમ</th><th>ક્રિયા</th>
@@ -912,7 +912,6 @@
       let name = r["ખરીદનાર"] || r["દવાનું નામ"] || r["ખાતરનું નામ"] || r["દવાનું_નામ"] || r["ખાતરનું_નામ"] || r["કામ"] || "-";
       let amt = r["કુલ રકમ (₹)"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || r["બીલની કુલ રકમ"] || r["રકમ"] || r["કુલ ભાડું"] || 0;
 
-      // ટેબલની હરોળમાં "એન્ટ્રી Id" દર્શાવ્યું છે
       html += `<tr>
         <td><input type="checkbox" class="row-select-${tabName}" value="${entryId}"></td>
         <td><b>${entryId}</b></td>
@@ -990,8 +989,45 @@
           updatePartnerSummary('Sales');
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
-      } else {
-        alert("એડિટ સુવિધા ટૂંક સમયમાં ઓપન થશે. ID: " + entryId);
+      } else if(tabName === 'Med') {
+        let found = (appData.Pesticide_Items || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
+        if(found) {
+          switchSubTab('Med', 'New');
+          document.getElementById("mDate").value = String(found["તારીખ"] || "").split('T')[0];
+          document.getElementById("mBill").value = found["બિલ નં"] || "";
+          document.getElementById("mBhagiya").value = found["ભાગીદાર"] || "";
+          document.getElementById("mVepari").value = found["વેપારી"] || "";
+          document.getElementById("editMedId").value = entryId;
+          document.getElementById("btnMed").innerText = "અપડેટ કરો";
+          updatePartnerSummary('Med');
+          alert("દવા એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+      } else if(tabName === 'Fert') {
+        let found = (appData.Fertilizer_Items || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
+        if(found) {
+          switchSubTab('Fert', 'New');
+          document.getElementById("fDate").value = String(found["તારીખ"] || "").split('T')[0];
+          document.getElementById("fBill").value = found["બિલ નં"] || "";
+          document.getElementById("fBhagiya").value = found["ભાગીદાર"] || "";
+          document.getElementById("fVepari").value = found["વેપારી"] || "";
+          document.getElementById("editFertId").value = entryId;
+          document.getElementById("btnFert").innerText = "અપડેટ કરો";
+          updatePartnerSummary('Fert');
+          alert("ખાતર એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+      } else if(tabName === 'Trac') {
+        let found = (appData.Tractor_Expense || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
+        if(found) {
+          switchSubTab('Trac', 'New');
+          document.getElementById("tDate").value = String(found["તારીખ"] || "").split('T')[0];
+          document.getElementById("tBill").value = found["બિલ નં"] || "";
+          document.getElementById("tBhagiya").value = found["ભાગીદાર"] || "";
+          document.getElementById("tDriver").value = found["ડ્રાઈવર/માલિક"] || "";
+          document.getElementById("editTracId").value = entryId;
+          document.getElementById("btnTrac").innerText = "અપડેટ કરો";
+          updatePartnerSummary('Trac');
+          alert("ટ્રેક્ટર એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       }
     });
   }
@@ -1067,7 +1103,6 @@
     document.getElementById("btnSales").innerText = "સેવ થઈ રહ્યું છે...";
     let date = v("sDate"), billNo = v("sBill") || "N/A", bhagiya = v("sBhagiya"), year = getYear(date);
     
-    // એન્ટ્રી Id ટૂંકો રાખવો (દા.ત. SL- અને છેલ્લા 6 અંકો)
     let existingId = document.getElementById("editEntryId").value;
     let mainEntryId = existingId ? existingId : "SL-" + Math.floor(100000 + Math.random() * 900000);
 

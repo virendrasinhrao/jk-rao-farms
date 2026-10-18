@@ -160,7 +160,7 @@
         <h4>કુલ વેચાણ</h4>
         <div class="sum-amount" id="bannerValSales">₹ 0.00</div>
       </div>
-      <form id="salesForm" onsubmit="askMpinAndExecute(event, submitSales)">
+      <form id="salesForm" onsubmit="submitSales(event)">
         <input type="hidden" id="editEntryId" value="">
         <div class="flex-row">
           <div class="form-group"><label>તારીખ:</label><input type="date" id="sDate" required onchange="updatePartnerSummary('Sales')"></div>
@@ -204,7 +204,8 @@
         <h4>કુલ વેચાણ</h4>
         <div class="sum-amount" id="bannerValMed">₹ 0.00</div>
       </div>
-      <form id="medForm" onsubmit="askMpinAndExecute(event, submitMed)">
+      <form id="medForm" onsubmit="submitMed(event)">
+        <input type="hidden" id="editMedId" value="">
         <div class="flex-row">
           <div class="form-group"><label>તારીખ:</label><input type="date" id="mDate" required onchange="updatePartnerSummary('Med')"></div>
           <div class="form-group"><label>બિલ નં:</label><input type="text" id="mBill"></div>
@@ -267,7 +268,8 @@
         <h4>કુલ વેચાણ</h4>
         <div class="sum-amount" id="bannerValFert">₹ 0.00</div>
       </div>
-      <form id="fertForm" onsubmit="askMpinAndExecute(event, submitFert)">
+      <form id="fertForm" onsubmit="submitFert(event)">
+        <input type="hidden" id="editFertId" value="">
         <div class="flex-row">
           <div class="form-group"><label>તારીખ:</label><input type="date" id="fDate" required onchange="updatePartnerSummary('Fert')"></div>
           <div class="form-group"><label>બિલ નં:</label><input type="text" id="fBill"></div>
@@ -330,7 +332,8 @@
         <h4>કુલ વેચાણ</h4>
         <div class="sum-amount" id="bannerValTrac">₹ 0.00</div>
       </div>
-      <form id="tracForm" onsubmit="askMpinAndExecute(event, submitTrac)">
+      <form id="tracForm" onsubmit="submitTrac(event)">
+        <input type="hidden" id="editTracId" value="">
         <div class="flex-row">
           <div class="form-group"><label>તારીખ:</label><input type="date" id="tDate" required onchange="updatePartnerSummary('Trac')"></div>
           <div class="form-group"><label>વાઉચર/બિલ:</label><input type="text" id="tBill"></div>
@@ -391,7 +394,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGrp2DYecLKktHp5dOUI0itYGPibhzuduEh2d39RfWEeGB-6pj8GDlEFlFAcODYfo2EA/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz8Tyav_VEWOYaGzLoUSahblwnUigs6uwKdU1-fO-TBwGODnSgHP_xYYhHzT6ajHL_ZYA/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -431,13 +434,34 @@
     document.getElementById('subBtn' + tabName + 'View').classList.remove('active-sub');
 
     if(subType === 'New') {
-      document.getElementById('editEntryId').value = "";
       if(tabName === 'Sales') {
+        document.getElementById('editEntryId').value = "";
         document.getElementById('salesForm').reset();
         document.getElementById('salesItemsContainer').innerHTML = "";
         addSalesItemRow();
         document.getElementById('sDate').value = new Date().toISOString().split('T')[0];
         document.getElementById('btnSales').innerText = "સેવ કરો";
+      } else if(tabName === 'Med') {
+        document.getElementById('editMedId').value = "";
+        document.getElementById('medForm').reset();
+        document.getElementById('medItemsContainer').innerHTML = "";
+        addMedItemRow();
+        document.getElementById('mDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('btnMed').innerText = "સેવ કરો";
+      } else if(tabName === 'Fert') {
+        document.getElementById('editFertId').value = "";
+        document.getElementById('fertForm').reset();
+        document.getElementById('fertItemsContainer').innerHTML = "";
+        addFertItemRow();
+        document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('btnFert').innerText = "સેવ કરો";
+      } else if(tabName === 'Trac') {
+        document.getElementById('editTracId').value = "";
+        document.getElementById('tracForm').reset();
+        document.getElementById('tracItemsContainer').innerHTML = "";
+        addTracItemRow();
+        document.getElementById('tDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('btnTrac').innerText = "સેવ કરો";
       }
       document.getElementById('subContent' + tabName + 'New').style.display = 'block';
       document.getElementById('subBtn' + tabName + 'New').classList.add('active-sub');
@@ -448,9 +472,8 @@
     }
   }
 
-  function askMpinAndExecute(event, callback) {
-    event.preventDefault();
-    pendingActionCallback = () => callback(event);
+  function askMpinAndExecute(callback) {
+    pendingActionCallback = callback;
     document.getElementById("inputMpin").value = "";
     document.getElementById("modalMpin").style.display = "block";
   }
@@ -863,7 +886,6 @@
     document.getElementById("dashFarmerExpense").innerText = "₹ " + farmerExp.toFixed(2);
   }
 
-  // ચેકબોક્સ (✓) સાથેનું ટેબલ વ્યુ
   function renderTable(tabName) {
     let container = document.getElementById("tableContainer" + tabName);
     let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : 'Tractor_Expense';
@@ -872,7 +894,7 @@
     if(rows.length === 0) { container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ રેકોર્ડ ઉપલબ્ધ નથી.</p>"; return; }
 
     let deleteBtnHtml = `<div style="margin-bottom:8px; text-align:left;">
-      <button class="btn-delete" onclick="deleteSelectedRecords('${sheetKey}')">🗑️ પસંદ કરેલ (✓) ડિલીટ કરો</button>
+      <button class="btn-delete" onclick="askMpinForDeleteSelected('${sheetKey}')">🗑️ પસંદ કરેલ (✓) ડિલીટ કરો</button>
     </div>`;
 
     let html = deleteBtnHtml + `<table><tr>
@@ -882,7 +904,7 @@
 
     rows.forEach((r, index) => {
       let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
-      let entryId = r["વેચાણ બિલ ID"] || r["Entry_ID"] || r["બિલ નં"] || index;
+      let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || r["વેચાણ બિલ ID"] || r["બિલ નં"] || index;
       let bhagiya = r["ભાગીદાર"] || r["Bhagiya"] || "-";
       let billNo = r["બિલ નં"] || r["બિલ_નં"] || "-";
       let year = r["વર્ષ"] || r["Year"] || "";
@@ -898,7 +920,7 @@
         <td>${name}</td>
         <td>₹ ${parseFloat(amt).toFixed(2)}</td>
         <td>
-          <button class="btn-edit" onclick="editRecord('${sheetKey}', '${entryId}')">એડિટ</button>
+          <button class="btn-edit" onclick="askMpinForEdit('${tabName}', '${entryId}')">એડિટ</button>
         </td>
       </tr>`;
     });
@@ -910,8 +932,7 @@
     checkboxes.forEach(cb => cb.checked = master.checked);
   }
 
-  // પસંદ કરેલી (✓ થયેલી) એન્ટ્રીઓ જ MPIN પૂછીને ડિલીટ કરવી
-  function deleteSelectedRecords(sheetKey) {
+  function askMpinForDeleteSelected(sheetKey) {
     let activeTab = sheetKey === 'Sales_Ledger' ? 'Sales' : sheetKey === 'Pesticide_Items' ? 'Med' : sheetKey === 'Fertilizer_Items' ? 'Fert' : 'Trac';
     let checkedBoxes = document.querySelectorAll('.row-select-' + activeTab + ':checked');
     
@@ -922,7 +943,7 @@
 
     let idsToDelete = Array.from(checkedBoxes).map(cb => cb.value);
 
-    pendingActionCallback = () => {
+    askMpinAndExecute(() => {
       if(!confirm("શું તમે ખરેખર પસંદ કરેલી " + idsToDelete.length + " એન્ટ્રીઓ ડિલીટ કરવા માંગો છો?")) return;
       
       let promises = idsToDelete.map(id => {
@@ -936,10 +957,7 @@
         alert("પસંદ કરેલ એન્ટ્રીઓ સફળતાપૂર્વક ડિલીટ થઈ ગઈ!");
         fetchData();
       }).catch(err => alert("ભૂલ: " + err));
-    };
-
-    document.getElementById("inputMpin").value = "";
-    document.getElementById("modalMpin").style.display = "block";
+    });
   }
 
   function filterTable(tabName) {
@@ -951,20 +969,32 @@
     });
   }
 
-  function editRecord(sheetName, entryId) {
-    pendingActionCallback = () => {
-      alert("આ રેકોર્ડ માટે એડિટ સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે. ID: " + entryId);
-    };
-    document.getElementById("inputMpin").value = "";
-    document.getElementById("modalMpin").style.display = "block";
+  function askMpinForEdit(tabName, entryId) {
+    askMpinAndExecute(() => {
+      if(tabName === 'Sales') {
+        let found = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["વેચાણ બિલ ID"] || "").trim() === String(entryId).trim());
+        if(found) {
+          switchSubTab('Sales', 'New');
+          document.getElementById("sDate").value = String(found["તારીખ"] || "").split('T')[0];
+          document.getElementById("sBill").value = found["બિલ નં"] || "";
+          document.getElementById("sBhagiya").value = found["ભાગીદાર"] || "";
+          document.getElementById("sVepari").value = found["ખરીદનાર"] || "";
+          document.getElementById("sStatus").value = found["બીલની સ્થિતિ (બાકી/જમા)"] || "રોકડા / જમા";
+          document.getElementById("sHastak").value = found["પૈસા કોણે લીધા (હસ્તે)"] || "";
+          document.getElementById("sBLidha").value = found["ભાગિયાએ લીધા? (Yes/No)"] || "No";
+          document.getElementById("editEntryId").value = entryId;
+          document.getElementById("btnSales").innerText = "અપડેટ કરો";
+          updatePartnerSummary('Sales');
+          alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+      } else {
+        alert("એડિટ સુવિધા ટૂંક સમયમાં ઓપન થશે. ID: " + entryId);
+      }
+    });
   }
 
   function askMpinForDeleteMaster(sheetName) {
-    pendingActionCallback = () => { deleteMasterItem(sheetName); };
-    document.getElementById("modalBhagiya").style.display = 'none';
-    document.getElementById("modalVepari").style.display = 'none';
-    document.getElementById("inputMpin").value = "";
-    document.getElementById("modalMpin").style.display = "block";
+    askMpinAndExecute(() => { deleteMasterItem(sheetName); });
   }
 
   function checkBhagiyaNew(sel) { if(sel.value === "NEW") { document.getElementById("modalBhagiya").style.display = "block"; sel.value = ""; } }
@@ -1028,13 +1058,15 @@
   }
 
   function submitSales(e) {
+    e.preventDefault();
     let rows = document.querySelectorAll("#salesItemsContainer .item-row");
     if(rows.length === 0) return alert("કમ સે કમ એક આઇટમ ઉમેરો!");
     document.getElementById("btnSales").innerText = "સેવ થઈ રહ્યું છે...";
     let date = v("sDate"), billNo = v("sBill") || "N/A", bhagiya = v("sBhagiya"), year = getYear(date);
     
+    // એન્ટ્રી Id ટૂંકો રાખવો (દા.ત. SL- અને છેલ્લા 6 અંકો)
     let existingId = document.getElementById("editEntryId").value;
-    let mainEntryId = existingId ? existingId : "SL-" + Date.now();
+    let mainEntryId = existingId ? existingId : "SL-" + Math.floor(100000 + Math.random() * 900000);
 
     handlePhotoUpload("sPhoto", function(photoBase64) {
       if(photoBase64) {
@@ -1071,6 +1103,7 @@
   }
 
   function submitMed(e) {
+    e.preventDefault();
     let rows = document.querySelectorAll("#medItemsContainer .item-row");
     if(rows.length === 0) return alert("કમ સે કમ એક દવા ઉમેરો!");
     document.getElementById("btnMed").innerText = "સેવ થઈ રહ્યું છે...";
@@ -1091,13 +1124,13 @@
         totalFarmerAmt += mFarmVal;
 
         itemRows.push([
-          year, date, billNo, row.querySelector(".davaList").value, row.querySelector(".mType").value,
+          year, "ME-" + Math.floor(100000 + Math.random() * 900000), date, billNo, row.querySelector(".davaList").value, row.querySelector(".mType").value,
           row.querySelector(".mWeight").value, row.querySelector(".mPack").value, row.querySelector(".mQty").value,
           row.querySelector(".mBhav").value, mTotVal,
           row.querySelector(".pakList").value, row.querySelector(".mKShare").value, mFarmVal
         ]);
       });
-      let ledgerRow = [ year, "ME-" + Date.now(), date, bhagiya, "દવા ખર્ચ", totalFarmerAmt, v("mStatus"), v("mVepari") ];
+      let ledgerRow = [ year, "ME-" + Math.floor(100000 + Math.random() * 900000), date, bhagiya, "દવા ખર્ચ", totalFarmerAmt, v("mStatus"), v("mVepari") ];
       fetch(SCRIPT_URL, {
         method: "POST",
         body: JSON.stringify({ action: "savePesticideBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow })
@@ -1114,6 +1147,7 @@
   }
 
   function submitFert(e) {
+    e.preventDefault();
     let rows = document.querySelectorAll("#fertItemsContainer .item-row");
     if(rows.length === 0) return alert("કમ સે કમ એક ખાતર આઇટમ ઉમેરો!");
     document.getElementById("btnFert").innerText = "સેવ થઈ રહ્યું છે...";
@@ -1135,12 +1169,12 @@
         totalFarmerAmt += fFarmVal;
 
         itemRows.push([ 
-          year, date, billNo, row.querySelector(".khatarList").value, row.querySelector(".fWeight").value, 
+          year, "FE-" + Math.floor(100000 + Math.random() * 900000), date, billNo, row.querySelector(".khatarList").value, row.querySelector(".fWeight").value, 
           row.querySelector(".fPack").value, qty, bhav, amt,
           row.querySelector(".pakList").value, row.querySelector(".fKShare").value, fFarmVal
         ]);
       });
-      let ledgerRow = [ year, "FE-" + Date.now(), date, bhagiya, "ખાતર ખર્ચ", totalFarmerAmt, v("fStatus"), v("fVepari") ];
+      let ledgerRow = [ year, "FE-" + Math.floor(100000 + Math.random() * 900000), date, bhagiya, "ખાતર ખર્ચ", totalFarmerAmt, v("fStatus"), v("fVepari") ];
       fetch(SCRIPT_URL, {
         method: "POST",
         body: JSON.stringify({ action: "saveFertilizerBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow })
@@ -1157,11 +1191,12 @@
   }
 
   function submitTrac(e) {
+    e.preventDefault();
     let rows = document.querySelectorAll("#tracItemsContainer .item-row");
     if(rows.length === 0) return alert("કમ સે કમ એક કામ ઉમેરો!");
     document.getElementById("btnTrac").innerText = "સેવ થઈ રહ્યું છે...";
     let date = v("tDate"), billNo = v("tBill") || "N/A", bhagiya = v("tBhagiya"), year = getYear(date);
-    let mainEntryId = "TE-" + Date.now();
+    let mainEntryId = "TE-" + Math.floor(100000 + Math.random() * 900000);
     handlePhotoUpload("tPhoto", function(photoBase64) {
       if(photoBase64) {
         let photoRow = [ year, mainEntryId, date, billNo, bhagiya, "ટ્રેક્ટર ખર્ચ", photoBase64 ];
@@ -1169,7 +1204,7 @@
       }
       let totalBillAmt = 0, rowDataArray = [];
       rows.forEach((row, index) => {
-        let entryId = mainEntryId + "-" + (index + 1);
+        let entryId = mainEntryId + (rows.length > 1 ? "-" + (index + 1) : "");
         let total = parseFloat((row.querySelector(".tTotal").value || "").replace("₹", "")) || 0; 
         let tFarmerVal = parseFloat((row.querySelector(".sKRakam").value || "").replace("₹", "")) || 0;
         totalBillAmt += total;
@@ -1225,7 +1260,7 @@
     let html = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>પ્રકાર</th><th>ફોટો</th><th>ક્રિયા</th></tr>`;
     photos.forEach(p => {
       let imgTag = p["Photo_Link"] ? `<a href="${p["Photo_Link"]}" target="_blank"><img src="${p["Photo_Link"]}" style="width:40px; height:40px; object-fit:cover;"></a>` : "ના";
-      html += `<tr><td>${String(p["Date"]||'').split('T')[0]}</td><td>${p["Bill_No"]||''}</td><td>${p["Bhagiya"]||''}</td><td>${p["Category"]||''}</td><td>${imgTag}</td><td><button class="btn-delete" onclick="askMpinForDeleteRecord('Photo_Gallery', '${p["Entry_ID"]}')">ડિલિટ</button></td></tr>`;
+      html += `<tr><td>${String(p["Date"]||'').split('T')[0]}</td><td>${p["Bill_No"]||''}</td><td>${p["Bhagiya"]||''}</td><td>${p["Category"]||''}</td><td>${imgTag}</td><td><button class="btn-delete" onclick="askMpinForDeleteSelected('Photo_Gallery')">ડિલિટ</button></td></tr>`;
     });
     container.innerHTML = html + `</table>`;
   }

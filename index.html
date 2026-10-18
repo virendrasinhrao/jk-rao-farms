@@ -76,8 +76,8 @@
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
     .modal-content { background: white; margin: 10% auto; padding: 15px; width: 90%; max-width: 350px; border-radius: 6px; }
     
-    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; }
-    th, td { border: 1px solid #ccc; padding: 6px; text-align: center; }
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 11px; }
+    th, td { border: 1px solid #ccc; padding: 5px; text-align: center; }
     th { background-color: #34495e; color: white; }
     
     .item-row { background: #fdfefe; padding: 8px; border: 1px solid #dcdde1; border-radius: 4px; margin-bottom: 8px; position: relative; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
@@ -91,7 +91,19 @@
     .sub-nav button { flex: 1; padding: 10px; font-size: 14px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; background: #bdc3c7; color: #2c3e50; }
     .sub-nav button.active-sub { background: #2980b9; color: white; }
 
-    .partner-banner { background: #ebf5fb; border: 1px solid #3498db; padding: 10px; border-radius: 5px; margin-bottom: 12px; display: flex; justify-content: space-around; font-size: 13px; font-weight: bold; color: #2980b9; text-align: center; }
+    /* આકર્ષક પાર્ટનર સમરી બેનર (AppSheet સ્ટાઇલ) */
+    .partner-sum-banner { 
+      background: linear-gradient(135deg, #2c3e50, #34495e); 
+      color: #fff; 
+      padding: 12px; 
+      border-radius: 6px; 
+      margin-bottom: 12px; 
+      text-align: center; 
+      box-shadow: 0 3px 6px rgba(0,0,0,0.16); 
+      display: none; 
+    }
+    .partner-sum-banner h4 { margin: 0 0 5px 0; font-size: 12px; color: #1abc9c; text-transform: uppercase; letter-spacing: 1px; }
+    .partner-sum-banner .sum-amount { font-size: 22px; font-weight: bold; color: #f39c12; }
   </style>
 </head>
 <body>
@@ -145,10 +157,13 @@
     
     <div id="subContentSalesNew" class="sub-section">
       <h3 style="text-align:center; color:#27ae60; margin-top:0;">🌱 વેચાણ એન્ટ્રી</h3>
-      <div id="partnerBannerSales" class="partner-banner" style="display:none;"></div>
+      <div id="partnerBannerSales" class="partner-sum-banner">
+        <h4 id="bannerTitleSales">ભાગીદારનું કુલ વેચાણ (આખું વર્ષ)</h4>
+        <div class="sum-amount" id="bannerValSales">₹ 0.00</div>
+      </div>
       <form id="salesForm" onsubmit="askMpinAndExecute(event, submitSales)">
         <div class="flex-row">
-          <div class="form-group"><label>તારીખ:</label><input type="date" id="sDate" required></div>
+          <div class="form-group"><label>તારીખ:</label><input type="date" id="sDate" required onchange="updatePartnerSummary('Sales')"></div>
           <div class="form-group"><label>બિલ નં:</label><input type="text" id="sBill"></div>
         </div>
         <div class="flex-row">
@@ -170,8 +185,8 @@
     </div>
 
     <div id="subContentSalesView" class="sub-section" style="display:none;">
-      <h3 style="text-align:center; color:#27ae60; margin-top:0;">📋 વેચાણ રેકોર્ડ્સ</h3>
-      <div class="form-group"><input type="text" id="searchSales" placeholder="🔍 બિલ કે ભાગીદારના નામથી શોધો..." oninput="filterTable('Sales')"></div>
+      <h3 style="text-align:center; color:#27ae60; margin-top:0;">📋 વેચાણ રેકોર્ડ્સ (આઇટમ મુજબ)</h3>
+      <div class="form-group"><input type="text" id="searchSales" placeholder="🔍 બિલ, પાક કે ભાગીદારના નામથી શોધો..." oninput="filterTable('Sales')"></div>
       <div id="tableContainerSales" style="overflow-x:auto;"></div>
     </div>
   </div>
@@ -185,10 +200,13 @@
 
     <div id="subContentMedNew" class="sub-section">
       <h3 style="text-align:center; color:#2980b9; margin-top:0;">🧪 દવા ખર્ચ એન્ટ્રી</h3>
-      <div id="partnerBannerMed" class="partner-banner" style="display:none;"></div>
+      <div id="partnerBannerMed" class="partner-sum-banner">
+        <h4 id="bannerTitleMed">ભાગીદારનો કુલ દવા ખર્ચ (આખું વર્ષ)</h4>
+        <div class="sum-amount" id="bannerValMed">₹ 0.00</div>
+      </div>
       <form id="medForm" onsubmit="askMpinAndExecute(event, submitMed)">
         <div class="flex-row">
-          <div class="form-group"><label>તારીખ:</label><input type="date" id="mDate" required></div>
+          <div class="form-group"><label>તારીખ:</label><input type="date" id="mDate" required onchange="updatePartnerSummary('Med')"></div>
           <div class="form-group"><label>બિલ નં:</label><input type="text" id="mBill"></div>
         </div>
         <div class="flex-row">
@@ -230,8 +248,8 @@
     </div>
 
     <div id="subContentMedView" class="sub-section" style="display:none;">
-      <h3 style="text-align:center; color:#2980b9; margin-top:0;">📋 દવા બિલ રેકોર્ડ્સ</h3>
-      <div class="form-group"><input type="text" id="searchMed" placeholder="🔍 બિલ કે વેપારીના નામથી શોધો..." oninput="filterTable('Med')"></div>
+      <h3 style="text-align:center; color:#2980b9; margin-top:0;">📋 દવા આઇટમ રેકોર્ડ્સ</h3>
+      <div class="form-group"><input type="text" id="searchMed" placeholder="🔍 બિલ, દવા કે પાકના નામથી શોધો..." oninput="filterTable('Med')"></div>
       <div id="tableContainerMed" style="overflow-x:auto;"></div>
     </div>
   </div>
@@ -245,10 +263,13 @@
 
     <div id="subContentFertNew" class="sub-section">
       <h3 style="text-align:center; color:#d35400; margin-top:0;">🌾 ખાતર ખર્ચ એન્ટ્રી</h3>
-      <div id="partnerBannerFert" class="partner-banner" style="display:none;"></div>
+      <div id="partnerBannerFert" class="partner-sum-banner">
+        <h4 id="bannerTitleFert">ભાગીદારનો કુલ ખાતર ખર્ચ (આખું વર્ષ)</h4>
+        <div class="sum-amount" id="bannerValFert">₹ 0.00</div>
+      </div>
       <form id="fertForm" onsubmit="askMpinAndExecute(event, submitFert)">
         <div class="flex-row">
-          <div class="form-group"><label>તારીખ:</label><input type="date" id="fDate" required></div>
+          <div class="form-group"><label>તારીખ:</label><input type="date" id="fDate" required onchange="updatePartnerSummary('Fert')"></div>
           <div class="form-group"><label>બિલ નં:</label><input type="text" id="fBill"></div>
         </div>
         <div class="flex-row">
@@ -290,8 +311,8 @@
     </div>
 
     <div id="subContentFertView" class="sub-section" style="display:none;">
-      <h3 style="text-align:center; color:#d35400; margin-top:0;">📋 ખાતર બિલ રેકોર્ડ્સ</h3>
-      <div class="form-group"><input type="text" id="searchFert" placeholder="🔍 બિલ કે વેપારીના નામથી શોધો..." oninput="filterTable('Fert')"></div>
+      <h3 style="text-align:center; color:#d35400; margin-top:0;">📋 ખાતર આઇટમ રેકોર્ડ્સ</h3>
+      <div class="form-group"><input type="text" id="searchFert" placeholder="🔍 બિલ, ખાતર કે પાકના નામથી શોધો..." oninput="filterTable('Fert')"></div>
       <div id="tableContainerFert" style="overflow-x:auto;"></div>
     </div>
   </div>
@@ -305,10 +326,13 @@
 
     <div id="subContentTracNew" class="sub-section">
       <h3 style="text-align:center; color:#8e44ad; margin-top:0;">🚜 ટ્રેક્ટર ખર્ચ એન્ટ્રી</h3>
-      <div id="partnerBannerTrac" class="partner-banner" style="display:none;"></div>
+      <div id="partnerBannerTrac" class="partner-sum-banner">
+        <h4 id="bannerTitleTrac">ભાગીદારનો કુલ ટ્રેક્ટર ખર્ચ (આખું વર્ષ)</h4>
+        <div class="sum-amount" id="bannerValTrac">₹ 0.00</div>
+      </div>
       <form id="tracForm" onsubmit="askMpinAndExecute(event, submitTrac)">
         <div class="flex-row">
-          <div class="form-group"><label>તારીખ:</label><input type="date" id="tDate" required></div>
+          <div class="form-group"><label>તારીખ:</label><input type="date" id="tDate" required onchange="updatePartnerSummary('Trac')"></div>
           <div class="form-group"><label>વાઉચર/બિલ:</label><input type="text" id="tBill"></div>
         </div>
         <div class="flex-row">
@@ -330,12 +354,12 @@
 
     <div id="subContentTracView" class="sub-section" style="display:none;">
       <h3 style="text-align:center; color:#8e44ad; margin-top:0;">📋 ટ્રેક્ટર ખર્ચ રેકોર્ડ્સ</h3>
-      <div class="form-group"><input type="text" id="searchTrac" placeholder="🔍 વાઉચર કે ડ્રાઈવરના નામથી શોધો..." oninput="filterTable('Trac')"></div>
+      <div class="form-group"><input type="text" id="searchTrac" placeholder="🔍 વાઉચર, કામ કે ડ્રાઈવરના નામથી શોધો..." oninput="filterTable('Trac')"></div>
       <div id="tableContainerTrac" style="overflow-x:auto;"></div>
     </div>
   </div>
 
- <!-- 5. GALLERY SECTION -->
+  <!-- 5. GALLERY SECTION -->
   <div id="formGallery" class="section">
     <h3 style="text-align:center; color:#2c3e50; margin-top:0;">🖼️ બિલ ફોટો ગેલેરી & રેકોર્ડ્સ</h3>
     <div class="form-group">
@@ -368,7 +392,7 @@
 
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPhMuNZu0v_WWKRGasugF1X_ETxejk-diHDF2nxTqkDRIrohwvvxDLJpAYRqZBilOqEQ/exec";
-  const CORRECT_MPIN = "1234"; // ડિફૉલ્ટ MPIN
+  const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
 
@@ -513,41 +537,59 @@
     });
   }
 
+  // AppSheet જેવું SUM લૉજિક (ભાગીદાર અને વર્ષ મુજબ)
   function updatePartnerSummary(sectionType) {
-    let bhagiyaSel = document.getElementById(sectionType === 'Sales' ? 'sBhagiya' : sectionType === 'Med' ? 'mBhagiya' : sectionType === 'Fert' ? 'fBhagiya' : 'tBhagiya');
-    let banner = document.getElementById('partnerBanner' + sectionType);
-    let selectedBhagiya = bhagiyaSel.value;
+    let dateId = sectionType === 'Sales' ? 'sDate' : sectionType === 'Med' ? 'mDate' : sectionType === 'Fert' ? 'fDate' : 'tDate';
+    let bhagiyaId = sectionType === 'Sales' ? 'sBhagiya' : sectionType === 'Med' ? 'mBhagiya' : sectionType === 'Fert' ? 'fBhagiya' : 'tBhagiya';
     
-    if(!selectedBhagiya || selectedBhagiya === "NEW") {
+    let dateVal = document.getElementById(dateId).value;
+    let selectedBhagiya = document.getElementById(bhagiyaId).value;
+    let banner = document.getElementById('partnerBanner' + sectionType);
+
+    if(!selectedBhagiya || selectedBhagiya === "NEW" || !dateVal) {
       banner.style.display = 'none';
       return;
     }
 
-    let pSales = 0, pMed = 0, pFert = 0, pTrac = 0, pUpad = 0;
-    if(appData.Sales_Ledger) {
-      appData.Sales_Ledger.forEach(r => { if(String(r["ભાગીદાર"] || "").trim() === selectedBhagiya) pSales += parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0); });
-    }
-    if(appData.Pesticide_Bill) {
-      appData.Pesticide_Bill.forEach(r => { if(String(r["ભાગીદાર"] || "").trim() === selectedBhagiya) pMed += parseFloat(r["બીલની_કુલ_રકમ"] || r["બીલની કુલ રકમ"] || 0); });
-    }
-    if(appData.Fertilizer_Bill) {
-      appData.Fertilizer_Bill.forEach(r => { if(String(r["ભાગીદાર"] || "").trim() === selectedBhagiya) pFert += parseFloat(r["બીલની_કુલ_રકમ"] || r["બીલની કુલ રકમ"] || 0); });
-    }
-    if(appData.Tractor_Expense) {
-      appData.Tractor_Expense.forEach(r => { if(String(r["ભાગીદાર"] || "").trim() === selectedBhagiya) pTrac += parseFloat(r["કુલ_ભાડું"] || r["કુલ ભાડું"] || 0); });
-    }
-    if(appData.Upad_Ledger) {
-      appData.Upad_Ledger.forEach(r => { if(String(r["ભાગીદાર"] || "").trim() === selectedBhagiya) pUpad += parseFloat(r["રકમ"] || 0); });
+    let targetYear = getYear(dateVal);
+    let totalSum = 0;
+
+    if(sectionType === 'Sales' && appData.Sales_Ledger) {
+      appData.Sales_Ledger.forEach(r => {
+        let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
+        let rBhagiya = String(r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
+        if(rBhagiya === selectedBhagiya && rYear === targetYear) {
+          totalSum += parseFloat(r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
+        }
+      });
+    } else if(sectionType === 'Med' && appData.Pesticide_Bill) {
+      appData.Pesticide_Bill.forEach(r => {
+        let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
+        let rBhagiya = String(r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
+        if(rBhagiya === selectedBhagiya && rYear === targetYear) {
+          totalSum += parseFloat(r["બીલની_કુલ_રકમ"] || r["બીલની કુલ રકમ"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
+        }
+      });
+    } else if(sectionType === 'Fert' && appData.Fertilizer_Bill) {
+      appData.Fertilizer_Bill.forEach(r => {
+        let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
+        let rBhagiya = String(r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
+        if(rBhagiya === selectedBhagiya && rYear === targetYear) {
+          totalSum += parseFloat(r["બીલની_કુલ_રકમ"] || r["બીલની કુલ રકમ"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
+        }
+      });
+    } else if(sectionType === 'Trac' && appData.Tractor_Expense) {
+      appData.Tractor_Expense.forEach(r => {
+        let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
+        let rBhagiya = String(r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
+        if(rBhagiya === selectedBhagiya && rYear === targetYear) {
+          totalSum += parseFloat(r["કુલ_ભાડું"] || r["કુલ ભાડું"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
+        }
+      });
     }
 
-    banner.innerHTML = `
-      <div>વેચાણ: ₹ ${pSales.toFixed(2)}</div>
-      <div>દવા: ₹ ${pMed.toFixed(2)}</div>
-      <div>ખાતર: ₹ ${pFert.toFixed(2)}</div>
-      <div>ટ્રેક્ટર: ₹ ${pTrac.toFixed(2)}</div>
-      <div>ઉપાડ: ₹ ${pUpad.toFixed(2)}</div>
-    `;
-    banner.style.display = 'flex';
+    document.getElementById('bannerVal' + sectionType).innerText = "₹ " + totalSum.toFixed(2);
+    banner.style.display = 'block';
   }
 
   function addSalesItemRow() {
@@ -599,6 +641,7 @@
     `;
     container.appendChild(div); populateData(); calcMedBill();
   }
+
   function addFertItemRow() {
     let container = document.getElementById("fertItemsContainer");
     let div = document.createElement("div"); div.className = "item-row";
@@ -812,29 +855,49 @@
     document.getElementById("dashFarmerExpense").innerText = "₹ " + farmerExp.toFixed(2);
   }
 
+  // ટેબલ વ્યુમાં તમામ આઇટમ્સ અને કૉલમ્સ દર્શાવવા માટે
   function renderTable(tabName) {
     let container = document.getElementById("tableContainer" + tabName);
-    let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Bill' : tabName === 'Fert' ? 'Fertilizer_Bill' : 'Tractor_Expense';
-    let rows = appData[sheetKey] || [];
+    let itemSheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : 'Tractor_Expense';
+    let rows = appData[itemSheetKey] || [];
     
     if(rows.length === 0) { container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ રેકોર્ડ ઉપલબ્ધ નથી.</p>"; return; }
 
-    let html = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>કુલ રકમ</th><th>ક્રિયા</th></tr>`;
+    let html = `<table><tr>
+      <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>નામ/વસ્તુ</th><th>વજન/માપ</th><th>પેકિંગ</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>હિસ્સો %</th><th>ખેડૂ રકમ</th><th>ક્રિયા</th>
+    </tr>`;
+
     rows.forEach(r => {
+      let year = r["વર્ષ"] || r["Year"] || "";
       let date = r["તારીખ"] || r["Date"] || "";
       let bill = r["બિલ_નં"] || r["બિલ નં"] || r["Bill_No"] || "";
-      let bhagiya = r["ભાગીદાર"] || r["Bhagiya"] || "";
-      let amt = r["કુલ_રકમ"] || r["કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || r["બીલની કુલ રકમ"] || r["કુલ_ભાડું"] || r["કુલ ભાડું"] || 0;
+      let name = r["દવાનું_નામ"] || r["દવાનું નામ"] || r["ખાતરનું_નામ"] || r["ખાતરનું નામ"] || r["દવા/ખાતર"] || r["કામ"] || "-";
+      let weight = r["વજન"] || r["Weight"] || "-";
+      let pack = r["પેકિંગ"] || r["Pack"] || "-";
+      let qty = r["નંગ"] || r["નંગ/થેલી"] || r["Qty"] || "-";
+      let bhav = r["ભાવ"] || r["Rate"] || "-";
+      let amt = r["રકમ"] || r["કુલ રકમ"] || r["કુલ_રકમ"] || r["Amount"] || 0;
+      let pak = r["પાકનું_નામ"] || r["પાકનું નામ"] || r["પાક"] || "-";
+      let share = r["ખેડૂ_હિસ્સો_%"] || r["ખેડૂ હિસ્સો %"] || "-";
+      let farmerAmt = r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0;
       let entryId = r["Entry_ID"] || r["બિલ_નં"] || "";
 
       html += `<tr>
+        <td>${year}</td>
         <td>${date}</td>
         <td>${bill}</td>
-        <td>${bhagiya}</td>
+        <td>${name}</td>
+        <td>${weight}</td>
+        <td>${pack}</td>
+        <td>${qty}</td>
+        <td>${bhav}</td>
         <td>₹ ${parseFloat(amt).toFixed(2)}</td>
+        <td>${pak}</td>
+        <td>${share}</td>
+        <td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td>
         <td>
-          <button class="btn-edit" onclick="editRecord('${sheetKey}', '${entryId}')">એડિટ</button>
-          <button class="btn-delete" onclick="askMpinForDeleteRecord('${sheetKey}', '${entryId}')">ડિલિટ</button>
+          <button class="btn-edit" onclick="editRecord('${itemSheetKey}', '${entryId}')">એડિટ</button>
+          <button class="btn-delete" onclick="askMpinForDeleteRecord('${itemSheetKey}', '${entryId}')">ડિલિટ</button>
         </td>
       </tr>`;
     });
@@ -851,7 +914,7 @@
 
   function editRecord(sheetName, entryId) {
     pendingActionCallback = () => {
-      alert("એડિટ સુવિધા ટૂંક સમયમાં ઓપન થશે. એન્ટ્રી ID: " + entryId);
+      alert("એડિટ સુવિધા ટૂંક સમયમાં ઓપન થશે. ID: " + entryId);
     };
     document.getElementById("inputMpin").value = "";
     document.getElementById("modalMpin").style.display = "block";
@@ -873,9 +936,7 @@
   }
 
   function askMpinForDeleteMaster(sheetName) {
-    pendingActionCallback = () => {
-      deleteMasterItem(sheetName);
-    };
+    pendingActionCallback = () => { deleteMasterItem(sheetName); };
     document.getElementById("modalBhagiya").style.display = 'none';
     document.getElementById("modalVepari").style.display = 'none';
     document.getElementById("inputMpin").value = "";
@@ -1106,6 +1167,7 @@
       });
     });
   }
+
   function saveB() {
     let name = v("nbName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
     saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone"), v("nbAdd") ]);

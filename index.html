@@ -43,6 +43,19 @@
       padding: 5px 10px;
     }
 
+    /* ખેડૂ રકમ માટે આકર્ષક અને પ્રોફેશનલ લુક */
+    .farmer-amount-box { 
+      background: linear-gradient(135deg, #2980b9, #3498db) !important; 
+      color: #ffffff !important; 
+      font-size: 15px !important; 
+      font-weight: bold !important; 
+      text-align: right; 
+      border: 2px solid #1f618d !important; 
+      border-radius: 4px; 
+      padding: 6px 10px;
+      box-shadow: 0 2px 5px rgba(41, 128, 185, 0.3);
+    }
+
     .words-box {
       background-color: #2c3e50 !important;
       color: #ffffff !important;
@@ -93,7 +106,7 @@
   </div>
 
   <!-- 0. DASHBOARD -->
-  <div id="formDash" class="section active">
+  <div id="formDash" class="section">
     <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📊 ફાર્મ ડેશબોર્ડ (સારાંશ)</h3>
     <div class="dash-box">
       <h4>કુલ વેચાણ રકમ (Total Sales):</h4>
@@ -193,7 +206,7 @@
   </div>
 
   <!-- 3. FERTILIZER FORM -->
-  <div id="formFert" class="section">
+  <div id="formFert" class="section active">
     <h3 style="text-align:center; color:#d35400; margin-top:0;">🌾 ખાતર ખર્ચ (Fertilizer)</h3>
     <form id="fertForm" onsubmit="submitFert(event)">
       <div class="flex-row">
@@ -288,7 +301,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyiY2lUaJIDtpV-jQoThaI4jwxO2SgTiasnTsNY71NYp0AlKt-NTtSrkWutHag1BMe7mw/exec";
+  const SCRIPT_URL = "https://https://script.google.com/macros/s/AKfycbyiY2lUaJIDtpV-jQoThaI4jwxO2SgTiasnTsNY71NYp0AlKt-NTtSrkWutHag1BMe7mw/exec";
   let appData = {};
 
   window.onload = function() {
@@ -421,7 +434,7 @@
       </div>
       <div class="flex-row">
         <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKShare readonly-bg" readonly></div>
-        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam readonly-bg" readonly></div>
+        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove()">ડિલિટ</button></div>
       </div>
     `;
@@ -448,7 +461,7 @@
       <div class="flex-row">
         <div class="form-group"><label>પાક:</label><select class="pakList" onchange="checkCropNew(this); calcMedRow(this);"></select></div>
         <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="mKShare readonly-bg" readonly></div>
-        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="mKRakam readonly-bg" readonly></div>
+        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="mKRakam farmer-amount-box" readonly></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcMedBill();">ડિલિટ</button></div>
       </div>
     `;
@@ -472,7 +485,7 @@
       <div class="flex-row">
         <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcFertBill();"></select></div>
         <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="fKShare readonly-bg" readonly></div>
-        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="fKRakam readonly-bg" readonly></div>
+        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="fKRakam farmer-amount-box" readonly></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcFertBill();">ડિલિટ</button></div>
       </div>
     `;
@@ -504,7 +517,7 @@
       </div>
       <div class="flex-row">
         <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKShare readonly-bg" readonly></div>
-        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam readonly-bg" readonly></div>
+        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove()">ડિલિટ</button></div>
       </div>
     `;
@@ -624,7 +637,6 @@
     }
     let totalExp = 0, farmerExp = 0;
     
-    // 1. દવા ખર્ચ ગણતરી (Pesticide_Items માંથી ખેડૂ રકમ)
     if(appData.Pesticide_Items) {
       appData.Pesticide_Items.forEach(r => {
         let fAmt = parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0);
@@ -638,7 +650,6 @@
       });
     }
 
-    // 2. ખાતર ખર્ચ ગણતરી (Fertilizer_Items માંથી ખેડૂ રકમ)
     if(appData.Fertilizer_Items) {
       appData.Fertilizer_Items.forEach(r => {
         let fAmt = parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0);
@@ -652,7 +663,6 @@
       });
     }
 
-    // 3. ટ્રેક્ટર ખર્ચ ગણતરી
     if(appData.Tractor_Expense) {
       appData.Tractor_Expense.forEach(r => {
         let billAmt = parseFloat(r["કુલ_ભાડું"] || r["કુલ ભાડું"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);

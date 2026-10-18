@@ -347,7 +347,7 @@
           <div class="form-group"><label>સ્થિતિ:</label><select id="tStatus"><option>રોકડા</option><option>બાકી</option></select></div>
           <div class="form-group"><label>કોણે આપ્યા:</label><select id="tHastak" class="bhagiyaList" required></select></div>
         </div>
-        <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="tPhoto" accept="image/*" capture="environment"></div>
+       <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="tPhoto" accept="image/*" capture="environment"></div>
         <button type="submit" id="btnTrac" class="btn-submit">સેવ કરો</button>
       </form>
     </div>
@@ -660,7 +660,7 @@
         <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcFertBill();"></select></div>
         <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="fKShare readonly-bg" readonly value="0"></div>
         <div class="form-group" style="flex: 2;"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="fKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
-        <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcFertBill();">ડિલિટ</button></div>
+       <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcFertBill();">ડિલિટ</button></div>
       </div>
     `;
     container.appendChild(div); populateData(); calcFertBill();
@@ -871,10 +871,16 @@
       rows.forEach(r => {
         let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
         let entryId = r["વેચાણ બિલ ID"] || r["Entry_ID"] || "";
+        
+        // ડેટા રીડ કરવા માટે મલ્ટિપલ કૉલમ ઓપ્શન્સ
         let pauchVal = r["પાઉચ / નંગ"] !== undefined ? r["પાઉચ / નંગ"] : (r["પાઉચ / કુલ વજન"] !== undefined ? r["પાઉચ / કુલ વજન"] : (r["પાઉચ"] || 0));
         let weightVal = r["કુલ વજન (કિલો)"] !== undefined ? r["કુલ વજન (કિલો)"] : (r["વજન (કિલો)"] !== undefined ? r["વજન (કિલો)"] : (r["વજન"] || 0));
         let bhav20Val = r[". ૧ મણનો ભાવ (20 Kg)"] !== undefined ? r[". ૧ મણનો ભાવ (20 Kg)"] : (r["૧_મણ_ભાવ"] || 0);
-        let bhav1Val = r["ભાવ (પ્રતિ કિલો)"] !== undefined ? r["ભાવ (પ્રતિ કિલો)"] : (bhav20Val / 20);
+        
+        // જો શીટમાં ભાવ (પ્રતિ કિલો) સીધો ન હોય તો મણના ભાવ પરથી ગણતરી કરવી
+        let bhav1Val = r["ભાવ (પ્રતિ કિલો)"] !== undefined && !isNaN(parseFloat(r["ભાવ (પ્રતિ કિલો)"])) 
+                       ? parseFloat(r["ભાવ (પ્રતિ કિલો)"]) 
+                       : (parseFloat(bhav20Val) / 20);
 
         html += `<tr>
           <td>${r["વર્ષ"] || r["Year"] || ""}</td>
@@ -886,7 +892,7 @@
           <td>${pauchVal}</td>
           <td>${weightVal}</td>
           <td>₹ ${parseFloat(bhav20Val).toFixed(2)}</td>
-          <td>₹ ${parseFloat(bhav1Val).toFixed(2)}</td>
+          <td>₹ ${isNaN(bhav1Val) ? "0.00" : bhav1Val.toFixed(2)}</td>
           <td>₹ ${parseFloat(r["કુલ રકમ (₹)"] || r["કુલ_રકમ"] || 0).toFixed(2)}</td>
           <td>${r["ખેડૂ હિસ્સો (%)"] || r["ખેડૂ_હિસ્સો_%"] || 0}%</td>
           <td>₹ ${parseFloat(r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0).toFixed(2)}</td>
@@ -1096,7 +1102,6 @@
       });
     });
   }
-
   function submitMed(e) {
     let rows = document.querySelectorAll("#medItemsContainer .item-row");
     if(rows.length === 0) return alert("કમ સે કમ એક દવા ઉમેરો!");
@@ -1152,7 +1157,7 @@
     let totalBill = parseFloat((document.getElementById("fTotalBill").value || "").replace("₹", "")) || 0;
     let inWords = convertToGujaratiWords(totalBill);
     handlePhotoUpload("fPhoto", function(photoBase64) {
-     let billRow = [ year, date, billNo, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
+      let billRow = [ year, date, billNo, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
       let itemRows = [];
       let totalFarmerAmt = 0;
       rows.forEach(row => {
@@ -1266,3 +1271,4 @@
 </script>
 </body>
 </html>
+  

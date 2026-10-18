@@ -93,7 +93,7 @@
   </div>
 
   <!-- 0. DASHBOARD -->
-  <div id="formDash" class="section">
+  <div id="formDash" class="section active">
     <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📊 ફાર્મ ડેશબોર્ડ (સારાંશ)</h3>
     <div class="dash-box">
       <h4>કુલ વેચાણ રકમ (Total Sales):</h4>
@@ -193,7 +193,7 @@
   </div>
 
   <!-- 3. FERTILIZER FORM -->
-  <div id="formFert" class="section active">
+  <div id="formFert" class="section">
     <h3 style="text-align:center; color:#d35400; margin-top:0;">🌾 ખાતર ખર્ચ (Fertilizer)</h3>
     <form id="fertForm" onsubmit="submitFert(event)">
       <div class="flex-row">
@@ -288,7 +288,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz2OSsIIB0XYH1cyD-FqwnTGdc0B6iN8bJ0p8DB5J5b6ZUVCeHBYj0LdXpziJISFXhebA/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyiY2lUaJIDtpV-jQoThaI4jwxO2SgTiasnTsNY71NYp0AlKt-NTtSrkWutHag1BMe7mw/exec";
   let appData = {};
 
   window.onload = function() {
@@ -444,6 +444,11 @@
       <div class="flex-row">
         <div class="form-group"><label>ભાવ:</label><input type="number" class="mBhav" step="0.01" oninput="calcMedRow(this)" required></div>
         <div class="form-group"><label>રકમ (₹):</label><input type="text" class="mTotal readonly-bg" readonly></div>
+      </div>
+      <div class="flex-row">
+        <div class="form-group"><label>પાક:</label><select class="pakList" onchange="checkCropNew(this); calcMedRow(this);"></select></div>
+        <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="mKShare readonly-bg" readonly></div>
+        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="mKRakam readonly-bg" readonly></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcMedBill();">ડિલિટ</button></div>
       </div>
     `;
@@ -463,6 +468,11 @@
         <div class="form-group"><label>નંગ/થેલી:</label><input type="number" class="fQty" value="1" min="1" oninput="calcFertBill()" required></div>
         <div class="form-group"><label>ભાવ:</label><input type="number" class="fBhav" step="0.01" oninput="calcFertBill()" required></div>
         <div class="form-group"><label>રકમ (₹):</label><input type="text" class="fAmt readonly-bg" readonly required></div>
+      </div>
+      <div class="flex-row">
+        <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcFertBill();"></select></div>
+        <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="fKShare readonly-bg" readonly></div>
+        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="fKRakam readonly-bg" readonly></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcFertBill();">ડિલિટ</button></div>
       </div>
     `;
@@ -536,7 +546,19 @@
     let row = el.closest('.item-row');
     let bhav = parseFloat(row.querySelector('.mBhav').value) || 0;
     let qty = parseFloat(row.querySelector('.mQty').value) || 1;
-    row.querySelector('.mTotal').value = (bhav * qty).toFixed(2);
+    let total = bhav * qty;
+    row.querySelector('.mTotal').value = total.toFixed(2);
+    
+    let type = row.querySelector('.mType').value.trim();
+    let share = 0;
+    if (type === "નીંદામણ") {
+      share = 100;
+    } else {
+      share = getCropShare(row.querySelector('.pakList').value);
+    }
+    row.querySelector('.mKShare').value = share;
+    row.querySelector('.mKRakam').value = (total * (share / 100)).toFixed(2);
+
     calcMedBill();
   }
 
@@ -563,6 +585,10 @@
       let amt = qty * bhav;
       row.querySelector('.fAmt').value = amt.toFixed(2);
       subTotal += amt;
+
+      let share = getCropShare(row.querySelector('.pakList').value);
+      row.querySelector('.fKShare').value = share;
+      row.querySelector('.fKRakam').value = (amt * (share / 100)).toFixed(2);
     });
     document.getElementById("fSubTotal").value = subTotal.toFixed(2);
     let tax = parseFloat(document.getElementById("fTax").value) || 0;
@@ -597,16 +623,45 @@
       });
     }
     let totalExp = 0, farmerExp = 0;
-    ['Pesticide_Bill', 'Fertilizer_Bill', 'Tractor_Expense'].forEach(sheet => {
-      if(appData[sheet]) {
-        appData[sheet].forEach(r => {
-          let billAmt = parseFloat(r["બીલની_કુલ_રકમ"] || r["બીલની કુલ રકમ"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || r["કુલ_ભાડું"] || r["કુલ ભાડું"] || 0);
-          let farmerAmt = parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0);
-          if(!isNaN(billAmt)) totalExp += billAmt;
-          if(!isNaN(farmerAmt)) farmerExp += farmerAmt;
-        });
-      }
-    });
+    
+    // 1. દવા ખર્ચ ગણતરી (Pesticide_Items માંથી ખેડૂ રકમ)
+    if(appData.Pesticide_Items) {
+      appData.Pesticide_Items.forEach(r => {
+        let fAmt = parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0);
+        if(!isNaN(fAmt)) farmerExp += fAmt;
+      });
+    }
+    if(appData.Pesticide_Bill) {
+      appData.Pesticide_Bill.forEach(r => {
+        let billAmt = parseFloat(r["બીલની_કુલ_રકમ"] || r["બીલની કુલ રકમ"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
+        if(!isNaN(billAmt)) totalExp += billAmt;
+      });
+    }
+
+    // 2. ખાતર ખર્ચ ગણતરી (Fertilizer_Items માંથી ખેડૂ રકમ)
+    if(appData.Fertilizer_Items) {
+      appData.Fertilizer_Items.forEach(r => {
+        let fAmt = parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0);
+        if(!isNaN(fAmt)) farmerExp += fAmt;
+      });
+    }
+    if(appData.Fertilizer_Bill) {
+      appData.Fertilizer_Bill.forEach(r => {
+        let billAmt = parseFloat(r["બીલની_કુલ_રકમ"] || r["બીલની કુલ રકમ"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
+        if(!isNaN(billAmt)) totalExp += billAmt;
+      });
+    }
+
+    // 3. ટ્રેક્ટર ખર્ચ ગણતરી
+    if(appData.Tractor_Expense) {
+      appData.Tractor_Expense.forEach(r => {
+        let billAmt = parseFloat(r["કુલ_ભાડું"] || r["કુલ ભાડું"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
+        let farmerAmt = parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0);
+        if(!isNaN(billAmt)) totalExp += billAmt;
+        if(!isNaN(farmerAmt)) farmerExp += farmerAmt;
+      });
+    }
+
     document.getElementById("dashTotalSales").innerText = "₹ " + totalSales.toFixed(2);
     document.getElementById("dashFarmerSales").innerText = "₹ " + farmerSales.toFixed(2);
     document.getElementById("dashTotalExpense").innerText = "₹ " + totalExp.toFixed(2);
@@ -749,10 +804,13 @@
         itemRows.push([
           year, date, billNo, row.querySelector(".davaList").value, row.querySelector(".mType").value,
           row.querySelector(".mWeight").value, row.querySelector(".mPack").value, row.querySelector(".mQty").value,
-          row.querySelector(".mBhav").value, parseFloat(row.querySelector(".mTotal").value) || 0
+          row.querySelector(".mBhav").value, parseFloat(row.querySelector(".mTotal").value) || 0,
+          row.querySelector(".pakList").value, row.querySelector(".mKShare").value, row.querySelector(".mKRakam").value
         ]);
       });
-      let ledgerRow = [ year, "ME-" + Date.now(), date, bhagiya, "દવા ખર્ચ", totalBill, v("mStatus"), v("mVepari") ];
+      let totalFarmerAmt = 0;
+      itemRows.forEach(r => totalFarmerAmt += parseFloat(r[12]) || 0);
+      let ledgerRow = [ year, "ME-" + Date.now(), date, bhagiya, "દવા ખર્ચ", totalFarmerAmt, v("mStatus"), v("mVepari") ];
       fetch(SCRIPT_URL, {
         method: "POST",
         body: JSON.stringify({ action: "savePesticideBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow })
@@ -786,9 +844,15 @@
       rows.forEach(row => {
         let qty = parseFloat(row.querySelector(".fQty").value) || 1, bhav = parseFloat(row.querySelector(".fBhav").value) || 0;
         let amt = parseFloat(row.querySelector(".fAmt").value) || (qty * bhav);
-        itemRows.push([ year, date, billNo, row.querySelector(".khatarList").value, row.querySelector(".fWeight").value, row.querySelector(".fPack").value, qty, bhav, amt ]);
+        itemRows.push([ 
+          year, date, billNo, row.querySelector(".khatarList").value, row.querySelector(".fWeight").value, 
+          row.querySelector(".fPack").value, qty, bhav, amt,
+          row.querySelector(".pakList").value, row.querySelector(".fKShare").value, row.querySelector(".fKRakam").value
+        ]);
       });
-      let ledgerRow = [ year, "FE-" + Date.now(), date, bhagiya, "ખાતર ખર્ચ", totalBill, v("fStatus"), v("fVepari") ];
+      let totalFarmerAmt = 0;
+      itemRows.forEach(r => totalFarmerAmt += parseFloat(r[11]) || 0);
+      let ledgerRow = [ year, "FE-" + Date.now(), date, bhagiya, "ખાતર ખર્ચ", totalFarmerAmt, v("fStatus"), v("fVepari") ];
       fetch(SCRIPT_URL, {
         method: "POST",
         body: JSON.stringify({ action: "saveFertilizerBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow })

@@ -856,51 +856,67 @@
   }
 
   // ટેબલ વ્યુમાં તમામ આઇટમ્સ અને કૉલમ્સ દર્શાવવા માટે
-  function renderTable(tabName) {
+ function renderTable(tabName) {
     let container = document.getElementById("tableContainer" + tabName);
-    let itemSheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : 'Tractor_Expense';
-    let rows = appData[itemSheetKey] || [];
+    let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : 'Tractor_Expense';
+    let rows = appData[sheetKey] || [];
     
     if(rows.length === 0) { container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ રેકોર્ડ ઉપલબ્ધ નથી.</p>"; return; }
 
-    let html = `<table><tr>
-      <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>નામ/વસ્તુ</th><th>વજન/માપ</th><th>પેકિંગ</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>હિસ્સો %</th><th>ખેડૂ રકમ</th><th>ક્રિયા</th>
-    </tr>`;
-
-    rows.forEach(r => {
-      let year = r["વર્ષ"] || r["Year"] || "";
-      let date = r["તારીખ"] || r["Date"] || "";
-      let bill = r["બિલ_નં"] || r["બિલ નં"] || r["Bill_No"] || "";
-      let name = r["દવાનું_નામ"] || r["દવાનું નામ"] || r["ખાતરનું_નામ"] || r["ખાતરનું નામ"] || r["દવા/ખાતર"] || r["કામ"] || "-";
-      let weight = r["વજન"] || r["Weight"] || "-";
-      let pack = r["પેકિંગ"] || r["Pack"] || "-";
-      let qty = r["નંગ"] || r["નંગ/થેલી"] || r["Qty"] || "-";
-      let bhav = r["ભાવ"] || r["Rate"] || "-";
-      let amt = r["રકમ"] || r["કુલ રકમ"] || r["કુલ_રકમ"] || r["Amount"] || 0;
-      let pak = r["પાકનું_નામ"] || r["પાકનું નામ"] || r["પાક"] || "-";
-      let share = r["ખેડૂ_હિસ્સો_%"] || r["ખેડૂ હિસ્સો %"] || "-";
-      let farmerAmt = r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0;
-      let entryId = r["Entry_ID"] || r["બિલ_નં"] || "";
-
-      html += `<tr>
-        <td>${year}</td>
-        <td>${date}</td>
-        <td>${bill}</td>
-        <td>${name}</td>
-        <td>${weight}</td>
-        <td>${pack}</td>
-        <td>${qty}</td>
-        <td>${bhav}</td>
-        <td>₹ ${parseFloat(amt).toFixed(2)}</td>
-        <td>${pak}</td>
-        <td>${share}</td>
-        <td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td>
-        <td>
-          <button class="btn-edit" onclick="editRecord('${itemSheetKey}', '${entryId}')">એડિટ</button>
-          <button class="btn-delete" onclick="askMpinForDeleteRecord('${itemSheetKey}', '${entryId}')">ડિલિટ</button>
-        </td>
+    let html = "";
+    if (tabName === 'Sales') {
+      html = `<table><tr>
+        <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>વેપારી</th><th>પાક</th><th>પાઉચ</th><th>વજન (કિલો)</th><th>૧ મણ ભાવ</th><th>૧ કિલો ભાવ</th><th>કુલ રકમ</th><th>હિસ્સો %</th><th>ખેડૂ રકમ</th><th>સ્થિતિ</th><th>હસ્તે</th><th>ક્રિયા</th>
       </tr>`;
-    });
+      rows.forEach(r => {
+        html += `<tr>
+          <td>${r["વર્ષ"] || r["Year"] || ""}</td>
+          <td>${r["તારીખ"] || r["Date"] || ""}</td>
+          <td>${r["બિલ_નં"] || r["બિલ નં"] || r["Bill_No"] || ""}</td>
+          <td>${r["ભાગીદાર"] || r["Bhagiya"] || ""}</td>
+          <td>${r["વેપારી"] || r["Merchant"] || ""}</td>
+          <td>${r["પાકનું_નામ"] || r["પાકનું નામ"] || r["પાક"] || ""}</td>
+          <td>${r["પાઉચ"] || 0}</td>
+          <td>${r["વજન"] || r["Weight"] || 0}</td>
+          <td>₹ ${parseFloat(r["૧_મણ_ભાવ"] || r["૧ મણ ભાવ"] || 0).toFixed(2)}</td>
+          <td>₹ ${parseFloat(r["૧_કિલો_ભાવ"] || r["૧ કિલો ભાવ"] || 0).toFixed(2)}</td>
+          <td>₹ ${parseFloat(r["કુલ_રકમ"] || r["કુલ રકમ"] || 0).toFixed(2)}</td>
+          <td>${r["ખેડૂ_હિસ્સો_%"] || r["ખેડૂ હિસ્સો %"] || 0}%</td>
+          <td>₹ ${parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0).toFixed(2)}</td>
+          <td>${r["સ્થિતિ"] || ""}</td>
+          <td>${r["હસ્તે"] || ""}</td>
+          <td>
+            <button class="btn-edit" onclick="editRecord('${sheetKey}', '${r["Entry_ID"] || ""}')">એડિટ</button>
+            <button class="btn-delete" onclick="askMpinForDeleteRecord('${sheetKey}', '${r["Entry_ID"] || ""}')">ડિલિટ</button>
+          </td>
+        </tr>`;
+      });
+    } else {
+      html = `<table><tr>
+        <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>નામ/વસ્તુ</th><th>વજન/માપ</th><th>પેકિંગ</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>હિસ્સો %</th><th>ખેડૂ રકમ</th><th>ક્રિયા</th>
+      </tr>`;
+      rows.forEach(r => {
+        let name = r["દવાનું_નામ"] || r["દવાનું નામ"] || r["ખાતરનું_નામ"] || r["ખાતરનું નામ"] || r["દવા/ખાતર"] || r["કામ"] || "-";
+        html += `<tr>
+          <td>${r["વર્ષ"] || r["Year"] || ""}</td>
+          <td>${r["તારીખ"] || r["Date"] || ""}</td>
+          <td>${r["બિલ_નં"] || r["બિલ નં"] || r["Bill_No"] || ""}</td>
+          <td>${name}</td>
+          <td>${r["વજન"] || r["Weight"] || "-"}</td>
+          <td>${r["પેકિંગ"] || r["Pack"] || "-"}</td>
+          <td>${r["નંગ"] || r["નંગ/થેલી"] || r["Qty"] || "-"}</td>
+          <td>₹ ${parseFloat(r["ભાવ"] || r["Rate"] || 0).toFixed(2)}</td>
+          <td>₹ ${parseFloat(r["રકમ"] || r["કુલ રકમ"] || r["કુલ_રકમ"] || r["Amount"] || 0).toFixed(2)}</td>
+          <td>${r["પાકનું_નામ"] || r["પાકનું નામ"] || r["પાક"] || "-"}</td>
+          <td>${r["ખેડૂ_હિસ્સો_%"] || r["ખેડૂ હિસ્સો %"] || "-"}</td>
+          <td>₹ ${parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0).toFixed(2)}</td>
+          <td>
+            <button class="btn-edit" onclick="editRecord('${sheetKey}', '${r["Entry_ID"] || ""}')">એડિટ</button>
+            <button class="btn-delete" onclick="askMpinForDeleteRecord('${sheetKey}', '${r["Entry_ID"] || ""}')">ડિલિટ</button>
+          </td>
+        </tr>`;
+      });
+    }
     container.innerHTML = html + `</table>`;
   }
   function filterTable(tabName) {

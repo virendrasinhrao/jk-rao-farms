@@ -28,6 +28,7 @@
     .btn-submit { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; font-size: 15px; cursor: pointer; margin-top: 10px; font-weight: bold; border-radius: 3px; }
     .btn-submit:hover { background: #219653; }
     .btn-delete { background: #c0392b; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; }
+    .btn-edit { background: #f39c12; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; }
     .btn-add-item { background: #2980b9; color: white; border: none; padding: 6px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; margin-bottom: 8px; }
     
     .readonly-bg { background-color: #f1f2f6; }
@@ -44,7 +45,6 @@
       padding: 5px 10px;
     }
 
-    /* ખેડૂ રકમ માટે આકર્ષક અને પ્રોફેશનલ લુક (₹ સિમ્બોલ સાથે) */
     .farmer-amount-box { 
       background: linear-gradient(135deg, #2980b9, #3498db) !important; 
       color: #ffffff !important; 
@@ -81,10 +81,17 @@
     th { background-color: #34495e; color: white; }
     
     .item-row { background: #fdfefe; padding: 8px; border: 1px solid #dcdde1; border-radius: 4px; margin-bottom: 8px; position: relative; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
-    .dash-box { background: #e8f8f5; border-left: 4px solid #27ae60; padding: 10px; margin-bottom: 8px; border-radius: 3px; }
-    .dash-box h4 { margin: 0 0 3px 0; color: #2c3e50; font-size: 13px; }
-    .dash-box p { margin: 0; font-size: 16px; font-weight: bold; color: #16a085; }
-    .bill-summary { background: #fcf3cf; border: 1px solid #f39c12; padding: 10px; border-radius: 4px; margin-bottom: 10px; }
+    
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px; }
+    .dash-box { background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #27ae60; padding: 12px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .dash-box h4 { margin: 0 0 5px 0; color: #2c3e50; font-size: 12px; text-transform: uppercase; }
+    .dash-box p { margin: 0; font-size: 18px; font-weight: bold; color: #16a085; }
+
+    .sub-nav { display: flex; gap: 10px; margin-bottom: 15px; }
+    .sub-nav button { flex: 1; padding: 10px; font-size: 14px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; background: #bdc3c7; color: #2c3e50; }
+    .sub-nav button.active-sub { background: #2980b9; color: white; }
+
+    .partner-banner { background: #ebf5fb; border: 1px solid #3498db; padding: 10px; border-radius: 5px; margin-bottom: 12px; display: flex; justify-content: space-around; font-size: 13px; font-weight: bold; color: #2980b9; text-align: center; }
   </style>
 </head>
 <body>
@@ -108,179 +115,227 @@
 
   <!-- 0. DASHBOARD -->
   <div id="formDash" class="section">
-    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📊 ફાર્મ ડેશબોર્ડ (સારાંશ)</h3>
-    <div class="dash-box">
-      <h4>કુલ વેચાણ રકમ (Total Sales):</h4>
-      <p id="dashTotalSales">₹ 0.00</p>
-    </div>
-    <div class="dash-box" style="border-left-color: #2980b9;">
-      <h4>કુલ ખેડૂ વેચાણ હિસ્સો (Farmer Sales Amt):</h4>
-      <p id="dashFarmerSales" style="color: #2980b9;">₹ 0.00</p>
-    </div>
-    <div class="dash-box" style="border-left-color: #d35400;">
-      <h4>કુલ ખર્ચ (દવા + ખાતર + ટ્રેક્ટર):</h4>
-      <p id="dashTotalExpense" style="color: #d35400;">₹ 0.00</p>
-    </div>
-    <div class="dash-box" style="border-left-color: #8e44ad;">
-      <h4>કુલ ખેડૂ ખર્ચ હિસ્સો (Farmer Exp Amt):</h4>
-      <p id="dashFarmerExpense" style="color: #8e44ad;">₹ 0.00</p>
+    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📊 ફાર્મ ડેશબોર્ડ (વર્ષવાર સારાંશ)</h3>
+    <div class="dashboard-grid">
+      <div class="dash-box">
+        <h4>કુલ વેચાણ (Total Sales)</h4>
+        <p id="dashTotalSales">₹ 0.00</p>
+      </div>
+      <div class="dash-box" style="border-left-color: #2980b9;">
+        <h4>ખેડૂ વેચાણ હિસ્સો</h4>
+        <p id="dashFarmerSales" style="color: #2980b9;">₹ 0.00</p>
+      </div>
+      <div class="dash-box" style="border-left-color: #d35400;">
+        <h4>કુલ ખર્ચ (દવા+ખાતર+ટ્રેક્ટર)</h4>
+        <p id="dashTotalExpense" style="color: #d35400;">₹ 0.00</p>
+      </div>
+      <div class="dash-box" style="border-left-color: #8e44ad;">
+        <h4>ખેડૂ ખર્ચ હિસ્સો</h4>
+        <p id="dashFarmerExpense" style="color: #8e44ad;">₹ 0.00</p>
+      </div>
     </div>
   </div>
 
-  <!-- 1. SALES FORM -->
+  <!-- 1. SALES SECTION -->
   <div id="formSales" class="section">
-    <h3 style="text-align:center; color:#27ae60; margin-top:0;">🌱 વેચાણ (Sales Entry)</h3>
-    <form id="salesForm" onsubmit="submitSales(event)">
-      <div class="flex-row">
-        <div class="form-group"><label>તારીખ:</label><input type="date" id="sDate" required></div>
-        <div class="form-group"><label>બિલ નં:</label><input type="text" id="sBill"></div>
-      </div>
-      <div class="flex-row">
-        <div class="form-group"><label>ભાગીદાર:</label><select id="sBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
-        <div class="form-group"><label>વેપારી:</label><select id="sVepari" class="vepariList" required onchange="checkVepariNew(this)"></select></div>
-      </div>
-      
-      <hr style="margin:10px 0;">
-      <h4>આઇટમ્સ લિસ્ટ:</h4>
-      <button type="button" class="btn-add-item" onclick="addSalesItemRow()">➕ આઇટમ ઉમેરો</button>
-      <div id="salesItemsContainer"></div>
+    <div class="sub-nav">
+      <button id="subBtnSalesNew" class="active-sub" onclick="switchSubTab('Sales', 'New')">➕ નવી એન્ટ્રી</button>
+      <button id="subBtnSalesView" onclick="switchSubTab('Sales', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
+    </div>
+    
+    <div id="subContentSalesNew" class="sub-section">
+      <h3 style="text-align:center; color:#27ae60; margin-top:0;">🌱 વેચાણ એન્ટ્રી</h3>
+      <div id="partnerBannerSales" class="partner-banner" style="display:none;"></div>
+      <form id="salesForm" onsubmit="askMpinAndExecute(event, submitSales)">
+        <div class="flex-row">
+          <div class="form-group"><label>તારીખ:</label><input type="date" id="sDate" required></div>
+          <div class="form-group"><label>બિલ નં:</label><input type="text" id="sBill"></div>
+        </div>
+        <div class="flex-row">
+          <div class="form-group"><label>ભાગીદાર:</label><select id="sBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Sales');"></select></div>
+          <div class="form-group"><label>વેપારી:</label><select id="sVepari" class="vepariList" required onchange="checkVepariNew(this)"></select></div>
+        </div>
+        <hr style="margin:10px 0;">
+        <h4>આઇટમ્સ લિસ્ટ:</h4>
+        <button type="button" class="btn-add-item" onclick="addSalesItemRow()">➕ આઇટમ ઉમેરો</button>
+        <div id="salesItemsContainer"></div>
+        <div class="flex-row" style="margin-top:10px;">
+          <div class="form-group"><label>સ્થિતિ:</label><select id="sStatus"><option>રોકડા / જમા</option><option>બાકી</option></select></div>
+          <div class="form-group"><label>કોણે લીધા?</label><input type="text" id="sHastak" required></div>
+          <div class="form-group"><label>ભાગિયાએ લીધા?</label><select id="sBLidha"><option>No</option><option>Yes</option></select></div>
+        </div>
+        <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="sPhoto" accept="image/*" capture="environment"></div>
+        <button type="submit" id="btnSales" class="btn-submit">સેવ કરો</button>
+      </form>
+    </div>
 
-      <div class="flex-row" style="margin-top:10px;">
-        <div class="form-group"><label>સ્થિતિ:</label><select id="sStatus"><option>રોકડા / જમા</option><option>બાકી</option></select></div>
-        <div class="form-group"><label>કોણે લીધા?</label><input type="text" id="sHastak" required></div>
-        <div class="form-group"><label>ભાગિયાએ લીધા?</label><select id="sBLidha"><option>No</option><option>Yes</option></select></div>
-      </div>
-      <div class="form-group">
-        <label>બિલનો ફોટો:</label><input type="file" id="sPhoto" accept="image/*" capture="environment">
-      </div>
-      <button type="submit" id="btnSales" class="btn-submit">સેવ કરો</button>
-    </form>
+    <div id="subContentSalesView" class="sub-section" style="display:none;">
+      <h3 style="text-align:center; color:#27ae60; margin-top:0;">📋 વેચાણ રેકોર્ડ્સ</h3>
+      <div class="form-group"><input type="text" id="searchSales" placeholder="🔍 બિલ કે ભાગીદારના નામથી શોધો..." oninput="filterTable('Sales')"></div>
+      <div id="tableContainerSales" style="overflow-x:auto;"></div>
+    </div>
   </div>
 
-  <!-- 2. MEDICINE FORM -->
+  <!-- 2. MEDICINE SECTION -->
   <div id="formMed" class="section">
-    <h3 style="text-align:center; color:#2980b9; margin-top:0;">🧪 દવા ખર્ચ (Medicine / Pesticide)</h3>
-    <form id="medForm" onsubmit="submitMed(event)">
-      <div class="flex-row">
-        <div class="form-group"><label>તારીખ:</label><input type="date" id="mDate" required></div>
-        <div class="form-group"><label>બિલ નં:</label><input type="text" id="mBill"></div>
-      </div>
-      <div class="flex-row">
-        <div class="form-group"><label>ભાગીદાર:</label><select id="mBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
-        <div class="form-group"><label>દુકાન / વેપારી:</label><select id="mVepari" required onchange="checkMedVepariNew(this)"></select></div>
-      </div>
-      
-      <hr style="margin:10px 0;">
-      <h4>દવાઓની યાદી:</h4>
-      <button type="button" class="btn-add-item" onclick="addMedItemRow()">➕ દવા ઉમેરો</button>
-      <div id="medItemsContainer"></div>
+    <div class="sub-nav">
+      <button id="subBtnMedNew" class="active-sub" onclick="switchSubTab('Med', 'New')">➕ નવી એન્ટ્રી</button>
+      <button id="subBtnMedView" onclick="switchSubTab('Med', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
+    </div>
 
-      <div class="bill-summary">
-        <h4 style="margin:0 0 8px 0; color:#2980b9;">📋 ટેક્સ અને બિલ સમરી</h4>
+    <div id="subContentMedNew" class="sub-section">
+      <h3 style="text-align:center; color:#2980b9; margin-top:0;">🧪 દવા ખર્ચ એન્ટ્રી</h3>
+      <div id="partnerBannerMed" class="partner-banner" style="display:none;"></div>
+      <form id="medForm" onsubmit="askMpinAndExecute(event, submitMed)">
         <div class="flex-row">
-          <div class="form-group"><label>કુલ આઇટમ રકમ:</label><input type="text" id="mSubTotal" class="readonly-bg" readonly value="₹ 0.00"></div>
-          <div class="form-group"><label>ટેક્સ %:</label><input type="number" id="mTax" step="0.01" value="0" oninput="calcMedBill()" required></div>
+          <div class="form-group"><label>તારીખ:</label><input type="date" id="mDate" required></div>
+          <div class="form-group"><label>બિલ નં:</label><input type="text" id="mBill"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>જી.એસ.ટી. રકમ:</label><input type="text" id="mGst" class="readonly-bg" readonly value="₹ 0.00"></div>
-          <div class="form-group"><label>સી.એસ.ટી. રકમ:</label><input type="text" id="mCst" class="readonly-bg" readonly value="₹ 0.00"></div>
+          <div class="form-group"><label>ભાગીદાર:</label><select id="mBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Med');"></select></div>
+          <div class="form-group"><label>દુકાન / વેપારી:</label><select id="mVepari" required onchange="checkMedVepariNew(this)"></select></div>
         </div>
-        <div class="form-group">
-          <label style="color: #27ae60; font-size: 14px;">બિલની કુલ રકમ (₹):</label>
-          <input type="text" id="mTotalBill" class="highlight-total" readonly value="₹ 0.00">
-        </div>
-        <div class="form-group" style="margin-top: 8px;">
-          <label>અંકે રૂપિયા (શબ્દોમાં):</label>
-          <input type="text" id="mTotalWords" class="words-box" readonly value="અંકે રૂપિયા શૂન્ય પૂરા">
-        </div>
-      </div>
+        <hr style="margin:10px 0;">
+        <h4>દવાઓની યાદી:</h4>
+        <button type="button" class="btn-add-item" onclick="addMedItemRow()">➕ દવા ઉમેરો</button>
+        <div id="medItemsContainer"></div>
 
-      <div class="flex-row">
-        <div class="form-group"><label>હસ્તે:</label><select id="mHastak" class="bhagiyaList" required></select></div>
-        <div class="form-group"><label>સ્થિતિ:</label><select id="mStatus"><option>જમા</option><option>બાકી</option></select></div>
-      </div>
-      <div class="form-group">
-        <label>બિલનો ફોટો:</label><input type="file" id="mPhoto" accept="image/*" capture="environment">
-      </div>
-      <button type="submit" id="btnMed" class="btn-submit">સેવ કરો</button>
-    </form>
+        <div class="bill-summary">
+          <h4 style="margin:0 0 8px 0; color:#2980b9;">📋 ટેક્સ અને બિલ સમરી</h4>
+          <div class="flex-row">
+            <div class="form-group"><label>કુલ આઇટમ રકમ:</label><input type="text" id="mSubTotal" class="readonly-bg" readonly value="₹ 0.00"></div>
+            <div class="form-group"><label>ટેક્સ %:</label><input type="number" id="mTax" step="0.01" value="0" oninput="calcMedBill()" required></div>
+          </div>
+          <div class="flex-row">
+            <div class="form-group"><label>જી.એસ.ટી. રકમ:</label><input type="text" id="mGst" class="readonly-bg" readonly value="₹ 0.00"></div>
+            <div class="form-group"><label>સી.એસ.ટી. રકમ:</label><input type="text" id="mCst" class="readonly-bg" readonly value="₹ 0.00"></div>
+          </div>
+          <div class="form-group">
+            <label style="color: #27ae60; font-size: 14px;">બિલની કુલ રકમ (₹):</label>
+            <input type="text" id="mTotalBill" class="highlight-total" readonly value="₹ 0.00">
+          </div>
+          <div class="form-group" style="margin-top: 8px;">
+            <label>અંકે રૂપિયા (શબ્દોમાં):</label>
+            <input type="text" id="mTotalWords" class="words-box" readonly value="અંકે રૂપિયા શૂન્ય પૂરા">
+          </div>
+        </div>
+
+        <div class="flex-row">
+          <div class="form-group"><label>હસ્તે:</label><select id="mHastak" class="bhagiyaList" required></select></div>
+          <div class="form-group"><label>સ્થિતિ:</label><select id="mStatus"><option>જમા</option><option>બાકી</option></select></div>
+        </div>
+        <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="mPhoto" accept="image/*" capture="environment"></div>
+        <button type="submit" id="btnMed" class="btn-submit">સેવ કરો</button>
+      </form>
+    </div>
+
+    <div id="subContentMedView" class="sub-section" style="display:none;">
+      <h3 style="text-align:center; color:#2980b9; margin-top:0;">📋 દવા બિલ રેકોર્ડ્સ</h3>
+      <div class="form-group"><input type="text" id="searchMed" placeholder="🔍 બિલ કે વેપારીના નામથી શોધો..." oninput="filterTable('Med')"></div>
+      <div id="tableContainerMed" style="overflow-x:auto;"></div>
+    </div>
   </div>
 
-  <!-- 3. FERTILIZER FORM -->
+  <!-- 3. FERTILIZER SECTION -->
   <div id="formFert" class="section active">
-    <h3 style="text-align:center; color:#d35400; margin-top:0;">🌾 ખાતર ખર્ચ (Fertilizer)</h3>
-    <form id="fertForm" onsubmit="submitFert(event)">
-      <div class="flex-row">
-        <div class="form-group"><label>તારીખ:</label><input type="date" id="fDate" required></div>
-        <div class="form-group"><label>બિલ નં:</label><input type="text" id="fBill"></div>
-      </div>
-      <div class="flex-row">
-        <div class="form-group"><label>ભાગીદાર:</label><select id="fBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
-        <div class="form-group"><label>વેપારી:</label><select id="fVepari" class="fertVepariList" required onchange="checkFertVepariNew(this)"></select></div>
-      </div>
-      
-      <hr style="margin:10px 0;">
-      <h4>ખાતરની આઇટમ્સ:</h4>
-      <button type="button" class="btn-add-item" onclick="addFertItemRow()">➕ ખાતર ઉમેરો</button>
-      <div id="fertItemsContainer"></div>
+    <div class="sub-nav">
+      <button id="subBtnFertNew" class="active-sub" onclick="switchSubTab('Fert', 'New')">➕ નવી એન્ટ્રી</button>
+      <button id="subBtnFertView" onclick="switchSubTab('Fert', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
+    </div>
 
-      <div class="bill-summary">
-        <h4 style="margin:0 0 8px 0; color:#d35400;">📋 ટેક્સ અને બિલ સમરી</h4>
+    <div id="subContentFertNew" class="sub-section">
+      <h3 style="text-align:center; color:#d35400; margin-top:0;">🌾 ખાતર ખર્ચ એન્ટ્રી</h3>
+      <div id="partnerBannerFert" class="partner-banner" style="display:none;"></div>
+      <form id="fertForm" onsubmit="askMpinAndExecute(event, submitFert)">
         <div class="flex-row">
-          <div class="form-group"><label>કુલ આઇટમ રકમ:</label><input type="text" id="fSubTotal" class="readonly-bg" readonly value="₹ 0.00"></div>
-          <div class="form-group"><label>ટેક્સ %:</label><input type="number" id="fTax" step="0.01" value="0" oninput="calcFertBill()" required></div>
+          <div class="form-group"><label>તારીખ:</label><input type="date" id="fDate" required></div>
+          <div class="form-group"><label>બિલ નં:</label><input type="text" id="fBill"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>જી.એસ.ટી. રકમ:</label><input type="text" id="mGst2" class="readonly-bg" readonly value="₹ 0.00"></div>
-          <div class="form-group"><label>સી.એસ.ટી. રકમ:</label><input type="text" id="mCst2" class="readonly-bg" readonly value="₹ 0.00"></div>
+          <div class="form-group"><label>ભાગીદાર:</label><select id="fBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Fert');"></select></div>
+          <div class="form-group"><label>વેપારી:</label><select id="fVepari" class="fertVepariList" required onchange="checkFertVepariNew(this)"></select></div>
         </div>
-        <div class="form-group">
-          <label style="color: #d35400; font-size: 14px;">બિલની કુલ રકમ (₹):</label><input type="text" id="fTotalBill" class="highlight-total" readonly value="₹ 0.00">
-        </div>
-        <div class="form-group" style="margin-top: 8px;">
-          <label>અંકે રૂપિયા (શબ્દોમાં):</label>
-          <input type="text" id="fTotalWords" class="words-box" readonly value="અંકે રૂપિયા શૂન્ય પૂરા">
-        </div>
-      </div>
+        <hr style="margin:10px 0;">
+        <h4>ખાતરની આઇટમ્સ:</h4>
+        <button type="button" class="btn-add-item" onclick="addFertItemRow()">➕ ખાતર ઉમેરો</button>
+        <div id="fertItemsContainer"></div>
 
-      <div class="flex-row">
-        <div class="form-group"><label>હસ્તે:</label><select id="fHastak" class="bhagiyaList" required></select></div>
-        <div class="form-group"><label>સ્થિતિ:</label><select id="fStatus"><option>જમા</option><option>બાકી</option></select></div>
-      </div>
-      <div class="form-group"><label>વિગત:</label><input type="text" id="fDetails" placeholder="ઓપ્શનલ"></div>
-      <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="fPhoto" accept="image/*" capture="environment"></div>
-      <button type="submit" id="btnFert" class="btn-submit">સેવ કરો</button>
-    </form>
+        <div class="bill-summary">
+          <h4 style="margin:0 0 8px 0; color:#d35400;">📋 ટેક્સ અને બિલ સમરી</h4>
+          <div class="flex-row">
+            <div class="form-group"><label>કુલ આઇટમ રકમ:</label><input type="text" id="fSubTotal" class="readonly-bg" readonly value="₹ 0.00"></div>
+            <div class="form-group"><label>ટેક્સ %:</label><input type="number" id="fTax" step="0.01" value="0" oninput="calcFertBill()" required></div>
+          </div>
+          <div class="flex-row">
+            <div class="form-group"><label>જી.એસ.ટી. રકમ:</label><input type="text" id="mGst2" class="readonly-bg" readonly value="₹ 0.00"></div>
+            <div class="form-group"><label>સી.એસ.ટી. રકમ:</label><input type="text" id="mCst2" class="readonly-bg" readonly value="₹ 0.00"></div>
+          </div>
+          <div class="form-group">
+            <label style="color: #d35400; font-size: 14px;">બિલની કુલ રકમ (₹):</label><input type="text" id="fTotalBill" class="highlight-total" readonly value="₹ 0.00">
+          </div>
+          <div class="form-group" style="margin-top: 8px;">
+            <label>અંકે રૂપિયા (શબ્દોમાં):</label>
+            <input type="text" id="fTotalWords" class="words-box" readonly value="અંકે રૂપિયા શૂન્ય પૂરા">
+          </div>
+        </div>
+
+        <div class="flex-row">
+          <div class="form-group"><label>હસ્તે:</label><select id="fHastak" class="bhagiyaList" required></select></div>
+          <div class="form-group"><label>સ્થિતિ:</label><select id="fStatus"><option>જમા</option><option>બાકી</option></select></div>
+        </div>
+        <div class="form-group"><label>વિગત:</label><input type="text" id="fDetails" placeholder="ઓપ્શનલ"></div>
+        <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="fPhoto" accept="image/*" capture="environment"></div>
+        <button type="submit" id="btnFert" class="btn-submit">સેવ કરો</button>
+      </form>
+    </div>
+
+    <div id="subContentFertView" class="sub-section" style="display:none;">
+      <h3 style="text-align:center; color:#d35400; margin-top:0;">📋 ખાતર બિલ રેકોર્ડ્સ</h3>
+      <div class="form-group"><input type="text" id="searchFert" placeholder="🔍 બિલ કે વેપારીના નામથી શોધો..." oninput="filterTable('Fert')"></div>
+      <div id="tableContainerFert" style="overflow-x:auto;"></div>
+    </div>
   </div>
 
-  <!-- 4. TRACTOR FORM -->
+  <!-- 4. TRACTOR SECTION -->
   <div id="formTrac" class="section">
-    <h3 style="text-align:center; color:#8e44ad; margin-top:0;">🚜 ટ્રેક્ટર ખર્ચ (Tractor)</h3>
-    <form id="tracForm" onsubmit="submitTrac(event)">
-      <div class="flex-row">
-        <div class="form-group"><label>તારીખ:</label><input type="date" id="tDate" required></div>
-        <div class="form-group"><label>વાઉચર/બિલ:</label><input type="text" id="tBill"></div>
-      </div>
-      <div class="flex-row">
-        <div class="form-group"><label>ભાગીદાર:</label><select id="tBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
-        <div class="form-group"><label>ડ્રાઈવર/માલિક:</label><input type="text" id="tDriver" required></div>
-      </div>
-      
-      <hr style="margin:10px 0;">
-      <h4>ટ્રેક્ટર કામોની યાદી:</h4>
-      <button type="button" class="btn-add-item" onclick="addTracItemRow()">➕ કામ ઉમેરો</button>
-      <div id="tracItemsContainer"></div>
+    <div class="sub-nav">
+      <button id="subBtnTracNew" class="active-sub" onclick="switchSubTab('Trac', 'New')">➕ નવી એન્ટ્રી</button>
+      <button id="subBtnTracView" onclick="switchSubTab('Trac', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
+    </div>
 
-      <div class="flex-row" style="margin-top:10px;">
-        <div class="form-group"><label>સ્થિતિ:</label><select id="tStatus"><option>રોકડા</option><option>બાકી</option></select></div>
-        <div class="form-group"><label>કોણે આપ્યા:</label><select id="tHastak" class="bhagiyaList" required></select></div>
-      </div>
-      <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="tPhoto" accept="image/*" capture="environment"></div>
-      <button type="submit" id="btnTrac" class="btn-submit">સેવ કરો</button>
-    </form>
+    <div id="subContentTracNew" class="sub-section">
+      <h3 style="text-align:center; color:#8e44ad; margin-top:0;">🚜 ટ્રેક્ટર ખર્ચ એન્ટ્રી</h3>
+      <div id="partnerBannerTrac" class="partner-banner" style="display:none;"></div>
+      <form id="tracForm" onsubmit="askMpinAndExecute(event, submitTrac)">
+        <div class="flex-row">
+          <div class="form-group"><label>તારીખ:</label><input type="date" id="tDate" required></div>
+          <div class="form-group"><label>વાઉચર/બિલ:</label><input type="text" id="tBill"></div>
+        </div>
+        <div class="flex-row">
+          <div class="form-group"><label>ભાગીદાર:</label><select id="tBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Trac');"></select></div>
+          <div class="form-group"><label>ડ્રાઈવર/માલિક:</label><input type="text" id="tDriver" required></div>
+        </div>
+        <hr style="margin:10px 0;">
+        <h4>ટ્રેક્ટર કામોની યાદી:</h4>
+        <button type="button" class="btn-add-item" onclick="addTracItemRow()">➕ કામ ઉમેરો</button>
+        <div id="tracItemsContainer"></div>
+        <div class="flex-row" style="margin-top:10px;">
+          <div class="form-group"><label>સ્થિતિ:</label><select id="tStatus"><option>રોકડા</option><option>બાકી</option></select></div>
+          <div class="form-group"><label>કોણે આપ્યા:</label><select id="tHastak" class="bhagiyaList" required></select></div>
+        </div>
+        <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="tPhoto" accept="image/*" capture="environment"></div>
+        <button type="submit" id="btnTrac" class="btn-submit">સેવ કરો</button>
+      </form>
+    </div>
+
+    <div id="subContentTracView" class="sub-section" style="display:none;">
+      <h3 style="text-align:center; color:#8e44ad; margin-top:0;">📋 ટ્રેક્ટર ખર્ચ રેકોર્ડ્સ</h3>
+      <div class="form-group"><input type="text" id="searchTrac" placeholder="🔍 વાઉચર કે ડ્રાઈવરના નામથી શોધો..." oninput="filterTable('Trac')"></div>
+      <div id="tableContainerTrac" style="overflow-x:auto;"></div>
+    </div>
   </div>
 
-  <!-- 5. GALLERY SECTION -->
+ <!-- 5. GALLERY SECTION -->
   <div id="formGallery" class="section">
     <h3 style="text-align:center; color:#2c3e50; margin-top:0;">🖼️ બિલ ફોટો ગેલેરી & રેકોર્ડ્સ</h3>
     <div class="form-group">
@@ -292,17 +347,29 @@
   </div>
 </div>
 
-<!-- Pop-ups -->
-<div id="modalBhagiya" class="modal"><div class="modal-content"><h3>➕ ભાગીદાર મેનેજમેન્ટ</h3><input type="text" id="nbName" placeholder="નામ" class="form-group"><input type="number" id="nbPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nbAdd" placeholder="ગામ" class="form-group"><button type="button" class="btn-submit" onclick="saveB()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="deleteMasterItem('Bhagiya_Master')">પસંદ કરેલ ભાગીદાર ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalBhagiya').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
+<!-- Modal Pop-ups -->
+<div id="modalMpin" class="modal">
+  <div class="modal-content" style="text-align:center;">
+    <h3 style="color:#c0392b; margin-top:0;">🔒 સિક્યુરિટી MPIN</h3>
+    <p style="font-size:13px; color:#555;">આ ક્રિયા કરવા માટે 4 આંકડાનો MPIN નાખો:</p>
+    <input type="password" id="inputMpin" maxlength="4" style="text-align:center; font-size:20px; letter-spacing:8px; margin-bottom:12px;" placeholder="••••">
+    <button type="button" class="btn-submit" onclick="verifyMpinAndProceed()">કન્ફર્મ કરો</button>
+    <button type="button" onclick="document.getElementById('modalMpin').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">કેન્સલ</button>
+  </div>
+</div>
 
-<div id="modalVepari" class="modal"><div class="modal-content"><h3>➕ વેપારી મેનેજમેન્ટ</h3><input type="text" id="nvName" placeholder="નામ" class="form-group"><input type="number" id="nvPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nvCity" placeholder="ગામ" class="form-group"><select id="nvCategory" class="form-group"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="દવા">દવા</option><option value="ખાતર">ખાતર</option></select><button type="button" class="btn-submit" onclick="saveV()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="deleteMasterItem('Merchant_Master')">પસંદ કરેલ વેપારી ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalVepari').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
+<div id="modalBhagiya" class="modal"><div class="modal-content"><h3>➕ ભાગીદાર મેનેજમેન્ટ</h3><input type="text" id="nbName" placeholder="નામ" class="form-group"><input type="number" id="nbPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nbAdd" placeholder="ગામ" class="form-group"><button type="button" class="btn-submit" onclick="saveB()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Bhagiya_Master')">પસંદ કરેલ ભાગીદાર ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalBhagiya').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
+
+<div id="modalVepari" class="modal"><div class="modal-content"><h3>➕ વેપારી મેનેજમેન્ટ</h3><input type="text" id="nvName" placeholder="નામ" class="form-group"><input type="number" id="nvPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nvCity" placeholder="ગામ" class="form-group"><select id="nvCategory" class="form-group"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="દવા">દવા</option><option value="ખાતર">ખાતર</option></select><button type="button" class="btn-submit" onclick="saveV()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Merchant_Master')">પસંદ કરેલ વેપારી ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalVepari').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
 
 <div id="modalFertilizer" class="modal"><div class="modal-content"><h3>➕ ખાતર મેનેજમેન્ટ</h3><input type="text" id="nfName" placeholder="ખાતરનું નામ (દા.ત. યુરિયા)" class="form-group"><button type="button" class="btn-submit" onclick="saveFertilizerMaster()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="deleteFertilizerMaster()">પસંદ કરેલ ખાતર ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalFertilizer').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
 
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxWCm_8aDZ4pjBY9yhw-L4tPxBe5X8mIa-Gb_PRdDOumGn19ibU6Pv848mMznHkmuMmsw/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPhMuNZu0v_WWKRGasugF1X_ETxejk-diHDF2nxTqkDRIrohwvvxDLJpAYRqZBilOqEQ/exec";
+  const CORRECT_MPIN = "1234"; // ડિફૉલ્ટ MPIN
+  let pendingActionCallback = null;
   let appData = {};
 
   window.onload = function() {
@@ -320,6 +387,7 @@
     if(icon) icon.className = "spin";
     fetch(SCRIPT_URL).then(res => res.json()).then(res => {
       appData = res.data; populateData(); updateDashboard(); renderGallery();
+      ['Sales', 'Med', 'Fert', 'Trac'].forEach(t => renderTable(t));
       if(icon) icon.className = "";
     }).catch(err => { if(icon) icon.className = ""; alert("ભૂલ: " + err); });
   }
@@ -331,6 +399,39 @@
     document.getElementById('tab' + tab).classList.add('active');
     if(tab === 'Dash') updateDashboard();
     if(tab === 'Gallery') renderGallery();
+  }
+
+  function switchSubTab(tabName, subType) {
+    document.querySelectorAll('#form' + tabName + ' .sub-section').forEach(el => el.style.display = 'none');
+    document.getElementById('subBtn' + tabName + 'New').classList.remove('active-sub');
+    document.getElementById('subBtn' + tabName + 'View').classList.remove('active-sub');
+
+    if(subType === 'New') {
+      document.getElementById('subContent' + tabName + 'New').style.display = 'block';
+      document.getElementById('subBtn' + tabName + 'New').classList.add('active-sub');
+    } else {
+      document.getElementById('subContent' + tabName + 'View').style.display = 'block';
+      document.getElementById('subBtn' + tabName + 'View').classList.add('active-sub');
+      renderTable(tabName);
+    }
+  }
+
+  function askMpinAndExecute(event, callback) {
+    event.preventDefault();
+    pendingActionCallback = () => callback(event);
+    document.getElementById("inputMpin").value = "";
+    document.getElementById("modalMpin").style.display = "block";
+  }
+
+  function verifyMpinAndProceed() {
+    let entered = document.getElementById("inputMpin").value;
+    if(entered === CORRECT_MPIN) {
+      document.getElementById("modalMpin").style.display = "none";
+      if(pendingActionCallback) pendingActionCallback();
+      pendingActionCallback = null;
+    } else {
+      alert("ખોટો MPIN કોડ છે! કૃપા કરીને સાચો કોડ નાખો.");
+    }
   }
 
   function convertToGujaratiWords(amount) {
@@ -412,11 +513,41 @@
     });
   }
 
-  function checkFertilizerNew(sel) {
-    if(sel.value === "NEW") {
-      document.getElementById("modalFertilizer").style.display = "block";
-      sel.value = "";
+  function updatePartnerSummary(sectionType) {
+    let bhagiyaSel = document.getElementById(sectionType === 'Sales' ? 'sBhagiya' : sectionType === 'Med' ? 'mBhagiya' : sectionType === 'Fert' ? 'fBhagiya' : 'tBhagiya');
+    let banner = document.getElementById('partnerBanner' + sectionType);
+    let selectedBhagiya = bhagiyaSel.value;
+    
+    if(!selectedBhagiya || selectedBhagiya === "NEW") {
+      banner.style.display = 'none';
+      return;
     }
+
+    let pSales = 0, pMed = 0, pFert = 0, pTrac = 0, pUpad = 0;
+    if(appData.Sales_Ledger) {
+      appData.Sales_Ledger.forEach(r => { if(String(r["ભાગીદાર"] || "").trim() === selectedBhagiya) pSales += parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0); });
+    }
+    if(appData.Pesticide_Bill) {
+      appData.Pesticide_Bill.forEach(r => { if(String(r["ભાગીદાર"] || "").trim() === selectedBhagiya) pMed += parseFloat(r["બીલની_કુલ_રકમ"] || r["બીલની કુલ રકમ"] || 0); });
+    }
+    if(appData.Fertilizer_Bill) {
+      appData.Fertilizer_Bill.forEach(r => { if(String(r["ભાગીદાર"] || "").trim() === selectedBhagiya) pFert += parseFloat(r["બીલની_કુલ_રકમ"] || r["બીલની કુલ રકમ"] || 0); });
+    }
+    if(appData.Tractor_Expense) {
+      appData.Tractor_Expense.forEach(r => { if(String(r["ભાગીદાર"] || "").trim() === selectedBhagiya) pTrac += parseFloat(r["કુલ_ભાડું"] || r["કુલ ભાડું"] || 0); });
+    }
+    if(appData.Upad_Ledger) {
+      appData.Upad_Ledger.forEach(r => { if(String(r["ભાગીદાર"] || "").trim() === selectedBhagiya) pUpad += parseFloat(r["રકમ"] || 0); });
+    }
+
+    banner.innerHTML = `
+      <div>વેચાણ: ₹ ${pSales.toFixed(2)}</div>
+      <div>દવા: ₹ ${pMed.toFixed(2)}</div>
+      <div>ખાતર: ₹ ${pFert.toFixed(2)}</div>
+      <div>ટ્રેક્ટર: ₹ ${pTrac.toFixed(2)}</div>
+      <div>ઉપાડ: ₹ ${pUpad.toFixed(2)}</div>
+    `;
+    banner.style.display = 'flex';
   }
 
   function addSalesItemRow() {
@@ -460,7 +591,7 @@
         <div class="form-group"><label>રકમ (₹):</label><input type="text" class="mTotal readonly-bg" readonly value="₹ 0.00"></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>પાક:</label><select class="pakList" onchange="checkCropNew(this); calcMedRow();"></select></div>
+        <div class="form-group"><label>પાક:</label><select class="pakList" onchange="checkCropNew(this); calcMedBill();"></select></div>
         <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="mKShare readonly-bg" readonly value="0"></div>
         <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="mKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcMedBill();">ડિલિટ</button></div>
@@ -468,7 +599,6 @@
     `;
     container.appendChild(div); populateData(); calcMedBill();
   }
-
   function addFertItemRow() {
     let container = document.getElementById("fertItemsContainer");
     let div = document.createElement("div"); div.className = "item-row";
@@ -583,15 +713,9 @@
     document.getElementById("mTotalBill").value = "₹ " + totalBill.toFixed(2);
     document.getElementById("mTotalWords").value = convertToGujaratiWords(totalBill);
 
-    // બિલની કુલ રકમ (totalBill) પરથી દરેક રો માં ખેડૂ રકમ ગણવી
     rows.forEach(row => {
       let type = row.querySelector('.mType').value.trim();
-      let share = 0;
-      if (type === "નીંદામણ") {
-        share = 100;
-      } else {
-        share = getCropShare(row.querySelector('.pakList').value);
-      }
+      let share = (type === "નીંદામણ") ? 100 : getCropShare(row.querySelector('.pakList').value);
       row.querySelector('.mKShare').value = share;
       row.querySelector('.mKRakam').value = "₹ " + (totalBill * (share / 100)).toFixed(2);
     });
@@ -616,7 +740,6 @@
     document.getElementById("fTotalBill").value = "₹ " + totalBill.toFixed(2);
     document.getElementById("fTotalWords").value = convertToGujaratiWords(totalBill);
 
-    // બિલની કુલ રકમ (totalBill) પરથી દરેક રો માં ખેડૂ રકમ ગણવી
     rows.forEach(row => {
       let share = getCropShare(row.querySelector('.pakList').value);
       row.querySelector('.fKShare').value = share;
@@ -689,6 +812,76 @@
     document.getElementById("dashFarmerExpense").innerText = "₹ " + farmerExp.toFixed(2);
   }
 
+  function renderTable(tabName) {
+    let container = document.getElementById("tableContainer" + tabName);
+    let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Bill' : tabName === 'Fert' ? 'Fertilizer_Bill' : 'Tractor_Expense';
+    let rows = appData[sheetKey] || [];
+    
+    if(rows.length === 0) { container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ રેકોર્ડ ઉપલબ્ધ નથી.</p>"; return; }
+
+    let html = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>કુલ રકમ</th><th>ક્રિયા</th></tr>`;
+    rows.forEach(r => {
+      let date = r["તારીખ"] || r["Date"] || "";
+      let bill = r["બિલ_નં"] || r["બિલ નં"] || r["Bill_No"] || "";
+      let bhagiya = r["ભાગીદાર"] || r["Bhagiya"] || "";
+      let amt = r["કુલ_રકમ"] || r["કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || r["બીલની કુલ રકમ"] || r["કુલ_ભાડું"] || r["કુલ ભાડું"] || 0;
+      let entryId = r["Entry_ID"] || r["બિલ_નં"] || "";
+
+      html += `<tr>
+        <td>${date}</td>
+        <td>${bill}</td>
+        <td>${bhagiya}</td>
+        <td>₹ ${parseFloat(amt).toFixed(2)}</td>
+        <td>
+          <button class="btn-edit" onclick="editRecord('${sheetKey}', '${entryId}')">એડિટ</button>
+          <button class="btn-delete" onclick="askMpinForDeleteRecord('${sheetKey}', '${entryId}')">ડિલિટ</button>
+        </td>
+      </tr>`;
+    });
+    container.innerHTML = html + `</table>`;
+  }
+  function filterTable(tabName) {
+    let query = document.getElementById("search" + tabName).value.toLowerCase();
+    let rows = document.querySelectorAll("#tableContainer" + tabName + " tr");
+    rows.forEach((row, i) => {
+      if(i === 0) return;
+      row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
+    });
+  }
+
+  function editRecord(sheetName, entryId) {
+    pendingActionCallback = () => {
+      alert("એડિટ સુવિધા ટૂંક સમયમાં ઓપન થશે. એન્ટ્રી ID: " + entryId);
+    };
+    document.getElementById("inputMpin").value = "";
+    document.getElementById("modalMpin").style.display = "block";
+  }
+
+  function askMpinForDeleteRecord(sheetName, entryId) {
+    pendingActionCallback = () => {
+      if(!confirm("શું તમે આ રેકોર્ડ ડિલિટ કરવા માંગો છો?")) return;
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "deleteRecord", entryId: entryId, sheetName: sheetName })
+      }).then(res => res.json()).then(() => {
+        alert("સફળતાપૂર્વક ડિલિટ થઈ ગયું!");
+        fetchData();
+      }).catch(err => alert("ભૂલ: " + err));
+    };
+    document.getElementById("inputMpin").value = "";
+    document.getElementById("modalMpin").style.display = "block";
+  }
+
+  function askMpinForDeleteMaster(sheetName) {
+    pendingActionCallback = () => {
+      deleteMasterItem(sheetName);
+    };
+    document.getElementById("modalBhagiya").style.display = 'none';
+    document.getElementById("modalVepari").style.display = 'none';
+    document.getElementById("inputMpin").value = "";
+    document.getElementById("modalMpin").style.display = "block";
+  }
+
   function checkBhagiyaNew(sel) { if(sel.value === "NEW") { document.getElementById("modalBhagiya").style.display = "block"; sel.value = ""; } }
   function checkVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
   function checkMedVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("nvCategory").value = "દવા"; document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
@@ -696,10 +889,7 @@
   function checkCropNew(sel) { if(sel.value === "NEW") { document.getElementById("modalCrop").style.display = "block"; sel.value = ""; } }
 
   function deleteMasterItem(sheetName) {
-    let nameToDelete = "";
-    if(sheetName === 'Bhagiya_Master') nameToDelete = document.getElementById("sBhagiya").value || document.getElementById("mBhagiya").value;
-    else nameToDelete = document.getElementById("sVepari").value || document.getElementById("mVepari").value;
-    
+    let nameToDelete = document.getElementById("sBhagiya").value || document.getElementById("mBhagiya").value || document.getElementById("sVepari").value || document.getElementById("mVepari").value;
     if(!nameToDelete || nameToDelete === "NEW") { alert("કૃપા કરીને ડિલિટ કરવા માટે નામ પસંદ કરો!"); return; }
     if(!confirm("શું તમે '" + nameToDelete + "' ને ડિલિટ કરવા માંગો છો?")) return;
 
@@ -708,8 +898,6 @@
       body: JSON.stringify({ action: "deleteRecord", entryId: nameToDelete, sheetName: sheetName })
     }).then(res => res.json()).then(() => {
       alert("સફળતાપૂર્વક ડિલિટ થઈ ગયું!");
-      document.getElementById('modalBhagiya').style.display = 'none';
-      document.getElementById('modalVepari').style.display = 'none';
       fetchData();
     }).catch(err => alert("ભૂલ: " + err));
   }
@@ -724,24 +912,6 @@
       alert("ખાતર સફળતાપૂર્વક ઉમેરાઈ ગયું!");
       document.getElementById("modalFertilizer").style.display = "none";
       document.getElementById("nfName").value = "";
-      fetchData();
-    }).catch(err => alert("ભૂલ: " + err));
-  }
-
-  function deleteFertilizerMaster() {
-    let activeSelects = document.querySelectorAll(".khatarList");
-    let nameToDelete = "";
-    activeSelects.forEach(sel => { if(sel.value && sel.value !== "NEW") nameToDelete = sel.value; });
-    
-    if(!nameToDelete) return alert("કૃપા કરીને ડિલિટ કરવા માટે ખાતર પસંદ કરો!");
-    if(!confirm("શું તમે '" + nameToDelete + "' ખાતર ડિલિટ કરવા માંગો છો?")) return;
-
-    fetch(SCRIPT_URL, {
-      method: "POST",
-      body: JSON.stringify({ action: "deleteRecord", entryId: nameToDelete, sheetName: "Fertilizer_Master" })
-    }).then(res => res.json()).then(() => {
-      alert("ડિલિટ થઈ ગયું!");
-      document.getElementById('modalFertilizer').style.display = 'none';
       fetchData();
     }).catch(err => alert("ભૂલ: " + err));
   }
@@ -773,7 +943,6 @@
   }
 
   function submitSales(e) {
-    e.preventDefault();
     let rows = document.querySelectorAll("#salesItemsContainer .item-row");
     if(rows.length === 0) return alert("કમ સે કમ એક આઇટમ ઉમેરો!");
     document.getElementById("btnSales").innerText = "સેવ થઈ રહ્યું છે...";
@@ -810,7 +979,6 @@
   }
 
   function submitMed(e) {
-    e.preventDefault();
     let rows = document.querySelectorAll("#medItemsContainer .item-row");
     if(rows.length === 0) return alert("કમ સે કમ એક દવા ઉમેરો!");
     document.getElementById("btnMed").innerText = "સેવ થઈ રહ્યું છે...";
@@ -854,7 +1022,6 @@
   }
 
   function submitFert(e) {
-    e.preventDefault();
     let rows = document.querySelectorAll("#fertItemsContainer .item-row");
     if(rows.length === 0) return alert("કમ સે કમ એક ખાતર આઇટમ ઉમેરો!");
     document.getElementById("btnFert").innerText = "સેવ થઈ રહ્યું છે...";
@@ -898,7 +1065,6 @@
   }
 
   function submitTrac(e) {
-    e.preventDefault();
     let rows = document.querySelectorAll("#tracItemsContainer .item-row");
     if(rows.length === 0) return alert("કમ સે કમ એક કામ ઉમેરો!");
     document.getElementById("btnTrac").innerText = "સેવ થઈ રહ્યું છે...";
@@ -940,7 +1106,6 @@
       });
     });
   }
-
   function saveB() {
     let name = v("nbName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
     saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone"), v("nbAdd") ]);
@@ -967,7 +1132,7 @@
     let html = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>પ્રકાર</th><th>ફોટો</th><th>ક્રિયા</th></tr>`;
     photos.forEach(p => {
       let imgTag = p["Photo_Link"] ? `<a href="${p["Photo_Link"]}" target="_blank"><img src="${p["Photo_Link"]}" style="width:40px; height:40px; object-fit:cover;"></a>` : "ના";
-      html += `<tr><td>${p["Date"]||''}</td><td>${p["Bill_No"]||''}</td><td>${p["Bhagiya"]||''}</td><td>${p["Category"]||''}</td><td>${imgTag}</td><td><button class="btn-delete" onclick="deleteRecord('${p["Entry_ID"]}', '${p["Category"]}')">ડિલિટ</button></td></tr>`;
+      html += `<tr><td>${p["Date"]||''}</td><td>${p["Bill_No"]||''}</td><td>${p["Bhagiya"]||''}</td><td>${p["Category"]||''}</td><td>${imgTag}</td><td><button class="btn-delete" onclick="askMpinForDeleteRecord('Photo_Gallery', '${p["Entry_ID"]}')">ડિલિટ</button></td></tr>`;
     });
     container.innerHTML = html + `</table>`;
   }
@@ -977,16 +1142,6 @@
     document.querySelectorAll("#galleryContainer tr").forEach((row, i) => {
       if(i === 0) return; row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
     });
-  }
-
-  function deleteRecord(entryId, category) {
-    if(!confirm("ડિલિટ કરવું છે?")) return;
-    let sheetName = "Sales_Ledger";
-    if(category === "દવા ખર્ચ") sheetName = "Pesticide_Bill";
-    else if(category === "ખાતર ખર્ચ") sheetName = "Fertilizer_Bill";
-    else if(category === "ટ્રેક્ટર ખર્ચ") sheetName = "Tractor_Expense";
-    fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "deleteRecord", entryId: entryId, sheetName: sheetName }) })
-    .then(() => { alert("ડિલિટ થઈ ગયું!"); fetchData(); });
   }
 </script>
 </body>

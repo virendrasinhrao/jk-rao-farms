@@ -91,7 +91,6 @@
     .sub-nav button { flex: 1; padding: 10px; font-size: 14px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; background: #bdc3c7; color: #2c3e50; }
     .sub-nav button.active-sub { background: #2980b9; color: white; }
 
-    /* આકર્ષક પાર્ટનર સમરી બેનર (AppSheet સ્ટાઇલ) */
     .partner-sum-banner { 
       background: linear-gradient(135deg, #2c3e50, #34495e); 
       color: #fff; 
@@ -162,22 +161,23 @@
         <div class="sum-amount" id="bannerValSales">₹ 0.00</div>
       </div>
       <form id="salesForm" onsubmit="askMpinAndExecute(event, submitSales)">
+        <input type="hidden" id="editEntryId" value="">
         <div class="flex-row">
           <div class="form-group"><label>તારીખ:</label><input type="date" id="sDate" required onchange="updatePartnerSummary('Sales')"></div>
           <div class="form-group"><label>બિલ નં:</label><input type="text" id="sBill"></div>
         </div>
         <div class="flex-row">
           <div class="form-group"><label>ભાગીદાર:</label><select id="sBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Sales');"></select></div>
-          <div class="form-group"><label>વેપારી:</label><select id="sVepari" class="vepariList" required onchange="checkVepariNew(this)"></select></div>
+          <div class="form-group"><label>ખરીદનાર (વેપારી):</label><select id="sVepari" class="vepariList" required onchange="checkVepariNew(this)"></select></div>
         </div>
         <hr style="margin:10px 0;">
         <h4>આઇટમ્સ લિસ્ટ:</h4>
         <button type="button" class="btn-add-item" onclick="addSalesItemRow()">➕ આઇટમ ઉમેરો</button>
         <div id="salesItemsContainer"></div>
         <div class="flex-row" style="margin-top:10px;">
-          <div class="form-group"><label>સ્થિતિ:</label><select id="sStatus"><option>રોકડા / જમા</option><option>બાકી</option></select></div>
-          <div class="form-group"><label>કોણે લીધા?</label><input type="text" id="sHastak" required></div>
-          <div class="form-group"><label>ભાગિયાએ લીધા?</label><select id="sBLidha"><option>No</option><option>Yes</option></select></div>
+          <div class="form-group"><label>બીલની સ્થિતિ (બાકી/જમા):</label><select id="sStatus"><option>રોકડા / જમા</option><option>બાકી</option></select></div>
+          <div class="form-group"><label>પૈસા કોણે લીધા (હસ્તે):</label><input type="text" id="sHastak" required></div>
+          <div class="form-group"><label>ભાગિયાએ લીધા? (Yes/No):</label><select id="sBLidha"><option>No</option><option>Yes</option></select></div>
         </div>
         <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="sPhoto" accept="image/*" capture="environment"></div>
         <button type="submit" id="btnSales" class="btn-submit">સેવ કરો</button>
@@ -185,8 +185,8 @@
     </div>
 
     <div id="subContentSalesView" class="sub-section" style="display:none;">
-      <h3 style="text-align:center; color:#27ae60; margin-top:0;">📋 વેચાણ રેકોર્ડ્સ (આઇટમ મુજબ)</h3>
-      <div class="form-group"><input type="text" id="searchSales" placeholder="🔍 બિલ, પાક કે ભાગીદારના નામથી શોધો..." oninput="filterTable('Sales')"></div>
+      <h3 style="text-align:center; color:#27ae60; margin-top:0;">📋 વેચાણ રેકોર્ડ્સ</h3>
+      <div class="form-group"><input type="text" id="searchSales" placeholder="🔍 બિલ, ખરીદનાર કે ભાગીદારના નામથી શોધો..." oninput="filterTable('Sales')"></div>
       <div id="tableContainerSales" style="overflow-x:auto;"></div>
     </div>
   </div>
@@ -391,7 +391,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPhMuNZu0v_WWKRGasugF1X_ETxejk-diHDF2nxTqkDRIrohwvvxDLJpAYRqZBilOqEQ/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-WExnG6crI4RFH4i9CAinkhtHEASnlEezemRM0yKUvZUYRYEFwheRdfdN01F6fZrGfw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -431,6 +431,7 @@
     document.getElementById('subBtn' + tabName + 'View').classList.remove('active-sub');
 
     if(subType === 'New') {
+      document.getElementById('editEntryId').value = "";
       document.getElementById('subContent' + tabName + 'New').style.display = 'block';
       document.getElementById('subBtn' + tabName + 'New').classList.add('active-sub');
     } else {
@@ -537,7 +538,6 @@
     });
   }
 
-  // AppSheet જેવું SUM લૉજિક (ભાગીદાર અને વર્ષ મુજબ)
   function updatePartnerSummary(sectionType) {
     let dateId = sectionType === 'Sales' ? 'sDate' : sectionType === 'Med' ? 'mDate' : sectionType === 'Fert' ? 'fDate' : 'tDate';
     let bhagiyaId = sectionType === 'Sales' ? 'sBhagiya' : sectionType === 'Med' ? 'mBhagiya' : sectionType === 'Fert' ? 'fBhagiya' : 'tBhagiya';
@@ -559,7 +559,7 @@
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
         let rBhagiya = String(r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
         if(rBhagiya === selectedBhagiya && rYear === targetYear) {
-          totalSum += parseFloat(r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
+          totalSum += parseFloat(r["કુલ રકમ (₹)"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
         }
       });
     } else if(sectionType === 'Med' && appData.Pesticide_Bill) {
@@ -567,7 +567,7 @@
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
         let rBhagiya = String(r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
         if(rBhagiya === selectedBhagiya && rYear === targetYear) {
-          totalSum += parseFloat(r["બીલની_કુલ_રકમ"] || r["બીલની કુલ રકમ"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
+          totalSum += parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || 0);
         }
       });
     } else if(sectionType === 'Fert' && appData.Fertilizer_Bill) {
@@ -575,7 +575,7 @@
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
         let rBhagiya = String(r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
         if(rBhagiya === selectedBhagiya && rYear === targetYear) {
-          totalSum += parseFloat(r["બીલની_કુલ_રકમ"] || r["બીલની કુલ રકમ"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
+          totalSum += parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || 0);
         }
       });
     } else if(sectionType === 'Trac' && appData.Tractor_Expense) {
@@ -583,7 +583,7 @@
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
         let rBhagiya = String(r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
         if(rBhagiya === selectedBhagiya && rYear === targetYear) {
-          totalSum += parseFloat(r["કુલ_ભાડું"] || r["કુલ ભાડું"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
+          totalSum += parseFloat(r["કુલ ભાડું"] || r["કુલ_ભાડું"] || 0);
         }
       });
     }
@@ -598,12 +598,12 @@
     div.innerHTML = `
       <div class="flex-row">
         <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcSalesRow(this);"></select></div>
-        <div class="form-group"><label>પાઉચ:</label><input type="number" class="sPauch" value="0"></div>
+        <div class="form-group"><label>પાઉચ / કુલ વજન:</label><input type="number" class="sPauch" value="0"></div>
         <div class="form-group"><label>વજન (કિલો):</label><input type="number" class="sWeight" step="0.01" oninput="calcSalesRow(this)" required></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>૧ મણ ભાવ:</label><input type="number" class="sBhav20" step="0.01" oninput="calcSalesRow(this)" required></div>
-        <div class="form-group"><label>૧ કિલો ભાવ:</label><input type="text" class="sBhav1 readonly-bg" readonly value="₹ 0.00"></div>
+        <div class="form-group"><label>૧ મણનો ભાવ (20 Kg):</label><input type="number" class="sBhav20" step="0.01" oninput="calcSalesRow(this)" required></div>
+        <div class="form-group"><label>ભાવ (પ્રતિ કિલો):</label><input type="text" class="sBhav1 readonly-bg" readonly value="₹ 0.00"></div>
         <div class="form-group"><label>કુલ રકમ (₹):</label><input type="text" class="sTotal readonly-bg" readonly value="₹ 0.00"></div>
       </div>
       <div class="flex-row">
@@ -702,8 +702,9 @@
     let row = el.closest('.item-row');
     let w = parseFloat(row.querySelector('.sWeight').value) || 0;
     let b20 = parseFloat(row.querySelector('.sBhav20').value) || 0;
-    row.querySelector('.sBhav1').value = "₹ " + (b20/20).toFixed(2);
-    let total = w * (b20/20);
+    let b1 = b20 / 20;
+    row.querySelector('.sBhav1').value = "₹ " + b1.toFixed(2);
+    let total = w * b1;
     row.querySelector('.sTotal').value = "₹ " + total.toFixed(2);
     let s = getCropShare(row.querySelector('.pakList').value);
     row.querySelector('.sKShare').value = s;
@@ -808,42 +809,42 @@
     let totalSales = 0, farmerSales = 0;
     if(appData.Sales_Ledger) {
       appData.Sales_Ledger.forEach(r => {
-        totalSales += parseFloat(r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
-        farmerSales += parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0);
+        totalSales += parseFloat(r["કુલ રકમ (₹)"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
+        farmerSales += parseFloat(r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0);
       });
     }
     let totalExp = 0, farmerExp = 0;
     
     if(appData.Pesticide_Items) {
       appData.Pesticide_Items.forEach(r => {
-        let fAmt = parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0);
+        let fAmt = parseFloat(r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0);
         if(!isNaN(fAmt)) farmerExp += fAmt;
       });
     }
     if(appData.Pesticide_Bill) {
       appData.Pesticide_Bill.forEach(r => {
-        let billAmt = parseFloat(r["બીલની_કુલ_રકમ"] || r["બીલની કુલ રકમ"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
+        let billAmt = parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || 0);
         if(!isNaN(billAmt)) totalExp += billAmt;
       });
     }
 
     if(appData.Fertilizer_Items) {
       appData.Fertilizer_Items.forEach(r => {
-        let fAmt = parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0);
+        let fAmt = parseFloat(r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0);
         if(!isNaN(fAmt)) farmerExp += fAmt;
       });
     }
     if(appData.Fertilizer_Bill) {
       appData.Fertilizer_Bill.forEach(r => {
-        let billAmt = parseFloat(r["બીલની_કુલ_રકમ"] || r["બીલની કુલ રકમ"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
+        let billAmt = parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || 0);
         if(!isNaN(billAmt)) totalExp += billAmt;
       });
     }
 
     if(appData.Tractor_Expense) {
       appData.Tractor_Expense.forEach(r => {
-        let billAmt = parseFloat(r["કુલ_ભાડું"] || r["કુલ ભાડું"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
-        let farmerAmt = parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0);
+        let billAmt = parseFloat(r["કુલ ભાડું"] || r["કુલ_ભાડું"] || 0);
+        let farmerAmt = parseFloat(r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0);
         if(!isNaN(billAmt)) totalExp += billAmt;
         if(!isNaN(farmerAmt)) farmerExp += farmerAmt;
       });
@@ -855,8 +856,7 @@
     document.getElementById("dashFarmerExpense").innerText = "₹ " + farmerExp.toFixed(2);
   }
 
-  // ટેબલ વ્યુમાં તમામ આઇટમ્સ અને કૉલમ્સ દર્શાવવા માટે
- function renderTable(tabName) {
+  function renderTable(tabName) {
     let container = document.getElementById("tableContainer" + tabName);
     let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : 'Tractor_Expense';
     let rows = appData[sheetKey] || [];
@@ -866,59 +866,65 @@
     let html = "";
     if (tabName === 'Sales') {
       html = `<table><tr>
-        <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>વેપારી</th><th>પાક</th><th>પાઉચ</th><th>વજન (કિલો)</th><th>૧ મણ ભાવ</th><th>૧ કિલો ભાવ</th><th>કુલ રકમ</th><th>હિસ્સો %</th><th>ખેડૂ રકમ</th><th>સ્થિતિ</th><th>હસ્તે</th><th>ક્રિયા</th>
+        <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>ખરીદનાર</th><th>પાકનું નામ</th><th>પાઉચ / કુલ વજન</th><th>વજન (કિલો)</th><th>૧ મણનો ભાવ (20 Kg)</th><th>ભાવ (પ્રતિ કિલો)</th><th>કુલ રકમ (₹)</th><th>ખેડૂ હિસ્સો (%)</th><th>ખેડૂ રકમ</th><th>બીલની સ્થિતિ (બાકી/જમા)</th><th>પૈસા કોણે લીધા (હસ્તે)</th><th>ભાગિયાએ લીધા? (Yes/No)</th><th>ક્રિયા</th>
       </tr>`;
       rows.forEach(r => {
+        let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
+        let entryId = r["વેચાણ બિલ ID"] || r["Entry_ID"] || "";
         html += `<tr>
           <td>${r["વર્ષ"] || r["Year"] || ""}</td>
-          <td>${r["તારીખ"] || r["Date"] || ""}</td>
-          <td>${r["બિલ_નં"] || r["બિલ નં"] || r["Bill_No"] || ""}</td>
+          <td>${cleanDate}</td>
+          <td>${r["બિલ નં"] || r["બિલ_નં"] || ""}</td>
           <td>${r["ભાગીદાર"] || r["Bhagiya"] || ""}</td>
-          <td>${r["વેપારી"] || r["Merchant"] || ""}</td>
-          <td>${r["પાકનું_નામ"] || r["પાકનું નામ"] || r["પાક"] || ""}</td>
-          <td>${r["પાઉચ"] || 0}</td>
-          <td>${r["વજન"] || r["Weight"] || 0}</td>
-          <td>₹ ${parseFloat(r["૧_મણ_ભાવ"] || r["૧ મણ ભાવ"] || 0).toFixed(2)}</td>
-          <td>₹ ${parseFloat(r["૧_કિલો_ભાવ"] || r["૧ કિલો ભાવ"] || 0).toFixed(2)}</td>
-          <td>₹ ${parseFloat(r["કુલ_રકમ"] || r["કુલ રકમ"] || 0).toFixed(2)}</td>
-          <td>${r["ખેડૂ_હિસ્સો_%"] || r["ખેડૂ હિસ્સો %"] || 0}%</td>
-          <td>₹ ${parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0).toFixed(2)}</td>
-          <td>${r["સ્થિતિ"] || ""}</td>
-          <td>${r["હસ્તે"] || ""}</td>
+          <td>${r["ખરીદનાર"] || r["Merchant"] || ""}</td>
+          <td>${r["પાકનું નામ"] || r["પાકનું_નામ"] || ""}</td>
+          <td>${r["પાઉચ / કુલ વજન"] || r["પાઉચ"] || 0}</td>
+          <td>${r["વજન (કિલો)"] || r["વજન"] || 0}</td>
+          <td>₹ ${parseFloat(r[". ૧ મણનો ભાવ (20 Kg)"] || r["૧_મણ_ભાવ"] || 0).toFixed(2)}</td>
+          <td>₹ ${parseFloat(r["ભાવ (પ્રતિ કિલો)"] || r["૧_કિલો_ભાવ"] || 0).toFixed(2)}</td>
+          <td>₹ ${parseFloat(r["કુલ રકમ (₹)"] || r["કુલ_રકમ"] || 0).toFixed(2)}</td>
+          <td>${r["ખેડૂ હિસ્સો (%)"] || r["ખેડૂ_હિસ્સો_%"] || 0}%</td>
+          <td>₹ ${parseFloat(r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0).toFixed(2)}</td>
+          <td>${r["બીલની સ્થિતિ (બાકી/જમા)"] || r["સ્થિતિ"] || ""}</td>
+          <td>${r["પૈસા કોણે લીધા (હસ્તે)"] || r["હસ્તે"] || ""}</td>
+          <td>${r["ભાગિયાએ લીધા? (Yes/No)"] || r["ભાગિયાએ લીધા"] || "No"}</td>
           <td>
-            <button class="btn-edit" onclick="editRecord('${sheetKey}', '${r["Entry_ID"] || ""}')">એડિટ</button>
-            <button class="btn-delete" onclick="askMpinForDeleteRecord('${sheetKey}', '${r["Entry_ID"] || ""}')">ડિલિટ</button>
+            <button class="btn-edit" onclick="editSalesRecord('${entryId}')">એડિટ</button>
+            <button class="btn-delete" onclick="askMpinForDeleteRecord('${sheetKey}', '${entryId}')">ડિલિટ</button>
           </td>
         </tr>`;
       });
     } else {
       html = `<table><tr>
-        <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>નામ/વસ્તુ</th><th>વજન/માપ</th><th>પેકિંગ</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>હિસ્સો %</th><th>ખેડૂ રકમ</th><th>ક્રિયા</th>
+        <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>નામ</th><th>વજન</th><th>પેકિંગ</th><th>નંગ/થેલી</th><th>ભાવ</th><th>રકમ</th><th>પાકનું નામ</th><th>ખેડૂ હિસ્સો %</th><th>ખેડૂ રકમ</th><th>ક્રિયા</th>
       </tr>`;
       rows.forEach(r => {
-        let name = r["દવાનું_નામ"] || r["દવાનું નામ"] || r["ખાતરનું_નામ"] || r["ખાતરનું નામ"] || r["દવા/ખાતર"] || r["કામ"] || "-";
+        let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
+        let entryId = r["Entry_ID"] || r["બિલ નં"] || "";
+        let name = r["દવાનું નામ"] || r["ખાતરનું નામ"] || r["દવાનું_નામ"] || r["ખાતરનું_નામ"] || r["કામ"] || "-";
         html += `<tr>
           <td>${r["વર્ષ"] || r["Year"] || ""}</td>
-          <td>${r["તારીખ"] || r["Date"] || ""}</td>
-          <td>${r["બિલ_નં"] || r["બિલ નં"] || r["Bill_No"] || ""}</td>
+          <td>${cleanDate}</td>
+          <td>${r["બિલ નં"] || r["બિલ_નં"] || ""}</td>
           <td>${name}</td>
           <td>${r["વજન"] || r["Weight"] || "-"}</td>
           <td>${r["પેકિંગ"] || r["Pack"] || "-"}</td>
-          <td>${r["નંગ"] || r["નંગ/થેલી"] || r["Qty"] || "-"}</td>
+          <td>${r["નંગ/થેલી"] || r["નંગ"] || "-"}</td>
           <td>₹ ${parseFloat(r["ભાવ"] || r["Rate"] || 0).toFixed(2)}</td>
-          <td>₹ ${parseFloat(r["રકમ"] || r["કુલ રકમ"] || r["કુલ_રકમ"] || r["Amount"] || 0).toFixed(2)}</td>
-          <td>${r["પાકનું_નામ"] || r["પાકનું નામ"] || r["પાક"] || "-"}</td>
-          <td>${r["ખેડૂ_હિસ્સો_%"] || r["ખેડૂ હિસ્સો %"] || "-"}</td>
-          <td>₹ ${parseFloat(r["ખેડૂ_રકમ"] || r["ખેડૂ રકમ"] || 0).toFixed(2)}</td>
+          <td>₹ ${parseFloat(r["રકમ"] || r["કુલ રકમ"] || 0).toFixed(2)}</td>
+          <td>${r["પાકનું નામ"] || r["પાકનું_નામ"] || "-"}</td>
+          <td>${r["ખેડૂ હિસ્સો %"] || r["ખેડૂ_હિસ્સો_%"] || "-"}</td>
+          <td>₹ ${parseFloat(r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0).toFixed(2)}</td>
           <td>
-            <button class="btn-edit" onclick="editRecord('${sheetKey}', '${r["Entry_ID"] || ""}')">એડિટ</button>
-            <button class="btn-delete" onclick="askMpinForDeleteRecord('${sheetKey}', '${r["Entry_ID"] || ""}')">ડિલિટ</button>
+            <button class="btn-edit" onclick="editRecord('${sheetKey}', '${entryId}')">એડિટ</button>
+            <button class="btn-delete" onclick="askMpinForDeleteRecord('${sheetKey}', '${entryId}')">ડિલિટ</button>
           </td>
         </tr>`;
       });
     }
     container.innerHTML = html + `</table>`;
   }
+
   function filterTable(tabName) {
     let query = document.getElementById("search" + tabName).value.toLowerCase();
     let rows = document.querySelectorAll("#tableContainer" + tabName + " tr");
@@ -928,9 +934,34 @@
     });
   }
 
+  // વેચાણ રેકોર્ડ એડિટ કરવા માટેનું ફંક્શન
+  function editSalesRecord(entryId) {
+    pendingActionCallback = () => {
+      let found = (appData.Sales_Ledger || []).find(r => String(r["વેચાણ બિલ ID"] || "").trim() === String(entryId).trim());
+      if(found) {
+        switchSubTab('Sales', 'New');
+        document.getElementById("sDate").value = String(found["તારીખ"] || "").split('T')[0];
+        document.getElementById("sBill").value = found["બિલ નં"] || "";
+        document.getElementById("sBhagiya").value = found["ભાગીદાર"] || "";
+        document.getElementById("sVepari").value = found["ખરીદનાર"] || "";
+        document.getElementById("sStatus").value = found["બીલની સ્થિતિ (બાકી/જમા)"] || "રોકડા / જમા";
+        document.getElementById("sHastak").value = found["પૈસા કોણે લીધા (હસ્તે)"] || "";
+        document.getElementById("sBLidha").value = found["ભાગિયાએ લીધા? (Yes/No)"] || "No";
+        document.getElementById("editEntryId").value = entryId;
+        document.getElementById("btnSales").innerText = "અપડેટ કરો";
+        updatePartnerSummary('Sales');
+        alert("એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે. સુધારો કરીને સેવ કરો!");
+      } else {
+        alert("રેકોર્ડ મળ્યો નથી!");
+      }
+    };
+    document.getElementById("inputMpin").value = "";
+    document.getElementById("modalMpin").style.display = "block";
+  }
+
   function editRecord(sheetName, entryId) {
     pendingActionCallback = () => {
-      alert("એડિટ સુવિધા ટૂંક સમયમાં ઓપન થશે. ID: " + entryId);
+      alert("આ રેકોર્ડ માટે એડિટ સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે. ID: " + entryId);
     };
     document.getElementById("inputMpin").value = "";
     document.getElementById("modalMpin").style.display = "block";
@@ -1024,7 +1055,11 @@
     if(rows.length === 0) return alert("કમ સે કમ એક આઇટમ ઉમેરો!");
     document.getElementById("btnSales").innerText = "સેવ થઈ રહ્યું છે...";
     let date = v("sDate"), billNo = v("sBill") || "N/A", bhagiya = v("sBhagiya"), year = getYear(date);
-    let mainEntryId = "SL-" + Date.now();
+    
+    // જો એડિટ મોડ હોય તો જૂનો ID વાપરો, નહીંતર નવો બનાવો
+    let existingId = document.getElementById("editEntryId").value;
+    let mainEntryId = existingId ? existingId : "SL-" + Date.now();
+
     handlePhotoUpload("sPhoto", function(photoBase64) {
       if(photoBase64) {
         let photoRow = [ year, mainEntryId, date, billNo, bhagiya, "વેચાણ", photoBase64 ];
@@ -1032,7 +1067,7 @@
       }
       let count = 0;
       rows.forEach((row, index) => {
-        let entryId = mainEntryId + "-" + (index + 1);
+        let entryId = mainEntryId + (rows.length > 1 ? "-" + (index + 1) : "");
         let sTotalVal = parseFloat((row.querySelector(".sTotal").value || "").replace("₹", "")) || 0;
         let sFarmerVal = parseFloat((row.querySelector(".sKRakam").value || "").replace("₹", "")) || 0;
 
@@ -1045,9 +1080,13 @@
         fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "saveSales", rowValues: rowData }) }).then(() => {
           count++;
           if(count === rows.length) {
-            alert("વેચાણ સફળતાપૂર્વક સેવ થઈ ગયું!"); document.getElementById("btnSales").innerText = "સેવ કરો";
-            document.getElementById("salesForm").reset(); document.getElementById("salesItemsContainer").innerHTML = "";
-            addSalesItemRow(); document.getElementById("sDate").value = new Date().toISOString().split('T')[0];
+            alert("વેચાણ સફળતાપૂર્વક સેવ થઈ ગયું!"); 
+            document.getElementById("btnSales").innerText = "સેવ કરો";
+            document.getElementById("editEntryId").value = "";
+            document.getElementById("salesForm").reset(); 
+            document.getElementById("salesItemsContainer").innerHTML = "";
+            addSalesItemRow(); 
+            document.getElementById("sDate").value = new Date().toISOString().split('T')[0];
             fetchData(); switchTab('Dash');
           }
         });
@@ -1210,7 +1249,7 @@
     let html = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>પ્રકાર</th><th>ફોટો</th><th>ક્રિયા</th></tr>`;
     photos.forEach(p => {
       let imgTag = p["Photo_Link"] ? `<a href="${p["Photo_Link"]}" target="_blank"><img src="${p["Photo_Link"]}" style="width:40px; height:40px; object-fit:cover;"></a>` : "ના";
-      html += `<tr><td>${p["Date"]||''}</td><td>${p["Bill_No"]||''}</td><td>${p["Bhagiya"]||''}</td><td>${p["Category"]||''}</td><td>${imgTag}</td><td><button class="btn-delete" onclick="askMpinForDeleteRecord('Photo_Gallery', '${p["Entry_ID"]}')">ડિલિટ</button></td></tr>`;
+      html += `<tr><td>${String(p["Date"]||'').split('T')[0]}</td><td>${p["Bill_No"]||''}</td><td>${p["Bhagiya"]||''}</td><td>${p["Category"]||''}</td><td>${imgTag}</td><td><button class="btn-delete" onclick="askMpinForDeleteRecord('Photo_Gallery', '${p["Entry_ID"]}')">ડિલિટ</button></td></tr>`;
     });
     container.innerHTML = html + `</table>`;
   }

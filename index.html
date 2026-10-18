@@ -27,7 +27,7 @@
     
     .btn-submit { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; font-size: 15px; cursor: pointer; margin-top: 10px; font-weight: bold; border-radius: 3px; }
     .btn-submit:hover { background: #219653; }
-    .btn-delete { background: #c0392b; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; }
+    .btn-delete { background: #c0392b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
     .btn-edit { background: #f39c12; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; }
     .btn-add-item { background: #2980b9; color: white; border: none; padding: 6px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; margin-bottom: 8px; }
     
@@ -615,7 +615,7 @@
       </div>
       <div class="flex-row">
         <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKShare readonly-bg" readonly value="0"></div>
-        <div class="form-group" style="flex: 2;"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove()">ડિલિટ</button></div>
       </div>
     `;
@@ -642,7 +642,7 @@
       <div class="flex-row">
         <div class="form-group"><label>પાક:</label><select class="pakList" onchange="checkCropNew(this); calcMedBill();"></select></div>
         <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="mKShare readonly-bg" readonly value="0"></div>
-        <div class="form-group" style="flex: 2;"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="mKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="mKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcMedBill();">ડિલિટ</button></div>
       </div>
     `;
@@ -666,7 +666,7 @@
       <div class="flex-row">
         <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcFertBill();"></select></div>
         <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="fKShare readonly-bg" readonly value="0"></div>
-        <div class="form-group" style="flex: 2;"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="fKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="fKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcFertBill();">ડિલિટ</button></div>
       </div>
     `;
@@ -698,7 +698,7 @@
       </div>
       <div class="flex-row">
         <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKShare readonly-bg" readonly value="0"></div>
-        <div class="form-group" style="flex: 2;"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove()">ડિલિટ</button></div>
       </div>
     `;
@@ -863,6 +863,7 @@
     document.getElementById("dashFarmerExpense").innerText = "₹ " + farmerExp.toFixed(2);
   }
 
+  // ચેકબોક્સ (✓) સાથેનું ટેબલ વ્યુ
   function renderTable(tabName) {
     let container = document.getElementById("tableContainer" + tabName);
     let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : 'Tractor_Expense';
@@ -870,75 +871,75 @@
     
     if(rows.length === 0) { container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ રેકોર્ડ ઉપલબ્ધ નથી.</p>"; return; }
 
-    let html = "";
-    if (tabName === 'Sales') {
-      html = `<table><tr>
-        <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>ખરીદનાર</th><th>પાકનું નામ</th><th>પાઉચ / નંગ</th><th>કુલ વજન (કિલો)</th><th>૧ મણનો ભાવ (20 Kg)</th><th>ભાવ (પ્રતિ કિલો)</th><th>કુલ રકમ (₹)</th><th>ખેડૂ હિસ્સો (%)</th><th>ખેડૂ રકમ</th><th>બીલની સ્થિતિ (બાકી/જમા)</th><th>પૈસા કોણે લીધા (હસ્તે)</th><th>ભાગિયાએ લીધા? (Yes/No)</th><th>ક્રિયા</th>
-      </tr>`;
-      rows.forEach(r => {
-        let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
-        let entryId = r["વેચાણ બિલ ID"] || r["Entry_ID"] || "";
-        
-        let pauchVal = r["પાઉચ / નંગ"] !== undefined ? r["પાઉચ / નંગ"] : (r["પાઉચ / કુલ વજન"] !== undefined ? r["પાઉચ / કુલ વજન"] : (r["પાઉચ"] || 0));
-        let weightVal = r["કુલ વજન (કિલો)"] !== undefined ? r["કુલ વજન (કિલો)"] : (r["વજન (કિલો)"] !== undefined ? r["વજન (કિલો)"] : (r["વજન"] || 0));
-        let bhav20Val = r[". ૧ મણનો ભાવ (20 Kg)"] !== undefined ? r[". ૧ મણનો ભાવ (20 Kg)"] : (r["૧_મણ_ભાવ"] || 0);
-        
-        let bhav1Val = r["ભાવ (પ્રતિ કિલો)"] !== undefined && !isNaN(parseFloat(r["ભાવ (પ્રતિ કિલો)"])) 
-                       ? parseFloat(r["ભાવ (પ્રતિ કિલો)"]) 
-                       : (parseFloat(bhav20Val) / 20);
+    let deleteBtnHtml = `<div style="margin-bottom:8px; text-align:left;">
+      <button class="btn-delete" onclick="deleteSelectedRecords('${sheetKey}')">🗑️ પસંદ કરેલ (✓) ડિલીટ કરો</button>
+    </div>`;
 
-        html += `<tr>
-          <td>${r["વર્ષ"] || r["Year"] || ""}</td>
-          <td>${cleanDate}</td>
-          <td>${r["બિલ નં"] || r["બિલ_નં"] || ""}</td>
-          <td>${r["ભાગીદાર"] || r["Bhagiya"] || ""}</td>
-          <td>${r["ખરીદનાર"] || r["Merchant"] || ""}</td>
-          <td>${r["પાકનું નામ"] || r["પાકનું_નામ"] || ""}</td>
-          <td>${pauchVal}</td>
-          <td>${weightVal}</td>
-          <td>₹ ${parseFloat(bhav20Val).toFixed(2)}</td>
-          <td>₹ ${isNaN(bhav1Val) ? "0.00" : bhav1Val.toFixed(2)}</td>
-          <td>₹ ${parseFloat(r["કુલ રકમ (₹)"] || r["કુલ_રકમ"] || 0).toFixed(2)}</td>
-          <td>${r["ખેડૂ હિસ્સો (%)"] || r["ખેડૂ_હિસ્સો_%"] || 0}%</td>
-          <td>₹ ${parseFloat(r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0).toFixed(2)}</td>
-          <td>${r["બીલની સ્થિતિ (બાકી/જમા)"] || r["સ્થિતિ"] || ""}</td>
-          <td>${r["પૈસા કોણે લીધા (હસ્તે)"] || r["હસ્તે"] || ""}</td>
-          <td>${r["ભાગિયાએ લીધા? (Yes/No)"] || r["ભાગિયાએ લીધા"] || "No"}</td>
-          <td>
-            <button class="btn-edit" onclick="editSalesRecord('${entryId}')">એડિટ</button>
-            <button class="btn-delete" onclick="askMpinForDeleteRecord('${sheetKey}', '${entryId}')">ડિલિટ</button>
-          </td>
-        </tr>`;
-      });
-    } else {
-      html = `<table><tr>
-        <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>નામ</th><th>વજન</th><th>પેકિંગ</th><th>નંગ/થેલી</th><th>ભાવ</th><th>રકમ</th><th>પાકનું નામ</th><th>ખેડૂ હિસ્સો %</th><th>ખેડૂ રકમ</th><th>ક્રિયા</th>
+    let html = deleteBtnHtml + `<table><tr>
+      <th><input type="checkbox" id="selectAll_${tabName}" onclick="toggleSelectAll(this, '${tabName}')"></th>
+      <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>વિગત/નામ</th><th>કુલ રકમ</th><th>ક્રિયા</th>
+    </tr>`;
+
+    rows.forEach((r, index) => {
+      let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
+      let entryId = r["વેચાણ બિલ ID"] || r["Entry_ID"] || r["બિલ નં"] || index;
+      let bhagiya = r["ભાગીદાર"] || r["Bhagiya"] || "-";
+      let billNo = r["બિલ નં"] || r["બિલ_નં"] || "-";
+      let year = r["વર્ષ"] || r["Year"] || "";
+      let name = r["ખરીદનાર"] || r["દવાનું નામ"] || r["ખાતરનું નામ"] || r["દવાનું_નામ"] || r["ખાતરનું_નામ"] || r["કામ"] || "-";
+      let amt = r["કુલ રકમ (₹)"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || r["બીલની કુલ રકમ"] || r["રકમ"] || r["કુલ ભાડું"] || 0;
+
+      html += `<tr>
+        <td><input type="checkbox" class="row-select-${tabName}" value="${entryId}"></td>
+        <td>${year}</td>
+        <td>${cleanDate}</td>
+        <td>${billNo}</td>
+        <td>${bhagiya}</td>
+        <td>${name}</td>
+        <td>₹ ${parseFloat(amt).toFixed(2)}</td>
+        <td>
+          <button class="btn-edit" onclick="editRecord('${sheetKey}', '${entryId}')">એડિટ</button>
+        </td>
       </tr>`;
-      rows.forEach(r => {
-        let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
-        let entryId = r["Entry_ID"] || r["બિલ નં"] || "";
-        let name = r["દવાનું નામ"] || r["ખાતરનું નામ"] || r["દવાનું_નામ"] || r["ખાતરનું_નામ"] || r["કામ"] || "-";
-        html += `<tr>
-          <td>${r["વર્ષ"] || r["Year"] || ""}</td>
-          <td>${cleanDate}</td>
-          <td>${r["બિલ નં"] || r["બિલ_નં"] || ""}</td>
-          <td>${name}</td>
-          <td>${r["વજન"] || r["Weight"] || "-"}</td>
-          <td>${r["પેકિંગ"] || r["Pack"] || "-"}</td>
-          <td>${r["નંગ/થેલી"] || r["નંગ"] || "-"}</td>
-          <td>₹ ${parseFloat(r["ભાવ"] || r["Rate"] || 0).toFixed(2)}</td>
-          <td>₹ ${parseFloat(r["રકમ"] || r["કુલ રકમ"] || 0).toFixed(2)}</td>
-          <td>${r["પાકનું નામ"] || r["પાકનું_નામ"] || "-"}</td>
-          <td>${r["ખેડૂ હિસ્સો %"] || r["ખેડૂ_હિસ્સો_%"] || "-"}</td>
-          <td>₹ ${parseFloat(r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0).toFixed(2)}</td>
-          <td>
-            <button class="btn-edit" onclick="editRecord('${sheetKey}', '${entryId}')">એડિટ</button>
-            <button class="btn-delete" onclick="askMpinForDeleteRecord('${sheetKey}', '${entryId}')">ડિલિટ</button>
-          </td>
-        </tr>`;
-      });
-    }
+    });
     container.innerHTML = html + `</table>`;
+  }
+
+  function toggleSelectAll(master, tabName) {
+    let checkboxes = document.querySelectorAll('.row-select-' + tabName);
+    checkboxes.forEach(cb => cb.checked = master.checked);
+  }
+
+  // પસંદ કરેલી (✓ થયેલી) એન્ટ્રીઓ જ MPIN પૂછીને ડિલીટ કરવી
+  function deleteSelectedRecords(sheetKey) {
+    let activeTab = sheetKey === 'Sales_Ledger' ? 'Sales' : sheetKey === 'Pesticide_Items' ? 'Med' : sheetKey === 'Fertilizer_Items' ? 'Fert' : 'Trac';
+    let checkedBoxes = document.querySelectorAll('.row-select-' + activeTab + ':checked');
+    
+    if(checkedBoxes.length === 0) {
+      alert("કૃપા કરીને ડિલીટ કરવા માટે ઓછામાં ઓછી એક એન્ટ્રી પર ✓ (ટિક) કરો!");
+      return;
+    }
+
+    let idsToDelete = Array.from(checkedBoxes).map(cb => cb.value);
+
+    pendingActionCallback = () => {
+      if(!confirm("શું તમે ખરેખર પસંદ કરેલી " + idsToDelete.length + " એન્ટ્રીઓ ડિલીટ કરવા માંગો છો?")) return;
+      
+      let promises = idsToDelete.map(id => {
+        return fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "deleteRecord", entryId: id, sheetName: sheetKey })
+        });
+      });
+
+      Promise.all(promises).then(() => {
+        alert("પસંદ કરેલ એન્ટ્રીઓ સફળતાપૂર્વક ડિલીટ થઈ ગઈ!");
+        fetchData();
+      }).catch(err => alert("ભૂલ: " + err));
+    };
+
+    document.getElementById("inputMpin").value = "";
+    document.getElementById("modalMpin").style.display = "block";
   }
 
   function filterTable(tabName) {
@@ -950,48 +951,9 @@
     });
   }
 
-  function editSalesRecord(entryId) {
-    pendingActionCallback = () => {
-      let found = (appData.Sales_Ledger || []).find(r => String(r["વેચાણ બિલ ID"] || "").trim() === String(entryId).trim());
-      if(found) {
-        switchSubTab('Sales', 'New');
-        document.getElementById("sDate").value = String(found["તારીખ"] || "").split('T')[0];
-        document.getElementById("sBill").value = found["બિલ નં"] || "";
-        document.getElementById("sBhagiya").value = found["ભાગીદાર"] || "";
-        document.getElementById("sVepari").value = found["ખરીદનાર"] || "";
-        document.getElementById("sStatus").value = found["બીલની સ્થિતિ (બાકી/જમા)"] || "રોકડા / જમા";
-        document.getElementById("sHastak").value = found["પૈસા કોણે લીધા (હસ્તે)"] || "";
-        document.getElementById("sBLidha").value = found["ભાગિયાએ લીધા? (Yes/No)"] || "No";
-        document.getElementById("editEntryId").value = entryId;
-        document.getElementById("btnSales").innerText = "અપડેટ કરો";
-        updatePartnerSummary('Sales');
-        alert("એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે. સુધારો કરીને સેવ કરો!");
-      } else {
-        alert("રેકોર્ડ મળ્યો નથી!");
-      }
-    };
-    document.getElementById("inputMpin").value = "";
-    document.getElementById("modalMpin").style.display = "block";
-  }
-
   function editRecord(sheetName, entryId) {
     pendingActionCallback = () => {
       alert("આ રેકોર્ડ માટે એડિટ સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે. ID: " + entryId);
-    };
-    document.getElementById("inputMpin").value = "";
-    document.getElementById("modalMpin").style.display = "block";
-  }
-
-  function askMpinForDeleteRecord(sheetKey, entryId) {
-    pendingActionCallback = () => {
-      if(!confirm("શું તમે આ રેકોર્ડ ડિલિટ કરવા માંગો છો?")) return;
-      fetch(SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify({ action: "deleteRecord", entryId: entryId, sheetName: sheetKey })
-      }).then(res => res.json()).then(() => {
-        alert("સફળતાપૂર્વક ડિલિટ થઈ ગયું!");
-        fetchData();
-      }).catch(err => alert("ભૂલ: " + err));
     };
     document.getElementById("inputMpin").value = "";
     document.getElementById("modalMpin").style.display = "block";

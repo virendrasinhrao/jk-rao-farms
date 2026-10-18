@@ -897,9 +897,10 @@
       <button class="btn-delete" onclick="askMpinForDeleteSelected('${sheetKey}')">🗑️ પસંદ કરેલ (✓) ડિલીટ કરો</button>
     </div>`;
 
+    // ટેબલ હેડરમાં "એન્ટ્રી Id" ઉમેર્યું છે
     let html = deleteBtnHtml + `<table><tr>
       <th><input type="checkbox" id="selectAll_${tabName}" onclick="toggleSelectAll(this, '${tabName}')"></th>
-      <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>વિગત/નામ</th><th>કુલ રકમ</th><th>ક્રિયા</th>
+      <th>એન્ટ્રી Id</th><th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>વિગત/નામ</th><th>કુલ રકમ</th><th>ક્રિયા</th>
     </tr>`;
 
     rows.forEach((r, index) => {
@@ -911,8 +912,10 @@
       let name = r["ખરીદનાર"] || r["દવાનું નામ"] || r["ખાતરનું નામ"] || r["દવાનું_નામ"] || r["ખાતરનું_નામ"] || r["કામ"] || "-";
       let amt = r["કુલ રકમ (₹)"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || r["બીલની કુલ રકમ"] || r["રકમ"] || r["કુલ ભાડું"] || 0;
 
+      // ટેબલની હરોળમાં "એન્ટ્રી Id" દર્શાવ્યું છે
       html += `<tr>
         <td><input type="checkbox" class="row-select-${tabName}" value="${entryId}"></td>
+        <td><b>${entryId}</b></td>
         <td>${year}</td>
         <td>${cleanDate}</td>
         <td>${billNo}</td>

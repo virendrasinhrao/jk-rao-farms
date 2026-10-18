@@ -866,11 +866,16 @@
     let html = "";
     if (tabName === 'Sales') {
       html = `<table><tr>
-        <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>ખરીદનાર</th><th>પાકનું નામ</th><th>પાઉચ / નંગ</th><th>કુલ વજન (કિલો)</th><th>૧ મણનો ભાવ (20 Kg)</th><th>ભાવ (પ્રતિ કિલો)</th><th>કુલ રકમ (₹)</th><th>ખેડૂ હિસ્સો (%)</th><th>ખેડૂ હિસ્સો (%)</th><th>બીલની સ્થિતિ (બાકી/જમા)</th><th>પૈસા કોણે લીધા (હસ્તે)</th><th>ભાગિયાએ લીધા? (Yes/No)</th><th>ક્રિયા</th>
+        <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>ખરીદનાર</th><th>પાકનું નામ</th><th>પાઉચ / નંગ</th><th>કુલ વજન (કિલો)</th><th>૧ મણનો ભાવ (20 Kg)</th><th>ભાવ (પ્રતિ કિલો)</th><th>કુલ રકમ (₹)</th><th>ખેડૂ હિસ્સો (%)</th><th>ખેડૂ રકમ</th><th>બીલની સ્થિતિ (બાકી/જમા)</th><th>પૈસા કોણે લીધા (હસ્તે)</th><th>ભાગિયાએ લીધા? (Yes/No)</th><th>ક્રિયા</th>
       </tr>`;
       rows.forEach(r => {
         let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
         let entryId = r["વેચાણ બિલ ID"] || r["Entry_ID"] || "";
+        let pauchVal = r["પાઉચ / નંગ"] !== undefined ? r["પાઉચ / નંગ"] : (r["પાઉચ / કુલ વજન"] !== undefined ? r["પાઉચ / કુલ વજન"] : (r["પાઉચ"] || 0));
+        let weightVal = r["કુલ વજન (કિલો)"] !== undefined ? r["કુલ વજન (કિલો)"] : (r["વજન (કિલો)"] !== undefined ? r["વજન (કિલો)"] : (r["વજન"] || 0));
+        let bhav20Val = r[". ૧ મણનો ભાવ (20 Kg)"] !== undefined ? r[". ૧ મણનો ભાવ (20 Kg)"] : (r["૧_મણ_ભાવ"] || 0);
+        let bhav1Val = r["ભાવ (પ્રતિ કિલો)"] !== undefined ? r["ભાવ (પ્રતિ કિલો)"] : (bhav20Val / 20);
+
         html += `<tr>
           <td>${r["વર્ષ"] || r["Year"] || ""}</td>
           <td>${cleanDate}</td>
@@ -878,10 +883,10 @@
           <td>${r["ભાગીદાર"] || r["Bhagiya"] || ""}</td>
           <td>${r["ખરીદનાર"] || r["Merchant"] || ""}</td>
           <td>${r["પાકનું નામ"] || r["પાકનું_નામ"] || ""}</td>
-          <td>${r["પાઉચ / કુલ વજન"] || r["પાઉચ"] || 0}</td>
-          <td>${r["વજન (કિલો)"] || r["વજન"] || 0}</td>
-          <td>₹ ${parseFloat(r[". ૧ મણનો ભાવ (20 Kg)"] || r["૧_મણ_ભાવ"] || 0).toFixed(2)}</td>
-          <td>₹ ${parseFloat(r["ભાવ (પ્રતિ કિલો)"] || r["૧_કિલો_ભાવ"] || 0).toFixed(2)}</td>
+          <td>${pauchVal}</td>
+          <td>${weightVal}</td>
+          <td>₹ ${parseFloat(bhav20Val).toFixed(2)}</td>
+          <td>₹ ${parseFloat(bhav1Val).toFixed(2)}</td>
           <td>₹ ${parseFloat(r["કુલ રકમ (₹)"] || r["કુલ_રકમ"] || 0).toFixed(2)}</td>
           <td>${r["ખેડૂ હિસ્સો (%)"] || r["ખેડૂ_હિસ્સો_%"] || 0}%</td>
           <td>₹ ${parseFloat(r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0).toFixed(2)}</td>
@@ -896,7 +901,7 @@
       });
     } else {
       html = `<table><tr>
-        <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>નામ</th><th>વજન</th><th>પેકિંગ</th><th>નંગ/થેલી</th><th>ભાવ</th><th>રકમ</th><th>પાકનું નામ</th><th>ખેડૂ હિસ્સો %</th><th>ખેડૂ હિસ્સો (%)</th><th>ક્રિયા</th>
+        <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>નામ</th><th>વજન</th><th>પેકિંગ</th><th>નંગ/થેલી</th><th>ભાવ</th><th>રકમ</th><th>પાકનું નામ</th><th>ખેડૂ હિસ્સો %</th><th>ખેડૂ રકમ</th><th>ક્રિયા</th>
       </tr>`;
       rows.forEach(r => {
         let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
@@ -1147,7 +1152,7 @@
     let totalBill = parseFloat((document.getElementById("fTotalBill").value || "").replace("₹", "")) || 0;
     let inWords = convertToGujaratiWords(totalBill);
     handlePhotoUpload("fPhoto", function(photoBase64) {
-      let billRow = [ year, date, billNo, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
+     let billRow = [ year, date, billNo, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
       let itemRows = [];
       let totalFarmerAmt = 0;
       rows.forEach(row => {

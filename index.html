@@ -157,7 +157,7 @@
     <div id="subContentSalesNew" class="sub-section">
       <h3 style="text-align:center; color:#27ae60; margin-top:0;">🌱 વેચાણ એન્ટ્રી</h3>
       <div id="partnerBannerSales" class="partner-sum-banner">
-        <h4 id="bannerTitleSales">ભાગીદારનું કુલ વેચાણ (આખું વર્ષ)</h4>
+        <h4>કુલ વેચાણ</h4>
         <div class="sum-amount" id="bannerValSales">₹ 0.00</div>
       </div>
       <form id="salesForm" onsubmit="askMpinAndExecute(event, submitSales)">
@@ -201,7 +201,7 @@
     <div id="subContentMedNew" class="sub-section">
       <h3 style="text-align:center; color:#2980b9; margin-top:0;">🧪 દવા ખર્ચ એન્ટ્રી</h3>
       <div id="partnerBannerMed" class="partner-sum-banner">
-        <h4 id="bannerTitleMed">ભાગીદારનો કુલ દવા ખર્ચ (આખું વર્ષ)</h4>
+        <h4>કુલ વેચાણ</h4>
         <div class="sum-amount" id="bannerValMed">₹ 0.00</div>
       </div>
       <form id="medForm" onsubmit="askMpinAndExecute(event, submitMed)">
@@ -264,7 +264,7 @@
     <div id="subContentFertNew" class="sub-section">
       <h3 style="text-align:center; color:#d35400; margin-top:0;">🌾 ખાતર ખર્ચ એન્ટ્રી</h3>
       <div id="partnerBannerFert" class="partner-sum-banner">
-        <h4 id="bannerTitleFert">ભાગીદારનો કુલ ખાતર ખર્ચ (આખું વર્ષ)</h4>
+        <h4>કુલ વેચાણ</h4>
         <div class="sum-amount" id="bannerValFert">₹ 0.00</div>
       </div>
       <form id="fertForm" onsubmit="askMpinAndExecute(event, submitFert)">
@@ -327,7 +327,7 @@
     <div id="subContentTracNew" class="sub-section">
       <h3 style="text-align:center; color:#8e44ad; margin-top:0;">🚜 ટ્રેક્ટર ખર્ચ એન્ટ્રી</h3>
       <div id="partnerBannerTrac" class="partner-sum-banner">
-        <h4 id="bannerTitleTrac">ભાગીદારનો કુલ ટ્રેક્ટર ખર્ચ (આખું વર્ષ)</h4>
+        <h4>કુલ વેચાણ</h4>
         <div class="sum-amount" id="bannerValTrac">₹ 0.00</div>
       </div>
       <form id="tracForm" onsubmit="askMpinAndExecute(event, submitTrac)">
@@ -598,8 +598,8 @@
     div.innerHTML = `
       <div class="flex-row">
         <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcSalesRow(this);"></select></div>
-        <div class="form-group"><label>પાઉચ / કુલ વજન:</label><input type="number" class="sPauch" value="0"></div>
-        <div class="form-group"><label>વજન (કિલો):</label><input type="number" class="sWeight" step="0.01" oninput="calcSalesRow(this)" required></div>
+        <div class="form-group"><label>પાઉચ / નંગ:</label><input type="number" class="sPauch" value="0"></div>
+        <div class="form-group"><label>કુલ વજન (કિલો):</label><input type="number" class="sWeight" step="0.01" oninput="calcSalesRow(this)" required></div>
       </div>
       <div class="flex-row">
         <div class="form-group"><label>૧ મણનો ભાવ (20 Kg):</label><input type="number" class="sBhav20" step="0.01" oninput="calcSalesRow(this)" required></div>
@@ -608,7 +608,7 @@
       </div>
       <div class="flex-row">
         <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKShare readonly-bg" readonly value="0"></div>
-        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div class="form-group" style="flex: 2;"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove()">ડિલિટ</button></div>
       </div>
     `;
@@ -635,7 +635,7 @@
       <div class="flex-row">
         <div class="form-group"><label>પાક:</label><select class="pakList" onchange="checkCropNew(this); calcMedBill();"></select></div>
         <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="mKShare readonly-bg" readonly value="0"></div>
-        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="mKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div class="form-group" style="flex: 2;"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="mKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcMedBill();">ડિલિટ</button></div>
       </div>
     `;
@@ -659,7 +659,7 @@
       <div class="flex-row">
         <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcFertBill();"></select></div>
         <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="fKShare readonly-bg" readonly value="0"></div>
-        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="fKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div class="form-group" style="flex: 2;"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="fKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcFertBill();">ડિલિટ</button></div>
       </div>
     `;
@@ -691,7 +691,7 @@
       </div>
       <div class="flex-row">
         <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKShare readonly-bg" readonly value="0"></div>
-        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div class="form-group" style="flex: 2;"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove()">ડિલિટ</button></div>
       </div>
     `;
@@ -866,7 +866,7 @@
     let html = "";
     if (tabName === 'Sales') {
       html = `<table><tr>
-        <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>ખરીદનાર</th><th>પાકનું નામ</th><th>પાઉચ / કુલ વજન</th><th>વજન (કિલો)</th><th>૧ મણનો ભાવ (20 Kg)</th><th>ભાવ (પ્રતિ કિલો)</th><th>કુલ રકમ (₹)</th><th>ખેડૂ હિસ્સો (%)</th><th>ખેડૂ રકમ</th><th>બીલની સ્થિતિ (બાકી/જમા)</th><th>પૈસા કોણે લીધા (હસ્તે)</th><th>ભાગિયાએ લીધા? (Yes/No)</th><th>ક્રિયા</th>
+        <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>ખરીદનાર</th><th>પાકનું નામ</th><th>પાઉચ / નંગ</th><th>કુલ વજન (કિલો)</th><th>૧ મણનો ભાવ (20 Kg)</th><th>ભાવ (પ્રતિ કિલો)</th><th>કુલ રકમ (₹)</th><th>ખેડૂ હિસ્સો (%)</th><th>ખેડૂ હિસ્સો (%)</th><th>બીલની સ્થિતિ (બાકી/જમા)</th><th>પૈસા કોણે લીધા (હસ્તે)</th><th>ભાગિયાએ લીધા? (Yes/No)</th><th>ક્રિયા</th>
       </tr>`;
       rows.forEach(r => {
         let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
@@ -896,7 +896,7 @@
       });
     } else {
       html = `<table><tr>
-        <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>નામ</th><th>વજન</th><th>પેકિંગ</th><th>નંગ/થેલી</th><th>ભાવ</th><th>રકમ</th><th>પાકનું નામ</th><th>ખેડૂ હિસ્સો %</th><th>ખેડૂ રકમ</th><th>ક્રિયા</th>
+        <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>નામ</th><th>વજન</th><th>પેકિંગ</th><th>નંગ/થેલી</th><th>ભાવ</th><th>રકમ</th><th>પાકનું નામ</th><th>ખેડૂ હિસ્સો %</th><th>ખેડૂ હિસ્સો (%)</th><th>ક્રિયા</th>
       </tr>`;
       rows.forEach(r => {
         let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
@@ -934,7 +934,6 @@
     });
   }
 
-  // વેચાણ રેકોર્ડ એડિટ કરવા માટેનું ફંક્શન
   function editSalesRecord(entryId) {
     pendingActionCallback = () => {
       let found = (appData.Sales_Ledger || []).find(r => String(r["વેચાણ બિલ ID"] || "").trim() === String(entryId).trim());
@@ -1056,7 +1055,6 @@
     document.getElementById("btnSales").innerText = "સેવ થઈ રહ્યું છે...";
     let date = v("sDate"), billNo = v("sBill") || "N/A", bhagiya = v("sBhagiya"), year = getYear(date);
     
-    // જો એડિટ મોડ હોય તો જૂનો ID વાપરો, નહીંતર નવો બનાવો
     let existingId = document.getElementById("editEntryId").value;
     let mainEntryId = existingId ? existingId : "SL-" + Date.now();
 

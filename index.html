@@ -31,6 +31,7 @@
     .btn-add-item { background: #2980b9; color: white; border: none; padding: 6px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; margin-bottom: 8px; }
     
     .readonly-bg { background-color: #f1f2f6; }
+    .hidden-field { display: none !important; }
     
     .highlight-total { 
       background-color: #27ae60 !important; 
@@ -433,8 +434,8 @@
         <div class="form-group"><label>કુલ રકમ (₹):</label><input type="text" class="sTotal readonly-bg" readonly value="₹ 0.00"></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKShare readonly-bg" readonly></div>
-        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKShare readonly-bg" readonly value="0"></div>
+        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove()">ડિલિટ</button></div>
       </div>
     `;
@@ -459,9 +460,9 @@
         <div class="form-group"><label>રકમ (₹):</label><input type="text" class="mTotal readonly-bg" readonly value="₹ 0.00"></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>પાક:</label><select class="pakList" onchange="checkCropNew(this); calcMedRow(this);"></select></div>
-        <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="mKShare readonly-bg" readonly></div>
-        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="mKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div class="form-group"><label>પાક:</label><select class="pakList" onchange="checkCropNew(this); calcMedRow();"></select></div>
+        <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="mKShare readonly-bg" readonly value="0"></div>
+        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="mKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcMedBill();">ડિલિટ</button></div>
       </div>
     `;
@@ -484,8 +485,8 @@
       </div>
       <div class="flex-row">
         <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcFertBill();"></select></div>
-        <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="fKShare readonly-bg" readonly></div>
-        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="fKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="fKShare readonly-bg" readonly value="0"></div>
+        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="fKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcFertBill();">ડિલિટ</button></div>
       </div>
     `;
@@ -516,8 +517,8 @@
         <div class="form-group"><label>કુલ ભાડું (₹):</label><input type="text" class="tTotal readonly-bg" readonly value="₹ 0.00"></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKShare readonly-bg" readonly></div>
-        <div class="form-group"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKShare readonly-bg" readonly value="0"></div>
+        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove()">ડિલિટ</button></div>
       </div>
     `;
@@ -556,22 +557,13 @@
   }
 
   function calcMedRow(el) {
-    let row = el.closest('.item-row');
-    let bhav = parseFloat(row.querySelector('.mBhav').value) || 0;
-    let qty = parseFloat(row.querySelector('.mQty').value) || 1;
-    let total = bhav * qty;
-    row.querySelector('.mTotal').value = "₹ " + total.toFixed(2);
-    
-    let type = row.querySelector('.mType').value.trim();
-    let share = 0;
-    if (type === "નીંદામણ") {
-      share = 100;
-    } else {
-      share = getCropShare(row.querySelector('.pakList').value);
+    if(el) {
+      let row = el.closest('.item-row');
+      let bhav = parseFloat(row.querySelector('.mBhav').value) || 0;
+      let qty = parseFloat(row.querySelector('.mQty').value) || 1;
+      let total = bhav * qty;
+      row.querySelector('.mTotal').value = "₹ " + total.toFixed(2);
     }
-    row.querySelector('.mKShare').value = share;
-    row.querySelector('.mKRakam').value = "₹ " + (total * (share / 100)).toFixed(2);
-
     calcMedBill();
   }
 
@@ -590,6 +582,19 @@
     document.getElementById("mCst").value = "₹ " + cstAmt.toFixed(2);
     document.getElementById("mTotalBill").value = "₹ " + totalBill.toFixed(2);
     document.getElementById("mTotalWords").value = convertToGujaratiWords(totalBill);
+
+    // બિલની કુલ રકમ (totalBill) પરથી દરેક રો માં ખેડૂ રકમ ગણવી
+    rows.forEach(row => {
+      let type = row.querySelector('.mType').value.trim();
+      let share = 0;
+      if (type === "નીંદામણ") {
+        share = 100;
+      } else {
+        share = getCropShare(row.querySelector('.pakList').value);
+      }
+      row.querySelector('.mKShare').value = share;
+      row.querySelector('.mKRakam').value = "₹ " + (totalBill * (share / 100)).toFixed(2);
+    });
   }
 
   function calcFertBill() {
@@ -601,10 +606,6 @@
       let amt = qty * bhav;
       row.querySelector('.fAmt').value = "₹ " + amt.toFixed(2);
       subTotal += amt;
-
-      let share = getCropShare(row.querySelector('.pakList').value);
-      row.querySelector('.fKShare').value = share;
-      row.querySelector('.fKRakam').value = "₹ " + (amt * (share / 100)).toFixed(2);
     });
     document.getElementById("fSubTotal").value = "₹ " + subTotal.toFixed(2);
     let tax = parseFloat(document.getElementById("fTax").value) || 0;
@@ -614,6 +615,13 @@
     document.getElementById("mCst2").value = "₹ " + cstAmt.toFixed(2);
     document.getElementById("fTotalBill").value = "₹ " + totalBill.toFixed(2);
     document.getElementById("fTotalWords").value = convertToGujaratiWords(totalBill);
+
+    // બિલની કુલ રકમ (totalBill) પરથી દરેક રો માં ખેડૂ રકમ ગણવી
+    rows.forEach(row => {
+      let share = getCropShare(row.querySelector('.pakList').value);
+      row.querySelector('.fKShare').value = share;
+      row.querySelector('.fKRakam').value = "₹ " + (totalBill * (share / 100)).toFixed(2);
+    });
   }
 
   function calcTracRow(el) {

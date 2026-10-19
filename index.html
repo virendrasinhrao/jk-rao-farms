@@ -758,7 +758,7 @@
         <div class="form-group"><label>મિનિટ:</label><input type="number" class="tMin" value="${min}" min="0" max="59" oninput="calcTracRow(this)"></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>કલાકનો ભાવ:</label><input type="number" class="tRate" value="${rRate}" oninput="calcTracRow(this)" required></div>
+        <div class="form-group"><label>કલાકનો ભાવ:</label><input type="number" class="tRate" value="${rRate}" oninput="calcTracRow(this); autoCalcMinRate(this);" required></div>
         <div class="form-group"><label>મિનિટનો ભાવ:</label><input type="number" class="tMinRate" value="${mRate}" oninput="calcTracRow(this)"></div>
         <div class="form-group"><label>કુલ રકમ (₹):</label><input type="text" class="tTotal readonly-bg" readonly value="₹ 0.00"></div>
       </div>
@@ -778,6 +778,16 @@
       workSelect.value = work;
     }
     if(hrs || rRate) calcTracRow(div.querySelector('.tHrs'));
+  }
+
+  // કલાકના ભાવ પરથી મિનિટનો ભાવ ઓટોમેટિક ગણવાનું ફંક્શન
+  function autoCalcMinRate(el) {
+    let row = el.closest('.item-row');
+    let rRate = parseFloat(row.querySelector('.tRate').value) || 0;
+    let minRateInput = row.querySelector('.tMinRate');
+    let mRate = rRate / 60;
+    minRateInput.value = mRate.toFixed(2);
+    calcTracRow(el);
   }
 
   function calcSalesRow(el) {
@@ -869,8 +879,6 @@
     rows.forEach(row => {
       let pakSelectVal = row.querySelector('.pakList').value;
       let share = getCropShare(pakSelectVal);
-      
-      // જો કૌંસમાં (0.5) કે (50%) હોય તો તેને ટકાવારીમાં કન્વર્ટ કરો
       if (share === 0 && pakSelectVal) {
         let match = pakSelectVal.match(/\((.*?)\)/);
         if (match) {
@@ -878,7 +886,6 @@
           if (!isNaN(val)) share = val <= 1 ? val * 100 : val;
         }
       }
-      
       row.querySelector('.fKShare').value = share;
       let farmerAmt = totalBill * (share / 100);
       let farmerAmtBox = row.querySelector('.sKRakam') || row.querySelector('.fKRakam');
@@ -887,6 +894,7 @@
       }
     });
   }
+
   function calcTracRow(el) {
     let row = el.closest('.item-row');
     let hrs = parseFloat(row.querySelector('.tHrs').value) || 0;
@@ -1000,7 +1008,7 @@
     } else if(tabName === 'Fert') {
       html += `<th>બીલ નં</th><th>ખેડૂનું નામ</th><th>ખાતરનું નામ</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th>`;
     } else if(tabName === 'Trac') {
-      html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>ਕલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બીલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th>`;
+      html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બીલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th>`;
     }
     html += `<th>ક્રિયા</th></tr>`;
 

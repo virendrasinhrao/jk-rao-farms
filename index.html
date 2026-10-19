@@ -941,6 +941,7 @@
     document.getElementById("dashFarmerExpense").innerText = "₹ " + farmerExp.toFixed(2);
   }
 
+  // ૧. ટેબલ વ્યુ રેન્ડર કરવાનું ફંક્શન (જેમાં ટ્રેક્ટરની ૧૪ કૉલમ્સ અને એડિટ/ડિલીટ બટન આવશે)
   function renderTable(tabName) {
     let container = document.getElementById("tableContainer" + tabName);
     let rows = [];
@@ -980,18 +981,6 @@
       let billNo = r["બીલ નં"] || r["બિલ નં"] || r["બિલ_નં"] || r["Bill_No"] || "";
       let bhagiya = r["હસ્તે"] || r["ભાગીદાર"] || r["Bhagiya"] || "";
 
-      if ((!billNo || !bhagiya || bhagiya === "-") && (tabName === 'Med' || tabName === 'Fert')) {
-        let billSheetName = tabName === 'Med' ? 'Pesticide_Bill' : 'Fertilizer_Bill';
-        let parentBill = (appData[billSheetName] || []).find(b => {
-          let bId = String(b["એન્ટ્રી Id"] || b["Entry_ID"] || "").trim();
-          let currentId = String(entryId).trim();
-          return currentId.indexOf(bId) === 0 || String(b["બીલ નં"] || b["બિલ નં"] || "").trim() === String(billNo).trim();
-        });
-        if (parentBill) {
-          if (!billNo) billNo = parentBill["બીલ નં"] || parentBill["બિલ નં"] || parentBill["Bill_No"] || "-";
-          if (!bhagiya || bhagiya === "-") bhagiya = parentBill["ખેડૂનું નામ"] || parentBill["ભાગીદાર"] || parentBill["Bhagiya"] || "-";
-        }
-      }
       if(!billNo) billNo = "-";
       if(!bhagiya) bhagiya = "-";
 
@@ -1043,6 +1032,98 @@
     container.innerHTML = html + `</table>`;
   }
 
+  // ૨. એડિટ (Edit) કરવા માટે MPIN પૂછીને રેકોર્ડ ફોર્મમાં લોડ કરવાનું ફંક્શન
+  function askMpinForEdit(tabName, entryId) {
+    askMpinAndExecute(() => {
+      if(tabName === 'Trac') {
+        let cleanTargetId = String(entryId).trim();
+        let foundItems = (appData.Tractor_Expense || []).filter(r => {
+          let rId = String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim();
+          return rId === cleanTargetId || rId.indexOf(cleanTargetId) === 0 || cleanTargetId.indexOf(rId) === 0;
+        });
+
+        if(foundItems.length > 0) {
+          switchSubTab('Trac', 'New');
+          document.getElementById("tDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
+          document.getElementById("tDriver").value = foundItems[0]["ટ્રેક્ટર માલિક"] || foundItems[0]["ડ્રાઈવર/માલિક"] || "";
+          document.getElementById("tBhagiya").value = foundItems[0]["હસ્તે"] || foundItems[0]["ભાગીદાર"] || "";
+          document.getElementById("tStatus").value = foundItems[0]["બીલની સ્થિતિ"] || "રોકડા";
+          document.getElementById("tHastak").value = foundItems[0]["હસ્તે"] || "";
+          document.getElementById("editTracId").value = cleanTargetId;
+          document.getElementById("btnTrac").innerText = "અપડેટ કરો";
+          
+          document.getElementById("tracItemsContainer").innerHTML = "";
+          foundItems.forEach(item => {
+            addTracItemRow(
+              item["પાકનું નામ"] || "", 
+              item["કામની વિગત"] || item["કામ"] || "", 
+              item["કલાક"] || 0, 
+              item["મિનિટ"] || 0, 
+              item["કલાકનો ભાવ"] || item["ભાવ"] || 0, 
+              item["મિનિટનો ભાવ"] || 0
+            );
+          });
+          updatePartnerSummary('Trac');
+          alert("ટ્રેક્ટર એન્ટ્રી ફોર્મમાં સફળતાપૂર્વક લોડ થઈ ગઈ છે!");
+        } else { 
+          alert("રેકોર્ડ મળ્યો નથી! (ID: " + cleanTargetId + ")"); 
+        }
+      } 
+      else if(tabName === 'Sales') {
+        let found = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || "").trim() === String(entryId).trim());
+        if(found) {
+          switchSubTab('Sales', 'New');
+          document.getElementById("sDate").value = String(found["તારીખ"] || "").split('T')[0];
+          document.getElementById("sBill").value = found["બિલ નં"] || "";
+          document.getElementById("sBhagiya").value = found["ભાગીદાર"] || "";
+          document.getElementById("sVepari").value = found["ખરીદનાર"] || "";
+          document.getElementById("sStatus").value = found["બીલની સ્થિતિ (બાકી/જમા)"] || "રોકડા / જમા";
+          document.getElementById("sHastak").value = found["પૈસા કોણે લીધા (હસ્તે)"] || "";
+          document.getElementById("sBLidha").value = found["ભાગિયાએ લીધા? (Yes/No)"] || "No";
+          document.getElementById("editEntryId").value = entryId;
+          document.getElementById("btnSales").innerText = "અપડેટ કરો";
+          document.getElementById("salesItemsContainer").innerHTML = "";
+          addSalesItemRow(found["પાઉચ / નંગ"] || 0, found["કુલ વજન (કિલો"] || found["કુલ વજન (કિલો)"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
+          updatePartnerSummary('Sales');
+          alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+      }
+    });
+  }
+
+  // ૩. ડિલીટ (Delete) કરવા માટેનું ફંક્શન
+  function askMpinForDeleteSelected(sheetKey) {
+    let activeTab = sheetKey === 'Sales_Ledger' ? 'Sales' : sheetKey === 'Pesticide_Items' ? 'Med' : sheetKey === 'Fertilizer_Items' ? 'Fert' : 'Trac';
+    let checkedBoxes = document.querySelectorAll('.row-select-' + activeTab + ':checked');
+    
+    if(checkedBoxes.length === 0) {
+      alert("કૃપા કરીને ડિલીટ કરવા માટે ઓછામાં ઓછી એક એન્ટ્રી પર ✓ (ટિક) કરો!");
+      return;
+    }
+
+    let idsToDelete = Array.from(checkedBoxes).map(cb => cb.value);
+
+    askMpinAndExecute(() => {
+      if(!confirm("શું તમે ખરેખર પસંદ કરેલી " + idsToDelete.length + " એન્ટ્રીઓ ડિલીટ કરવા માંગો છો?")) return;
+      
+      let promises = idsToDelete.map(id => {
+        return fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "deleteRecord", entryId: id, sheetName: sheetKey })
+        });
+      });
+
+      Promise.all(promises).then(() => {
+        alert("પસંદ કરેલ એન્ટ્રીઓ સફળતાપૂર્વક ડિલીટ થઈ ગઈ!");
+        fetchData();
+      }).catch(err => alert("ભૂલ: " + err));
+    });
+  }
+
+  function toggleSelectAll(master, tabName) {
+    let checkboxes = document.querySelectorAll('.row-select-' + tabName);
+    checkboxes.forEach(cb => cb.checked = master.checked);
+  }
   function toggleSelectAll(master, tabName) {
     let checkboxes = document.querySelectorAll('.row-select-' + tabName);
     checkboxes.forEach(cb => cb.checked = master.checked);

@@ -780,7 +780,6 @@
     if(hrs || rRate) calcTracRow(div.querySelector('.tHrs'));
   }
 
-  // કલાકના ભાવ પરથી મિનિટનો ભાવ ઓટોમેટિક ગણવાનું ફંક્શન
   function autoCalcMinRate(el) {
     let row = el.closest('.item-row');
     let rRate = parseFloat(row.querySelector('.tRate').value) || 0;
@@ -1173,6 +1172,85 @@
 
   function askMpinForEdit(tabName, entryId) {
     editRecord(entryId, tabName);
+  }
+
+  // સુધારેલું ખાતર બિલ સેવ ફંક્શન (હસ્તે કૉલમ સાથે)
+  function submitFert(e) {
+    e.preventDefault();
+    let rows = document.querySelectorAll("#fertItemsContainer .item-row");
+    if(rows.length === 0) return alert("કમ સે કમ એક આઇટમ ઉમેરો!");
+    document.getElementById("btnFert").innerText = "સેવ થઈ રહ્યું છે...";
+    let date = v("fDate"), year = getYear(date);
+    let existingId = document.getElementById("editFertId").value;
+    let mainEntryId = existingId ? existingId : "FB-" + Math.floor(100000 + Math.random() * 900000);
+
+    let subTotal = parseFloat(document.getElementById("fSubTotal").value.replace("₹", "").trim()) || 0;
+    let tax = parseFloat(document.getElementById("fTax").value) || 0;
+    let gst = parseFloat(document.getElementById("mGst2").value.replace("₹", "").trim()) || 0;
+    let cst = parseFloat(document.getElementById("mCst2").value.replace("₹", "").trim()) || 0;
+    let totalBill = parseFloat(document.getElementById("fTotalBill").value.replace("₹", "").trim()) || 0;
+    let words = document.getElementById("fTotalWords").value;
+
+    let billRow = [
+      year, 
+      mainEntryId, 
+      v("fBill"), 
+      date, 
+      v("fVepari"), 
+      v("fBhagiya"), 
+      subTotal, 
+      tax, 
+      gst, 
+      cst, 
+      totalBill, 
+      "", 
+      words, 
+      v("fHastak") // હસ્તે ની કૉલમ બરાબર જગ્યાએ ઉમેરી દીધી
+    ];
+
+    let itemRows = [];
+    rows.forEach((row, index) => {
+      let itemId = mainEntryId + (rows.length > 1 ? "-" + (index + 1) : "");
+      let qty = parseFloat(row.querySelector(".fQty").value) || 0;
+      let bhav = parseFloat(row.querySelector(".fBhav").value) || 0;
+      let amt = qty * bhav;
+      let share = parseFloat(row.querySelector(".fKShare").value) || 0;
+      let farmerAmt = totalBill * (share / 100);
+
+      itemRows.push([
+        year, 
+        itemId, 
+        date, 
+        v("fBill"), 
+        v("fBhagiya"), 
+        row.querySelector(".khatarList").value, 
+        row.querySelector(".fPack").value, 
+        qty, 
+        bhav, 
+        amt, 
+        row.querySelector(".pakList").value, 
+        share + "%", 
+        farmerAmt
+      ]);
+    });
+
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "saveFertilizerBill", billRow: billRow, itemRows: itemRows, editEntryId: existingId })
+    }).then(res => res.json()).then(() => {
+      alert("ખાતર ખર્ચ સફળતાપૂર્વક સેવ થઈ ગયો!");
+      document.getElementById("btnFert").innerText = "સેવ કરો";
+      document.getElementById("editFertId").value = "";
+      document.getElementById("fertForm").reset();
+      document.getElementById("fertItemsContainer").innerHTML = "";
+      addFertItemRow();
+      document.getElementById("fDate").value = new Date().toISOString().split('T')[0];
+      fetchData();
+      switchTab('Dash');
+    }).catch(err => {
+      document.getElementById("btnFert").innerText = "સેવ કરો";
+      alert("ભૂલ: " + err);
+    });
   }
 
   function submitTrac(e) {

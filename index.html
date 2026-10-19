@@ -1024,7 +1024,7 @@
       }
 
       html += `<td>
-          <button class="btn-edit" onclick="askMpinForEdit('${tabName}', '${entryId}')">એડિટ</button>
+          <button class="btn-edit" onclick="editRecord('${entryId}', '${tabName}')">એડિટ</button>
         </td>
       </tr>`;
     });
@@ -1073,7 +1073,7 @@
     });
   }
 
-  function askMpinForEdit(tabName, entryId) {
+  function editRecord(entryId, tabName) {
     askMpinAndExecute(() => {
       if(tabName === 'Trac') {
         let cleanTargetId = String(entryId).trim();
@@ -1128,6 +1128,91 @@
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       }
+    });
+  }
+
+  function askMpinForEdit(tabName, entryId) {
+    editRecord(entryId, tabName);
+  }
+
+  function submitTrac(e) {
+    e.preventDefault();
+    let rows = document.querySelectorAll("#tracItemsContainer .item-row");
+    if(rows.length === 0) return alert("કમ સે કમ એક કામ ઉમેરો!");
+    document.getElementById("btnTrac").innerText = "સેવ થઈ રહ્યું છે...";
+    let date = v("tDate"), year = getYear(date);
+    
+    let existingId = document.getElementById("editTracId").value;
+    let mainEntryId = existingId ? existingId : "TE-" + Math.floor(100000 + Math.random() * 900000);
+
+    let rowDataArray = [];
+    rows.forEach((row, index) => {
+      let entryId = mainEntryId + (rows.length > 1 ? "-" + (index + 1) : "");
+      let total = parseFloat((row.querySelector(".tTotal").value || "").replace("₹", "")) || 0; 
+      let farmerCost = parseFloat((row.querySelector(".sKRakam").value || "").replace("₹", "")) || 0;
+
+      rowDataArray.push([
+        year, entryId, date, v("tDriver"), row.querySelector(".pakList").value,
+        row.querySelector(".tWork").value, parseFloat(row.querySelector(".tHrs").value) || 0, parseFloat(row.querySelector(".tMin").value) || 0,
+        parseFloat(row.querySelector(".tRate").value) || 0, parseFloat(row.querySelector(".tMinRate").value) || 0,
+        total, v("tStatus"), v("tHastak"), farmerCost
+      ]);
+    });
+
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "saveTractor", rowValuesArray: rowDataArray, editEntryId: existingId })
+    }).then(res => res.json()).then(() => {
+      alert("ટ્રેક્ટર ખર્ચ સફળતાપૂર્વક સેવ થઈ ગયો!"); 
+      document.getElementById("btnTrac").innerText = "સેવ કરો";
+      document.getElementById("editTracId").value = "";
+      document.getElementById("tracForm").reset(); 
+      document.getElementById("tracItemsContainer").innerHTML = "";
+      addTracItemRow(); 
+      document.getElementById("tDate").value = new Date().toISOString().split('T')[0];
+      fetchData(); 
+      switchTab('Dash');
+    }).catch(err => {
+      document.getElementById("btnTrac").innerText = "સેવ કરો";
+      alert("ભૂલ: " + err);
+    });
+  }
+
+  function saveB() {
+    let name = v("nbName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
+    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone"), v("nbAdd") ]);
+    document.getElementById("modalBhagiya").style.display = "none";
+  }
+  function saveV() {
+    let name = v("nvName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
+    saveData("saveVepari", [ name, v("nvPhone"), v("nvCity"), v("nvCategory") ]);
+    document.getElementById("modalVepari").style.display = "none";
+  }
+  function saveC() {
+    let name = v("ncName").trim(), share = v("ncShare"); if(name == "") return alert("નામ જરૂરી છે!");
+    saveData("saveCrop", [ name, share + "%" ]);
+    document.getElementById("modalCrop").style.display = "none";
+  }
+  function saveData(action, rowValues) {
+    fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: action, rowValues: rowValues }) })
+    .then(res => res.json()).then(() => { alert("સફળ!"); fetchData(); switchTab('Dash'); }).catch(err => alert("ભૂલ: " + err));
+  }
+
+  function renderGallery() {
+    let container = document.getElementById("galleryContainer"), photos = appData.Photo_Gallery || [];
+    if(photos.length === 0) { container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ ફોટો નથી.</p>"; return; }
+    let html = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>પ્રકાર</th><th>ફોટો</th><th>ક્રિયા</th></tr>`;
+    photos.forEach(p => {
+      let imgTag = p["Photo_Link"] ? `<a href="${p["Photo_Link"]}" target="_blank"><img src="${p["Photo_Link"]}" style="width:40px; height:40px; object-fit:cover;"></a>` : "ના";
+      html += `<tr><td>${String(p["Date"]||'').split('T')[0]}</td><td>${p["Bill_No"]||''}</td><td>${p["Bhagiya"]||''}</td><td>${p["Category"]||''}</td><td>${imgTag}</td><td><button class="btn-delete" onclick="askMpinForDeleteSelected('Photo_Gallery')">ડિલિટ</button></td></tr>`;
+    });
+    container.innerHTML = html + `</table>`;
+  }
+
+  function filterGallery() {
+    let query = document.getElementById("searchGallery").value.toLowerCase();
+    document.querySelectorAll("#galleryContainer tr").forEach((row, i) => {
+      if(i === 0) return; row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
     });
   }
 </script>

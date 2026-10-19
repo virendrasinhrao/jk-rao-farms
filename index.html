@@ -34,15 +34,16 @@
     .readonly-bg { background-color: #f1f2f6; }
     .hidden-field { display: none !important; }
     
+    /* ખાતર અને દવા જેવું મોટું અને આકર્ષક ગ્રીન બેકગ્રાઉન્ડ કુલ રકમ બોક્સ */
     .highlight-total { 
       background-color: #27ae60 !important; 
       color: #ffffff !important; 
-      font-size: 18px !important; 
+      font-size: 20px !important; 
       font-weight: bold !important; 
       text-align: right; 
       border: 2px solid #1e8449 !important; 
       border-radius: 3px; 
-      padding: 5px 10px;
+      padding: 6px 10px;
     }
 
     .farmer-amount-box { 
@@ -622,6 +623,7 @@
     banner.style.display = 'block';
   }
 
+  // વેચાણ એન્ટ્રીમાં કુલ રકમ નું ખાનું ખાતર/દવા જેવું મોટું અને ખેડૂ રકમની ઉપર સેટ કર્યું છે
   function addSalesItemRow(pauch=0, weight="", bhav20="", pak="", kRakam="") {
     let container = document.getElementById("salesItemsContainer");
     let div = document.createElement("div"); div.className = "item-row";
@@ -634,9 +636,14 @@
       <div class="flex-row">
         <div class="form-group"><label>૧ મણનો ભાવ (20 Kg):</label><input type="number" class="sBhav20" step="0.01" value="${bhav20}" oninput="calcSalesRow(this)" required></div>
         <div class="form-group"><label>ભાવ (પ્રતિ કિલો):</label><input type="text" class="sBhav1 readonly-bg" readonly value="₹ 0.00"></div>
-        <div class="form-group"><label>કુલ રકમ (₹):</label><input type="text" class="sTotal readonly-bg highlight-total" readonly value="₹ 0.00"></div>
       </div>
       <div class="flex-row">
+        <div class="form-group" style="flex: 2;">
+          <label style="color: #27ae60; font-size: 14px;">કુલ રકમ (₹):</label>
+          <input type="text" class="sTotal readonly-bg highlight-total" readonly value="₹ 0.00">
+        </div>
+      </div>
+      <div class="flex-row" style="margin-top: 8px;">
         <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKShare readonly-bg" readonly value="0"></div>
         <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove()">ડિલિટ</button></div>
@@ -833,7 +840,7 @@
     rows.forEach(row => {
       let share = getCropShare(row.querySelector('.pakList').value);
       row.querySelector('.fKShare').value = share;
-      row.querySelector('.fKRakam').value = "₹ " + (totalBill * (share / 100)).toFixed(2);
+      row.querySelector('.mKRakam').value = "₹ " + (totalBill * (share / 100)).toFixed(2);
     });
   }
 
@@ -986,7 +993,6 @@
     });
   }
 
-  // ચારેય ટેબલ માટે ઓરિજિનલ ડેટા સાથે એડિટ લોડ કરવું
   function askMpinForEdit(tabName, entryId) {
     askMpinAndExecute(() => {
       if(tabName === 'Sales') {
@@ -1017,6 +1023,7 @@
           document.getElementById("mBill").value = foundItems[0]["બિલ નં"] || "";
           document.getElementById("mBhagiya").value = foundItems[0]["ભાગીદાર"] || "";
           document.getElementById("mVepari").value = foundBill ? foundBill["વેપારી"] : "";
+          document.getElementById("mTax").value = foundBill ? foundBill["ટેક્સ"] : 0;
           document.getElementById("editMedId").value = entryId;
           document.getElementById("btnMed").innerText = "અપડેટ કરો";
           
@@ -1248,7 +1255,7 @@
       rows.forEach(row => {
         let qty = parseFloat(row.querySelector(".fQty").value) || 1, bhav = parseFloat(row.querySelector(".fBhav").value) || 0;
         let amt = parseFloat((row.querySelector(".fAmt").value || "").replace("₹", "")) || (qty * bhav);
-        let fFarmVal = parseFloat((row.querySelector(".sKRakam") ? row.querySelector(".sKRakam").value : row.querySelector(".fKRakam").value || "").replace("₹", "")) || 0;
+        let fFarmVal = parseFloat((row.querySelector(".sKRakam") ? row.querySelector(".sKRakam").value : row.querySelector(".mKRakam").value || "").replace("₹", "")) || 0;
         totalFarmerAmt += fFarmVal;
 
         itemRows.push([ 
@@ -1362,3 +1369,4 @@
 </script>
 </body>
 </html>
+

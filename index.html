@@ -405,7 +405,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbycQ03j4PBJDwXaMt6PVYj6sE3NqrneHOeEKK3ZztmcF83dcroJCeYy-8QDE88UHrdnFA/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwTIN0hD8df5LQdbWNWCtwv2ZWdfPqnzbY3px3Rlmv-rsQ1Pg7-Q3WargK6nQvtdc7tYw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -622,7 +622,7 @@
     } else if(sectionType === 'Trac' && appData.Tractor_Expense) {
       appData.Tractor_Expense.forEach(r => {
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
-        let rBhagiya = String(r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
+        let rBhagiya = String(r["હસ્તે"] || r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
         if(rBhagiya === selectedBhagiya && rYear === targetYear) {
           totalSum += parseFloat(r["કુલ બિલ રકમ"] || r["કુલ ભાડું"] || 0);
         }
@@ -1158,7 +1158,7 @@
         if(foundItems.length > 0) {
           switchSubTab('Trac', 'New');
           document.getElementById("tDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
-          document.getElementById("tBhagiya").value = foundItems[0]["ભાગીદાર"] || "";
+          document.getElementById("tBhagiya").value = foundItems[0]["હસ્તે"] || foundItems[0]["ભાગીદાર"] || "";
           document.getElementById("tDriver").value = foundItems[0]["ટ્રેક્ટર માલિક"] || foundItems[0]["ડ્રાઈવર/માલિક"] || "";
           document.getElementById("tStatus").value = foundItems[0]["બીલની સ્થિતિ"] || "રોકડા";
           document.getElementById("tHastak").value = foundItems[0]["હસ્તે"] || "";

@@ -888,7 +888,7 @@
     if(s == 20) finalS = 0;
     else if(s == 50 && (work=="પાળા" || work=="નિકો" || work=="હળામણ")) finalS = 100;
     row.querySelector('.sKShare').value = finalS;
-    row.querySelector('.sKRakam').value = "₹ " + (total * (finalS/100)).toFixed(2);
+    row.querySelector('.sKRakam').value = "₹ " + (total * (finalS / 100)).toFixed(2);
     
     calcTracTotal();
   }
@@ -897,8 +897,8 @@
     let rows = document.querySelectorAll("#tracItemsContainer .item-row");
     let totalBill = 0, totalFarmer = 0;
     rows.forEach(row => {
-      let tVal = parseFloat((row.querySelector('.tTotal').value || "").replace("₹", "")) || 0;
-      let fVal = parseFloat((row.querySelector('.sKRakam').value || "").replace("₹", "")) || 0;
+      let tVal = parseFloat((row.querySelector('.tTotal').value || "").replace("₹", "").trim()) || 0;
+      let fVal = parseFloat((row.querySelector('.sKRakam').value || "").replace("₹", "").trim()) || 0;
       totalBill += tVal;
       totalFarmer += fVal;
     });
@@ -985,7 +985,7 @@
     } else if(tabName === 'Fert') {
       html += `<th>બીલ નં</th><th>ખેડૂનું નામ</th><th>ખાતરનું નામ</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th>`;
     } else if(tabName === 'Trac') {
-      html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બીલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th>`;
+      html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>ਕલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બીલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th>`;
     }
     html += `<th>ક્રિયા</th></tr>`;
 
@@ -1165,8 +1165,8 @@
     let rowDataArray = [];
     rows.forEach((row, index) => {
       let entryId = mainEntryId + (rows.length > 1 ? "-" + (index + 1) : "");
-      let total = parseFloat((row.querySelector(".tTotal").value || "").replace("₹", "")) || 0; 
-      let farmerCost = parseFloat((row.querySelector(".sKRakam").value || "").replace("₹", "")) || 0;
+      let total = parseFloat((row.querySelector(".tTotal").value || "").replace("₹", "").trim()) || 0; 
+      let farmerCost = parseFloat((row.querySelector(".sKRakam").value || "").replace("₹", "").trim()) || 0;
 
       rowDataArray.push([
         year, entryId, date, v("tDriver"), row.querySelector(".pakList").value,
@@ -1205,16 +1205,21 @@
     saveData("saveVepari", [ name, v("nvPhone"), v("nvCity"), v("nvCategory") ]);
     document.getElementById("modalVepari").style.display = "none";
   }
-  function saveC() {
-    let name = v("ncName").trim(), share = v("ncShare"); if(name == "") return alert("નામ જરૂરી છે!");
-    saveData("saveCrop", [ name, share + "%" ]);
-    document.getElementById("modalCrop").style.display = "none";
+  let getCropShare = function(cropName) {
+    if (!cropName) return 0;
+    let match = cropName.match(/\((.*?)\)/);
+    if (match) { let val = parseFloat(match[1]); if (!isNaN(val)) return val <= 1 ? val * 100 : val; }
+    if (!appData.Crop_Master) return 0;
+    let crop = appData.Crop_Master.find(c => String(c["પાકનું નામ"]).trim() === String(cropName).trim());
+    if (!crop) return 0;
+    let share = crop["ભાગ_ટકા"] || 0;
+    return parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
+  };
+  function v(id) { return document.getElementById(id).value; }
+  function getYear(dateString) {
+    let d = new Date(dateString), m = d.getMonth() + 1, y = d.getFullYear();
+    return (m >= 5) ? (y + "-" + (y + 1).toString().slice(-2)) : ((y - 1) + "-" + y.toString().slice(-2));
   }
-  function saveData(action, rowValues) {
-    fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: action, rowValues: rowValues }) })
-    .then(res => res.json()).then(() => { alert("સફળ!"); fetchData(); switchTab('Dash'); }).catch(err => alert("ભૂલ: " + err));
-  }
-
   function renderGallery() {
     let container = document.getElementById("galleryContainer");
     if(!container) return;
@@ -1230,7 +1235,6 @@
     });
     container.innerHTML = html + `</table>`;
   }
-
   function filterGallery() {
     let query = document.getElementById("searchGallery").value.toLowerCase();
     document.querySelectorAll("#galleryContainer tr").forEach((row, i) => {

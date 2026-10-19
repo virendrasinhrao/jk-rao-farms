@@ -34,7 +34,6 @@
     .readonly-bg { background-color: #f1f2f6; }
     .hidden-field { display: none !important; }
     
-    /* ખાતર અને દવા જેવું મોટું અને આકર્ષક ગ્રીન બેકગ્રાઉન્ડ કુલ રકમ બોક્સ */
     .highlight-total { 
       background-color: #27ae60 !important; 
       color: #ffffff !important; 
@@ -395,7 +394,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz_zla28HNniFVoZFvujoqDXBpI-XPB5OL-ckGhyrQMQ9OockMUxzP24SNHS1qoErB_VQ/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxT-N5rK0YFT4bnxIxwoLtBqlpTBUhJprw09ZzT0-xHPqU6sbFOcBiwo1oMHAnZjvy-Kg/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -623,7 +622,6 @@
     banner.style.display = 'block';
   }
 
-  // વેચાણ એન્ટ્રીમાં કુલ રકમ નું ખાનું ખાતર/દવા જેવું મોટું અને ખેડૂ રકમની ઉપર સેટ કર્યું છે
   function addSalesItemRow(pauch=0, weight="", bhav20="", pak="", kRakam="") {
     let container = document.getElementById("salesItemsContainer");
     let div = document.createElement("div"); div.className = "item-row";
@@ -839,7 +837,6 @@
 
     rows.forEach(row => {
       let share = getCropShare(row.querySelector('.pakList').value);
-      row.querySelector('.fKShare').value = share;
       row.querySelector('.mKRakam').value = "₹ " + (totalBill * (share / 100)).toFixed(2);
     });
   }
@@ -1369,4 +1366,3 @@
 </script>
 </body>
 </html>
-

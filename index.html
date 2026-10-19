@@ -336,19 +336,19 @@
         <input type="hidden" id="editTracId" value="">
         <div class="flex-row">
           <div class="form-group"><label>તારીખ:</label><input type="date" id="tDate" required onchange="updatePartnerSummary('Trac')"></div>
-          <div class="form-group"><label>વાઉચર/બિલ:</label><input type="text" id="tBill"></div>
+          <div class="form-group"><label>ટ્રેક્ટર બીલ ID:</label><input type="text" id="tBill"></div>
         </div>
         <div class="flex-row">
           <div class="form-group"><label>ભાગીદાર:</label><select id="tBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Trac');"></select></div>
-          <div class="form-group"><label>ડ્રાઈવર/માલિક:</label><input type="text" id="tDriver" required></div>
+          <div class="form-group"><label>ટ્રેક્ટર માલિક:</label><input type="text" id="tDriver" required></div>
         </div>
         <hr style="margin:10px 0;">
         <h4>ટ્રેક્ટર કામોની યાદી:</h4>
         <button type="button" class="btn-add-item" onclick="addTracItemRow()">➕ કામ ઉમેરો</button>
         <div id="tracItemsContainer"></div>
         <div class="flex-row" style="margin-top:10px;">
-          <div class="form-group"><label>સ્થિતિ:</label><select id="tStatus"><option>રોકડા</option><option>બાકી</option></select></div>
-          <div class="form-group"><label>કોણે આપ્યા:</label><select id="tHastak" class="bhagiyaList" required></select></div>
+          <div class="form-group"><label>બીલની સ્થિતિ:</label><select id="tStatus"><option>રોકડા</option><option>બાકી</option></select></div>
+          <div class="form-group"><label>હસ્તે:</label><select id="tHastak" class="bhagiyaList" required></select></div>
         </div>
         <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="tPhoto" accept="image/*" capture="environment"></div>
         <button type="submit" id="btnTrac" class="btn-submit">સેવ કરો</button>
@@ -357,7 +357,7 @@
 
     <div id="subContentTracView" class="sub-section" style="display:none;">
       <h3 style="text-align:center; color:#8e44ad; margin-top:0;">📋 ટ્રેક્ટર ખર્ચ રેકોર્ડ્સ</h3>
-      <div class="form-group"><input type="text" id="searchTrac" placeholder="🔍 વાઉચર, કામ કે ડ્રાઈવરના નામથી શોધો..." oninput="filterTable('Trac')"></div>
+      <div class="form-group"><input type="text" id="searchTrac" placeholder="🔍 બીલ ID, કામ કે માલિકના નામથી શોધો..." oninput="filterTable('Trac')"></div>
       <div id="tableContainerTrac" style="overflow-x:auto;"></div>
     </div>
   </div>
@@ -595,7 +595,7 @@
     } else if(sectionType === 'Med' && appData.Pesticide_Bill) {
       appData.Pesticide_Bill.forEach(r => {
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
-        let rBhagiya = String(r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
+        let rBhagiya = String(r["ખેડૂનું નામ"] || r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
         if(rBhagiya === selectedBhagiya && rYear === targetYear) {
           totalSum += parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || 0);
         }
@@ -603,7 +603,7 @@
     } else if(sectionType === 'Fert' && appData.Fertilizer_Bill) {
       appData.Fertilizer_Bill.forEach(r => {
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
-        let rBhagiya = String(r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
+        let rBhagiya = String(r["ખેડૂનું નામ"] || r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
         if(rBhagiya === selectedBhagiya && rYear === targetYear) {
           totalSum += parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || 0);
         }
@@ -613,7 +613,7 @@
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
         let rBhagiya = String(r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
         if(rBhagiya === selectedBhagiya && rYear === targetYear) {
-          totalSum += parseFloat(r["કુલ ભાડું"] || r["કુલ_ભાડું"] || 0);
+          totalSum += parseFloat(r["કુલ બિલ રકમ"] || r["કુલ ભાડું"] || 0);
         }
       });
     }
@@ -893,7 +893,7 @@
 
     if(appData.Tractor_Expense) {
       appData.Tractor_Expense.forEach(r => {
-        let billAmt = parseFloat(r["કુલ ભાડું"] || r["કુલ_ભાડું"] || 0);
+        let billAmt = parseFloat(r["કુલ બિલ રકમ"] || r["કુલ ભાડું"] || 0);
         let farmerAmt = parseFloat(r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0);
         if(!isNaN(billAmt)) totalExp += billAmt;
         if(!isNaN(farmerAmt)) farmerExp += farmerAmt;
@@ -925,7 +925,13 @@
 
     let html = deleteBtnHtml + `<table><tr>
       <th><input type="checkbox" id="selectAll_${tabName}" onclick="toggleSelectAll(this, '${tabName}')"></th>
-      <th>એન્ટ્રી Id</th><th>તારીખ</th><th>બીલ નં</th><th>ખેડૂનું નામ</th>`;
+      <th>એન્ટ્રી Id</th>`;
+      
+    if (tabName === 'Trac') {
+      html += `<th>ટ્રેક્ટર બીલ ID</th>`;
+    } else {
+      html += `<th>તારીખ</th><th>બીલ નં</th><th>ખેડૂનું નામ</th>`;
+    }
 
     if(tabName === 'Sales') {
       html += `<th>ખરીદનાર</th><th>પાક</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th>`;
@@ -934,7 +940,7 @@
     } else if(tabName === 'Fert') {
       html += `<th>ખાતરનું નામ</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th>`;
     } else if(tabName === 'Trac') {
-      html += `<th>ડ્રાઈવર</th><th>કામ</th><th>કલાક</th><th>ભાવ</th><th>કુલ ભાડું</th>`;
+      html += `<th>તારીખ</th><th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કુલ બિલ રકમ</th>`;
     }
     html += `<th>ક્રિયા</th></tr>`;
 
@@ -942,8 +948,7 @@
       let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
       let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || r["વેચાણ બિલ ID"] || r["બિલ નં"] || index;
       
-      // Pesticide_Bill / Fertilizer_Bill માંથી સચોટ 'બીલ નં' અને 'ખેડૂનું નામ' મેળવવું
-      let billNo = r["બીલ નં"] || r["બિલ નં"] || r["બિલ_નં"] || r["Bill_No"] || "";
+      let billNo = r["બીલ નં"] || r["બિલ નં"] || r["બિલ_નં"] || r["Bill_No"] || r["ટ્રેક્ટર બીલ ID"] || "";
       let bhagiya = r["ખેડૂનું નામ"] || r["ભાગીદાર"] || r["Bhagiya"] || "";
 
       if ((!billNo || !bhagiya || bhagiya === "-") && (tabName === 'Med' || tabName === 'Fert')) {
@@ -963,32 +968,39 @@
 
       html += `<tr>
         <td><input type="checkbox" class="row-select-${tabName}" value="${entryId}"></td>
-        <td><b>${entryId}</b></td>
-        <td>${cleanDate}</td>
-        <td>${billNo}</td>
-        <td>${bhagiya}</td>`;
+        <td><b>${entryId}</b></td>`;
 
-      if(tabName === 'Sales') {
-        html += `<td>${r["ખરીદનાર"]||'-'}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કુલ વજન (કિલો"]||r["કુલ વજન (કિલો)"]||'-'} કિલો</td><td>₹ ${r[". ૧ મણનો ભાવ (20 Kg)"]||0}</td><td>₹ ${parseFloat(r["કુલ રકમ (₹)"]||0).toFixed(2)}</td>`;
-      } else if(tabName === 'Med') {
-        let davaName = r["દવાનું નામ"] || r["દવાનું_નામ"] || "-";
-        let davaType = r["દવા પ્રકાર"] || "-";
-        let wt = (r["વજન"] || "") + " " + (r["પેકિંગ"] || "");
-        let qty = r["નંગ"] || r["નંગ/થેલી"] || 1;
-        let bhav = r["ભાવ"] || 0;
-        let amt = r["રકમ"] || 0;
-        let pak = r["પાકનું નામ"] || "-";
-        html += `<td><b>${davaName}</b></td><td>${davaType}</td><td>${wt}</td><td>${qty}</td><td>₹ ${bhav}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${pak}</td>`;
-      } else if(tabName === 'Fert') {
-        let khatarName = r["ખાતરનું નામ"] || r["ખાતરનું_નામ"] || "-";
-        let wt = (r["વજન"] || "") + " " + (r["પેકિંગ"] || "");
-        let qty = r["નંગ/થેલી"] || 1;
-        let bhav = r["ભાવ"] || 0;
-        let amt = r["રકમ"] || 0;
-        let pak = r["પાકનું નામ"] || "-";
-        html += `<td><b>${khatarName}</b></td><td>${wt}</td><td>${qty}</td><td>₹ ${bhav}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${pak}</td>`;
-      } else if(tabName === 'Trac') {
-        html += `<td>${r["ડ્રાઈવર/માલિક"]||'-'}</td><td>${r["કામ"]||'-'}</td><td>${r["કલાક"]||0} કલાક</td><td>₹ ${r["ભાવ"]||0}</td><td>₹ ${parseFloat(r["કુલ ભાડું"]||0).toFixed(2)}</td>`;
+      if (tabName === 'Trac') {
+        let tracBillId = r["ટ્રેક્ટર બીલ ID"] || r["બિલ નં"] || "-";
+        let tracDate = cleanDate;
+        let tracOwner = r["ટ્રેક્ટર માલિક"] || r["ડ્રાઈવર/માલિક"] || "-";
+        let tracPak = r["પાકનું નામ"] || "-";
+        let tracWork = r["કામની વિગત"] || r["કામ"] || "-";
+        let tracAmt = r["કુલ બિલ રકમ"] || r["કુલ ભાડું"] || 0;
+
+        html += `<td>${tracBillId}</td><td>${tracDate}</td><td>${tracOwner}</td><td>${tracPak}</td><td>${tracWork}</td><td>₹ ${parseFloat(tracAmt).toFixed(2)}</td>`;
+      } else {
+        html += `<td>${cleanDate}</td><td>${billNo}</td><td>${bhagiya}</td>`;
+        if(tabName === 'Sales') {
+          html += `<td>${r["ખરીદનાર"]||'-'}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કુલ વજન (કિલો"]||r["કુલ વજન (કિલો)"]||'-'} કિલો</td><td>₹ ${r[". ૧ મણનો ભાવ (20 Kg)"]||0}</td><td>₹ ${parseFloat(r["કુલ રકમ (₹)"]||0).toFixed(2)}</td>`;
+        } else if(tabName === 'Med') {
+          let davaName = r["દવાનું નામ"] || r["દવાનું_નામ"] || "-";
+          let davaType = r["દવા પ્રકાર"] || "-";
+          let wt = (r["વજન"] || "") + " " + (r["પેકિંગ"] || "");
+          let qty = r["નંગ"] || r["નંગ/થેલી"] || 1;
+          let bhav = r["ભાવ"] || 0;
+          let amt = r["રકમ"] || 0;
+          let pak = r["પાકનું નામ"] || "-";
+          html += `<td><b>${davaName}</b></td><td>${davaType}</td><td>${wt}</td><td>${qty}</td><td>₹ ${bhav}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${pak}</td>`;
+        } else if(tabName === 'Fert') {
+          let khatarName = r["ખાતરનું નામ"] || r["ખાતરનું_નામ"] || "-";
+          let wt = (r["વજન"] || "") + " " + (r["પેકિંગ"] || "");
+          let qty = r["નંગ/થેલી"] || 1;
+          let bhav = r["ભાવ"] || 0;
+          let amt = r["રકમ"] || 0;
+          let pak = r["પાકનું નામ"] || "-";
+          html += `<td><b>${khatarName}</b></td><td>${wt}</td><td>${qty}</td><td>₹ ${bhav}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${pak}</td>`;
+        }
       }
 
       html += `<td>
@@ -1114,15 +1126,15 @@
         if(foundItems.length > 0) {
           switchSubTab('Trac', 'New');
           document.getElementById("tDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
-          document.getElementById("tBill").value = foundItems[0]["બિલ નં"] || "";
+          document.getElementById("tBill").value = foundItems[0]["ટ્રેક્ટર બીલ ID"] || foundItems[0]["બિલ નં"] || "";
           document.getElementById("tBhagiya").value = foundItems[0]["ભાગીદાર"] || "";
-          document.getElementById("tDriver").value = foundItems[0]["ડ્રાઈવર/માલિક"] || "";
+          document.getElementById("tDriver").value = foundItems[0]["ટ્રેક્ટર માલિક"] || foundItems[0]["ડ્રાઈવર/માલિક"] || "";
           document.getElementById("editTracId").value = entryId;
           document.getElementById("btnTrac").innerText = "અપડેટ કરો";
           
           document.getElementById("tracItemsContainer").innerHTML = "";
           foundItems.forEach(item => {
-            addTracItemRow(item["પાકનું નામ"] || "", item["કામ"] || "", item["કલાક"] || "", item["ભાવ"] || "");
+            addTracItemRow(item["પાકનું નામ"] || "", item["કામની વિગત"] || item["કામ"] || "", item["કલાક"] || "", item["કલાકનો ભાવ"] || item["ભાવ"] || "");
           });
           updatePartnerSummary('Trac');
           alert("ટ્રેક્ટર એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");

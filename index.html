@@ -740,7 +740,18 @@
     div.innerHTML = `
       <div class="flex-row">
         <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcTracRow(this);"></select></div>
-        <div class="form-group"><label>કામની વિગત:</label><select class="tWork" required onchange="calcTracRow(this)"><option>હળામણ</option><option>દાંતી</option><option>રોટાવેટર</option><option>પાળા</option><option>નિકો</option><option>દવા છાંટવી</option><option>અન્ય</option></select></div>
+        <div class="form-group">
+          <label>કામની વિગત:</label>
+          <select class="tWork" required onchange="calcTracRow(this)">
+            <option value="હળામણ">હળામણ</option>
+            <option value="દાંતી">દાંતી</option>
+            <option value="રોટાવેટર">રોટાવેટર</option>
+            <option value="પાળા">પાળા</option>
+            <option value="નિકો">નિકો</option>
+            <option value="દવા છાંટવી">દવા છાંટવી</option>
+            <option value="અન્ય">અન્ય</option>
+          </select>
+        </div>
       </div>
       <div class="flex-row">
         <div class="form-group"><label>કલાક:</label><input type="number" class="tHrs" value="${hrs}" min="0" oninput="calcTracRow(this)" required></div>
@@ -760,7 +771,12 @@
     container.appendChild(div); 
     populateData(); 
     if(pak) div.querySelector('.pakList').value = pak;
-    if(work) div.querySelector('.tWork').value = work;
+    if(work) {
+      let workSelect = div.querySelector('.tWork');
+      let optionExists = Array.from(workSelect.options).some(option => option.value === work);
+      if (!optionExists) { workSelect.add(new Option(work, work)); }
+      workSelect.value = work;
+    }
     if(hrs || rRate) calcTracRow(div.querySelector('.tHrs'));
   }
 
@@ -1109,10 +1125,7 @@
         } else { 
           alert("રેકોર્ડ મળ્યો નથી! (ID: " + cleanTargetId + ")"); 
         }
-      }
-      // ... બાકીનું સેલ્સ વગેરે એ જ રહેશે
-    });
-  }
+      } 
       else if(tabName === 'Sales') {
         let found = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || "").trim() === String(entryId).trim());
         if(found) {

@@ -867,11 +867,26 @@
     document.getElementById("fTotalWords").value = convertToGujaratiWords(totalBill);
 
     rows.forEach(row => {
-      let share = getCropShare(row.querySelector('.pakList').value);
-      row.querySelector('.sKRakam').value = "₹ " + (totalBill * (share / 100)).toFixed(2);
+      let pakSelectVal = row.querySelector('.pakList').value;
+      let share = getCropShare(pakSelectVal);
+      
+      // જો કૌંસમાં (0.5) કે (50%) હોય તો તેને ટકાવારીમાં કન્વર્ટ કરો
+      if (share === 0 && pakSelectVal) {
+        let match = pakSelectVal.match(/\((.*?)\)/);
+        if (match) {
+          let val = parseFloat(match[1]);
+          if (!isNaN(val)) share = val <= 1 ? val * 100 : val;
+        }
+      }
+      
+      row.querySelector('.fKShare').value = share;
+      let farmerAmt = totalBill * (share / 100);
+      let farmerAmtBox = row.querySelector('.sKRakam') || row.querySelector('.fKRakam');
+      if(farmerAmtBox) {
+        farmerAmtBox.value = "₹ " + farmerAmt.toFixed(2);
+      }
     });
   }
-
   function calcTracRow(el) {
     let row = el.closest('.item-row');
     let hrs = parseFloat(row.querySelector('.tHrs').value) || 0;

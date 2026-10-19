@@ -394,7 +394,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxT-N5rK0YFT4bnxIxwoLtBqlpTBUhJprw09ZzT0-xHPqU6sbFOcBiwo1oMHAnZjvy-Kg/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzIjrZ_bK0pGFDoZNlKoT1LViikQ6sQB756t_9icQfHLuiVG60Usxz_N5Kt2uEs_WlQVw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -925,7 +925,7 @@
 
     let html = deleteBtnHtml + `<table><tr>
       <th><input type="checkbox" id="selectAll_${tabName}" onclick="toggleSelectAll(this, '${tabName}')"></th>
-      <th>એન્ટ્રી Id</th><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th>`;
+      <th>એન્ટ્રી Id</th><th>તારીખ</th><th>બીલ નં</th><th>ખેડૂનું નામ</th>`;
 
     if(tabName === 'Sales') {
       html += `<th>ખરીદનાર</th><th>પાક</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th>`;
@@ -941,18 +941,24 @@
     rows.forEach((r, index) => {
       let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
       let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || r["વેચાણ બિલ ID"] || r["બિલ નં"] || index;
-      let billNo = r["બિલ નં"] || r["બિલ_નં"] || r["Bill_No"] || "-";
       
-      let bhagiya = r["ભાગીદાર"] || r["Bhagiya"] || "";
-      if (!bhagiya || bhagiya === "-") {
-        if (tabName === 'Med') {
-          let parentBill = (appData['Pesticide_Bill'] || []).find(b => String(b["બિલ નં"] || b["Bill_No"] || "").trim() === String(billNo).trim());
-          if (parentBill) bhagiya = parentBill["ભાગીદાર"] || parentBill["Bhagiya"] || "-";
-        } else if (tabName === 'Fert') {
-          let parentBill = (appData['Fertilizer_Bill'] || []).find(b => String(b["બિલ નં"] || b["Bill_No"] || "").trim() === String(billNo).trim());
-          if (parentBill) bhagiya = parentBill["ભાગીદાર"] || parentBill["Bhagiya"] || "-";
+      // Pesticide_Bill / Fertilizer_Bill માંથી સચોટ 'બીલ નં' અને 'ખેડૂનું નામ' મેળવવું
+      let billNo = r["બીલ નં"] || r["બિલ નં"] || r["બિલ_નં"] || r["Bill_No"] || "";
+      let bhagiya = r["ખેડૂનું નામ"] || r["ભાગીદાર"] || r["Bhagiya"] || "";
+
+      if ((!billNo || !bhagiya || bhagiya === "-") && (tabName === 'Med' || tabName === 'Fert')) {
+        let billSheetName = tabName === 'Med' ? 'Pesticide_Bill' : 'Fertilizer_Bill';
+        let parentBill = (appData[billSheetName] || []).find(b => {
+          let bId = String(b["એન્ટ્રી Id"] || b["Entry_ID"] || "").trim();
+          let currentId = String(entryId).trim();
+          return currentId.indexOf(bId) === 0 || String(b["બીલ નં"] || b["બિલ નં"] || "").trim() === String(billNo).trim();
+        });
+        if (parentBill) {
+          if (!billNo) billNo = parentBill["બીલ નં"] || parentBill["બિલ નં"] || parentBill["Bill_No"] || "-";
+          if (!bhagiya || bhagiya === "-") bhagiya = parentBill["ખેડૂનું નામ"] || parentBill["ભાગીદાર"] || parentBill["Bhagiya"] || "-";
         }
       }
+      if(!billNo) billNo = "-";
       if(!bhagiya) bhagiya = "-";
 
       html += `<tr>
@@ -1058,12 +1064,16 @@
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       } else if(tabName === 'Med') {
         let foundItems = (appData.Pesticide_Items || []).filter(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(String(entryId).trim()) === 0);
-        let foundBill = (appData.Pesticide_Bill || []).find(r => String(r["બિલ નં"] || r["Bill_No"] || "").trim() === String(foundItems.length > 0 ? foundItems[0]["બિલ નં"] : "").trim());
+        let foundBill = (appData.Pesticide_Bill || []).find(r => {
+          let bId = String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim();
+          let currentId = String(entryId).trim();
+          return currentId.indexOf(bId) === 0 || String(r["બીલ નં"] || r["બિલ નં"] || "").trim() === String(foundItems.length > 0 ? foundItems[0]["બીલ નં"] || foundItems[0]["બિલ નં"] : "").trim();
+        });
         if(foundItems.length > 0) {
           switchSubTab('Med', 'New');
           document.getElementById("mDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
-          document.getElementById("mBill").value = foundItems[0]["બિલ નં"] || "";
-          document.getElementById("mBhagiya").value = foundItems[0]["ભાગીદાર"] || (foundBill ? foundBill["ભાગીદાર"] : "");
+          document.getElementById("mBill").value = foundItems[0]["બીલ નં"] || foundItems[0]["બિલ નં"] || (foundBill ? foundBill["બીલ નં"] || foundBill["બિલ નં"] : "");
+          document.getElementById("mBhagiya").value = foundBill ? foundBill["ખેડૂનું નામ"] || foundBill["ભાગીદાર"] : foundItems[0]["ભાગીદાર"];
           document.getElementById("mVepari").value = foundBill ? foundBill["વેપારી"] : "";
           document.getElementById("mTax").value = foundBill ? foundBill["ટેક્સ%"] || foundBill["ટેક્સ"] : 0;
           document.getElementById("editMedId").value = entryId;
@@ -1078,12 +1088,16 @@
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       } else if(tabName === 'Fert') {
         let foundItems = (appData.Fertilizer_Items || []).filter(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(String(entryId).trim()) === 0);
-        let foundBill = (appData.Fertilizer_Bill || []).find(r => String(r["બિલ નં"] || r["Bill_No"] || "").trim() === String(foundItems.length > 0 ? foundItems[0]["બિલ નં"] : "").trim());
+        let foundBill = (appData.Fertilizer_Bill || []).find(r => {
+          let bId = String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim();
+          let currentId = String(entryId).trim();
+          return currentId.indexOf(bId) === 0 || String(r["બીલ નં"] || r["બિલ નં"] || "").trim() === String(foundItems.length > 0 ? foundItems[0]["બીલ નં"] || foundItems[0]["બિલ નં"] : "").trim();
+        });
         if(foundItems.length > 0) {
           switchSubTab('Fert', 'New');
           document.getElementById("fDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
-          document.getElementById("fBill").value = foundItems[0]["બિલ નં"] || "";
-          document.getElementById("fBhagiya").value = foundItems[0]["ભાગીદાર"] || (foundBill ? foundBill["ભાગીદાર"] : "");
+          document.getElementById("fBill").value = foundItems[0]["બીલ નં"] || foundItems[0]["બિલ નં"] || (foundBill ? foundBill["બીલ નં"] || foundBill["બિલ નં"] : "");
+          document.getElementById("fBhagiya").value = foundBill ? foundBill["ખેડૂનું નામ"] || foundBill["ભાગીદાર"] : foundItems[0]["ભાગીદાર"];
           document.getElementById("fVepari").value = foundBill ? foundBill["વેપારી"] : "";
           document.getElementById("editFertId").value = entryId;
           document.getElementById("btnFert").innerText = "અપડેટ કરો";

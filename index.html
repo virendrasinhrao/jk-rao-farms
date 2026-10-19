@@ -394,7 +394,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzIjrZ_bK0pGFDoZNlKoT1LViikQ6sQB756t_9icQfHLuiVG60Usxz_N5Kt2uEs_WlQVw/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxT-N5rK0YFT4bnxIxwoLtBqlpTBUhJprw09ZzT0-xHPqU6sbFOcBiwo1oMHAnZjvy-Kg/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -673,7 +673,7 @@
       <div class="flex-row">
         <div class="form-group"><label>પાક:</label><select class="pakList" onchange="checkCropNew(this); calcMedBill();"></select></div>
         <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="mKShare readonly-bg" readonly value="0"></div>
-        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="mKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcMedBill();">ડિલિટ</button></div>
       </div>
     `;
@@ -701,7 +701,7 @@
       <div class="flex-row">
         <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcFertBill();"></select></div>
         <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="fKShare readonly-bg" readonly value="0"></div>
-        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="mKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcFertBill();">ડિલિટ</button></div>
       </div>
     `;
@@ -812,7 +812,7 @@
       let type = row.querySelector('.mType').value.trim();
       let share = (type === "નીંદામણ") ? 100 : getCropShare(row.querySelector('.pakList').value);
       row.querySelector('.mKShare').value = share;
-      row.querySelector('.mKRakam').value = "₹ " + (totalBill * (share / 100)).toFixed(2);
+      row.querySelector('.sKRakam').value = "₹ " + (totalBill * (share / 100)).toFixed(2);
     });
   }
 
@@ -837,7 +837,7 @@
 
     rows.forEach(row => {
       let share = getCropShare(row.querySelector('.pakList').value);
-      row.querySelector('.mKRakam').value = "₹ " + (totalBill * (share / 100)).toFixed(2);
+      row.querySelector('.sKRakam').value = "₹ " + (totalBill * (share / 100)).toFixed(2);
     });
   }
 
@@ -906,7 +906,6 @@
     document.getElementById("dashFarmerExpense").innerText = "₹ " + farmerExp.toFixed(2);
   }
 
-  // ટેબલ વ્યુ - દવા અને ખાતર માટે તેમની ઓરિજિનલ કૉલમ્સ સાથે
   function renderTable(tabName) {
     let container = document.getElementById("tableContainer" + tabName);
     let rows = [];
@@ -942,8 +941,19 @@
     rows.forEach((r, index) => {
       let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
       let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || r["વેચાણ બિલ ID"] || r["બિલ નં"] || index;
-      let bhagiya = r["ભાગીદાર"] || r["Bhagiya"] || "-";
-      let billNo = r["બિલ નં"] || r["બિલ_નં"] || "-";
+      let billNo = r["બિલ નં"] || r["બિલ_નં"] || r["Bill_No"] || "-";
+      
+      let bhagiya = r["ભાગીદાર"] || r["Bhagiya"] || "";
+      if (!bhagiya || bhagiya === "-") {
+        if (tabName === 'Med') {
+          let parentBill = (appData['Pesticide_Bill'] || []).find(b => String(b["બિલ નં"] || b["Bill_No"] || "").trim() === String(billNo).trim());
+          if (parentBill) bhagiya = parentBill["ભાગીદાર"] || parentBill["Bhagiya"] || "-";
+        } else if (tabName === 'Fert') {
+          let parentBill = (appData['Fertilizer_Bill'] || []).find(b => String(b["બિલ નં"] || b["Bill_No"] || "").trim() === String(billNo).trim());
+          if (parentBill) bhagiya = parentBill["ભાગીદાર"] || parentBill["Bhagiya"] || "-";
+        }
+      }
+      if(!bhagiya) bhagiya = "-";
 
       html += `<tr>
         <td><input type="checkbox" class="row-select-${tabName}" value="${entryId}"></td>
@@ -1053,7 +1063,7 @@
           switchSubTab('Med', 'New');
           document.getElementById("mDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
           document.getElementById("mBill").value = foundItems[0]["બિલ નં"] || "";
-          document.getElementById("mBhagiya").value = foundItems[0]["ભાગીદાર"] || "";
+          document.getElementById("mBhagiya").value = foundItems[0]["ભાગીદાર"] || (foundBill ? foundBill["ભાગીદાર"] : "");
           document.getElementById("mVepari").value = foundBill ? foundBill["વેપારી"] : "";
           document.getElementById("mTax").value = foundBill ? foundBill["ટેક્સ%"] || foundBill["ટેક્સ"] : 0;
           document.getElementById("editMedId").value = entryId;
@@ -1073,7 +1083,7 @@
           switchSubTab('Fert', 'New');
           document.getElementById("fDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
           document.getElementById("fBill").value = foundItems[0]["બિલ નં"] || "";
-          document.getElementById("fBhagiya").value = foundItems[0]["ભાગીદાર"] || "";
+          document.getElementById("fBhagiya").value = foundItems[0]["ભાગીદાર"] || (foundBill ? foundBill["ભાગીદાર"] : "");
           document.getElementById("fVepari").value = foundBill ? foundBill["વેપારી"] : "";
           document.getElementById("editFertId").value = entryId;
           document.getElementById("btnFert").innerText = "અપડેટ કરો";

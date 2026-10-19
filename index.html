@@ -1199,8 +1199,13 @@
   }
 
   function renderGallery() {
-    let container = document.getElementById("galleryContainer"), photos = appData.Photo_Gallery || [];
-    if(photos.length === 0) { container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ ફોટો નથી.</p>"; return; }
+    let container = document.getElementById("galleryContainer");
+    if(!container) return;
+    let photos = appData.Photo_Gallery || [];
+    if(photos.length === 0) { 
+      container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ ફોટો ઉપલબ્ધ નથી.</p>"; 
+      return; 
+    }
     let html = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>પ્રકાર</th><th>ફોટો</th><th>ક્રિયા</th></tr>`;
     photos.forEach(p => {
       let imgTag = p["Photo_Link"] ? `<a href="${p["Photo_Link"]}" target="_blank"><img src="${p["Photo_Link"]}" style="width:40px; height:40px; object-fit:cover;"></a>` : "ના";

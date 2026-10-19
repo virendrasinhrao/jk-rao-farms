@@ -336,11 +336,10 @@
         <input type="hidden" id="editTracId" value="">
         <div class="flex-row">
           <div class="form-group"><label>તારીખ:</label><input type="date" id="tDate" required onchange="updatePartnerSummary('Trac')"></div>
-          <div class="form-group"><label>ટ્રેક્ટર બીલ ID:</label><input type="text" id="tBill"></div>
+          <div class="form-group"><label>ટ્રેક્ટર માલિક:</label><input type="text" id="tDriver" required></div>
         </div>
         <div class="flex-row">
           <div class="form-group"><label>ભાગીદાર:</label><select id="tBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Trac');"></select></div>
-          <div class="form-group"><label>ટ્રેક્ટર માલિક:</label><input type="text" id="tDriver" required></div>
         </div>
         <hr style="margin:10px 0;">
         <h4>ટ્રેક્ટર કામોની યાદી:</h4>
@@ -369,7 +368,7 @@
 
     <div id="subContentTracView" class="sub-section" style="display:none;">
       <h3 style="text-align:center; color:#8e44ad; margin-top:0;">📋 ટ્રેક્ટર ખર્ચ રેકોર્ડ્સ</h3>
-      <div class="form-group"><input type="text" id="searchTrac" placeholder="🔍 બીલ ID, કામ કે માલિકના નામથી શોધો..." oninput="filterTable('Trac')"></div>
+      <div class="form-group"><input type="text" id="searchTrac" placeholder="🔍 કામ કે માલિકના નામથી શોધો..." oninput="filterTable('Trac')"></div>
       <div id="tableContainerTrac" style="overflow-x:auto;"></div>
     </div>
   </div>
@@ -406,7 +405,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzIjrZ_bK0pGFDoZNlKoT1LViikQ6sQB756t_9icQfHLuiVG60Usxz_N5Kt2uEs_WlQVw/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbycQ03j4PBJDwXaMt6PVYj6sE3NqrneHOeEKK3ZztmcF83dcroJCeYy-8QDE88UHrdnFA/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -961,16 +960,16 @@
 
     let html = deleteBtnHtml + `<table><tr>
       <th><input type="checkbox" id="selectAll_${tabName}" onclick="toggleSelectAll(this, '${tabName}')"></th>
-      <th>એન્ટ્રી Id</th><th>તારીખ</th><th>બીલ નં</th><th>ખેડૂનું નામ</th>`;
+      <th>એન્ટ્રી Id</th><th>તારીખ</th>`;
 
     if(tabName === 'Sales') {
-      html += `<th>ખરીદનાર</th><th>પાક</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th>`;
+      html += `<th>બીલ નં</th><th>ખેડૂનું નામ</th><th>ખરીદનાર</th><th>પાક</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th>`;
     } else if(tabName === 'Med') {
-      html += `<th>દવાનું નામ</th><th>પ્રકાર</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th>`;
+      html += `<th>બીલ નં</th><th>ખેડૂનું નામ</th><th>દવાનું નામ</th><th>પ્રકાર</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th>`;
     } else if(tabName === 'Fert') {
-      html += `<th>ખાતરનું નામ</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th>`;
+      html += `<th>બીલ નં</th><th>ખેડૂનું નામ</th><th>ખાતરનું નામ</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th>`;
     } else if(tabName === 'Trac') {
-      html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કુલ બિલ રકમ</th><th>ભાગિયાનો ખર્ચ</th>`;
+      html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બીલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th>`;
     }
     html += `<th>ક્રિયા</th></tr>`;
 
@@ -978,8 +977,8 @@
       let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
       let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || r["વેચાણ બિલ ID"] || r["બિલ નં"] || index;
       
-      let billNo = r["બીલ નં"] || r["બિલ નં"] || r["બિલ_નં"] || r["Bill_No"] || r["ટ્રેક્ટર બીલ ID"] || "";
-      let bhagiya = r["ખેડૂનું નામ"] || r["ભાગીદાર"] || r["Bhagiya"] || "";
+      let billNo = r["બીલ નં"] || r["બિલ નં"] || r["બિલ_નં"] || r["Bill_No"] || "";
+      let bhagiya = r["હસ્તે"] || r["ભાગીદાર"] || r["Bhagiya"] || "";
 
       if ((!billNo || !bhagiya || bhagiya === "-") && (tabName === 'Med' || tabName === 'Fert')) {
         let billSheetName = tabName === 'Med' ? 'Pesticide_Bill' : 'Fertilizer_Bill';
@@ -999,12 +998,10 @@
       html += `<tr>
         <td><input type="checkbox" class="row-select-${tabName}" value="${entryId}"></td>
         <td><b>${entryId}</b></td>
-        <td>${cleanDate}</td>
-        <td>${billNo}</td>
-        <td>${bhagiya}</td>`;
+        <td>${cleanDate}</td>`;
 
       if(tabName === 'Sales') {
-        html += `<td>${r["ખરીદનાર"]||'-'}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કુલ વજન (કિલો"]||r["કુલ વજન (કિલો)"]||'-'} કિલો</td><td>₹ ${r[". ૧ મણનો ભાવ (20 Kg)"]||0}</td><td>₹ ${parseFloat(r["કુલ રકમ (₹)"]||0).toFixed(2)}</td>`;
+        html += `<td>${billNo}</td><td>${bhagiya}</td><td>${r["ખરીદનાર"]||'-'}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કુલ વજન (કિલો"]||r["કુલ વજન (કિલો)"]||'-'} કિલો</td><td>₹ ${r[". ૧ મણનો ભાવ (20 Kg)"]||0}</td><td>₹ ${parseFloat(r["કુલ રકમ (₹)"]||0).toFixed(2)}</td>`;
       } else if(tabName === 'Med') {
         let davaName = r["દવાનું નામ"] || r["દવાનું_નામ"] || "-";
         let davaType = r["દવા પ્રકાર"] || "-";
@@ -1013,7 +1010,7 @@
         let bhav = r["ભાવ"] || 0;
         let amt = r["રકમ"] || 0;
         let pak = r["પાકનું નામ"] || "-";
-        html += `<td><b>${davaName}</b></td><td>${davaType}</td><td>${wt}</td><td>${qty}</td><td>₹ ${bhav}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${pak}</td>`;
+        html += `<td>${billNo}</td><td>${bhagiya}</td><td><b>${davaName}</b></td><td>${davaType}</td><td>${wt}</td><td>${qty}</td><td>₹ ${bhav}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${pak}</td>`;
       } else if(tabName === 'Fert') {
         let khatarName = r["ખાતરનું નામ"] || r["ખાતરનું_નામ"] || "-";
         let wt = (r["વજન"] || "") + " " + (r["પેકિંગ"] || "");
@@ -1021,9 +1018,21 @@
         let bhav = r["ભાવ"] || 0;
         let amt = r["રકમ"] || 0;
         let pak = r["પાકનું નામ"] || "-";
-        html += `<td><b>${khatarName}</b></td><td>${wt}</td><td>${qty}</td><td>₹ ${bhav}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${pak}</td>`;
+        html += `<td>${billNo}</td><td>${bhagiya}</td><td><b>${khatarName}</b></td><td>${wt}</td><td>${qty}</td><td>₹ ${bhav}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${pak}</td>`;
       } else if(tabName === 'Trac') {
-        html += `<td>${r["ટ્રેક્ટર માલિક"]||r["ડ્રાઈવર/માલિક"]||'-'}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કામની વિગત"]||r["કામ"]||'-'}</td><td>₹ ${parseFloat(r["કુલ બિલ રકમ"]||r["કુલ ભાડું"]||0).toFixed(2)}</td><td>₹ ${parseFloat(r["ભાગિયાનો ખર્ચ"]||r["ખેડૂ રકમ"]||0).toFixed(2)}</td>`;
+        let owner = r["ટ્રેક્ટર માલિક"] || r["ડ્રાઈવર/માલિક"] || "-";
+        let pak = r["પાકનું નામ"] || "-";
+        let work = r["કામની વિગત"] || r["કામ"] || "-";
+        let hrs = r["કલાક"] || 0;
+        let min = r["મિનિટ"] || 0;
+        let rRate = r["કલાકનો ભાવ"] || 0;
+        let mRate = r["મિનિટનો ભાવ"] || 0;
+        let totalAmt = r["કુલ બિલ રકમ"] || r["કુલ ભાડું"] || 0;
+        let status = r["બીલની સ્થિતિ"] || "-";
+        let hastak = r["હસ્તે"] || "-";
+        let farmerCost = r["ભાગિયાનો ખર્ચ"] || r["ખેડૂ રકમ"] || 0;
+
+        html += `<td>${owner}</td><td>${pak}</td><td>${work}</td><td>${hrs} કલાક</td><td>${min} મિનિટ</td><td>₹ ${rRate}</td><td>₹ ${mRate}</td><td>₹ ${parseFloat(totalAmt).toFixed(2)}</td><td>${status}</td><td>${hastak}</td><td>₹ ${parseFloat(farmerCost).toFixed(2)}</td>`;
       }
 
       html += `<td>
@@ -1149,7 +1158,6 @@
         if(foundItems.length > 0) {
           switchSubTab('Trac', 'New');
           document.getElementById("tDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
-          document.getElementById("tBill").value = foundItems[0]["ટ્રેક્ટર બીલ ID"] || foundItems[0]["બિલ નં"] || "";
           document.getElementById("tBhagiya").value = foundItems[0]["ભાગીદાર"] || "";
           document.getElementById("tDriver").value = foundItems[0]["ટ્રેક્ટર માલિક"] || foundItems[0]["ડ્રાઈવર/માલિક"] || "";
           document.getElementById("tStatus").value = foundItems[0]["બીલની સ્થિતિ"] || "રોકડા";
@@ -1379,7 +1387,7 @@
     let rows = document.querySelectorAll("#tracItemsContainer .item-row");
     if(rows.length === 0) return alert("કમ સે કમ એક કામ ઉમેરો!");
     document.getElementById("btnTrac").innerText = "સેવ થઈ રહ્યું છે...";
-    let date = v("tDate"), billNo = v("tBill") || "N/A", bhagiya = v("tBhagiya"), year = getYear(date);
+    let date = v("tDate"), bhagiya = v("tBhagiya"), year = getYear(date);
     
     let existingId = document.getElementById("editTracId").value;
     let mainEntryId = existingId ? existingId : "TE-" + Math.floor(100000 + Math.random() * 900000);
@@ -1391,9 +1399,9 @@
         let total = parseFloat((row.querySelector(".tTotal").value || "").replace("₹", "")) || 0; 
         let farmerCost = parseFloat((row.querySelector(".sKRakam").value || "").replace("₹", "")) || 0;
 
-        // [વર્ષ, એન્ટ્રી Id, ટ્રેક્ટર બીલ ID, તારીખ, ટ્રેક્ટર માલિક, પાકનું નામ, કામની વિગત, કલાક, મિનિટ, કલાકનો ભાવ, મિનિટનો ભાવ, કુલ બિલ રકમ, બીલની સ્થિતિ, હસ્તે, ભાગિયાનો ખર્ચ]
+        // [વર્ષ, એન્ટ્રી Id, તારીખ, ટ્રેક્ટર માલિક, પાકનું નામ, કામની વિગત, કલાક, મિનિટ, કલાકનો ભાવ, મિનિટનો ભાવ, કુલ બિલ રકમ, બીલની સ્થિતિ, હસ્તે, ભાગિયાનો ખર્ચ]
         rowDataArray.push([
-          year, entryId, billNo, date, v("tDriver"), row.querySelector(".pakList").value,
+          year, entryId, date, v("tDriver"), row.querySelector(".pakList").value,
           row.querySelector(".tWork").value, parseFloat(row.querySelector(".tHrs").value) || 0, parseFloat(row.querySelector(".tMin").value) || 0,
           parseFloat(row.querySelector(".tRate").value) || 0, parseFloat(row.querySelector(".tMinRate").value) || 0,
           total, v("tStatus"), v("tHastak"), farmerCost
@@ -1415,7 +1423,7 @@
 
   function saveB() {
     let name = v("nbName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
-    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone", v("nbAdd")) ]);
+    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone"), v("nbAdd") ]);
     document.getElementById("modalBhagiya").style.display = "none";
   }
   function saveV() {

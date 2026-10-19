@@ -347,7 +347,6 @@
         <button type="button" class="btn-add-item" onclick="addTracItemRow()">➕ કામ ઉમેરો</button>
         <div id="tracItemsContainer"></div>
 
-        <!-- કુલ બિલ રકમ અને ભાગિયાનો ખર્ચ (મોટું આકર્ષક ખાનું) -->
         <div class="bill-summary" style="margin-top: 15px;">
           <div class="form-group">
             <label style="color: #8e44ad; font-size: 14px;">કુલ બિલ રકમ (₹):</label>
@@ -1386,47 +1385,37 @@
     let mainEntryId = existingId ? existingId : "TE-" + Math.floor(100000 + Math.random() * 900000);
 
     handlePhotoUpload("tPhoto", function(photoBase64) {
-      if(photoBase64) {
-        let photoRow = [ year, mainEntryId, date, billNo, bhagiya, "ટ્રેક્ટર ખર્ચ", photoBase64 ];
-        fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "savePhoto", rowValues: photoRow }) });
-      }
-      let totalBillAmt = 0, rowDataArray = [];
+      let rowDataArray = [];
       rows.forEach((row, index) => {
         let entryId = mainEntryId + (rows.length > 1 ? "-" + (index + 1) : "");
         let total = parseFloat((row.querySelector(".tTotal").value || "").replace("₹", "")) || 0; 
-        let tFarmerVal = parseFloat((row.querySelector(".sKRakam").value || "").replace("₹", "")) || 0;
-        totalBillAmt += total;
+        let farmerCost = parseFloat((row.querySelector(".sKRakam").value || "").replace("₹", "")) || 0;
 
+        // [વર્ષ, એન્ટ્રી Id, ટ્રેક્ટર બીલ ID, તારીખ, ટ્રેક્ટર માલિક, પાકનું નામ, કામની વિગત, કલાક, મિનિટ, કલાકનો ભાવ, મિનિટનો ભાવ, કુલ બિલ રકમ, બીલની સ્થિતિ, હસ્તે, ભાગિયાનો ખર્ચ]
         rowDataArray.push([
-          year, entryId, date, billNo, bhagiya, v("tDriver"), row.querySelector(".pakList").value,
-          row.querySelector(".tWork").value, row.querySelector(".tHrs").value, row.querySelector(".tMin").value || 0,
-          row.querySelector(".tRate").value, row.querySelector(".tMinRate").value || 0,
-          total, v("tStatus"), v("tHastak"), tFarmerVal, photoBase64
+          year, entryId, billNo, date, v("tDriver"), row.querySelector(".pakList").value,
+          row.querySelector(".tWork").value, parseFloat(row.querySelector(".tHrs").value) || 0, parseFloat(row.querySelector(".tMin").value) || 0,
+          parseFloat(row.querySelector(".tRate").value) || 0, parseFloat(row.querySelector(".tMinRate").value) || 0,
+          total, v("tStatus"), v("tHastak"), farmerCost
         ]);
       });
-      let ledgerRow = [ year, mainEntryId, date, bhagiya, "ટ્રેક્ટર ખર્ચ", totalBillAmt, v("tStatus"), v("tDriver") ];
-      let savedCount = 0;
-      rowDataArray.forEach(rowData => {
-        fetch(SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "saveTractor", rowValues: rowData, ledgerRow: (savedCount === 0 ? ledgerRow : null), editEntryId: existingId })
-        }).then(() => {
-          savedCount++;
-          if(savedCount === rowDataArray.length) {
-            alert("ટ્રેક્ટર ખર્ચ સેવ થઈ ગયો!"); document.getElementById("btnTrac").innerText = "સેવ કરો";
-            document.getElementById("editTracId").value = "";
-            document.getElementById("tracForm").reset(); document.getElementById("tracItemsContainer").innerHTML = "";
-            addTracItemRow(); document.getElementById("tDate").value = new Date().toISOString().split('T')[0];
-            fetchData(); switchTab('Dash');
-          }
-        });
+
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "saveTractor", rowValuesArray: rowDataArray, editEntryId: existingId })
+      }).then(res => res.json()).then(() => {
+        alert("ટ્રેક્ટર ખર્ચ સફળતાપૂર્વક સેવ થઈ ગયો!"); document.getElementById("btnTrac").innerText = "સેવ કરો";
+        document.getElementById("editTracId").value = "";
+        document.getElementById("tracForm").reset(); document.getElementById("tracItemsContainer").innerHTML = "";
+        addTracItemRow(); document.getElementById("tDate").value = new Date().toISOString().split('T')[0];
+        fetchData(); switchTab('Dash');
       });
     });
   }
 
   function saveB() {
     let name = v("nbName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
-    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone"), v("nbAdd") ]);
+    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone", v("nbAdd")) ]);
     document.getElementById("modalBhagiya").style.display = "none";
   }
   function saveV() {

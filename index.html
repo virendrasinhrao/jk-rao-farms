@@ -394,7 +394,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxT-N5rK0YFT4bnxIxwoLtBqlpTBUhJprw09ZzT0-xHPqU6sbFOcBiwo1oMHAnZjvy-Kg/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzIjrZ_bK0pGFDoZNlKoT1LViikQ6sQB756t_9icQfHLuiVG60Usxz_N5Kt2uEs_WlQVw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -953,7 +953,7 @@
         <td>${bhagiya}</td>`;
 
       if(tabName === 'Sales') {
-        html += `<td>${r["ખરીદનાર"]||'-'}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કુલ વજન (કિલો"]||'-'} કિલો</td><td>₹ ${r[". ૧ મણનો ભાવ (20 Kg)"]||0}</td><td>₹ ${parseFloat(r["કુલ રકમ (₹)"]||0).toFixed(2)}</td>`;
+        html += `<td>${r["ખરીદનાર"]||'-'}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કુલ વજન (કિલો"]||r["કુલ વજન (કિલો)"]||'-'} કિલો</td><td>₹ ${r[". ૧ મણનો ભાવ (20 Kg)"]||0}</td><td>₹ ${parseFloat(r["કુલ રકમ (₹)"]||0).toFixed(2)}</td>`;
       } else if(tabName === 'Med') {
         let davaName = r["દવાનું નામ"] || r["દવાનું_નામ"] || "-";
         let davaType = r["દવા પ્રકાર"] || "-";
@@ -1232,7 +1232,7 @@
     let mainEntryId = existingId ? existingId : "ME-" + Math.floor(100000 + Math.random() * 900000);
 
     handlePhotoUpload("mPhoto", function(photoBase64) {
-      let billRow = [ year, date, billNo, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
+      let billRow = [ year, mainEntryId, date, billNo, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
       let itemRows = [];
       let totalFarmerAmt = 0;
       rows.forEach(row => {

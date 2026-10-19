@@ -1094,9 +1094,10 @@
           
           document.getElementById("tracItemsContainer").innerHTML = "";
           foundItems.forEach(item => {
+            let workDetail = item["કામની વિગત"] || item["કામ"] || "હળામણ";
             addTracItemRow(
               item["પાકનું નામ"] || "", 
-              item["કામની વિગત"] || item["કામ"] || "", 
+              workDetail, 
               item["કલાક"] || 0, 
               item["મિનિટ"] || 0, 
               item["કલાકનો ભાવ"] || item["ભાવ"] || 0, 
@@ -1108,7 +1109,10 @@
         } else { 
           alert("રેકોર્ડ મળ્યો નથી! (ID: " + cleanTargetId + ")"); 
         }
-      } 
+      }
+      // ... બાકીનું સેલ્સ વગેરે એ જ રહેશે
+    });
+  }
       else if(tabName === 'Sales') {
         let found = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || "").trim() === String(entryId).trim());
         if(found) {

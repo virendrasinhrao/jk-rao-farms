@@ -405,7 +405,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw3es2wAwwHHyYwmTGgR03vQ-dHEhgI0kfP22CGtwUmGZF9lMd4kus-oEZfg595Yv8URQ/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyjCzpTC2JUcT_yj_LZQmxqlyu1IfR5o0icv81hkPMTh7qfkxc0U1N3UjXtbXeQfd2LwQ/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -584,6 +584,7 @@
   function checkMedVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("nvCategory").value = "દવા"; document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
   function checkFertVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("nvCategory").value = "ખાતર"; document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
   function checkCropNew(sel) { if(sel.value === "NEW") { document.getElementById("modalCrop").style.display = "block"; sel.value = ""; } }
+  function checkFertilizerNew(sel) { if(sel.value === "NEW") { document.getElementById("modalFertilizer").style.display = "block"; sel.value = ""; } }
 
   function updatePartnerSummary(sectionType) {
     let dateId = sectionType === 'Sales' ? 'sDate' : sectionType === 'Med' ? 'mDate' : sectionType === 'Fert' ? 'fDate' : 'tDate';
@@ -612,7 +613,7 @@
     } else if(sectionType === 'Med' && appData.Pesticide_Bill) {
       appData.Pesticide_Bill.forEach(r => {
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
-        let rBhagiya = String(r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
+        let rBhagiya = String(r["ખેડૂનું નામ"] || r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
         if(rBhagiya === selectedBhagiya && rYear === targetYear) {
           totalSum += parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || 0);
         }
@@ -620,7 +621,7 @@
     } else if(sectionType === 'Fert' && appData.Fertilizer_Bill) {
       appData.Fertilizer_Bill.forEach(r => {
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
-        let rBhagiya = String(r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
+        let rBhagiya = String(r["ખેડૂનું નામ"] || r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
         if(rBhagiya === selectedBhagiya && rYear === targetYear) {
           totalSum += parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || 0);
         }
@@ -628,9 +629,9 @@
     } else if(sectionType === 'Trac' && appData.Tractor_Expense) {
       appData.Tractor_Expense.forEach(r => {
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
-        let rBhagiya = String(r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
+        let rBhagiya = String(r["હસ્તે"] || r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
         if(rBhagiya === selectedBhagiya && rYear === targetYear) {
-          totalSum += parseFloat(r["કુલ ભાડું"] || r["કુલ_ભાડું"] || 0);
+          totalSum += parseFloat(r["કુલ બિલ રકમ"] || r["કુલ ભાડું"] || 0);
         }
       });
     }
@@ -690,7 +691,7 @@
       <div class="flex-row">
         <div class="form-group"><label>પાક:</label><select class="pakList" onchange="checkCropNew(this); calcMedBill();"></select></div>
         <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="mKShare readonly-bg" readonly value="0"></div>
-        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="mKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcMedBill();">ડિલિટ</button></div>
       </div>
     `;
@@ -718,7 +719,7 @@
       <div class="flex-row">
         <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcFertBill();"></select></div>
         <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="fKShare readonly-bg" readonly value="0"></div>
-        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="mKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcFertBill();">ડિલિટ</button></div>
       </div>
     `;
@@ -740,30 +741,59 @@
     else packInput.value = "";
   }
 
-  function addTracItemRow(pak="", work="હળામણ", hrs="", rate="") {
+  function addTracItemRow(pak="", work="હળામણ", hrs="", min=0, rRate="", mRate="") {
     let container = document.getElementById("tracItemsContainer");
     let div = document.createElement("div"); div.className = "item-row";
     div.innerHTML = `
       <div class="flex-row">
         <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcTracRow(this);"></select></div>
-        <div class="form-group"><label>કામ:</label><select class="tWork" required onchange="calcTracRow(this)"><option>હળામણ</option><option>દાંતી</option><option>રોટાવેટર</option><option>પાળા</option><option>નિકો</option><option>દવા છાંટવી</option><option>અન્ય</option></select></div>
+        <div class="form-group">
+          <label>કામની વિગત:</label>
+          <select class="tWork" required onchange="calcTracRow(this)">
+            <option value="હળામણ">હળામણ</option>
+            <option value="દાંતી">દાંતી</option>
+            <option value="રોટાવેટર">રોટાવેટર</option>
+            <option value="પાળા">પાળા</option>
+            <option value="નિકો">નિકો</option>
+            <option value="દવા છાંટવી">દવા છાંટવી</option>
+            <option value="અન્ય">અન્ય</option>
+          </select>
+        </div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>કલાક:</label><input type="number" class="tHrs" step="0.5" value="${hrs}" oninput="calcTracRow(this)" required></div>
-        <div class="form-group"><label>ભાવ:</label><input type="number" class="tRate" value="${rate}" oninput="calcTracRow(this)" required></div>
-        <div class="form-group"><label>કુલ ભાડું (₹):</label><input type="text" class="tTotal readonly-bg" readonly value="₹ 0.00"></div>
+        <div class="form-group"><label>કલાક:</label><input type="number" class="tHrs" value="${hrs}" min="0" oninput="calcTracRow(this)" required></div>
+        <div class="form-group"><label>મિનિટ:</label><input type="number" class="tMin" value="${min}" min="0" max="59" oninput="calcTracRow(this)"></div>
       </div>
       <div class="flex-row">
+        <div class="form-group"><label>કલાકનો ભાવ:</label><input type="number" class="tRate" value="${rRate}" oninput="calcTracRow(this); autoCalcMinRate(this);" required></div>
+        <div class="form-group"><label>મિનિટનો ભાવ:</label><input type="number" class="tMinRate" value="${mRate}" oninput="calcTracRow(this)"></div>
+        <div class="form-group"><label>કુલ રકમ (₹):</label><input type="text" class="tTotal readonly-bg" readonly value="₹ 0.00"></div>
+      </div>
+      <div class="flex-row" style="margin-top: 8px;">
         <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKShare readonly-bg" readonly value="0"></div>
-        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
-        <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove()">ડિલિટ</button></div>
+        <div class="form-group" style="flex: 2;"><label>ભાગિયાનો ખર્ચ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcTracTotal();">ડિલિટ</button></div>
       </div>
     `;
     container.appendChild(div); 
     populateData(); 
     if(pak) div.querySelector('.pakList').value = pak;
-    if(work) div.querySelector('.tWork').value = work;
-    if(hrs && rate) calcTracRow(div.querySelector('.tHrs'));
+    if(work) {
+      let workSelect = div.querySelector('.tWork');
+      let optionExists = Array.from(workSelect.options).some(option => option.value === work);
+      if (!optionExists) { workSelect.add(new Option(work, work)); }
+      workSelect.value = work;
+    }
+    if(hrs || rRate) calcTracRow(div.querySelector('.tHrs'));
+  }
+
+  function autoCalcMinRate(el) {
+    let row = el.closest('.item-row');
+    let rRate = parseFloat(row.querySelector('.tRate').value) || 0;
+    let minRateInput = row.querySelector('.tMinRate');
+    let mRate = rRate / 60;
+    minRateInput.value = mRate.toFixed(2);
+    calcTracRow(el);
   }
 
   function calcSalesRow(el) {
@@ -829,7 +859,7 @@
       let type = row.querySelector('.mType').value.trim();
       let share = (type === "નીંદામણ") ? 100 : getCropShare(row.querySelector('.pakList').value);
       row.querySelector('.mKShare').value = share;
-      row.querySelector('.mKRakam').value = "₹ " + (totalBill * (share / 100)).toFixed(2);
+      row.querySelector('.sKRakam').value = "₹ " + (totalBill * (share / 100)).toFixed(2);
     });
   }
 
@@ -853,23 +883,56 @@
     document.getElementById("fTotalWords").value = convertToGujaratiWords(totalBill);
 
     rows.forEach(row => {
-      let share = getCropShare(row.querySelector('.pakList').value);
-      row.querySelector('.mKRakam').value = "₹ " + (totalBill * (share / 100)).toFixed(2);
+      let pakSelectVal = row.querySelector('.pakList').value;
+      let share = getCropShare(pakSelectVal);
+      if (share === 0 && pakSelectVal) {
+        let match = pakSelectVal.match(/\((.*?)\)/);
+        if (match) {
+          let val = parseFloat(match[1]);
+          if (!isNaN(val)) share = val <= 1 ? val * 100 : val;
+        }
+      }
+      row.querySelector('.fKShare').value = share;
+      let farmerAmt = totalBill * (share / 100);
+      let farmerAmtBox = row.querySelector('.sKRakam') || row.querySelector('.fKRakam');
+      if(farmerAmtBox) {
+        farmerAmtBox.value = "₹ " + farmerAmt.toFixed(2);
+      }
     });
   }
 
   function calcTracRow(el) {
     let row = el.closest('.item-row');
-    let h = parseFloat(row.querySelector('.tHrs').value) || 0;
-    let r = parseFloat(row.querySelector('.tRate').value) || 0;
-    let t = h * r; row.querySelector('.tTotal').value = "₹ " + t.toFixed(2);
+    let hrs = parseFloat(row.querySelector('.tHrs').value) || 0;
+    let min = parseFloat(row.querySelector('.tMin').value) || 0;
+    let rRate = parseFloat(row.querySelector('.tRate').value) || 0;
+    let mRate = parseFloat(row.querySelector('.tMinRate').value) || 0;
+    
+    let total = (hrs * rRate) + (min * mRate);
+    row.querySelector('.tTotal').value = "₹ " + total.toFixed(2);
+    
     let work = row.querySelector('.tWork').value;
     let s = getCropShare(row.querySelector('.pakList').value);
     let finalS = s;
     if(s == 20) finalS = 0;
     else if(s == 50 && (work=="પાળા" || work=="નિકો" || work=="હળામણ")) finalS = 100;
     row.querySelector('.sKShare').value = finalS;
-    row.querySelector('.sKRakam').value = "₹ " + (t * (finalS/100)).toFixed(2);
+    row.querySelector('.sKRakam').value = "₹ " + (total * (finalS / 100)).toFixed(2);
+    
+    calcTracTotal();
+  }
+
+  function calcTracTotal() {
+    let rows = document.querySelectorAll("#tracItemsContainer .item-row");
+    let totalBill = 0, totalFarmer = 0;
+    rows.forEach(row => {
+      let tVal = parseFloat((row.querySelector('.tTotal').value || "").replace("₹", "").trim()) || 0;
+      let fVal = parseFloat((row.querySelector('.sKRakam').value || "").replace("₹", "").trim()) || 0;
+      totalBill += tVal;
+      totalFarmer += fVal;
+    });
+    document.getElementById("tTotalBill").value = "₹ " + totalBill.toFixed(2);
+    document.getElementById("tFarmerTotal").value = "₹ " + totalFarmer.toFixed(2);
   }
 
   function updateDashboard() {
@@ -881,6 +944,7 @@
       });
     }
     let totalExp = 0, farmerExp = 0;
+    
     if(appData.Pesticide_Items) {
       appData.Pesticide_Items.forEach(r => {
         let fAmt = parseFloat(r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0);
@@ -893,6 +957,7 @@
         if(!isNaN(billAmt)) totalExp += billAmt;
       });
     }
+
     if(appData.Fertilizer_Items) {
       appData.Fertilizer_Items.forEach(r => {
         let fAmt = parseFloat(r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0);
@@ -905,14 +970,16 @@
         if(!isNaN(billAmt)) totalExp += billAmt;
       });
     }
+
     if(appData.Tractor_Expense) {
       appData.Tractor_Expense.forEach(r => {
-        let billAmt = parseFloat(r["કુલ ભાડું"] || r["કુલ_ભાડું"] || 0);
-        let farmerAmt = parseFloat(r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0);
+        let billAmt = parseFloat(r["કુલ બિલ રકમ"] || r["કુલ ભાડું"] || 0);
+        let farmerAmt = parseFloat(r["ભાગિયાનો ખર્ચ"] || r["ખેડૂ રકમ"] || 0);
         if(!isNaN(billAmt)) totalExp += billAmt;
         if(!isNaN(farmerAmt)) farmerExp += farmerAmt;
       });
     }
+
     document.getElementById("dashTotalSales").innerText = "₹ " + totalSales.toFixed(2);
     document.getElementById("dashFarmerSales").innerText = "₹ " + farmerSales.toFixed(2);
     document.getElementById("dashTotalExpense").innerText = "₹ " + totalExp.toFixed(2);
@@ -922,6 +989,7 @@
   function renderTable(tabName) {
     let container = document.getElementById("tableContainer" + tabName);
     let rows = [];
+    
     if(tabName === 'Sales') rows = appData['Sales_Ledger'] || [];
     else if(tabName === 'Med') rows = appData['Pesticide_Items'] || [];
     else if(tabName === 'Fert') rows = appData['Fertilizer_Items'] || [];
@@ -937,34 +1005,48 @@
 
     let html = deleteBtnHtml + `<table><tr>
       <th><input type="checkbox" id="selectAll_${tabName}" onclick="toggleSelectAll(this, '${tabName}')"></th>
-      <th>એન્ટ્રી Id</th><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th>`;
+      <th>એન્ટ્રી Id</th><th>તારીખ</th>`;
 
     if(tabName === 'Sales') {
-      html += `<th>ખરીદનાર</th><th>પાક</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th>`;
+      html += `<th>બીલ નં</th><th>ખેડૂનું નામ</th><th>ખરીદનાર</th><th>પાક</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th>`;
     } else if(tabName === 'Med') {
-      html += `<th>દવાનું નામ</th><th>પ્રકાર</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th>`;
+      html += `<th>બીલ નં</th><th>ખેડૂનું નામ</th><th>દવાનું નામ</th><th>પ્રકાર</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th>`;
     } else if(tabName === 'Fert') {
-      html += `<th>ખાતરનું નામ</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th>`;
+      html += `<th>બીલ નં</th><th>ખેડૂનું નામ</th><th>ખાતરનું નામ</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th>`;
     } else if(tabName === 'Trac') {
-      html += `<th>ડ્રાઈવર</th><th>કામ</th><th>કલાક</th><th>ભાવ</th><th>કુલ ભાડું</th>`;
+      html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બીલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th>`;
     }
     html += `<th>ક્રિયા</th></tr>`;
 
     rows.forEach((r, index) => {
       let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
       let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || r["વેચાણ બિલ ID"] || r["બિલ નં"] || index;
-      let bhagiya = r["ભાગીદાર"] || r["Bhagiya"] || "-";
-      let billNo = r["બિલ નં"] || r["બિલ_નં"] || "-";
+      
+      let billNo = r["બીલ નં"] || r["બિલ નં"] || r["બિલ_નં"] || r["Bill_No"] || "";
+      let bhagiya = r["હસ્તે"] || r["ભાગીદાર"] || r["Bhagiya"] || "";
+
+      if ((!billNo || !bhagiya || bhagiya === "-") && (tabName === 'Med' || tabName === 'Fert')) {
+        let billSheetName = tabName === 'Med' ? 'Pesticide_Bill' : 'Fertilizer_Bill';
+        let parentBill = (appData[billSheetName] || []).find(b => {
+          let bId = String(b["એન્ટ્રી Id"] || b["Entry_ID"] || "").trim();
+          let currentId = String(entryId).trim();
+          return currentId.indexOf(bId) === 0 || String(b["બીલ નં"] || b["બિલ નં"] || "").trim() === String(billNo).trim();
+        });
+        if (parentBill) {
+          if (!billNo) billNo = parentBill["બીલ નં"] || parentBill["બિલ નં"] || parentBill["Bill_No"] || "-";
+          if (!bhagiya || bhagiya === "-") bhagiya = parentBill["ખેડૂનું નામ"] || parentBill["ભાગીદાર"] || parentBill["Bhagiya"] || "-";
+        }
+      }
+      if(!billNo) billNo = "-";
+      if(!bhagiya) bhagiya = "-";
 
       html += `<tr>
         <td><input type="checkbox" class="row-select-${tabName}" value="${entryId}"></td>
         <td><b>${entryId}</b></td>
-        <td>${cleanDate}</td>
-        <td>${billNo}</td>
-        <td>${bhagiya}</td>`;
+        <td>${cleanDate}</td>`;
 
       if(tabName === 'Sales') {
-        html += `<td>${r["ખરીદનાર"]||'-'}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કુલ વજન (કિલો"]||r["કુલ વજન (કિલો)"]||'-'} કિલો</td><td>₹ ${r[". ૧ મણનો ભાવ (20 Kg)"]||0}</td><td>₹ ${parseFloat(r["કુલ રકમ (₹)"]||0).toFixed(2)}</td>`;
+        html += `<td>${billNo}</td><td>${bhagiya}</td><td>${r["ખરીદનાર"]||'-'}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કુલ વજન (કિલો"]||r["કુલ વજન (કિલો)"]||'-'} કિલો</td><td>₹ ${r[". ૧ મણનો ભાવ (20 Kg)"]||0}</td><td>₹ ${parseFloat(r["કુલ રકમ (₹)"]||0).toFixed(2)}</td>`;
       } else if(tabName === 'Med') {
         let davaName = r["દવાનું નામ"] || r["દવાનું_નામ"] || "-";
         let davaType = r["દવા પ્રકાર"] || "-";
@@ -973,7 +1055,7 @@
         let bhav = r["ભાવ"] || 0;
         let amt = r["રકમ"] || 0;
         let pak = r["પાકનું નામ"] || "-";
-        html += `<td><b>${davaName}</b></td><td>${davaType}</td><td>${wt}</td><td>${qty}</td><td>₹ ${bhav}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${pak}</td>`;
+        html += `<td>${billNo}</td><td>${bhagiya}</td><td><b>${davaName}</b></td><td>${davaType}</td><td>${wt}</td><td>${qty}</td><td>₹ ${bhav}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${pak}</td>`;
       } else if(tabName === 'Fert') {
         let khatarName = r["ખાતરનું નામ"] || r["ખાતરનું_નામ"] || "-";
         let wt = (r["વજન"] || "") + " " + (r["પેકિંગ"] || "");
@@ -981,13 +1063,25 @@
         let bhav = r["ભાવ"] || 0;
         let amt = r["રકમ"] || 0;
         let pak = r["પાકનું નામ"] || "-";
-        html += `<td><b>${khatarName}</b></td><td>${wt}</td><td>${qty}</td><td>₹ ${bhav}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${pak}</td>`;
+        html += `<td>${billNo}</td><td>${bhagiya}</td><td><b>${khatarName}</b></td><td>${wt}</td><td>${qty}</td><td>₹ ${bhav}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${pak}</td>`;
       } else if(tabName === 'Trac') {
-        html += `<td>${r["ડ્રાઈવર/માલિક"]||'-'}</td><td>${r["કામ"]||'-'}</td><td>${r["કલાક"]||0} કલાક</td><td>₹ ${r["ભાવ"]||0}</td><td>₹ ${parseFloat(r["કુલ ભાડું"]||0).toFixed(2)}</td>`;
+        let owner = r["ટ્રેક્ટર માલિક"] || r["ડ્રાઈવર/માલિક"] || "-";
+        let pak = r["પાકનું નામ"] || "-";
+        let work = r["કામની વિગત"] || r["કામ"] || "-";
+        let hrs = r["કલાક"] || 0;
+        let min = r["મિનિટ"] || 0;
+        let rRate = r["કલાકનો ભાવ"] || 0;
+        let mRate = r["મિનિટનો ભાવ"] || 0;
+        let totalAmt = r["કુલ બિલ રકમ"] || r["કુલ ભાડું"] || 0;
+        let status = r["બીલની સ્થિતિ"] || "-";
+        let hastak = r["હસ્તે"] || "-";
+        let farmerCost = r["ભાગિયાનો ખર્ચ"] || r["ખેડૂ રકમ"] || 0;
+
+        html += `<td>${owner}</td><td>${pak}</td><td>${work}</td><td>${hrs} કલાક</td><td>${min} મિનિટ</td><td>₹ ${rRate}</td><td>₹ ${mRate}</td><td>₹ ${parseFloat(totalAmt).toFixed(2)}</td><td>${status}</td><td>${hastak}</td><td>₹ ${parseFloat(farmerCost).toFixed(2)}</td>`;
       }
 
       html += `<td>
-          <button class="btn-edit" onclick="askMpinForEdit('${tabName}', '${entryId}')">એડિટ</button>
+          <button class="btn-edit" onclick="editRecord('${entryId}', '${tabName}')">એડિટ</button>
         </td>
       </tr>`;
     });
@@ -1002,20 +1096,24 @@
   function askMpinForDeleteSelected(sheetKey) {
     let activeTab = sheetKey === 'Sales_Ledger' ? 'Sales' : sheetKey === 'Pesticide_Items' ? 'Med' : sheetKey === 'Fertilizer_Items' ? 'Fert' : 'Trac';
     let checkedBoxes = document.querySelectorAll('.row-select-' + activeTab + ':checked');
+    
     if(checkedBoxes.length === 0) {
       alert("કૃપા કરીને ડિલીટ કરવા માટે ઓછામાં ઓછી એક એન્ટ્રી પર ✓ (ટિક) કરો!");
       return;
     }
+
     let idsToDelete = Array.from(checkedBoxes).map(cb => cb.value);
 
     askMpinAndExecute(() => {
       if(!confirm("શું તમે ખરેખર પસંદ કરેલી " + idsToDelete.length + " એન્ટ્રીઓ ડિલીટ કરવા માંગો છો?")) return;
+      
       let promises = idsToDelete.map(id => {
         return fetch(SCRIPT_URL, {
           method: "POST",
           body: JSON.stringify({ action: "deleteRecord", entryId: id, sheetName: sheetKey })
         });
       });
+
       Promise.all(promises).then(() => {
         alert("પસંદ કરેલ એન્ટ્રીઓ સફળતાપૂર્વક ડિલીટ થઈ ગઈ!");
         fetchData();
@@ -1032,10 +1130,45 @@
     });
   }
 
-  function askMpinForEdit(tabName, entryId) {
+  function editRecord(entryId, tabName) {
     askMpinAndExecute(() => {
-      if(tabName === 'Sales') {
-        let found = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["વેચાણ બિલ ID"] || "").trim() === String(entryId).trim());
+      if(tabName === 'Trac') {
+        let cleanTargetId = String(entryId).trim();
+        let foundItems = (appData.Tractor_Expense || []).filter(r => {
+          let rId = String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim();
+          return rId === cleanTargetId || rId.indexOf(cleanTargetId) === 0 || cleanTargetId.indexOf(rId) === 0;
+        });
+
+        if(foundItems.length > 0) {
+          switchSubTab('Trac', 'New');
+          document.getElementById("tDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
+          document.getElementById("tDriver").value = foundItems[0]["ટ્રેક્ટર માલિક"] || foundItems[0]["ડ્રાઈવર/માલિક"] || "";
+          document.getElementById("tBhagiya").value = foundItems[0]["હસ્તે"] || foundItems[0]["ભાગીદાર"] || "";
+          document.getElementById("tStatus").value = foundItems[0]["બીલની સ્થિતિ"] || "રોકડા";
+          document.getElementById("tHastak").value = foundItems[0]["હસ્તે"] || "";
+          document.getElementById("editTracId").value = cleanTargetId;
+          document.getElementById("btnTrac").innerText = "અપડેટ કરો";
+          
+          document.getElementById("tracItemsContainer").innerHTML = "";
+          foundItems.forEach(item => {
+            let workDetail = item["કામની વિગત"] || item["કામ"] || "હળામણ";
+            addTracItemRow(
+              item["પાકનું નામ"] || "", 
+              workDetail, 
+              item["કલાક"] || 0, 
+              item["મિનિટ"] || 0, 
+              item["કલાકનો ભાવ"] || item["ભાવ"] || 0, 
+              item["મિનિટનો ભાવ"] || 0
+            );
+          });
+          updatePartnerSummary('Trac');
+          alert("ટ્રેક્ટર એન્ટ્રી ફોર્મમાં સફળતાપૂર્વક લોડ થઈ ગઈ છે!");
+        } else { 
+          alert("રેકોર્ડ મળ્યો નથી! (ID: " + cleanTargetId + ")"); 
+        }
+      } 
+      else if(tabName === 'Sales') {
+        let found = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || "").trim() === String(entryId).trim());
         if(found) {
           switchSubTab('Sales', 'New');
           document.getElementById("sDate").value = String(found["તારીખ"] || "").split('T')[0];
@@ -1052,260 +1185,61 @@
           updatePartnerSummary('Sales');
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
-      } else if(tabName === 'Med') {
-        let foundItems = (appData.Pesticide_Items || []).filter(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(String(entryId).trim()) === 0);
-        let foundBill = (appData.Pesticide_Bill || []).find(r => String(r["બિલ નં"] || r["Bill_No"] || "").trim() === String(foundItems.length > 0 ? foundItems[0]["બિલ નં"] : "").trim());
-        if(foundItems.length > 0) {
-          switchSubTab('Med', 'New');
-          document.getElementById("mDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
-          document.getElementById("mBill").value = foundItems[0]["બિલ નં"] || "";
-          document.getElementById("mBhagiya").value = foundItems[0]["ભાગીદાર"] || "";
-          document.getElementById("mVepari").value = foundBill ? foundBill["વેપારી"] : "";
-          document.getElementById("mTax").value = foundBill ? foundBill["ટેક્સ%"] || foundBill["ટેક્સ"] : 0;
-          document.getElementById("editMedId").value = entryId;
-          document.getElementById("btnMed").innerText = "અપડેટ કરો";
-          document.getElementById("medItemsContainer").innerHTML = "";
-          foundItems.forEach(item => {
-            addMedItemRow(item["દવાનું નામ"] || item["દવાનું_નામ"] || "", item["વજન"] || "", item["પેકિંગ"] || "", item["નંગ"] || item["નંગ/થેલી"] || 1, item["ભાવ"] || "", item["પાકનું નામ"] || "");
-          });
-          updatePartnerSummary('Med');
-          alert("દવા એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
-        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
-      } else if(tabName === 'Fert') {
-        let foundItems = (appData.Fertilizer_Items || []).filter(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(String(entryId).trim()) === 0);
-        let foundBill = (appData.Fertilizer_Bill || []).find(r => String(r["બિલ નં"] || r["Bill_No"] || "").trim() === String(foundItems.length > 0 ? foundItems[0]["બિલ નં"] : "").trim());
-        if(foundItems.length > 0) {
-          switchSubTab('Fert', 'New');
-          document.getElementById("fDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
-          document.getElementById("fBill").value = foundItems[0]["બિલ નં"] || "";
-          document.getElementById("fBhagiya").value = foundItems[0]["ભાગીદાર"] || "";
-          document.getElementById("fVepari").value = foundBill ? foundBill["વેપારી"] : "";
-          document.getElementById("editFertId").value = entryId;
-          document.getElementById("btnFert").innerText = "અપડેટ કરો";
-          document.getElementById("fertItemsContainer").innerHTML = "";
-          foundItems.forEach(item => {
-            addFertItemRow(item["ખાતરનું નામ"] || item["ખાતરનું_નામ"] || "", item["વજન"] || "", item["પેકિંગ"] || "", item["નંગ/થેલી"] || 1, item["ભાવ"] || "", item["પાકનું નામ"] || "");
-          });
-          updatePartnerSummary('Fert');
-          alert("ખાતર એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
-        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
-      } else if(tabName === 'Trac') {
-        let foundItems = (appData.Tractor_Expense || []).filter(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(String(entryId).trim()) === 0);
-        if(foundItems.length > 0) {
-          switchSubTab('Trac', 'New');
-          document.getElementById("tDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
-          document.getElementById("tBhagiya").value = foundItems[0]["ભાગીદાર"] || "";
-          document.getElementById("tDriver").value = foundItems[0]["ડ્રાઈવર/માલિક"] || "";
-          document.getElementById("editTracId").value = entryId;
-          document.getElementById("btnTrac").innerText = "અપડેટ કરો";
-          document.getElementById("tracItemsContainer").innerHTML = "";
-          foundItems.forEach(item => {
-            addTracItemRow(item["પાકનું નામ"] || "", item["કામ"] || "", item["કલાક"] || "", item["ભાવ"] || "");
-          });
-          updatePartnerSummary('Trac');
-          alert("ટ્રેક્ટર એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
-        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       }
-    });
-  }
-
-  function askMpinForDeleteMaster(sheetName) {
-    askMpinAndExecute(() => { deleteMasterItem(sheetName); });
-  }
-
-  function deleteMasterItem(sheetName) {
-    let nameToDelete = document.getElementById("sBhagiya").value || document.getElementById("mBhagiya").value || document.getElementById("sVepari").value || document.getElementById("mVepari").value;
-    if(!nameToDelete || nameToDelete === "NEW") { alert("કૃપા કરીને ડિલિટ કરવા માટે નામ પસંદ કરો!"); return; }
-    if(!confirm("શું તમે '" + nameToDelete + "' ને ડિલિટ કરવા માંગો છો?")) return;
-
-    fetch(SCRIPT_URL, {
-      method: "POST",
-      body: JSON.stringify({ action: "deleteRecord", entryId: nameToDelete, sheetName: sheetName })
-    }).then(res => res.json()).then(() => {
-      alert("સફળતાપૂર્વક ડિલિટ થઈ ગયું!");
-      fetchData();
-    }).catch(err => alert("ભૂલ: " + err));
-  }
-
-  function saveFertilizerMaster() {
-    let name = document.getElementById("nfName").value.trim();
-    if(!name) return alert("ખાતરનું નામ જરૂરી છે!");
-    fetch(SCRIPT_URL, {
-      method: "POST",
-      body: JSON.stringify({ action: "saveFertilizer", rowValues: [name] })
-    }).then(() => {
-      alert("ખાતર સફળતાપૂર્વક ઉમેરાઈ ગયું!");
-      document.getElementById("modalFertilizer").style.display = "none";
-      document.getElementById("nfName").value = "";
-      fetchData();
-    }).catch(err => alert("ભૂલ: " + err));
-  }
-
-  function getCropShare(cropName) {
-    if (!cropName) return 0;
-    let match = cropName.match(/\((.*?)\)/);
-    if (match) { let val = parseFloat(match[1]); if (!isNaN(val)) return val <= 1 ? val * 100 : val; }
-    if (!appData.Crop_Master) return 0;
-    let crop = appData.Crop_Master.find(c => String(c["પાકનું નામ"]).trim() === String(cropName).trim());
-    if (!crop) return 0;
-    let share = crop["ભાગ_ટકા"] || 0;
-    return parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
-  }
-
-  function v(id) { return document.getElementById(id).value; }
-  function getYear(dateString) {
-    let d = new Date(dateString), m = d.getMonth() + 1, y = d.getFullYear();
-    return (m >= 5) ? (y + "-" + (y + 1).toString().slice(-2)) : ((y - 1) + "-" + y.toString().slice(-2));
-  }
-
-  function handlePhotoUpload(fileInputId, callback) {
-    let fileInput = document.getElementById(fileInputId);
-    if(fileInput && fileInput.files[0]) {
-      let reader = new FileReader();
-      reader.onload = function(e) { callback(e.target.result); };
-      reader.readAsDataURL(fileInput.files[0]);
-    } else { callback(""); }
-  }
-
-  function submitSales(e) {
-    e.preventDefault();
-    let rows = document.querySelectorAll("#salesItemsContainer .item-row");
-    if(rows.length === 0) return alert("કમ સે કમ એક આઇટમ ઉમેરો!");
-    document.getElementById("btnSales").innerText = "સેવ થઈ રહ્યું છે...";
-    let date = v("sDate"), billNo = v("sBill") || "N/A", bhagiya = v("sBhagiya"), year = getYear(date);
-    
-    let existingId = document.getElementById("editEntryId").value;
-    let mainEntryId = existingId ? existingId : "SL-" + Math.floor(100000 + Math.random() * 900000);
-
-    handlePhotoUpload("sPhoto", function(photoBase64) {
-      if(photoBase64) {
-        let photoRow = [ year, mainEntryId, date, billNo, bhagiya, "વેચાણ", photoBase64 ];
-        fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "savePhoto", rowValues: photoRow }) });
-      }
-      let count = 0;
-      rows.forEach((row, index) => {
-        let entryId = mainEntryId + (rows.length > 1 ? "-" + (index + 1) : "");
-        let sTotalVal = parseFloat((row.querySelector(".sTotal").value || "").replace("₹", "")) || 0;
-        let sFarmerVal = parseFloat((row.querySelector(".sKRakam").value || "").replace("₹", "")) || 0;
-
-        let rowData = [
-          year, entryId, date, billNo, bhagiya, v("sVepari"), row.querySelector(".pakList").value, 
-          row.querySelector(".sPauch").value, row.querySelector(".sWeight").value, row.querySelector(".sBhav20").value, 
-          row.querySelector(".sBhav1").value, sTotalVal, row.querySelector(".sKShare").value, 
-          sFarmerVal, v("sStatus"), v("sHastak"), v("sBLidha"), photoBase64
-        ];
-        fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "saveSales", rowValues: rowData }) }).then(() => {
-          count++;
-          if(count === rows.length) {
-            alert("વેચાણ સફળતાપૂર્વક સેવ થઈ ગયું!"); 
-            document.getElementById("btnSales").innerText = "સેવ કરો";
-            document.getElementById("editEntryId").value = "";
-            document.getElementById("salesForm").reset(); 
-            document.getElementById("salesItemsContainer").innerHTML = "";
-            addSalesItemRow(); 
-            document.getElementById("sDate").value = new Date().toISOString().split('T')[0];
-            fetchData(); switchTab('Dash');
-          }
-        });
-      });
-    });
-  }
-
-  function submitMed(e) {
-    e.preventDefault();
-    let rows = document.querySelectorAll("#medItemsContainer .item-row");
-    if(rows.length === 0) return alert("કમ સે કમ એક દવા ઉમેરો!");
-    document.getElementById("btnMed").innerText = "સેવ થઈ રહ્યું છે...";
-    let date = v("mDate"), billNo = v("mBill") || "N/A", bhagiya = v("mBhagiya"), year = getYear(date);
-    let subTotal = parseFloat((document.getElementById("mSubTotal").value || "").replace("₹", "")) || 0;
-    let tax = parseFloat(document.getElementById("mTax").value) || 0;
-    let gst = parseFloat((document.getElementById("mGst").value || "").replace("₹", "")) || 0;
-    let cst = parseFloat((document.getElementById("mCst").value || "").replace("₹", "")) || 0;
-    let totalBill = parseFloat((document.getElementById("mTotalBill").value || "").replace("₹", "")) || 0;
-    let inWords = convertToGujaratiWords(totalBill);
-    
-    let existingId = document.getElementById("editMedId").value;
-    let mainEntryId = existingId ? existingId : "ME-" + Math.floor(100000 + Math.random() * 900000);
-
-    handlePhotoUpload("mPhoto", function(photoBase64) {
-      let billRow = [ year, mainEntryId, date, billNo, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
-      let itemRows = [];
-      let totalFarmerAmt = 0;
-      rows.forEach(row => {
-        let mTotVal = parseFloat((row.querySelector(".mTotal").value || "").replace("₹", "")) || 0;
-        let mFarmVal = parseFloat((row.querySelector(".sKRakam") ? row.querySelector(".sKRakam").value : row.querySelector(".mKRakam").value || "").replace("₹", "")) || 0;
-        totalFarmerAmt += mFarmVal;
-
-        itemRows.push([
-          year, mainEntryId, date, billNo, row.querySelector(".davaList").value, row.querySelector(".mType").value,
-          row.querySelector(".mWeight").value, row.querySelector(".mPack").value, row.querySelector(".mQty").value,
-          row.querySelector(".mBhav").value, mTotVal,
-          row.querySelector(".pakList").value, row.querySelector(".mKShare").value, mFarmVal
-        ]);
-      });
-      let ledgerRow = [ year, mainEntryId, date, bhagiya, "દવા ખર્ચ", totalFarmerAmt, v("mStatus"), v("mVepari") ];
-      fetch(SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify({ action: "savePesticideBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow, editEntryId: existingId })
-      }).then(res => res.json()).then(() => {
-        alert("દવા બિલ સફળતાપૂર્વક સેવ થઈ ગયું!"); document.getElementById("btnMed").innerText = "સેવ કરો";
-        document.getElementById("editMedId").value = "";
-        document.getElementById("medForm").reset(); document.getElementById("medItemsContainer").innerHTML = "";
-        addMedItemRow(); document.getElementById("mSubTotal").value = "₹ 0.00"; document.getElementById("mTax").value = "0";
-        document.getElementById("mGst").value = "₹ 0.00"; document.getElementById("mCst").value = "₹ 0.00";
-        document.getElementById("mTotalBill").value = "₹ 0.00"; document.getElementById("mTotalWords").value = "અંકે રૂપિયા શૂન્ય પૂરા";
-        document.getElementById("mDate").value = new Date().toISOString().split('T')[0];
-        fetchData(); switchTab('Dash');
-      });
     });
   }
 
   function submitFert(e) {
     e.preventDefault();
     let rows = document.querySelectorAll("#fertItemsContainer .item-row");
-    if(rows.length === 0) return alert("કમ સે કમ એક ખાતર આઇટમ ઉમેરો!");
+    if(rows.length === 0) return alert("કમ સે કમ એક આઇટમ ઉમેરો!");
     document.getElementById("btnFert").innerText = "સેવ થઈ રહ્યું છે...";
-    let date = v("fDate"), billNo = v("fBill") || "N/A", bhagiya = v("fBhagiya"), year = getYear(date);
-    let subTotal = parseFloat((document.getElementById("fSubTotal").value || "").replace("₹", "")) || 0;
-    let tax = parseFloat(document.getElementById("fTax").value) || 0;
-    let gst = parseFloat((document.getElementById("mGst2").value || "").replace("₹", "")) || 0;
-    let cst = parseFloat((document.getElementById("mCst2").value || "").replace("₹", "")) || 0;
-    let totalBill = parseFloat((document.getElementById("fTotalBill").value || "").replace("₹", "")) || 0;
-    let inWords = convertToGujaratiWords(totalBill);
-
+    let date = v("fDate"), year = getYear(date);
     let existingId = document.getElementById("editFertId").value;
-    let mainEntryId = existingId ? existingId : "FE-" + Math.floor(100000 + Math.random() * 900000);
+    let mainEntryId = existingId ? existingId : "FB-" + Math.floor(100000 + Math.random() * 900000);
 
-    handlePhotoUpload("fPhoto", function(photoBase64) {
-      let billRow = [ year, date, billNo, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
-      let itemRows = [];
-      let totalFarmerAmt = 0;
-      rows.forEach(row => {
-        let qty = parseFloat(row.querySelector(".fQty").value) || 1, bhav = parseFloat(row.querySelector(".fBhav").value) || 0;
-        let amt = parseFloat((row.querySelector(".fAmt").value || "").replace("₹", "")) || (qty * bhav);
-        let fFarmVal = parseFloat((row.querySelector(".sKRakam") ? row.querySelector(".sKRakam").value : row.querySelector(".mKRakam").value || "").replace("₹", "")) || 0;
-        totalFarmerAmt += fFarmVal;
+    let subTotal = parseFloat(document.getElementById("fSubTotal").value.replace("₹", "").trim()) || 0;
+    let tax = parseFloat(document.getElementById("fTax").value) || 0;
+    let gst = parseFloat(document.getElementById("mGst2").value.replace("₹", "").trim()) || 0;
+    let cst = parseFloat(document.getElementById("mCst2").value.replace("₹", "").trim()) || 0;
+    let totalBill = parseFloat(document.getElementById("fTotalBill").value.replace("₹", "").trim()) || 0;
+    let words = document.getElementById("fTotalWords").value;
 
-        itemRows.push([ 
-          year, mainEntryId, date, billNo, row.querySelector(".khatarList").value, row.querySelector(".fWeight").value, 
-          row.querySelector(".fPack").value, qty, bhav, amt,
-          row.querySelector(".pakList").value, row.querySelector(".fKShare").value, fFarmVal
-        ]);
-      });
-      let ledgerRow = [ year, mainEntryId, date, bhagiya, "ખાતર ખર્ચ", totalFarmerAmt, v("fStatus"), v("fVepari") ];
-      fetch(SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify({ action: "saveFertilizerBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow, editEntryId: existingId })
-      }).then(res => res.json()).then(() => {
-        alert("ખાતર બિલ સફળતાપૂર્વક સેવ થઈ ગયું!"); document.getElementById("btnFert").innerText = "સેવ કરો";
-        document.getElementById("editFertId").value = "";
-        document.getElementById("fertForm").reset(); document.getElementById("fertItemsContainer").innerHTML = "";
-        addFertItemRow(); document.getElementById("fSubTotal").value = "₹ 0.00"; document.getElementById("fTax").value = "0";
-        document.getElementById("mGst2").value = "₹ 0.00"; document.getElementById("mCst2").value = "₹ 0.00";
-        document.getElementById("fTotalBill").value = "₹ 0.00"; document.getElementById("fTotalWords").value = "અંકે રૂપિયા શૂન્ય પૂરા";
-        document.getElementById("fDate").value = new Date().toISOString().split('T')[0];
-        fetchData(); switchTab('Dash');
-      });
+    let billRow = [year, mainEntryId, v("fBill"), date, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, "", words, v("fHastak")];
+
+    let itemRows = [];
+    rows.forEach((row, index) => {
+      let itemId = mainEntryId + (rows.length > 1 ? "-" + (index + 1) : "");
+      let qty = parseFloat(row.querySelector(".fQty").value) || 0;
+      let bhav = parseFloat(row.querySelector(".fBhav").value) || 0;
+      let amt = qty * bhav;
+      let share = parseFloat(row.querySelector(".fKShare").value) || 0;
+      let farmerAmt = totalBill * (share / 100);
+
+      itemRows.push([year, itemId, date, v("fBill"), v("fBhagiya"), row.querySelector(".khatarList").value, row.querySelector(".fPack").value, qty, bhav, amt, row.querySelector(".pakList").value, share + "%", farmerAmt]);
+    });
+
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "saveFertilizerBill", billRow: billRow, itemRows: itemRows, editEntryId: existingId })
+    }).then(res => res.json()).then(res => {
+      if(res.status === "error") {
+        alert(res.message);
+        document.getElementById("btnFert").innerText = "સેવ કરો";
+        return;
+      }
+      alert("ખાતર ખર્ચ સફળતાપૂર્વક સેવ થઈ ગયો!");
+      document.getElementById("btnFert").innerText = "સેવ કરો";
+      document.getElementById("editFertId").value = "";
+      document.getElementById("fertForm").reset();
+      document.getElementById("fertItemsContainer").innerHTML = "";
+      addFertItemRow();
+      document.getElementById("fDate").value = new Date().toISOString().split('T')[0];
+      fetchData();
+      switchTab('Dash');
+    }).catch(err => {
+      document.getElementById("btnFert").innerText = "સેવ કરો";
+      alert("ભૂલ: " + err);
     });
   }
 
@@ -1314,53 +1248,41 @@
     let rows = document.querySelectorAll("#tracItemsContainer .item-row");
     if(rows.length === 0) return alert("કમ સે કમ એક કામ ઉમેરો!");
     document.getElementById("btnTrac").innerText = "સેવ થઈ રહ્યું છે...";
-    let date = v("tDate"), bhagiya = v("tBhagiya"), year = getYear(date);
-    
+    let date = v("tDate"), year = getYear(date);
     let existingId = document.getElementById("editTracId").value;
     let mainEntryId = existingId ? existingId : "TE-" + Math.floor(100000 + Math.random() * 900000);
 
-    handlePhotoUpload("tPhoto", function(photoBase64) {
-      if(photoBase64) {
-        let photoRow = [ year, mainEntryId, date, "N/A", bhagiya, "ટ્રેક્ટર ખર્ચ", photoBase64 ];
-        fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "savePhoto", rowValues: photoRow }) });
-      }
-      let totalBillAmt = 0, rowDataArray = [];
-      rows.forEach((row, index) => {
-        let entryId = mainEntryId + (rows.length > 1 ? "-" + (index + 1) : "");
-        let total = parseFloat((row.querySelector(".tTotal").value || "").replace("₹", "")) || 0; 
-        let tFarmerVal = parseFloat((row.querySelector(".sKRakam").value || "").replace("₹", "")) || 0;
-        totalBillAmt += total;
+    let rowDataArray = [];
+    rows.forEach((row, index) => {
+      let entryId = mainEntryId + (rows.length > 1 ? "-" + (index + 1) : "");
+      let total = parseFloat((row.querySelector(".tTotal").value || "").replace("₹", "").trim()) || 0; 
+      let farmerCost = parseFloat((row.querySelector(".sKRakam").value || "").replace("₹", "").trim()) || 0;
 
-        rowDataArray.push([
-          year, entryId, date, "N/A", bhagiya, v("tDriver"), row.querySelector(".pakList").value,
-          row.querySelector(".tWork").value, row.querySelector(".tHrs").value, row.querySelector(".tRate").value,
-          total, row.querySelector(".sKShare").value, tFarmerVal, v("tStatus"), v("tHastak"), "No", photoBase64
-        ]);
-      });
+      rowDataArray.push([year, entryId, date, v("tDriver"), row.querySelector(".pakList").value, row.querySelector(".tWork").value, parseFloat(row.querySelector(".tHrs").value) || 0, parseFloat(row.querySelector(".tMin").value) || 0, parseFloat(row.querySelector(".tRate").value) || 0, parseFloat(row.querySelector(".tMinRate").value) || 0, total, v("tStatus"), v("tHastak"), farmerCost]);
+    });
 
-      let ledgerRow = [ year, mainEntryId, date, bhagiya, "ટ્રેક્ટર ખર્ચ", totalBillAmt, v("tStatus"), v("tDriver") ];
-      let savedCount = 0;
-      rowDataArray.forEach(rowData => {
-        fetch(SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "saveTractor", rowValues: rowData, ledgerRow: (savedCount === 0 ? ledgerRow : null), editEntryId: existingId })
-        }).then(() => {
-          savedCount++;
-          if(savedCount === rowDataArray.length) {
-            alert("ટ્રેક્ટર ખર્ચ સેવ થઈ ગયો!"); document.getElementById("btnTrac").innerText = "સેવ કરો";
-            document.getElementById("editTracId").value = "";
-            document.getElementById("tracForm").reset(); document.getElementById("tracItemsContainer").innerHTML = "";
-            addTracItemRow(); document.getElementById("tDate").value = new Date().toISOString().split('T')[0];
-            fetchData(); switchTab('Dash');
-          }
-        });
-      });
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "saveTractor", rowValuesArray: rowDataArray, editEntryId: existingId })
+    }).then(res => res.json()).then(() => {
+      alert("ટ્રેક્ટર ખર્ચ સફળતાપૂર્વક સેવ થઈ ગયો!"); 
+      document.getElementById("btnTrac").innerText = "સેવ કરો";
+      document.getElementById("editTracId").value = "";
+      document.getElementById("tracForm").reset(); 
+      document.getElementById("tracItemsContainer").innerHTML = "";
+      addTracItemRow(); 
+      document.getElementById("tDate").value = new Date().toISOString().split('T')[0];
+      fetchData(); 
+      switchTab('Dash');
+    }).catch(err => {
+      document.getElementById("btnTrac").innerText = "સેવ કરો";
+      alert("ભૂલ: " + err);
     });
   }
 
   function saveB() {
     let name = v("nbName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
-    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone", v("nbAdd")) ]);
+    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone"), v("nbAdd") ]);
     document.getElementById("modalBhagiya").style.display = "none";
   }
   function saveV() {
@@ -1373,14 +1295,43 @@
     saveData("saveCrop", [ name, share + "%" ]);
     document.getElementById("modalCrop").style.display = "none";
   }
+  function saveFert() {
+    let name = v("nfName").trim(); if(name == "") return alert("ખાતરનું નામ જરૂરી છે!");
+    saveData("saveFertilizer", [ name ]);
+    document.getElementById("modalFertilizer").style.display = "none";
+  }
+
   function saveData(action, rowValues) {
     fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: action, rowValues: rowValues }) })
-    .then(res => res.json()).then(() => { alert("સફળ!"); fetchData(); switchTab('Dash'); }).catch(err => alert("ભૂલ: " + err));
+    .then(res => res.json()).then(() => { alert("સફળતાપૂર્વક ઉમેરાઈ ગયું!"); fetchData(); }).catch(err => alert("ભૂલ: " + err));
+  }
+
+  let getCropShare = function(cropName) {
+    if (!cropName) return 0;
+    let match = cropName.match(/\((.*?)\)/);
+    if (match) { let val = parseFloat(match[1]); if (!isNaN(val)) return val <= 1 ? val * 100 : val; }
+    if (!appData.Crop_Master) return 0;
+    let crop = appData.Crop_Master.find(c => String(c["પાકનું નામ"]).trim() === String(cropName).trim());
+    if (!crop) return 0;
+    let share = crop["ભાગ_ટકા"] || 0;
+    return parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
+  };
+
+  function v(id) { return document.getElementById(id).value; }
+  
+  function getYear(dateString) {
+    let d = new Date(dateString), m = d.getMonth() + 1, y = d.getFullYear();
+    return (m >= 5) ? (y + "-" + (y + 1).toString().slice(-2)) : ((y - 1) + "-" + y.toString().slice(-2));
   }
 
   function renderGallery() {
-    let container = document.getElementById("galleryContainer"), photos = appData.Photo_Gallery || [];
-    if(photos.length === 0) { container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ ફોટો નથી.</p>"; return; }
+    let container = document.getElementById("galleryContainer");
+    if(!container) return;
+    let photos = appData.Photo_Gallery || [];
+    if(photos.length === 0) { 
+      container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ ફોટો ઉપલબ્ધ નથી.</p>"; 
+      return; 
+    }
     let html = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>પ્રકાર</th><th>ફોટો</th><th>ક્રિયા</th></tr>`;
     photos.forEach(p => {
       let imgTag = p["Photo_Link"] ? `<a href="${p["Photo_Link"]}" target="_blank"><img src="${p["Photo_Link"]}" style="width:40px; height:40px; object-fit:cover;"></a>` : "ના";

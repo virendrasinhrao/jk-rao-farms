@@ -516,8 +516,8 @@
       if(contentNew) contentNew.style.display = 'block';
       if(btnNew) btnNew.classList.add('active-sub');
     } else {
-      let content = document.getElementById('subContent' + tabName + 'View');
-      if(content) content.style.display = 'block';
+      let contentView = document.getElementById('subContent' + tabName + 'View');
+      if(contentView) contentView.style.display = 'block';
       if(btnView) btnView.classList.add('active-sub');
       renderTable(tabName);
     }

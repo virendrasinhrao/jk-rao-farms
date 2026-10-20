@@ -81,6 +81,13 @@
     th { background-color: #34495e; color: white; }
     
     .item-row { background: #fdfefe; padding: 8px; border: 1px solid #dcdde1; border-radius: 4px; margin-bottom: 8px; position: relative; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
+
+    .sub-nav { display: flex; gap: 10px; margin-bottom: 15px; }
+    .sub-nav button { 
+      flex: 1; padding: 10px; font-size: 14px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; 
+      background: #bdc3c7; color: #2c3e50; transition: 0.3s; 
+    }
+    .sub-nav button.active-sub { background: #27ae60 !important; color: white !important; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
   </style>
 </head>
 <body>
@@ -127,9 +134,9 @@
 
   <!-- 1. SALES SECTION -->
   <div id="formSales" class="section">
-    <div class="sub-nav" style="display: flex; gap: 10px; margin-bottom: 15px;">
-      <button id="subBtnSalesNew" class="active-sub" onclick="switchSubTab('Sales', 'New')" style="flex:1; padding:10px; font-weight:bold; background:#2980b9; color:white; border:none; border-radius:4px;">➕ નવી એન્ટ્રી</button>
-      <button id="subBtnSalesView" onclick="switchSubTab('Sales', 'View')" style="flex:1; padding:10px; font-weight:bold; background:#bdc3c7; color:#2c3e50; border:none; border-radius:4px;">📋 બધી એન્ટ્રી જુઓ</button>
+    <div class="sub-nav">
+      <button id="subBtnSalesNew" class="active-sub" onclick="switchSubTab('Sales', 'New')">➕ નવી એન્ટ્રી</button>
+      <button id="subBtnSalesView" onclick="switchSubTab('Sales', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
     </div>
     
     <div id="subContentSalesNew" class="sub-section">
@@ -171,9 +178,9 @@
 
   <!-- 2. MEDICINE SECTION -->
   <div id="formMed" class="section">
-    <div class="sub-nav" style="display: flex; gap: 10px; margin-bottom: 15px;">
-      <button id="subBtnMedNew" class="active-sub" onclick="switchSubTab('Med', 'New')" style="flex:1; padding:10px; font-weight:bold; background:#2980b9; color:white; border:none; border-radius:4px;">➕ નવી એન્ટ્રી</button>
-      <button id="subBtnMedView" onclick="switchSubTab('Med', 'View')" style="flex:1; padding:10px; font-weight:bold; background:#bdc3c7; color:#2c3e50; border:none; border-radius:4px;">📋 બધી એન્ટ્રી જુઓ</button>
+    <div class="sub-nav">
+      <button id="subBtnMedNew" class="active-sub" onclick="switchSubTab('Med', 'New')">➕ નવી એન્ટ્રી</button>
+      <button id="subBtnMedView" onclick="switchSubTab('Med', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
     </div>
 
     <div id="subContentMedNew" class="sub-section">
@@ -235,9 +242,9 @@
 
   <!-- 3. FERTILIZER SECTION -->
   <div id="formFert" class="section active">
-    <div class="sub-nav" style="display: flex; gap: 10px; margin-bottom: 15px;">
-      <button id="subBtnFertNew" class="active-sub" onclick="switchSubTab('Fert', 'New')" style="flex:1; padding:10px; font-weight:bold; background:#2980b9; color:white; border:none; border-radius:4px;">➕ નવી એન્ટ્રી</button>
-      <button id="subBtnFertView" onclick="switchSubTab('Fert', 'View')" style="flex:1; padding:10px; font-weight:bold; background:#bdc3c7; color:#2c3e50; border:none; border-radius:4px;">📋 બધી એન્ટ્રી જુઓ</button>
+    <div class="sub-nav">
+      <button id="subBtnFertNew" class="active-sub" onclick="switchSubTab('Fert', 'New')">➕ નવી એન્ટ્રી</button>
+      <button id="subBtnFertView" onclick="switchSubTab('Fert', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
     </div>
 
     <div id="subContentFertNew" class="sub-section">
@@ -299,9 +306,9 @@
 
   <!-- 4. TRACTOR SECTION -->
   <div id="formTrac" class="section">
-    <div class="sub-nav" style="display: flex; gap: 10px; margin-bottom: 15px;">
-      <button id="subBtnTracNew" class="active-sub" onclick="switchSubTab('Trac', 'New')" style="flex:1; padding:10px; font-weight:bold; background:#2980b9; color:white; border:none; border-radius:4px;">➕ નવી એન્ટ્રી</button>
-      <button id="subBtnTracView" onclick="switchSubTab('Trac', 'View')" style="flex:1; padding:10px; font-weight:bold; background:#bdc3c7; color:#2c3e50; border:none; border-radius:4px;">📋 બધી એન્ટ્રી જુઓ</button>
+    <div class="sub-nav">
+      <button id="subBtnTracNew" class="active-sub" onclick="switchSubTab('Trac', 'New')">➕ નવી એન્ટ્રી</button>
+      <button id="subBtnTracView" onclick="switchSubTab('Trac', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
     </div>
 
     <div id="subContentTracNew" class="sub-section">
@@ -460,8 +467,11 @@
 
   function switchSubTab(tabName, subType) {
     document.querySelectorAll('#form' + tabName + ' .sub-section').forEach(el => el.style.display = 'none');
-    document.getElementById('subBtn' + tabName + 'New').classList.remove('active-sub');
-    document.getElementById('subBtn' + tabName + 'View').classList.remove('active-sub');
+    
+    let btnNew = document.getElementById('subBtn' + tabName + 'New');
+    let btnView = document.getElementById('subBtn' + tabName + 'View');
+    if(btnNew) btnNew.classList.remove('active-sub');
+    if(btnView) btnView.classList.remove('active-sub');
 
     if(subType === 'New') {
       if(tabName === 'Sales') {
@@ -502,11 +512,13 @@
         document.getElementById('tDate').value = new Date().toISOString().split('T')[0];
         document.getElementById('btnTrac').innerText = "સેવ કરો";
       }
-      document.getElementById('subContent' + tabName + 'New').style.display = 'block';
-      document.getElementById('subBtn' + tabName + 'New').classList.add('active-sub');
+      let contentNew = document.getElementById('subContent' + tabName + 'New');
+      if(contentNew) contentNew.style.display = 'block';
+      if(btnNew) btnNew.classList.add('active-sub');
     } else {
-      document.getElementById('subContent' + tabName + 'View').style.display = 'block';
-      document.getElementById('subBtn' + tabName + 'View').classList.add('active-sub');
+      let content = document.getElementById('subContent' + tabName + 'View');
+      if(content) content.style.display = 'block';
+      if(btnView) btnView.classList.add('active-sub');
       renderTable(tabName);
     }
   }

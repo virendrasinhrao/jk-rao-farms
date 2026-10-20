@@ -396,16 +396,16 @@
   </div>
 </div>
 
-<div id="modalBhagiya" class="modal"><div class="modal-content"><h3>➕ ભાગીદાર મેનેજમેન્ટ</h3><input type="text" id="nbName" placeholder="નામ" class="form-group"><input type="number" id="nbPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nbAdd" placeholder="ગામ" class="form-group"><button type="button" class="btn-submit" onclick="saveB()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Bhagiya_Master')">પસંદ કરેલ ભાગીદાર ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalBhagiya').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
+<div id="modalBhagiya" class="modal"><div class="modal-content"><h3>➕ ભાગીદાર મેનેજમેન્ટ</h3><input type="text" id="nbName" placeholder="નામ" class="form-group"><input type="number" id="nbPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nbAdd" placeholder="ગામ" class="form-group"><button type="button" class="btn-submit" onclick="saveB()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" onclick="document.getElementById('modalBhagiya').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
 
-<div id="modalVepari" class="modal"><div class="modal-content"><h3>➕ વેપારી મેનેજમેન્ટ</h3><input type="text" id="nvName" placeholder="નામ" class="form-group"><input type="number" id="nvPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nvCity" placeholder="ગામ" class="form-group"><select id="nvCategory" class="form-group"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="દવા">દવા</option><option value="ખાતર">ખાતર</option></select><button type="button" class="btn-submit" onclick="saveV()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Merchant_Master')">પસંદ કરેલ વેપારી ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalVepari').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
+<div id="modalVepari" class="modal"><div class="modal-content"><h3>➕ વેપારી મેનેજમેન્ટ</h3><input type="text" id="nvName" placeholder="નામ" class="form-group"><input type="number" id="nvPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nvCity" placeholder="ગામ" class="form-group"><select id="nvCategory" class="form-group"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="દવા">દવા</option><option value="ખાતર">ખાતર</option></select><button type="button" class="btn-submit" onclick="saveV()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" onclick="document.getElementById('modalVepari').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
 
-<div id="modalFertilizer" class="modal"><div class="modal-content"><h3>➕ ખાતર મેનેજમેન્ટ</h3><input type="text" id="nfName" placeholder="ખાતરનું નામ (દા.ત. યુરિયા)" class="form-group"><button type="button" class="btn-submit" onclick="saveFertilizerMaster()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="deleteFertilizerMaster()">પસંદ કરેલ ખાતર ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalFertilizer').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
+<div id="modalFertilizer" class="modal"><div class="modal-content"><h3>➕ ખાતર મેનેજમેન્ટ</h3><input type="text" id="nfName" placeholder="ખાતરનું નામ" class="form-group"><button type="button" class="btn-submit" onclick="saveFert()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" onclick="document.getElementById('modalFertilizer').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
 
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbygmX2eTOkzzGEG02-NZv1ifTzfRkoUxbGLw9ASQxFTJPlGvL6evJfmB3bmqKwP7MAl4A/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx67D_MqyxtrtjA3BAOJnx6OznwAWLFnj3ilRiWyaGiPn466WS0M96xGVjF41kAmRLf-g/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -578,6 +578,13 @@
       sel.value = currentVal;
     });
   }
+
+  function checkBhagiyaNew(sel) { if(sel.value === "NEW") { document.getElementById("modalBhagiya").style.display = "block"; sel.value = ""; } }
+  function checkVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
+  function checkMedVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
+  function checkFertVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
+  function checkCropNew(sel) { if(sel.value === "NEW") { document.getElementById("modalCrop").style.display = "block"; sel.value = ""; } }
+  function checkFertilizerNew(sel) { if(sel.value === "NEW") { document.getElementById("modalFertilizer").style.display = "block"; sel.value = ""; } }
 
   function updatePartnerSummary(sectionType) {
     let dateId = sectionType === 'Sales' ? 'sDate' : sectionType === 'Med' ? 'mDate' : sectionType === 'Fert' ? 'fDate' : 'tDate';
@@ -1170,11 +1177,6 @@
     });
   }
 
-  function askMpinForEdit(tabName, entryId) {
-    editRecord(entryId, tabName);
-  }
-
-  // સુધારેલું ખાતર બિલ સેવ ફંક્શન (હસ્તે કૉલમ સાથે)
   function submitFert(e) {
     e.preventDefault();
     let rows = document.querySelectorAll("#fertItemsContainer .item-row");
@@ -1191,22 +1193,7 @@
     let totalBill = parseFloat(document.getElementById("fTotalBill").value.replace("₹", "").trim()) || 0;
     let words = document.getElementById("fTotalWords").value;
 
-    let billRow = [
-      year, 
-      mainEntryId, 
-      v("fBill"), 
-      date, 
-      v("fVepari"), 
-      v("fBhagiya"), 
-      subTotal, 
-      tax, 
-      gst, 
-      cst, 
-      totalBill, 
-      "", 
-      words, 
-      v("fHastak") // હસ્તે ની કૉલમ બરાબર જગ્યાએ ઉમેરી દીધી
-    ];
+    let billRow = [year, mainEntryId, v("fBill"), date, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, "", words, v("fHastak")];
 
     let itemRows = [];
     rows.forEach((row, index) => {
@@ -1217,21 +1204,7 @@
       let share = parseFloat(row.querySelector(".fKShare").value) || 0;
       let farmerAmt = totalBill * (share / 100);
 
-      itemRows.push([
-        year, 
-        itemId, 
-        date, 
-        v("fBill"), 
-        v("fBhagiya"), 
-        row.querySelector(".khatarList").value, 
-        row.querySelector(".fPack").value, 
-        qty, 
-        bhav, 
-        amt, 
-        row.querySelector(".pakList").value, 
-        share + "%", 
-        farmerAmt
-      ]);
+      itemRows.push([year, itemId, date, v("fBill"), v("fBhagiya"), row.querySelector(".khatarList").value, row.querySelector(".fPack").value, qty, bhav, amt, row.querySelector(".pakList").value, share + "%", farmerAmt]);
     });
 
     fetch(SCRIPT_URL, {
@@ -1259,7 +1232,6 @@
     if(rows.length === 0) return alert("કમ સે કમ એક કામ ઉમેરો!");
     document.getElementById("btnTrac").innerText = "સેવ થઈ રહ્યું છે...";
     let date = v("tDate"), year = getYear(date);
-    
     let existingId = document.getElementById("editTracId").value;
     let mainEntryId = existingId ? existingId : "TE-" + Math.floor(100000 + Math.random() * 900000);
 
@@ -1269,12 +1241,7 @@
       let total = parseFloat((row.querySelector(".tTotal").value || "").replace("₹", "").trim()) || 0; 
       let farmerCost = parseFloat((row.querySelector(".sKRakam").value || "").replace("₹", "").trim()) || 0;
 
-      rowDataArray.push([
-        year, entryId, date, v("tDriver"), row.querySelector(".pakList").value,
-        row.querySelector(".tWork").value, parseFloat(row.querySelector(".tHrs").value) || 0, parseFloat(row.querySelector(".tMin").value) || 0,
-        parseFloat(row.querySelector(".tRate").value) || 0, parseFloat(row.querySelector(".tMinRate").value) || 0,
-        total, v("tStatus"), v("tHastak"), farmerCost
-      ]);
+      rowDataArray.push([year, entryId, date, v("tDriver"), row.querySelector(".pakList").value, row.querySelector(".tWork").value, parseFloat(row.querySelector(".tHrs").value) || 0, parseFloat(row.querySelector(".tMin").value) || 0, parseFloat(row.querySelector(".tRate").value) || 0, parseFloat(row.querySelector(".tMinRate").value) || 0, total, v("tStatus"), v("tHastak"), farmerCost]);
     });
 
     fetch(SCRIPT_URL, {
@@ -1306,6 +1273,22 @@
     saveData("saveVepari", [ name, v("nvPhone"), v("nvCity"), v("nvCategory") ]);
     document.getElementById("modalVepari").style.display = "none";
   }
+  function saveC() {
+    let name = v("ncName").trim(), share = v("ncShare"); if(name == "") return alert("નામ જરૂરી છે!");
+    saveData("saveCrop", [ name, share + "%" ]);
+    document.getElementById("modalCrop").style.display = "none";
+  }
+  function saveFert() {
+    let name = v("nfName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
+    saveData("saveFertilizer", [ name ]);
+    document.getElementById("modalFertilizer").style.display = "none";
+  }
+
+  function saveData(action, rowValues) {
+    fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: action, rowValues: rowValues }) })
+    .then(res => res.json()).then(() => { alert("સફળતાપૂર્વક ઉમેરાઈ ગયું!"); fetchData(); }).catch(err => alert("ભૂલ: " + err));
+  }
+
   let getCropShare = function(cropName) {
     if (!cropName) return 0;
     let match = cropName.match(/\((.*?)\)/);
@@ -1316,11 +1299,14 @@
     let share = crop["ભાગ_ટકા"] || 0;
     return parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
   };
+
   function v(id) { return document.getElementById(id).value; }
+  
   function getYear(dateString) {
     let d = new Date(dateString), m = d.getMonth() + 1, y = d.getFullYear();
     return (m >= 5) ? (y + "-" + (y + 1).toString().slice(-2)) : ((y - 1) + "-" + y.toString().slice(-2));
   }
+
   function renderGallery() {
     let container = document.getElementById("galleryContainer");
     if(!container) return;
@@ -1336,6 +1322,7 @@
     });
     container.innerHTML = html + `</table>`;
   }
+
   function filterGallery() {
     let query = document.getElementById("searchGallery").value.toLowerCase();
     document.querySelectorAll("#galleryContainer tr").forEach((row, i) => {

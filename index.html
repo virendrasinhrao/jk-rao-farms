@@ -430,9 +430,16 @@
     }).catch(err => { if(icon) icon.className = ""; alert("ભૂલ: " + err); });
   }
 
-  function checkDuplicateBill(inputEl, sheetName, btnId) {
+function checkDuplicateBill(inputEl, sheetName, btnId) {
     let billNo = inputEl.value.trim();
     let submitBtn = document.getElementById(btnId);
+    
+    // જો એડિટ (અપડેટ) મોડ ચાલુ હોય તો ડુપ્લિકેટ ચેક ન કરો
+    let editIdSales = document.getElementById('editEntryId') ? document.getElementById('editEntryId').value : "";
+    let editIdMed = document.getElementById('editMedId') ? document.getElementById('editMedId').value : "";
+    let editIdFert = document.getElementById('editFertId') ? document.getElementById('editFertId').value : "";
+    if(editIdSales || editIdMed || editIdFert) return;
+
     if(!billNo || billNo === "N/A") {
       inputEl.style.backgroundColor = "#fff";
       inputEl.style.color = "#333";
@@ -452,16 +459,16 @@
     });
 
     if(isDuplicate) {
-      inputEl.style.backgroundColor = "#ffcccc"; // લાલ બેકગ્રાઉન્ડ
-      inputEl.style.color = "#c0392b";           // લાલ અક્ષરો
+      inputEl.style.backgroundColor = "#ffcccc";
+      inputEl.style.color = "#c0392b";
       inputEl.style.borderColor = "#c0392b";
-      if(submitBtn) submitBtn.style.display = "none"; // સેવ બટન ગાયબ
+      if(submitBtn) submitBtn.style.display = "none";
       alert("⚠️ સાવધાન: આ બિલ નંબર (" + billNo + ") પહેલેથી જ સેવ થયેલ છે!");
     } else {
       inputEl.style.backgroundColor = "#fff";
       inputEl.style.color = "#333";
       inputEl.style.borderColor = "#bdc3c7";
-      if(submitBtn) submitBtn.style.display = "block"; // સેવ બટન પાછું દેખાશે
+      if(submitBtn) submitBtn.style.display = "block";
     }
   }
 

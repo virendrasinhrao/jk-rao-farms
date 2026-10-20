@@ -164,7 +164,7 @@
         <input type="hidden" id="editEntryId" value="">
         <div class="flex-row">
           <div class="form-group"><label>તારીખ:</label><input type="date" id="sDate" required onchange="updatePartnerSummary('Sales')"></div>
-          <div class="form-group"><label>બિલ નં:</label><input type="text" id="sBill" onblur="checkDuplicateBill(this, 'Sales_Ledger')"></div>
+          <div class="form-group"><label>બિલ નં:</label><input type="text" id="sBill" onblur="checkDuplicateBill(this, 'Sales_Ledger', 'btnSales')"></div>
         </div>
         <div class="flex-row">
           <div class="form-group"><label>ભાગીદાર:</label><select id="sBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Sales');"></select></div>
@@ -208,7 +208,7 @@
         <input type="hidden" id="editMedId" value="">
         <div class="flex-row">
           <div class="form-group"><label>તારીખ:</label><input type="date" id="mDate" required onchange="updatePartnerSummary('Med')"></div>
-          <div class="form-group"><label>બિલ નં:</label><input type="text" id="mBill" onblur="checkDuplicateBill(this, 'Pesticide_Bill')"></div>
+          <div class="form-group"><label>બિલ નં:</label><input type="text" id="mBill" onblur="checkDuplicateBill(this, 'Pesticide_Bill', 'btnMed')"></div>
         </div>
         <div class="flex-row">
           <div class="form-group"><label>ભાગીદાર:</label><select id="mBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Med');"></select></div>
@@ -272,7 +272,7 @@
         <input type="hidden" id="editFertId" value="">
         <div class="flex-row">
           <div class="form-group"><label>તારીખ:</label><input type="date" id="fDate" required onchange="updatePartnerSummary('Fert')"></div>
-          <div class="form-group"><label>બિલ નં:</label><input type="text" id="fBill" onblur="checkDuplicateBill(this, 'Fertilizer_Bill')"></div>
+          <div class="form-group"><label>બિલ નં:</label><input type="text" id="fBill" onblur="checkDuplicateBill(this, 'Fertilizer_Bill', 'btnFert')"></div>
         </div>
         <div class="flex-row">
           <div class="form-group"><label>ભાગીદાર:</label><select id="fBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Fert');"></select></div>
@@ -430,9 +430,16 @@
     }).catch(err => { if(icon) icon.className = ""; alert("ભૂલ: " + err); });
   }
 
-  function checkDuplicateBill(inputEl, sheetName) {
+  function checkDuplicateBill(inputEl, sheetName, btnId) {
     let billNo = inputEl.value.trim();
-    if(!billNo || billNo === "N/A") return;
+    let submitBtn = document.getElementById(btnId);
+    if(!billNo || billNo === "N/A") {
+      inputEl.style.backgroundColor = "#fff";
+      inputEl.style.color = "#333";
+      inputEl.style.borderColor = "#bdc3c7";
+      if(submitBtn) submitBtn.style.display = "block";
+      return;
+    }
 
     let rows = [];
     if(sheetName === 'Sales_Ledger') rows = appData.Sales_Ledger || [];
@@ -445,12 +452,16 @@
     });
 
     if(isDuplicate) {
-      inputEl.style.backgroundColor = "#ffcccc";
+      inputEl.style.backgroundColor = "#ffcccc"; // લાલ બેકગ્રાઉન્ડ
+      inputEl.style.color = "#c0392b";           // લાલ અક્ષરો
       inputEl.style.borderColor = "#c0392b";
+      if(submitBtn) submitBtn.style.display = "none"; // સેવ બટન ગાયબ
       alert("⚠️ સાવધાન: આ બિલ નંબર (" + billNo + ") પહેલેથી જ સેવ થયેલ છે!");
     } else {
       inputEl.style.backgroundColor = "#fff";
+      inputEl.style.color = "#333";
       inputEl.style.borderColor = "#bdc3c7";
+      if(submitBtn) submitBtn.style.display = "block"; // સેવ બટન પાછું દેખાશે
     }
   }
 
@@ -476,6 +487,9 @@
         addSalesItemRow();
         document.getElementById('sDate').value = new Date().toISOString().split('T')[0];
         document.getElementById('btnSales').innerText = "સેવ કરો";
+        document.getElementById('sBill').style.backgroundColor = "#fff";
+        document.getElementById('sBill').style.color = "#333";
+        document.getElementById('btnSales').style.display = "block";
       } else if(tabName === 'Med') {
         document.getElementById('editMedId').value = "";
         document.getElementById('medForm').reset();
@@ -483,6 +497,9 @@
         addMedItemRow();
         document.getElementById('mDate').value = new Date().toISOString().split('T')[0];
         document.getElementById('btnMed').innerText = "સેવ કરો";
+        document.getElementById('mBill').style.backgroundColor = "#fff";
+        document.getElementById('mBill').style.color = "#333";
+        document.getElementById('btnMed').style.display = "block";
       } else if(tabName === 'Fert') {
         document.getElementById('editFertId').value = "";
         document.getElementById('fertForm').reset();
@@ -490,6 +507,9 @@
         addFertItemRow();
         document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
         document.getElementById('btnFert').innerText = "સેવ કરો";
+        document.getElementById('fBill').style.backgroundColor = "#fff";
+        document.getElementById('fBill').style.color = "#333";
+        document.getElementById('btnFert').style.display = "block";
       } else if(tabName === 'Trac') {
         document.getElementById('editTracId').value = "";
         document.getElementById('tracForm').reset();

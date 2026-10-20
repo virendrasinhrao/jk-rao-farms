@@ -81,28 +81,6 @@
     th { background-color: #34495e; color: white; }
     
     .item-row { background: #fdfefe; padding: 8px; border: 1px solid #dcdde1; border-radius: 4px; margin-bottom: 8px; position: relative; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
-    
-    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px; }
-    .dash-box { background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #27ae60; padding: 12px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    .dash-box h4 { margin: 0 0 5px 0; color: #2c3e50; font-size: 12px; text-transform: uppercase; }
-    .dash-box p { margin: 0; font-size: 18px; font-weight: bold; color: #16a085; }
-
-    .sub-nav { display: flex; gap: 10px; margin-bottom: 15px; }
-    .sub-nav button { flex: 1; padding: 10px; font-size: 14px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; background: #bdc3c7; color: #2c3e50; }
-    .sub-nav button.active-sub { background: #2980b9; color: white; }
-
-    .partner-sum-banner { 
-      background: linear-gradient(135deg, #2c3e50, #34495e); 
-      color: #fff; 
-      padding: 12px; 
-      border-radius: 6px; 
-      margin-bottom: 12px; 
-      text-align: center; 
-      box-shadow: 0 3px 6px rgba(0,0,0,0.16); 
-      display: none; 
-    }
-    .partner-sum-banner h4 { margin: 0 0 5px 0; font-size: 12px; color: #1abc9c; text-transform: uppercase; letter-spacing: 1px; }
-    .partner-sum-banner .sum-amount { font-size: 22px; font-weight: bold; color: #f39c12; }
   </style>
 </head>
 <body>
@@ -127,31 +105,31 @@
   <!-- 0. DASHBOARD -->
   <div id="formDash" class="section">
     <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📊 ફાર્મ ડેશબોર્ડ (વર્ષવાર સારાંશ)</h3>
-    <div class="dashboard-grid">
-      <div class="dash-box">
-        <h4>કુલ વેચાણ (Total Sales)</h4>
-        <p id="dashTotalSales">₹ 0.00</p>
+    <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px;">
+      <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #27ae60; padding: 12px; border-radius: 6px;">
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">કુલ વેચાણ (Total Sales)</h4>
+        <p id="dashTotalSales" style="margin:0; font-size: 18px; font-weight: bold; color: #16a085;">₹ 0.00</p>
       </div>
-      <div class="dash-box" style="border-left-color: #2980b9;">
-        <h4>ખેડૂ વેચાણ હિસ્સો</h4>
-        <p id="dashFarmerSales" style="color: #2980b9;">₹ 0.00</p>
+      <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #2980b9; padding: 12px; border-radius: 6px;">
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">ખેડૂ વેચાણ હિસ્સો</h4>
+        <p id="dashFarmerSales" style="margin:0; font-size: 18px; font-weight: bold; color: #2980b9;">₹ 0.00</p>
       </div>
-      <div class="dash-box" style="border-left-color: #d35400;">
-        <h4>કુલ ખર્ચ (દવા+ખાતર+ટ્રેક્ટર)</h4>
-        <p id="dashTotalExpense" style="color: #d35400;">₹ 0.00</p>
+      <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #d35400; padding: 12px; border-radius: 6px;">
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">કુલ ખર્ચ</h4>
+        <p id="dashTotalExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #d35400;">₹ 0.00</p>
       </div>
-      <div class="dash-box" style="border-left-color: #8e44ad;">
-        <h4>ખેડૂ ખર્ચ હિસ્સો</h4>
-        <p id="dashFarmerExpense" style="color: #8e44ad;">₹ 0.00</p>
+      <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #8e44ad; padding: 12px; border-radius: 6px;">
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">ખેડૂ ખર્ચ હિસ્સો</h4>
+        <p id="dashFarmerExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #8e44ad;">₹ 0.00</p>
       </div>
     </div>
   </div>
 
   <!-- 1. SALES SECTION -->
   <div id="formSales" class="section">
-    <div class="sub-nav">
-      <button id="subBtnSalesNew" class="active-sub" onclick="switchSubTab('Sales', 'New')">➕ નવી એન્ટ્રી</button>
-      <button id="subBtnSalesView" onclick="switchSubTab('Sales', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
+    <div class="sub-nav" style="display: flex; gap: 10px; margin-bottom: 15px;">
+      <button id="subBtnSalesNew" class="active-sub" onclick="switchSubTab('Sales', 'New')" style="flex:1; padding:10px; font-weight:bold; background:#2980b9; color:white; border:none; border-radius:4px;">➕ નવી એન્ટ્રી</button>
+      <button id="subBtnSalesView" onclick="switchSubTab('Sales', 'View')" style="flex:1; padding:10px; font-weight:bold; background:#bdc3c7; color:#2c3e50; border:none; border-radius:4px;">📋 બધી એન્ટ્રી જુઓ</button>
     </div>
     
     <div id="subContentSalesNew" class="sub-section">
@@ -193,9 +171,9 @@
 
   <!-- 2. MEDICINE SECTION -->
   <div id="formMed" class="section">
-    <div class="sub-nav">
-      <button id="subBtnMedNew" class="active-sub" onclick="switchSubTab('Med', 'New')">➕ નવી એન્ટ્રી</button>
-      <button id="subBtnMedView" onclick="switchSubTab('Med', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
+    <div class="sub-nav" style="display: flex; gap: 10px; margin-bottom: 15px;">
+      <button id="subBtnMedNew" class="active-sub" onclick="switchSubTab('Med', 'New')" style="flex:1; padding:10px; font-weight:bold; background:#2980b9; color:white; border:none; border-radius:4px;">➕ નવી એન્ટ્રી</button>
+      <button id="subBtnMedView" onclick="switchSubTab('Med', 'View')" style="flex:1; padding:10px; font-weight:bold; background:#bdc3c7; color:#2c3e50; border:none; border-radius:4px;">📋 બધી એન્ટ્રી જુઓ</button>
     </div>
 
     <div id="subContentMedNew" class="sub-section">
@@ -257,9 +235,9 @@
 
   <!-- 3. FERTILIZER SECTION -->
   <div id="formFert" class="section active">
-    <div class="sub-nav">
-      <button id="subBtnFertNew" class="active-sub" onclick="switchSubTab('Fert', 'New')">➕ નવી એન્ટ્રી</button>
-      <button id="subBtnFertView" onclick="switchSubTab('Fert', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
+    <div class="sub-nav" style="display: flex; gap: 10px; margin-bottom: 15px;">
+      <button id="subBtnFertNew" class="active-sub" onclick="switchSubTab('Fert', 'New')" style="flex:1; padding:10px; font-weight:bold; background:#2980b9; color:white; border:none; border-radius:4px;">➕ નવી એન્ટ્રી</button>
+      <button id="subBtnFertView" onclick="switchSubTab('Fert', 'View')" style="flex:1; padding:10px; font-weight:bold; background:#bdc3c7; color:#2c3e50; border:none; border-radius:4px;">📋 બધી એન્ટ્રી જુઓ</button>
     </div>
 
     <div id="subContentFertNew" class="sub-section">
@@ -321,9 +299,9 @@
 
   <!-- 4. TRACTOR SECTION -->
   <div id="formTrac" class="section">
-    <div class="sub-nav">
-      <button id="subBtnTracNew" class="active-sub" onclick="switchSubTab('Trac', 'New')">➕ નવી એન્ટ્રી</button>
-      <button id="subBtnTracView" onclick="switchSubTab('Trac', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
+    <div class="sub-nav" style="display: flex; gap: 10px; margin-bottom: 15px;">
+      <button id="subBtnTracNew" class="active-sub" onclick="switchSubTab('Trac', 'New')" style="flex:1; padding:10px; font-weight:bold; background:#2980b9; color:white; border:none; border-radius:4px;">➕ નવી એન્ટ્રી</button>
+      <button id="subBtnTracView" onclick="switchSubTab('Trac', 'View')" style="flex:1; padding:10px; font-weight:bold; background:#bdc3c7; color:#2c3e50; border:none; border-radius:4px;">📋 બધી એન્ટ્રી જુઓ</button>
     </div>
 
     <div id="subContentTracNew" class="sub-section">
@@ -405,14 +383,6 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  function handlePhotoUpload(fileInputId, callback) {
-    let fileInput = document.getElementById(fileInputId);
-    if(fileInput && fileInput.files[0]) {
-      let reader = new FileReader();
-      reader.onload = function(e) { callback(e.target.result); };
-      reader.readAsDataURL(fileInput.files[0]);
-    } else { callback(""); }
-  }
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxdWynjc6laOLxbzlLID7mCnFTCUPKHpmRQ96OHsQIHwbqyXy-ex1S-M-_MVajuqp_V1w/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
@@ -438,11 +408,10 @@
     }).catch(err => { if(icon) icon.className = ""; alert("ભૂલ: " + err); });
   }
 
-function checkDuplicateBill(inputEl, sheetName, btnId) {
+  function checkDuplicateBill(inputEl, sheetName, btnId) {
     let billNo = inputEl.value.trim();
     let submitBtn = document.getElementById(btnId);
     
-    // જો એડિટ (અપડેટ) મોડ ચાલુ હોય તો ડુપ્લિકેટ ચેક ન કરો
     let editIdSales = document.getElementById('editEntryId') ? document.getElementById('editEntryId').value : "";
     let editIdMed = document.getElementById('editMedId') ? document.getElementById('editMedId').value : "";
     let editIdFert = document.getElementById('editFertId') ? document.getElementById('editFertId').value : "";
@@ -1233,6 +1202,45 @@ function checkDuplicateBill(inputEl, sheetName, btnId) {
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       }
+      else if(tabName === 'Med') {
+        let foundItems = (appData.Pesticide_Items || []).filter(r => String(r["એન્ટ્રી Id"] || "").trim().indexOf(String(entryId).trim()) === 0);
+        let foundBill = (appData.Pesticide_Bill || []).find(r => String(r["એન્ટ્રી Id"] || "").trim() === String(entryId).trim() || String(r["બિલ નં"] || "").trim() === String(foundItems.length > 0 ? foundItems[0]["બિલ નં"] : "").trim());
+        if(foundItems.length > 0) {
+          switchSubTab('Med', 'New');
+          document.getElementById("mDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
+          document.getElementById("mBill").value = foundItems[0]["બિલ નં"] || "";
+          document.getElementById("mBhagiya").value = foundItems[0]["ભાગીદાર"] || "";
+          document.getElementById("mVepari").value = foundBill ? foundBill["વેપારી"] : "";
+          document.getElementById("mTax").value = foundBill ? foundBill["ટેક્સ%"] || foundBill["ટેક્સ"] : 0;
+          document.getElementById("editMedId").value = entryId;
+          document.getElementById("btnMed").innerText = "અપડેટ કરો";
+          document.getElementById("medItemsContainer").innerHTML = "";
+          foundItems.forEach(item => {
+            addMedItemRow(item["દવાનું નામ"] || "", item["વજન"] || "", item["પેકિંગ"] || "", item["નંગ"] || 1, item["ભાવ"] || "", item["પાકનું નામ"] || "");
+          });
+          updatePartnerSummary('Med');
+          alert("દવા એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+      }
+      else if(tabName === 'Fert') {
+        let foundItems = (appData.Fertilizer_Items || []).filter(r => String(r["એન્ટ્રી Id"] || "").trim().indexOf(String(entryId).trim()) === 0);
+        let foundBill = (appData.Fertilizer_Bill || []).find(r => String(r["એન્ટ્રી Id"] || "").trim() === String(entryId).trim() || String(r["બિલ નં"] || "").trim() === String(foundItems.length > 0 ? foundItems[0]["બિલ નં"] : "").trim());
+        if(foundItems.length > 0) {
+          switchSubTab('Fert', 'New');
+          document.getElementById("fDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
+          document.getElementById("fBill").value = foundItems[0]["બિલ નં"] || "";
+          document.getElementById("fBhagiya").value = foundItems[0]["ભાગીદાર"] || "";
+          document.getElementById("fVepari").value = foundBill ? foundBill["વેપારી"] : "";
+          document.getElementById("editFertId").value = entryId;
+          document.getElementById("btnFert").innerText = "અપડેટ કરો";
+          document.getElementById("fertItemsContainer").innerHTML = "";
+          foundItems.forEach(item => {
+            addFertItemRow(item["ખાતરનું નામ"] || "", item["વજન"] || "", item["પેકિંગ"] || "", item["નંગ/થેલી"] || 1, item["ભાવ"] || "", item["પાકનું નામ"] || "");
+          });
+          updatePartnerSummary('Fert');
+          alert("ખાતર એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+      }
     });
   }
 
@@ -1467,6 +1475,15 @@ function checkDuplicateBill(inputEl, sheetName, btnId) {
   function saveData(action, rowValues) {
     fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: action, rowValues: rowValues }) })
     .then(res => res.json()).then(() => { alert("સફળતાપૂર્વક ઉમેરાઈ ગયું!"); fetchData(); }).catch(err => alert("ભૂલ: " + err));
+  }
+
+  function handlePhotoUpload(fileInputId, callback) {
+    let fileInput = document.getElementById(fileInputId);
+    if(fileInput && fileInput.files[0]) {
+      let reader = new FileReader();
+      reader.onload = function(e) { callback(e.target.result); };
+      reader.readAsDataURL(fileInput.files[0]);
+    } else { callback(""); }
   }
 
   let getCropShare = function(cropName) {

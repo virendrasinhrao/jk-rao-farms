@@ -1271,7 +1271,7 @@
         let foundItems = (appData.Pesticide_Items || []).filter(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(cleanId) === 0);
         let foundBill = (appData.Pesticide_Bill || []).find(r => 
           String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === cleanId || 
-          String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(cleanId) === 0 ||
+          String(r["એન્ટ્રી Id"] || "").trim().indexOf(cleanId) === 0 ||
           String(r["બિલ નં"] || r["બીલ નં"] || r["બિલ_નં"] || "").trim() === String(foundItems.length > 0 ? (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "") : "").trim()
         );
         let foundLedger = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || "").trim() === cleanId) || {};
@@ -1321,7 +1321,7 @@
         let foundItems = (appData.Fertilizer_Items || []).filter(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(cleanId) === 0);
         let foundBill = (appData.Fertilizer_Bill || []).find(r => 
           String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === cleanId || 
-          String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(cleanId) === 0 ||
+          String(r["એન્ટ્રી Id"] || "").trim().indexOf(cleanId) === 0 ||
           String(r["બિલ નં"] || r["બીલ નં"] || r["બિલ_નં"] || "").trim() === String(foundItems.length > 0 ? (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "") : "").trim()
         );
 

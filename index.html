@@ -29,7 +29,7 @@
     .btn-submit:hover { background: #219653; }
     
     /* Small Table Action Buttons */
-    .btn-table-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
+    .btn-table-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
     .btn-table-edit { background: #f39c12; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
     .table-actions-bar { display: none; gap: 8px; margin-bottom: 10px; padding: 6px 10px; background: #f8f9f9; border: 1px solid #d5dbdb; border-radius: 4px; align-items: center; }
 
@@ -1161,7 +1161,11 @@
       if(!confirm("શું તમે ખરેખર પસંદ કરેલી " + idsToDelete.length + " એન્ટ્રીઓ ડિલીટ કરવા માંગો છો?")) return;
       
       let actionBar = document.getElementById('actionBar' + tabName);
-      if(actionBar) actionBar.innerHTML = `<span style="color:#e74c3c; font-weight:bold; font-size:12px;">⏳ ડિલીટ થઈ રહ્યું છે...</span>`;
+      if(actionBar) {
+        actionBar.innerHTML = `<span style="color:#e74c3c; font-weight:bold; font-size:12px; display:flex; align-items:center; gap:6px;">
+          <span class="spin" style="display:inline-block;">⟳</span> ડિલીટ થઈ રહ્યું છે...
+        </span>`;
+      }
 
       let promises = idsToDelete.map(id => {
         return fetch(SCRIPT_URL, {
@@ -1172,8 +1176,12 @@
 
       Promise.all(promises).then(() => {
         alert("પસંદ કરેલ એન્ટ્રીઓ સફળતાપૂર્વક ડિલીટ થઈ ગઈ!");
+        if(actionBar) actionBar.style.display = 'none';
         fetchData();
-      }).catch(err => alert("ભૂલ: " + err));
+      }).catch(err => {
+        alert("ભૂલ: " + err);
+        fetchData();
+      });
     });
   }
 
@@ -1247,7 +1255,7 @@
         let foundItems = (appData.Pesticide_Items || []).filter(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(cleanId) === 0);
         let foundBill = (appData.Pesticide_Bill || []).find(r => 
           String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === cleanId || 
-          String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(cleanId) === 0 ||
+          String(r["એન્ટ્રી Id"] || "").trim().indexOf(cleanId) === 0 ||
           String(r["બિલ નં"] || r["બીલ નં"] || "").trim() === String(foundItems.length > 0 ? (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "") : "").trim()
         );
 
@@ -1455,7 +1463,7 @@
 
   function saveB() {
     let name = v("nbName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
-    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone", "nbAdd") ]);
+    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone"), v("nbAdd") ]);
     document.getElementById("modalBhagiya").style.display = "none";
   }
   function saveV() {

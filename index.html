@@ -25,12 +25,12 @@
     label { font-weight: bold; display: block; margin-bottom: 3px; font-size: 13px; color: #2c3e50; }
     input, select { width: 100%; padding: 7px; border: 1px solid #bdc3c7; border-radius: 3px; box-sizing: border-box; font-size: 13px; background: #fff; }
     
-    .btn-submit { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; font-size: 15px; cursor: pointer; margin-top: 10px; font-weight: bold; border-radius: 3px; }
+    .btn-submit { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; font-size: 15px; cursor: pointer; margin-top: 10px; font-weight: bold; border-radius: 3px; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .btn-submit:hover { background: #219653; }
     
     /* Small Table Action Buttons */
-    .btn-table-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
-    .btn-table-edit { background: #f39c12; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
+    .btn-table-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
+    .btn-table-edit { background: #f39c12; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
     .table-actions-bar { display: none; gap: 8px; margin-bottom: 10px; padding: 6px 10px; background: #f8f9f9; border: 1px solid #d5dbdb; border-radius: 4px; align-items: center; }
 
     .btn-add-item { background: #2980b9; color: white; border: none; padding: 6px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; margin-bottom: 8px; }
@@ -92,10 +92,10 @@
 <div class="card">
   <div class="nav">
     <button id="tabDash" class="active" onclick="switchTab('Dash')">📊 ડેશબોર્ડ</button>
-    <button id="tabSales" onclick="switchTab('Sales')">વેચાણ</button>
-    <button id="tabMed" onclick="switchTab('Med')">દવા</button>
-    <button id="tabFert" onclick="switchTab('Fert')">ખાતર</button>
-    <button id="tabTrac" onclick="switchTab('Trac')">ટ્રેક્ટર</button>
+    <button id="tabSales" onclick="switchTab('Sales')">💰 વેચાણ</button>
+    <button id="tabMed" onclick="switchTab('Med')">🧪 દવા</button>
+    <button id="tabFert" onclick="switchTab('Fert')">🌾 ખાતર</button>
+    <button id="tabTrac" onclick="switchTab('Trac')">🚜 ટ્રેક્ટર</button>
     <button id="tabGallery" onclick="switchTab('Gallery')">🖼️ ગેલેરી</button>
   </div>
 
@@ -104,19 +104,19 @@
     <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📊 ફાર્મ ડેશબોર્ડ (વર્ષવાર સારાંશ)</h3>
     <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px;">
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #27ae60; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">કુલ વેચાણ (Total Sales)</h4>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">💰 કુલ વેચાણ (Total Sales)</h4>
         <p id="dashTotalSales" style="margin:0; font-size: 18px; font-weight: bold; color: #16a085;">₹ 0.00</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #2980b9; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">ખેડૂ વેચાણ હિસ્સો</h4>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 ખેડૂ વેચાણ હિસ્સો</h4>
         <p id="dashFarmerSales" style="margin:0; font-size: 18px; font-weight: bold; color: #2980b9;">₹ 0.00</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #d35400; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">કુલ ખર્ચ</h4>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">📉 કુલ ખર્ચ</h4>
         <p id="dashTotalExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #d35400;">₹ 0.00</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #8e44ad; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">ખેડૂ ખર્ચ હિસ્સો</h4>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 ખેડૂ ખર્ચ હિસ્સો</h4>
         <p id="dashFarmerExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #8e44ad;">₹ 0.00</p>
       </div>
     </div>
@@ -130,7 +130,7 @@
     </div>
     
     <div id="subContentSalesNew" class="sub-section">
-      <h3 id="formTitleSales" style="text-align:center; color:#27ae60; margin-top:0;">🌱 વેચાણ એન્ટ્રી</h3>
+      <h3 id="formTitleSales" style="text-align:center; color:#27ae60; margin-top:0;">💰 વેચાણ એન્ટ્રી</h3>
       <div id="partnerBannerSales" class="partner-sum-banner">
         <h4 id="bannerTitleSales">કુલ વેચાણ</h4>
         <div class="sum-amount" id="bannerValSales">₹ 0.00</div>
@@ -138,30 +138,30 @@
       <form id="salesForm" onsubmit="submitSales(event)">
         <input type="hidden" id="editEntryId" value="">
         <div class="flex-row">
-          <div class="form-group"><label>તારીખ:</label><input type="date" id="sDate" required onchange="updatePartnerSummary('Sales')"></div>
-          <div class="form-group"><label>બિલ નં:</label><input type="text" id="sBill" onblur="checkDuplicateBill(this, 'Sales_Ledger', 'btnSales')"></div>
+          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="sDate" required onchange="updatePartnerSummary('Sales')"></div>
+          <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="sBill" onblur="checkDuplicateBill(this, 'Sales_Ledger', 'btnSales')"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>ભાગીદાર:</label><select id="sBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Sales');"></select></div>
-          <div class="form-group"><label>ખરીદનાર (વેપારી):</label><select id="sVepari" class="vepariList" required onchange="checkVepariNew(this)"></select></div>
+          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="sBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Sales');"></select></div>
+          <div class="form-group"><label>🛒 ખરીદનાર (વેપારી):</label><select id="sVepari" class="vepariList" required onchange="checkVepariNew(this)"></select></div>
         </div>
         <hr style="margin:10px 0;">
-        <h4>આઇટમ્સ લિસ્ટ:</h4>
+        <h4>📦 આઇટમ્સ લિસ્ટ:</h4>
         <button type="button" class="btn-add-item" onclick="addSalesItemRow()">➕ આઇટમ ઉમેરો</button>
         <div id="salesItemsContainer"></div>
         <div class="flex-row" style="margin-top:10px;">
-          <div class="form-group"><label>બીલની સ્થિતિ (બાકી/જમા):</label><select id="sStatus"><option>રોકડા / જમા</option><option>બાકી</option></select></div>
-          <div class="form-group"><label>પૈસા કોણે લીધા (હસ્તે):</label><select id="sHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
-          <div class="form-group"><label>ભાગિયાએ લીધા? (Yes/No):</label><select id="sBLidha"><option>No</option><option>Yes</option></select></div>
+          <div class="form-group"><label>📌 બીલની સ્થિતિ:</label><select id="sStatus"><option>રોકડા / જમા</option><option>બાકી</option></select></div>
+          <div class="form-group"><label>🤝 હસ્તે:</label><select id="sHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
+          <div class="form-group"><label>❓ ભાગિયાએ લીધા?:</label><select id="sBLidha"><option>No</option><option>Yes</option></select></div>
         </div>
-        <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="sPhoto" accept="image/*" capture="environment"></div>
-        <button type="submit" id="btnSales" class="btn-submit">સેવ કરો</button>
+        <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="sPhoto" accept="image/*" capture="environment"></div>
+        <button type="submit" id="btnSales" class="btn-submit">💾 સેવ કરો</button>
       </form>
     </div>
 
     <div id="subContentSalesView" class="sub-section" style="display:none;">
       <h3 style="text-align:center; color:#27ae60; margin-top:0;">📋 વેચાણ રેકોર્ડ્સ</h3>
-      <div class="form-group"><input type="text" id="searchSales" placeholder="🔍 બિલ, ખરીદનાર કે ભાગીદારના નામથી શોધો..." oninput="filterTable('Sales')"></div>
+      <div class="form-group"><input type="text" id="searchSales" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterTable('Sales')"></div>
       <div id="actionBarSales" class="table-actions-bar"></div>
       <div id="tableContainerSales" style="overflow-x:auto;"></div>
     </div>
@@ -183,15 +183,15 @@
       <form id="medForm" onsubmit="submitMed(event)">
         <input type="hidden" id="editMedId" value="">
         <div class="flex-row">
-          <div class="form-group"><label>તારીખ:</label><input type="date" id="mDate" required onchange="updatePartnerSummary('Med')"></div>
-          <div class="form-group"><label>બિલ નં:</label><input type="text" id="mBill" onblur="checkDuplicateBill(this, 'Pesticide_Bill', 'btnMed')"></div>
+          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="mDate" required onchange="updatePartnerSummary('Med')"></div>
+          <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="mBill" onblur="checkDuplicateBill(this, 'Pesticide_Bill', 'btnMed')"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>ભાગીદાર:</label><select id="mBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Med');"></select></div>
-          <div class="form-group"><label>દુકાન / વેપારી:</label><select id="mVepari" required onchange="checkMedVepariNew(this)"></select></div>
+          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="mBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Med');"></select></div>
+          <div class="form-group"><label>🏬 દુકાન / વેપારી:</label><select id="mVepari" required onchange="checkMedVepariNew(this)"></select></div>
         </div>
         <hr style="margin:10px 0;">
-        <h4>દવાઓની યાદી:</h4>
+        <h4>🧪 દવાઓની યાદી:</h4>
         <button type="button" class="btn-add-item" onclick="addMedItemRow()">➕ દવા ઉમેરો</button>
         <div id="medItemsContainer"></div>
 
@@ -205,9 +205,11 @@
             <div class="form-group"><label>જી.એસ.ટી. રકમ:</label><input type="text" id="mGst" class="readonly-bg" readonly value="₹ 0.00"></div>
             <div class="form-group"><label>સી.એસ.ટી. રકમ:</label><input type="text" id="mCst" class="readonly-bg" readonly value="₹ 0.00"></div>
           </div>
-          <div class="form-group">
-            <label style="color: #27ae60; font-size: 14px;">બિલની કુલ રકમ (₹):</label>
-            <input type="text" id="mTotalBill" class="highlight-total" readonly value="₹ 0.00">
+          <div class="flex-row">
+            <div class="form-group" style="flex:1;">
+              <label style="color: #27ae60; font-size: 14px;">બિલની કુલ રકમ (₹):</label>
+              <input type="text" id="mTotalBill" class="highlight-total" readonly value="₹ 0.00">
+            </div>
           </div>
           <div class="form-group" style="margin-top: 8px;">
             <label>અંકે રૂપિયા (શબ્દોમાં):</label>
@@ -216,17 +218,17 @@
         </div>
 
         <div class="flex-row">
-          <div class="form-group"><label>હસ્તે:</label><select id="mHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
-          <div class="form-group"><label>સ્થિતિ:</label><select id="mStatus"><option>જમા</option><option>બાકી</option></select></div>
+          <div class="form-group"><label>🤝 હસ્તે:</label><select id="mHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
+          <div class="form-group"><label>📌 સ્થિતિ:</label><select id="mStatus"><option>જમા</option><option>બાકી</option></select></div>
         </div>
-        <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="mPhoto" accept="image/*" capture="environment"></div>
-        <button type="submit" id="btnMed" class="btn-submit">સેવ કરો</button>
+        <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="mPhoto" accept="image/*" capture="environment"></div>
+        <button type="submit" id="btnMed" class="btn-submit">💾 સેવ કરો</button>
       </form>
     </div>
 
     <div id="subContentMedView" class="sub-section" style="display:none;">
       <h3 style="text-align:center; color:#2980b9; margin-top:0;">📋 દવા આઇટમ રેકોર્ડ્સ</h3>
-      <div class="form-group"><input type="text" id="searchMed" placeholder="🔍 બિલ, દવા કે પાકના નામથી શોધો..." oninput="filterTable('Med')"></div>
+      <div class="form-group"><input type="text" id="searchMed" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterTable('Med')"></div>
       <div id="actionBarMed" class="table-actions-bar"></div>
       <div id="tableContainerMed" style="overflow-x:auto;"></div>
     </div>
@@ -248,15 +250,15 @@
       <form id="fertForm" onsubmit="submitFert(event)">
         <input type="hidden" id="editFertId" value="">
         <div class="flex-row">
-          <div class="form-group"><label>તારીખ:</label><input type="date" id="fDate" required onchange="updatePartnerSummary('Fert')"></div>
-          <div class="form-group"><label>બિલ નં:</label><input type="text" id="fBill" onblur="checkDuplicateBill(this, 'Fertilizer_Bill', 'btnFert')"></div>
+          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="fDate" required onchange="updatePartnerSummary('Fert')"></div>
+          <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="fBill" onblur="checkDuplicateBill(this, 'Fertilizer_Bill', 'btnFert')"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>ભાગીદાર:</label><select id="fBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Fert');"></select></div>
-          <div class="form-group"><label>વેપારી:</label><select id="fVepari" class="fertVepariList" required onchange="checkFertVepariNew(this)"></select></div>
+          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="fBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Fert');"></select></div>
+          <div class="form-group"><label>🏬 વેપારી:</label><select id="fVepari" class="fertVepariList" required onchange="checkFertVepariNew(this)"></select></div>
         </div>
         <hr style="margin:10px 0;">
-        <h4>ખાતરની આઇટમ્સ:</h4>
+        <h4>🌾 ખાતરની આઇટમ્સ:</h4>
         <button type="button" class="btn-add-item" onclick="addFertItemRow()">➕ ખાતર ઉમેરો</button>
         <div id="fertItemsContainer"></div>
 
@@ -270,8 +272,11 @@
             <div class="form-group"><label>જી.એસ.ટી. રકમ:</label><input type="text" id="mGst2" class="readonly-bg" readonly value="₹ 0.00"></div>
             <div class="form-group"><label>સી.એસ.ટી. રકમ:</label><input type="text" id="mCst2" class="readonly-bg" readonly value="₹ 0.00"></div>
           </div>
-          <div class="form-group">
-            <label style="color: #d35400; font-size: 14px;">બિલની કુલ રકમ (₹):</label><input type="text" id="fTotalBill" class="highlight-total" readonly value="₹ 0.00">
+          <div class="flex-row">
+            <div class="form-group" style="flex:1;">
+              <label style="color: #d35400; font-size: 14px;">બિલની કુલ રકમ (₹):</label>
+              <input type="text" id="fTotalBill" class="highlight-total" readonly value="₹ 0.00">
+            </div>
           </div>
           <div class="form-group" style="margin-top: 8px;">
             <label>અંકે રૂપિયા (શબ્દોમાં):</label>
@@ -280,18 +285,18 @@
         </div>
 
         <div class="flex-row">
-          <div class="form-group"><label>હસ્તે:</label><select id="fHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
-          <div class="form-group"><label>સ્થિતિ:</label><select id="fStatus"><option>જમા</option><option>બાકી</option></select></div>
+          <div class="form-group"><label>🤝 હસ્તે:</label><select id="fHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
+          <div class="form-group"><label>📌 સ્થિતિ:</label><select id="fStatus"><option>જમા</option><option>બાકી</option></select></div>
         </div>
-        <div class="form-group"><label>વિગત:</label><input type="text" id="fDetails" placeholder="ઓપ્શનલ"></div>
-        <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="fPhoto" accept="image/*" capture="environment"></div>
-        <button type="submit" id="btnFert" class="btn-submit">સેવ કરો</button>
+        <div class="form-group"><label>📝 વિગત:</label><input type="text" id="fDetails" placeholder="ઓપ્શનલ"></div>
+        <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="fPhoto" accept="image/*" capture="environment"></div>
+        <button type="submit" id="btnFert" class="btn-submit">💾 સેવ કરો</button>
       </form>
     </div>
 
     <div id="subContentFertView" class="sub-section" style="display:none;">
       <h3 style="text-align:center; color:#d35400; margin-top:0;">📋 ખાતર આઇટમ રેકોર્ડ્સ</h3>
-      <div class="form-group"><input type="text" id="searchFert" placeholder="🔍 બિલ, ખાતર કે પાકના નામથી શોધો..." oninput="filterTable('Fert')"></div>
+      <div class="form-group"><input type="text" id="searchFert" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterTable('Fert')"></div>
       <div id="actionBarFert" class="table-actions-bar"></div>
       <div id="tableContainerFert" style="overflow-x:auto;"></div>
     </div>
@@ -313,14 +318,14 @@
       <form id="tracForm" onsubmit="submitTrac(event)">
         <input type="hidden" id="editTracId" value="">
         <div class="flex-row">
-          <div class="form-group"><label>તારીખ:</label><input type="date" id="tDate" required onchange="updatePartnerSummary('Trac')"></div>
-          <div class="form-group"><label>ટ્રેક્ટર માલિક:</label><input type="text" id="tDriver" required></div>
+          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="tDate" required onchange="updatePartnerSummary('Trac')"></div>
+          <div class="form-group"><label>🚜 ટ્રેક્ટર માલિક:</label><input type="text" id="tDriver" required></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>ભાગીદાર:</label><select id="tBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Trac');"></select></div>
+          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="tBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Trac');"></select></div>
         </div>
         <hr style="margin:10px 0;">
-        <h4>ટ્રેક્ટર કામોની યાદી:</h4>
+        <h4>🚜 ટ્રેક્ટર કામોની યાદી:</h4>
         <button type="button" class="btn-add-item" onclick="addTracItemRow()">➕ કામ ઉમેરો</button>
         <div id="tracItemsContainer"></div>
 
@@ -336,17 +341,17 @@
         </div>
 
         <div class="flex-row" style="margin-top:10px;">
-          <div class="form-group"><label>બીલની સ્થિતિ:</label><select id="tStatus"><option>રોકડા</option><option>બાકી</option></select></div>
-          <div class="form-group"><label>હસ્તે:</label><select id="tHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
+          <div class="form-group"><label>📌 બીલની સ્થિતિ:</label><select id="tStatus"><option>રોકડા</option><option>બાકી</option></select></div>
+          <div class="form-group"><label>🤝 હસ્તે:</label><select id="tHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
         </div>
-        <div class="form-group"><label>બિલનો ફોટો:</label><input type="file" id="tPhoto" accept="image/*" capture="environment"></div>
-        <button type="submit" id="btnTrac" class="btn-submit">સેવ કરો</button>
+        <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="tPhoto" accept="image/*" capture="environment"></div>
+        <button type="submit" id="btnTrac" class="btn-submit">💾 સેવ કરો</button>
       </form>
     </div>
 
     <div id="subContentTracView" class="sub-section" style="display:none;">
       <h3 style="text-align:center; color:#8e44ad; margin-top:0;">📋 ટ્રેક્ટર ખર્ચ રેકોર્ડ્સ</h3>
-      <div class="form-group"><input type="text" id="searchTrac" placeholder="🔍 કામ કે માલિકના નામથી શોધો..." oninput="filterTable('Trac')"></div>
+      <div class="form-group"><input type="text" id="searchTrac" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterTable('Trac')"></div>
       <div id="actionBarTrac" class="table-actions-bar"></div>
       <div id="tableContainerTrac" style="overflow-x:auto;"></div>
     </div>
@@ -356,7 +361,7 @@
   <div id="formGallery" class="section">
     <h3 style="text-align:center; color:#2c3e50; margin-top:0;">🖼️ બિલ ફોટો ગેલેરી & રેકોર્ડ્સ</h3>
     <div class="form-group">
-      <input type="text" id="searchGallery" placeholder="🔍 બિલ નંબર કે નામથી શોધો..." oninput="filterGallery()">
+      <input type="text" id="searchGallery" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterGallery()">
     </div>
     <div id="galleryContainer" style="overflow-x:auto;">
       <p style="text-align:center;">લોડ થઈ રહ્યું છે...</p>
@@ -472,30 +477,30 @@
       document.getElementById('editEntryId').value = ""; document.getElementById('salesForm').reset();
       document.getElementById('salesItemsContainer').innerHTML = ""; addSalesItemRow();
       document.getElementById('sDate').value = new Date().toISOString().split('T')[0];
-      document.getElementById('btnSales').innerText = "સેવ કરો"; document.getElementById('formTitleSales').innerText = "🌱 વેચાણ એન્ટ્રી";
+      document.getElementById('btnSales').innerText = "💾 સેવ કરો"; document.getElementById('formTitleSales').innerText = "💰 વેચાણ એન્ટ્રી";
       document.getElementById('subBtnSalesNew').innerText = "➕ નવી એન્ટ્રી"; document.getElementById('sBill').style.backgroundColor = "#fff"; document.getElementById('btnSales').style.display = "block";
-      document.getElementById('partnerBannerSales').style.display = 'none';
+      updatePartnerSummary('Sales');
     } else if(tabName === 'Med') {
       document.getElementById('editMedId').value = ""; document.getElementById('medForm').reset();
       document.getElementById('medItemsContainer').innerHTML = ""; addMedItemRow();
       document.getElementById('mDate').value = new Date().toISOString().split('T')[0];
-      document.getElementById('btnMed').innerText = "સેવ કરો"; document.getElementById('formTitleMed').innerText = "🧪 દવા ખર્ચ એન્ટ્રી";
+      document.getElementById('btnMed').innerText = "💾 સેવ કરો"; document.getElementById('formTitleMed').innerText = "🧪 દવા ખર્ચ એન્ટ્રી";
       document.getElementById('subBtnMedNew').innerText = "➕ નવી એન્ટ્રી"; document.getElementById('mBill').style.backgroundColor = "#fff"; document.getElementById('btnMed').style.display = "block";
-      document.getElementById('partnerBannerMed').style.display = 'none';
+      updatePartnerSummary('Med');
     } else if(tabName === 'Fert') {
       document.getElementById('editFertId').value = ""; document.getElementById('fertForm').reset();
       document.getElementById('fertItemsContainer').innerHTML = ""; addFertItemRow();
       document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
-      document.getElementById('btnFert').innerText = "સેવ કરો"; document.getElementById('formTitleFert').innerText = "🌾 ખાતર ખર્ચ એન્ટ્રી";
+      document.getElementById('btnFert').innerText = "💾 સેવ કરો"; document.getElementById('formTitleFert').innerText = "🌾 ખાતર ખર્ચ એન્ટ્રી";
       document.getElementById('subBtnFertNew').innerText = "➕ નવી એન્ટ્રી"; document.getElementById('fBill').style.backgroundColor = "#fff"; document.getElementById('btnFert').style.display = "block";
-      document.getElementById('partnerBannerFert').style.display = 'none';
+      updatePartnerSummary('Fert');
     } else if(tabName === 'Trac') {
       document.getElementById('editTracId').value = ""; document.getElementById('tracForm').reset();
       document.getElementById('tracItemsContainer').innerHTML = ""; addTracItemRow();
       document.getElementById('tDate').value = new Date().toISOString().split('T')[0];
-      document.getElementById('btnTrac').innerText = "સેવ કરો"; document.getElementById('formTitleTrac').innerText = "🚜 ટ્રેક્ટર ખર્ચ એન્ટ્રી";
+      document.getElementById('btnTrac').innerText = "💾 સેવ કરો"; document.getElementById('formTitleTrac').innerText = "🚜 ટ્રેક્ટર ખર્ચ એન્ટ્રી";
       document.getElementById('subBtnTracNew').innerText = "➕ નવી એન્ટ્રી";
-      document.getElementById('partnerBannerTrac').style.display = 'none';
+      updatePartnerSummary('Trac');
     }
   }
 
@@ -1190,7 +1195,15 @@
     let rows = document.querySelectorAll("#tableContainer" + tabName + " tr");
     rows.forEach((row, i) => {
       if(i === 0) return;
-      row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
+      let billCell = row.cells[3] ? row.cells[3].innerText.toLowerCase() : "";
+      let dateCell = row.cells[2] ? row.cells[2].innerText.toLowerCase() : "";
+      let idCell = row.cells[1] ? row.cells[1].innerText.toLowerCase() : "";
+      
+      if(billCell.includes(query) || dateCell.includes(query) || idCell.includes(query)) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
+      }
     });
   }
 
@@ -1241,7 +1254,7 @@
           document.getElementById("sBLidha").value = found["ભાગિયાએ લીધા? (Yes/No)"] || "No";
           document.getElementById("editEntryId").value = entryId;
           document.getElementById("btnSales").innerText = "અપડેટ કરો";
-          document.getElementById("formTitleSales").innerText = "🌱 વેચાણ અપડેટ";
+          document.getElementById("formTitleSales").innerText = "💰 વેચાણ અપડેટ";
           document.getElementById("subBtnSalesNew").innerText = "❌ કેન્સલ (રિટર્ન)";
           
           document.getElementById("salesItemsContainer").innerHTML = "";
@@ -1255,7 +1268,7 @@
         let foundItems = (appData.Pesticide_Items || []).filter(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(cleanId) === 0);
         let foundBill = (appData.Pesticide_Bill || []).find(r => 
           String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === cleanId || 
-          String(r["એન્ટ્રી Id"] || "").trim().indexOf(cleanId) === 0 ||
+          String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(cleanId) === 0 ||
           String(r["બિલ નં"] || r["બીલ નં"] || "").trim() === String(foundItems.length > 0 ? (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "") : "").trim()
         );
 
@@ -1342,16 +1355,16 @@
         
         fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "saveSales", rowValues: rowData, editEntryId: existingId }) })
         .then(res => res.json()).then(res => {
-          if(res.status === "error" && !hasError) { hasError = true; alert(res.message); document.getElementById("btnSales").innerText = "સેવ કરો"; return; }
+          if(res.status === "error" && !hasError) { hasError = true; alert(res.message); document.getElementById("btnSales").innerText = "💾 સેવ કરો"; return; }
           count++;
           if(!hasError && count === rows.length) {
             alert(existingId ? "વેચાણ સફળતાપૂર્વક અપડેટ થઈ ગયું!" : "વેચાણ સફળતાપૂર્વક સેવ થઈ ગયું!"); 
-            document.getElementById("btnSales").innerText = "સેવ કરો"; document.getElementById("editEntryId").value = "";
+            document.getElementById("btnSales").innerText = "💾 સેવ કરો"; document.getElementById("editEntryId").value = "";
             document.getElementById("salesForm").reset(); document.getElementById("salesItemsContainer").innerHTML = "";
             addSalesItemRow(); document.getElementById("sDate").value = new Date().toISOString().split('T')[0];
             fetchData(); switchTab('Dash');
           }
-        }).catch(err => { if(!hasError) { hasError = true; alert("ભૂલ: " + err); document.getElementById("btnSales").innerText = "સેવ કરો"; } });
+        }).catch(err => { if(!hasError) { hasError = true; alert("ભૂલ: " + err); document.getElementById("btnSales").innerText = "💾 સેવ કરો"; } });
       });
     });
   }
@@ -1384,9 +1397,9 @@
       fetch(SCRIPT_URL, {
         method: "POST", body: JSON.stringify({ action: "savePesticideBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow, editEntryId: existingId })
       }).then(res => res.json()).then(res => {
-        if(res.status === "error") { alert(res.message); document.getElementById("btnMed").innerText = "સેવ કરો"; return; }
+        if(res.status === "error") { alert(res.message); document.getElementById("btnMed").innerText = "💾 સેવ કરો"; return; }
         alert(existingId ? "દવા બિલ સફળતાપૂર્વક અપડેટ થઈ ગયું!" : "દવા બિલ સફળતાપૂર્વક સેવ થઈ ગયું!"); 
-        document.getElementById("btnMed").innerText = "સેવ કરો"; document.getElementById("editMedId").value = "";
+        document.getElementById("btnMed").innerText = "💾 સેવ કરો"; document.getElementById("editMedId").value = "";
         document.getElementById("medForm").reset(); document.getElementById("medItemsContainer").innerHTML = "";
         addMedItemRow(); document.getElementById("mDate").value = new Date().toISOString().split('T')[0];
         fetchData(); switchTab('Dash');
@@ -1423,9 +1436,9 @@
       fetch(SCRIPT_URL, {
         method: "POST", body: JSON.stringify({ action: "saveFertilizerBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow, editEntryId: existingId })
       }).then(res => res.json()).then(res => {
-        if(res.status === "error") { alert(res.message); document.getElementById("btnFert").innerText = "સેવ કરો"; return; }
+        if(res.status === "error") { alert(res.message); document.getElementById("btnFert").innerText = "💾 સેવ કરો"; return; }
         alert(existingId ? "ખાતર બિલ સફળતાપૂર્વક અપડેટ થઈ ગયું!" : "ખાતર બિલ સફળતાપૂર્વક સેવ થઈ ગયું!"); 
-        document.getElementById("btnFert").innerText = "સેવ કરો"; document.getElementById("editFertId").value = "";
+        document.getElementById("btnFert").innerText = "💾 સેવ કરો"; document.getElementById("editFertId").value = "";
         document.getElementById("fertForm").reset(); document.getElementById("fertItemsContainer").innerHTML = "";
         addFertItemRow(); document.getElementById("fDate").value = new Date().toISOString().split('T')[0];
         fetchData(); switchTab('Dash');
@@ -1454,11 +1467,11 @@
       method: "POST", body: JSON.stringify({ action: "saveTractor", rowValuesArray: rowDataArray, editEntryId: existingId })
     }).then(res => res.json()).then(() => {
       alert(existingId ? "ટ્રેક્ટર ખર્ચ સફળતાપૂર્વક અપડેટ થઈ ગયો!" : "ટ્રેક્ટર ખર્ચ સફળતાપૂર્વક સેવ થઈ ગયું!"); 
-      document.getElementById("btnTrac").innerText = "સેવ કરો"; document.getElementById("editTracId").value = "";
+      document.getElementById("btnTrac").innerText = "💾 સેવ કરો"; document.getElementById("editTracId").value = "";
       document.getElementById("tracForm").reset(); document.getElementById("tracItemsContainer").innerHTML = "";
       addTracItemRow(); document.getElementById("tDate").value = new Date().toISOString().split('T')[0];
       fetchData(); switchTab('Dash');
-    }).catch(err => { document.getElementById("btnTrac").innerText = "સેવ કરો"; alert("ભૂલ: " + err); });
+    }).catch(err => { document.getElementById("btnTrac").innerText = "💾 સેવ કરો"; alert("ભૂલ: " + err); });
   }
 
   function saveB() {

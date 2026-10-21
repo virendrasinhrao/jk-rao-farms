@@ -1290,7 +1290,7 @@
           alert("દવા એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       }
-      else if(tabName === 'Fert') {
+            else if(tabName === 'Fert') {
         let cleanId = String(entryId).trim();
         let foundItems = (appData.Fertilizer_Items || []).filter(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(cleanId) === 0);
         let foundBill = (appData.Fertilizer_Bill || []).find(r => 
@@ -1301,18 +1301,25 @@
 
         if(foundItems.length > 0) {
           switchSubTab('Fert', 'New');
-          document.getElementById("fDate").value = String(foundItems[0]["તારીખ"] || foundItems[0]["Date"] || "").split('T')[0];
           
-          let billNoVal = foundBill ? (foundBill["બિલ નં"] || foundBill["બીલ નં"] || foundBill["બિલ_નં"] || foundBill["Bill_No"] || "") : (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "");
+          // તારીખ સાચી સેટ કરવી (સમય વગરની માત્ર તારીખ)
+          let rawDate = foundItems[0]["તારીખ"] || foundItems[0]["Date"] || "";
+          document.getElementById("fDate").value = String(rawDate).split('T')[0];
+          
+          // બિલ નંબર સાચો સેટ કરવો
+          let billNoVal = foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || foundItems[0]["બિલ_નં"] || (foundBill ? (foundBill["બિલ નં"] || foundBill["બીલ નં"] || foundBill["બિલ_નં"] || foundBill["Bill_No"] || "") : "");
           document.getElementById("fBill").value = billNoVal;
 
-          let bhagiyaVal = (foundBill ? (foundBill["ખેડૂનું નામ"] || foundBill["ભાગીદાર"] || foundBill["ભાગીદાર/હસ્તે"] || foundBill["Bhagiya"] || "") : "") || foundItems[0]["ભાગીદાર"] || foundItems[0]["ખેડૂનું નામ"] || "";
+          // ભાગીદાર સાચો સેટ કરવો
+          let bhagiyaVal = foundItems[0]["ભાગીદાર"] || foundItems[0]["ખેડૂનું નામ"] || (foundBill ? (foundBill["ખેડૂનું નામ"] || foundBill["ભાગીદાર"] || foundBill["Bhagiya"] || "") : "");
           document.getElementById("fBhagiya").value = bhagiyaVal;
 
-          let vepariVal = (foundBill ? (foundBill["વેપારી"] || foundBill["વેપારીનું_નામ"] || foundBill["વેપારીનું નામ"] || foundBill["દુકાન / વેપારી"] || "") : "") || foundItems[0]["વેપારી"] || "";
+          // વેપારી સાચો સેટ કરવો
+          let vepariVal = foundItems[0]["વેપારી"] || (foundBill ? (foundBill["વેપારી"] || foundBill["વેપારીનું_નામ"] || foundBill["વેપારીનું નામ"] || foundBill["દુકાન / વેપારી"] || "") : "");
           document.getElementById("fVepari").value = vepariVal;
 
-          let hastakVal = (foundBill ? (foundBill["હસ્તે"] || foundBill["Hastak"] || foundBill["ભાગીદાર"] || "") : "") || foundItems[0]["હસ્તે"] || bhagiyaVal;
+          // હસ્તે સાચું સેટ કરવું
+          let hastakVal = foundItems[0]["હસ્તે"] || (foundBill ? (foundBill["હસ્તે"] || foundBill["Hastak"] || "") : "") || bhagiyaVal;
           document.getElementById("fHastak").value = hastakVal;
 
           document.getElementById("editFertId").value = entryId;
@@ -1332,11 +1339,10 @@
             );
           });
           updatePartnerSummary('Fert');
-          alert("ખાતર એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+          alert("ખાતર એન્ટ્રી ફોર્મમાં સફળતાપૂર્વક લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       }
-    });
-  }
+
 
   function submitSales(e) {
     e.preventDefault();

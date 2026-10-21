@@ -483,6 +483,7 @@
         document.getElementById('btnSales').innerText = "સેવ કરો";
         document.getElementById('formTitleSales').innerText = "🌱 વેચાણ એન્ટ્રી";
         document.getElementById('subBtnSalesNew').innerText = "➕ નવી એન્ટ્રી";
+        document.getElementById('subBtnSalesView').innerText = "📋 બધી એન્ટ્રી જુઓ";
         document.getElementById('sBill').style.backgroundColor = "#fff";
         document.getElementById('sBill').style.color = "#333";
         document.getElementById('btnSales').style.display = "block";
@@ -495,6 +496,7 @@
         document.getElementById('btnMed').innerText = "સેવ કરો";
         document.getElementById('formTitleMed').innerText = "🧪 દવા ખર્ચ એન્ટ્રી";
         document.getElementById('subBtnMedNew').innerText = "➕ નવી એન્ટ્રી";
+        document.getElementById('subBtnMedView').innerText = "📋 બધી એન્ટ્રી જુઓ";
         document.getElementById('mBill').style.backgroundColor = "#fff";
         document.getElementById('mBill').style.color = "#333";
         document.getElementById('btnMed').style.display = "block";
@@ -507,6 +509,7 @@
         document.getElementById('btnFert').innerText = "સેવ કરો";
         document.getElementById('formTitleFert').innerText = "🌾 ખાતર ખર્ચ એન્ટ્રી";
         document.getElementById('subBtnFertNew').innerText = "➕ નવી એન્ટ્રી";
+        document.getElementById('subBtnFertView').innerText = "📋 બધી એન્ટ્રી જુઓ";
         document.getElementById('fBill').style.backgroundColor = "#fff";
         document.getElementById('fBill').style.color = "#333";
         document.getElementById('btnFert').style.display = "block";
@@ -519,6 +522,7 @@
         document.getElementById('btnTrac').innerText = "સેવ કરો";
         document.getElementById('formTitleTrac').innerText = "🚜 ટ્રેક્ટર ખર્ચ એન્ટ્રી";
         document.getElementById('subBtnTracNew').innerText = "➕ નવી એન્ટ્રી";
+        document.getElementById('subBtnTracView').innerText = "📋 બધી એન્ટ્રી જુઓ";
       }
       let contentNew = document.getElementById('subContent' + tabName + 'New');
       if(contentNew) contentNew.style.display = 'block';
@@ -1185,7 +1189,7 @@
           document.getElementById("editTracId").value = cleanTargetId;
           document.getElementById("btnTrac").innerText = "અપડેટ કરો";
           document.getElementById("formTitleTrac").innerText = "🚜 ટ્રેક્ટર ખર્ચ અપડેટ";
-          document.getElementById("subBtnTracNew").innerText = "✏️ રેકોર્ડ અપડેટ કરો";
+          document.getElementById("subBtnTracNew").innerText = "❌ કેન્સલ (રિટર્ન)";
           
           document.getElementById("tracItemsContainer").innerHTML = "";
           foundItems.forEach(item => {
@@ -1219,7 +1223,7 @@
           document.getElementById("editEntryId").value = entryId;
           document.getElementById("btnSales").innerText = "અપડેટ કરો";
           document.getElementById("formTitleSales").innerText = "🌱 વેચાણ અપડેટ";
-          document.getElementById("subBtnSalesNew").innerText = "✏️ રેકોર્ડ અપડેટ કરો";
+          document.getElementById("subBtnSalesNew").innerText = "❌ કેન્સલ (રિટર્ન)";
           
           document.getElementById("salesItemsContainer").innerHTML = "";
           addSalesItemRow(found["પાઉચ / નંગ"] || 0, found["કુલ વજન (કિલો"] || found["કુલ વજન (કિલો)"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
@@ -1233,19 +1237,19 @@
         if(foundItems.length > 0) {
           switchSubTab('Med', 'New');
           document.getElementById("mDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
-          document.getElementById("mBill").value = foundItems[0]["બિલ નં"] || "";
+          document.getElementById("mBill").value = foundBill ? (foundBill["બિલ નં"] || foundBill["બિલ_નં"] || foundBill["Bill_No"] || foundItems[0]["બિલ નં"] || "") : (foundItems[0]["બિલ નં"] || "");
           document.getElementById("mBhagiya").value = foundBill ? (foundBill["ખેડૂનું નામ"] || foundBill["ભાગીદાર"] || "") : (foundItems[0]["ભાગીદાર"] || "");
           document.getElementById("mVepari").value = foundBill ? (foundBill["વેપારી"] || "") : "";
-          document.getElementById("mHastak").value = foundBill ? (foundBill["હસ્તે"] || "") : "";
+          document.getElementById("mHastak").value = foundBill ? (foundBill["હસ્તે"] || "") : (foundItems[0]["હસ્તે"] || "");
           document.getElementById("mTax").value = foundBill ? foundBill["ટેક્સ%"] || foundBill["ટેક્સ"] : 0;
           document.getElementById("editMedId").value = entryId;
           document.getElementById("btnMed").innerText = "અપડેટ કરો";
           document.getElementById("formTitleMed").innerText = "🧪 દવા ખર્ચ અપડેટ";
-          document.getElementById("subBtnMedNew").innerText = "✏️ રેકોર્ડ અપડેટ કરો";
+          document.getElementById("subBtnMedNew").innerText = "❌ કેન્સલ (રિટર્ન)";
           
           document.getElementById("medItemsContainer").innerHTML = "";
           foundItems.forEach(item => {
-            addMedItemRow(item["દવાનું નામ"] || "", item["વજન"] || "", item["પેકિંગ"] || "", item["નંગ"] || 1, item["ભાવ"] || "", item["પાકનું નામ"] || "");
+            addMedItemRow(item["દવાનું નામ"] || item["દવાનું_નામ"] || "", item["વજન"] || "", item["પેકિંગ"] || "", item["નંગ"] || item["નંગ/થેલી"] || 1, item["ભાવ"] || "", item["પાકનું નામ"] || "");
           });
           updatePartnerSummary('Med');
           alert("દવા એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
@@ -1257,18 +1261,18 @@
         if(foundItems.length > 0) {
           switchSubTab('Fert', 'New');
           document.getElementById("fDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
-          document.getElementById("fBill").value = foundItems[0]["બિલ નં"] || "";
+          document.getElementById("fBill").value = foundBill ? (foundBill["બિલ નં"] || foundBill["બિલ_નં"] || foundBill["Bill_No"] || foundItems[0]["બિલ નં"] || "") : (foundItems[0]["બિલ નં"] || "");
           document.getElementById("fBhagiya").value = foundBill ? (foundBill["ખેડૂનું નામ"] || foundBill["ભાગીદાર"] || "") : (foundItems[0]["ભાગીદાર"] || "");
           document.getElementById("fVepari").value = foundBill ? (foundBill["વેપારી"] || "") : "";
-          document.getElementById("fHastak").value = foundBill ? (foundBill["હસ્તે"] || "") : "";
+          document.getElementById("fHastak").value = foundBill ? (foundBill["હસ્તે"] || "") : (foundItems[0]["હસ્તે"] || "");
           document.getElementById("editFertId").value = entryId;
           document.getElementById("btnFert").innerText = "અપડેટ કરો";
           document.getElementById("formTitleFert").innerText = "🌾 ખાતર ખર્ચ અપડેટ";
-          document.getElementById("subBtnFertNew").innerText = "✏️ રેકોર્ડ અપડેટ કરો";
+          document.getElementById("subBtnFertNew").innerText = "❌ કેન્સલ (રિટર્ન)";
           
           document.getElementById("fertItemsContainer").innerHTML = "";
           foundItems.forEach(item => {
-            addFertItemRow(item["ખાતરનું નામ"] || "", item["વજન"] || "", item["પેકિંગ"] || "", item["નંગ/થેલી"] || 1, item["ભાવ"] || "", item["પાકનું નામ"] || "");
+            addFertItemRow(item["ખાતરનું નામ"] || item["ખાતરનું_નામ"] || "", item["વજન"] || "", item["પેકિંગ"] || "", item["નંગ/થેલી"] || 1, item["ભાવ"] || "", item["પાકનું નામ"] || "");
           });
           updatePartnerSummary('Fert');
           alert("ખાતર એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
@@ -1411,7 +1415,7 @@
     let mainEntryId = existingId ? existingId : "FE-" + Math.floor(100000 + Math.random() * 900000);
 
     handlePhotoUpload("fPhoto", function(photoBase64) {
-      let billRow = [ year, date, billNo, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords, v("fHastak") ];
+      let billRow = [ year, mainEntryId, date, billNo, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords, v("fHastak") ];
       let itemRows = [];
       let totalFarmerAmt = 0;
       rows.forEach(row => {

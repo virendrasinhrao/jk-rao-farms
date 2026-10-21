@@ -1248,7 +1248,7 @@
         let foundItems = (appData.Pesticide_Items || []).filter(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(cleanId) === 0);
         let foundBill = (appData.Pesticide_Bill || []).find(r => 
           String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === cleanId || 
-          String(r["એન્ટ્રી Id"] || "").trim().indexOf(cleanId) === 0 ||
+          String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(cleanId) === 0 ||
           String(r["બિલ નં"] || r["બીલ નં"] || r["બિલ_નં"] || "").trim() === String(foundItems.length > 0 ? (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "") : "").trim()
         );
         let foundLedger = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || "").trim() === cleanId) || {};
@@ -1269,7 +1269,9 @@
           let hastakVal = (foundBill ? (foundBill["હસ્તે"] || foundBill["Hastak"] || "") : "") || foundItems[0]["હસ્તે"] || foundLedger["હસ્તે"] || bhagiyaVal;
           document.getElementById("mHastak").value = hastakVal;
 
-          document.getElementById("mTax").value = foundBill ? (foundBill["ટેક્સ%"] || foundBill["ટેક્સ"] || 0) : 0;
+          let taxVal = foundBill ? (foundBill["ટેક્સ%"] || foundBill["ટેક્સ"] || foundBill["Tax"] || foundBill["ટેક્સ %"] || 0) : 0;
+          document.getElementById("mTax").value = taxVal;
+
           document.getElementById("editMedId").value = entryId;
           document.getElementById("btnMed").innerText = "અપડેટ કરો";
           document.getElementById("formTitleMed").innerText = "🧪 દવા ખર્ચ અપડેટ";
@@ -1286,6 +1288,7 @@
               item["પાકનું નામ"] || item["પાકનું_નામ"] || ""
             );
           });
+          calcMedBill();
           updatePartnerSummary('Med');
           alert("દવા એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
@@ -1315,9 +1318,12 @@
           let hastakVal = (foundBill ? (foundBill["હસ્તે"] || foundBill["Hastak"] || foundBill["ભાગીદાર"] || "") : "") || foundItems[0]["હસ્તે"] || bhagiyaVal;
           document.getElementById("fHastak").value = hastakVal;
 
+          let taxVal = foundBill ? (foundBill["ટેક્સ%"] || foundBill["ટેક્સ"] || foundBill["Tax"] || foundBill["ટેક્સ %"] || 0) : 0;
+          document.getElementById("fTax").value = taxVal;
+
           document.getElementById("editFertId").value = entryId;
           document.getElementById("btnFert").innerText = "અપડેટ કરો";
-          document.getElementById("formTitleFert").innerText = "🌾 ખાતર ખર્ચ અપડેટ";
+          document.getElementById("formTitleFert", "🌾 ખાતર ખર્ચ અપડેટ");
           document.getElementById("subBtnFertNew").innerText = "❌ કેન્સલ (રિટર્ન)";
           
           document.getElementById("fertItemsContainer").innerHTML = "";
@@ -1331,6 +1337,7 @@
               item["પાકનું નામ"] || item["પાકનું_નામ"] || ""
             );
           });
+          calcFertBill();
           updatePartnerSummary('Fert');
           alert("ખાતર એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }

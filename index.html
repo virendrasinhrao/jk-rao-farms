@@ -1114,7 +1114,7 @@
           String(b["બિલ નં"] || b["બીલ નં"] || "").trim() === String(billNo).trim()
         ) || {};
         
-        let totalBillAmt = parentBill["બીલની કુલ રકમ"] || parentBill["બીલની_કુલ_રકમ"] || parentBill["કુલ રકમ"] || parentBill["Total_Bill"] || 0;
+        let totalBillAmt = parentBill["બીલની કુલ રકમ"] || parentBill["બીલની_કુલ_રકમ"] || parentBill["બિલની કુલ રકમ"] || parentBill["Total_Bill"] || parentBill["કુલ રકમ"] || 0;
         let farmerAmt = r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0;
 
         html += `<td>${billNo}</td><td><b>${davaName}</b></td><td>${davaType}</td><td>${wt}</td><td>${qty}</td><td>₹ ${bhav}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${pak}</td><td>₹ ${parseFloat(totalBillAmt).toFixed(2)}</td><td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td>`;
@@ -1132,7 +1132,7 @@
           String(b["બિલ નં"] || b["બીલ નં"] || "").trim() === String(billNo).trim()
         ) || {};
         
-        let totalBillAmt = parentBill["બીલની કુલ રકમ"] || parentBill["બીલની_કુલ_રકમ"] || parentBill["કુલ રકમ"] || parentBill["Total_Bill"] || 0;
+        let totalBillAmt = parentBill["બીલની કુલ રકમ"] || parentBill["બીલની_કુલ_રકમ"] || parentBill["બિલની કુલ રકમ"] || parentBill["Total_Bill"] || parentBill["કુલ રકમ"] || 0;
         let farmerAmt = r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0;
 
         html += `<td>${billNo}</td><td><b>${khatarName}</b></td><td>${wt}</td><td>${qty}</td><td>₹ ${bhav}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${pak}</td><td>₹ ${parseFloat(totalBillAmt).toFixed(2)}</td><td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td>`;
@@ -1203,6 +1203,9 @@
   }
 
   function editRecord(entryId, tabName) {
+    // એડિટ બટન દબાવતાની સાથે જ પેજ સીધું ઉપર સ્ક્રોલ થઈ જશે
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
     askMpinAndExecute(() => {
       if(tabName === 'Trac') {
         let cleanTargetId = String(entryId).trim();

@@ -390,7 +390,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxdWynjc6laOLxbzlLID7mCnFTCUPKHpmRQ96OHsQIHwbqyXy-ex1S-M-_MVajuqp_V1w/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxwhHCp4C7RKjjhlWsvQVv1Uf-YyLBUYo8wwq30UkEKdNiexDPRVJ5fPiRYIg3QAsqbSg/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -1306,13 +1306,13 @@
           let billNoVal = foundBill ? (foundBill["બિલ નં"] || foundBill["બીલ નં"] || foundBill["બિલ_નં"] || foundBill["Bill_No"] || "") : (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "");
           document.getElementById("fBill").value = billNoVal;
 
-          let bhagiyaVal = foundBill ? (foundBill["ખેડૂ નામ"] || foundBill["ખેડૂનું નામ"] || foundBill["ભાગીદાર"] || foundBill["Bhagiya"] || "") : (foundItems[0]["ભાગીદાર"] || foundItems[0]["ખેડૂનું નામ"] || "");
+          let bhagiyaVal = (foundBill ? (foundBill["ખેડૂ નામ"] || foundBill["ખેડૂનું નામ"] || foundBill["ભાગીદાર"] || foundBill["Bhagiya"] || "") : "") || foundItems[0]["ભાગીદાર"] || foundItems[0]["ખેડૂનું નામ"] || "";
           document.getElementById("fBhagiya").value = bhagiyaVal;
 
-          let vepariVal = foundBill ? (foundBill["વેપારી"] || foundBill["વેપારીનું_નામ"] || foundBill["વેપારીનું નામ"] || foundBill["દુકાન / વેપારી"] || "") : "";
+          let vepariVal = (foundBill ? (foundBill["વેપારી"] || foundBill["વેપારીનું_નામ"] || foundBill["વેપારીનું નામ"] || foundBill["દુકાન / વેપારી"] || "") : "");
           document.getElementById("fVepari").value = vepariVal;
 
-          let hastakVal = foundBill ? (foundBill["હસ્તે"] || foundBill["Hastak"] || foundBill["ભાગીદાર"] || "") : (foundItems[0]["હસ્તે"] || bhagiyaVal);
+          let hastakVal = (foundBill ? (foundBill["હસ્તે"] || foundBill["Hastak"] || foundBill["ભાગીદાર"] || "") : "") || foundItems[0]["હસ્તે"] || bhagiyaVal;
           document.getElementById("fHastak").value = hastakVal;
 
           document.getElementById("editFertId").value = entryId;
@@ -1549,7 +1549,7 @@
 
   function saveB() {
     let name = v("nbName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
-    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone", v("nbAdd")) ]);
+    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone"), v("nbAdd") ]);
     document.getElementById("modalBhagiya").style.display = "none";
   }
   function saveV() {

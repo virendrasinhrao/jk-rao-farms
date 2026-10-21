@@ -381,9 +381,9 @@
   </div>
 </div>
 
-<div id="modalBhagiya" class="modal"><div class="modal-content"><h3>➕ ભાગીદાર મેનેજમેન્ટ</h3><input type="text" id="nbName" placeholder="નામ" class="form-group"><input type="number" id="nbPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nbAdd" placeholder="ગામ" class="form-group"><button type="button" class="btn-submit" onclick="saveB()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteSelected('Bhagiya_Master')">પસંદ કરેલ ભાગીદાર ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalBhagiya').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
+<div id="modalBhagiya" class="modal"><div class="modal-content"><h3>➕ ભાગીદાર મેનેજમેન્ટ</h3><input type="text" id="nbName" placeholder="નામ" class="form-group"><input type="number" id="nbPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nbAdd" placeholder="ગામ" class="form-group"><button type="button" class="btn-submit" onclick="saveB()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Bhagiya_Master')">પસંદ કરેલ ભાગીદાર ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalBhagiya').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
 
-<div id="modalVepari" class="modal"><div class="modal-content"><h3>➕ વેપારી મેનેજમેન્ટ</h3><input type="text" id="nvName" placeholder="નામ" class="form-group"><input type="number" id="nvPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nvCity" placeholder="ગામ" class="form-group"><select id="nvCategory" class="form-group"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="દવા">દવા</option><option value="ખાતર">ખાતર</option></select><button type="button" class="btn-submit" onclick="saveV()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteSelected('Merchant_Master')">પસંદ કરેલ વેપારી ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalVepari').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
+<div id="modalVepari" class="modal"><div class="modal-content"><h3>➕ વેપારી મેનેજમેન્ટ</h3><input type="text" id="nvName" placeholder="નામ" class="form-group"><input type="number" id="nvPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nvCity" placeholder="ગામ" class="form-group"><select id="nvCategory" class="form-group"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="દવા">દવા</option><option value="ખાતર">ખાતર</option></select><button type="button" class="btn-submit" onclick="saveV()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Merchant_Master')">પસંદ કરેલ વેપારી ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalVepari').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
 
 <div id="modalFertilizer" class="modal"><div class="modal-content"><h3>➕ ખાતર મેનેજમેન્ટ</h3><input type="text" id="nfName" placeholder="ખાતરનું નામ (દા.ત. યુરિયા)" class="form-group"><button type="button" class="btn-submit" onclick="saveFertilizerMaster()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="deleteFertilizerMaster()">પસંદ કરેલ ખાતર ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalFertilizer').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
 
@@ -1290,7 +1290,7 @@
           alert("દવા એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       }
-            else if(tabName === 'Fert') {
+      else if(tabName === 'Fert') {
         let cleanId = String(entryId).trim();
         let foundItems = (appData.Fertilizer_Items || []).filter(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(cleanId) === 0);
         let foundBill = (appData.Fertilizer_Bill || []).find(r => 
@@ -1301,25 +1301,18 @@
 
         if(foundItems.length > 0) {
           switchSubTab('Fert', 'New');
+          document.getElementById("fDate").value = String(foundItems[0]["તારીખ"] || foundItems[0]["Date"] || "").split('T')[0];
           
-          // તારીખ સાચી સેટ કરવી (સમય વગરની માત્ર તારીખ)
-          let rawDate = foundItems[0]["તારીખ"] || foundItems[0]["Date"] || "";
-          document.getElementById("fDate").value = String(rawDate).split('T')[0];
-          
-          // બિલ નંબર સાચો સેટ કરવો
-          let billNoVal = foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || foundItems[0]["બિલ_નં"] || (foundBill ? (foundBill["બિલ નં"] || foundBill["બીલ નં"] || foundBill["બિલ_નં"] || foundBill["Bill_No"] || "") : "");
+          let billNoVal = foundBill ? (foundBill["બિલ નં"] || foundBill["બીલ નં"] || foundBill["બિલ_નં"] || foundBill["Bill_No"] || "") : (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "");
           document.getElementById("fBill").value = billNoVal;
 
-          // ભાગીદાર સાચો સેટ કરવો
-          let bhagiyaVal = foundItems[0]["ભાગીદાર"] || foundItems[0]["ખેડૂનું નામ"] || (foundBill ? (foundBill["ખેડૂનું નામ"] || foundBill["ભાગીદાર"] || foundBill["Bhagiya"] || "") : "");
+          let bhagiyaVal = foundBill ? (foundBill["ખેડૂ નામ"] || foundBill["ખેડૂનું નામ"] || foundBill["ભાગીદાર"] || foundBill["Bhagiya"] || "") : (foundItems[0]["ભાગીદાર"] || foundItems[0]["ખેડૂનું નામ"] || "");
           document.getElementById("fBhagiya").value = bhagiyaVal;
 
-          // વેપારી સાચો સેટ કરવો
-          let vepariVal = foundItems[0]["વેપારી"] || (foundBill ? (foundBill["વેપારી"] || foundBill["વેપારીનું_નામ"] || foundBill["વેપારીનું નામ"] || foundBill["દુકાન / વેપારી"] || "") : "");
+          let vepariVal = foundBill ? (foundBill["વેપારી"] || foundBill["વેપારીનું_નામ"] || foundBill["વેપારીનું નામ"] || foundBill["દુકાન / વેપારી"] || "") : "";
           document.getElementById("fVepari").value = vepariVal;
 
-          // હસ્તે સાચું સેટ કરવું
-          let hastakVal = foundItems[0]["હસ્તે"] || (foundBill ? (foundBill["હસ્તે"] || foundBill["Hastak"] || "") : "") || bhagiyaVal;
+          let hastakVal = foundBill ? (foundBill["હસ્તે"] || foundBill["Hastak"] || foundBill["ભાગીદાર"] || "") : (foundItems[0]["હસ્તે"] || bhagiyaVal);
           document.getElementById("fHastak").value = hastakVal;
 
           document.getElementById("editFertId").value = entryId;
@@ -1339,10 +1332,11 @@
             );
           });
           updatePartnerSummary('Fert');
-          alert("ખાતર એન્ટ્રી ફોર્મમાં સફળતાપૂર્વક લોડ થઈ ગઈ છે!");
+          alert("ખાતર એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       }
-
+    });
+  }
 
   function submitSales(e) {
     e.preventDefault();
@@ -1423,7 +1417,7 @@
     let mainEntryId = existingId ? existingId : "ME-" + Math.floor(100000 + Math.random() * 900000);
 
     handlePhotoUpload("mPhoto", function(photoBase64) {
-      let billRow = [ year, mainEntryId, billNo, date, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords, v("mHastak") ];
+      let billRow = [ year, mainEntryId, date, billNo, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords, v("mHastak") ];
       let itemRows = [];
       let totalFarmerAmt = 0;
       rows.forEach(row => {
@@ -1538,7 +1532,7 @@
       method: "POST",
       body: JSON.stringify({ action: "saveTractor", rowValuesArray: rowDataArray, editEntryId: existingId })
     }).then(res => res.json()).then(() => {
-      alert(existingId ? "ટ્રેક્ટર ખર્ચ સફળતાપૂર્વક અપડેટ થઈ ગયો!" : "ટ્રેક્ટર ખર્ચ સફળતાપૂર્વક સેવ થઈ ગયો!"); 
+      alert(existingId ? "ટ્રેક્ટર ખર્ચ સફળતાપૂર્વક અપડેટ થઈ ગયો!" : "ટ્રેક્ટર ખર્ચ સફળતાપૂર્વક સેવ થઈ ગયું!"); 
       document.getElementById("btnTrac").innerText = "સેવ કરો";
       document.getElementById("editTracId").value = "";
       document.getElementById("tracForm").reset(); 
@@ -1555,7 +1549,7 @@
 
   function saveB() {
     let name = v("nbName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
-    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone"), v("nbAdd") ]);
+    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone", v("nbAdd")) ]);
     document.getElementById("modalBhagiya").style.display = "none";
   }
   function saveV() {

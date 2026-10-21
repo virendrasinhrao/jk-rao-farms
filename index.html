@@ -1245,7 +1245,12 @@
       }
       else if(tabName === 'Med') {
         let foundItems = (appData.Pesticide_Items || []).filter(r => String(r["એન્ટ્રી Id"] || "").trim().indexOf(String(entryId).trim()) === 0);
-        let foundBill = (appData.Pesticide_Bill || []).find(r => String(r["એન્ટ્રી Id"] || "").trim() === String(entryId).trim() || String(r["બિલ નં"] || r["બીલ નં"] || r["બિલ_નં"] || "").trim() === String(foundItems.length > 0 ? (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "") : "").trim());
+        let foundBill = (appData.Pesticide_Bill || []).find(r => 
+          String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim() || 
+          String(r["એન્ટ્રી Id"] || "").trim().indexOf(String(entryId).trim()) === 0 ||
+          String(r["બિલ નં"] || r["બીલ નં"] || r["બિલ_નં"] || "").trim() === String(foundItems.length > 0 ? (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "") : "").trim()
+        );
+
         if(foundItems.length > 0) {
           switchSubTab('Med', 'New');
           document.getElementById("mDate").value = String(foundItems[0]["તારીખ"] || foundItems[0]["Date"] || "").split('T')[0];
@@ -1256,7 +1261,7 @@
           let bhagiyaVal = foundBill ? (foundBill["ખેડૂનું નામ"] || foundBill["ભાગીદાર"] || foundBill["Bhagiya"] || "") : (foundItems[0]["ભાગીદાર"] || foundItems[0]["ખેડૂનું નામ"] || "");
           document.getElementById("mBhagiya").value = bhagiyaVal;
 
-          let vepariVal = foundBill ? (foundBill["વેપારી"] || foundBill["વેપારીનું_નામ"] || foundBill["વેપારીનું નામ"] || "") : "";
+          let vepariVal = foundBill ? (foundBill["વેપારી"] || foundBill["વેપારીનું_નામ"] || foundBill["વેપારીનું નામ"] || foundBill["દુકાન / વેપારી"] || "") : "";
           document.getElementById("mVepari").value = vepariVal;
 
           let hastakVal = foundBill ? (foundBill["હસ્તે"] || foundBill["Hastak"] || "") : (foundItems[0]["હસ્તે"] || "");
@@ -1285,7 +1290,12 @@
       }
       else if(tabName === 'Fert') {
         let foundItems = (appData.Fertilizer_Items || []).filter(r => String(r["એન્ટ્રી Id"] || "").trim().indexOf(String(entryId).trim()) === 0);
-        let foundBill = (appData.Fertilizer_Bill || []).find(r => String(r["એન્ટ્રી Id"] || "").trim() === String(entryId).trim() || String(r["બિલ નં"] || r["બીલ નં"] || r["બિલ_નં"] || "").trim() === String(foundItems.length > 0 ? (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "") : "").trim());
+        let foundBill = (appData.Fertilizer_Bill || []).find(r => 
+          String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim() || 
+          String(r["એન્ટ્રી Id"] || "").trim().indexOf(String(entryId).trim()) === 0 ||
+          String(r["બિલ નં"] || r["બીલ નં"] || r["બિલ_નં"] || "").trim() === String(foundItems.length > 0 ? (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "") : "").trim()
+        );
+
         if(foundItems.length > 0) {
           switchSubTab('Fert', 'New');
           document.getElementById("fDate").value = String(foundItems[0]["તારીખ"] || foundItems[0]["Date"] || "").split('T')[0];
@@ -1296,7 +1306,7 @@
           let bhagiyaVal = foundBill ? (foundBill["ખેડૂનું નામ"] || foundBill["ભાગીદાર"] || foundBill["Bhagiya"] || "") : (foundItems[0]["ભાગીદાર"] || foundItems[0]["ખેડૂનું નામ"] || "");
           document.getElementById("fBhagiya").value = bhagiyaVal;
 
-          let vepariVal = foundBill ? (foundBill["વેપારી"] || foundBill["વેપારીનું_નામ"] || foundBill["વેપારીનું નામ"] || "") : "";
+          let vepariVal = foundBill ? (foundBill["વેપારી"] || foundBill["વેપારીનું_નામ"] || foundBill["વેપારીનું નામ"] || foundBill["દુકાન / વેપારી"] || "") : "";
           document.getElementById("fVepari").value = vepariVal;
 
           let hastakVal = foundBill ? (foundBill["હસ્તે"] || foundBill["Hastak"] || "") : (foundItems[0]["હસ્તે"] || "");

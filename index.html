@@ -679,7 +679,7 @@
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
         let rBhagiya = String(r["ખેડૂનું નામ"] || r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
         if(rBhagiya === selectedBhagiya && rYear === targetYear) {
-          totalSum += parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || 0);
+          totalSum += parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || r["કુલ રકમ"] || r["Total_Bill"] || 0);
         }
       });
     } else if(sectionType === 'Fert' && appData.Fertilizer_Bill) {
@@ -687,7 +687,7 @@
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
         let rBhagiya = String(r["ખેડૂનું નામ"] || r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
         if(rBhagiya === selectedBhagiya && rYear === targetYear) {
-          totalSum += parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || 0);
+          totalSum += parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || r["કુલ રકમ"] || r["Total_Bill"] || 0);
         }
       });
     } else if(sectionType === 'Trac' && appData.Tractor_Expense) {
@@ -1109,8 +1109,12 @@
         let pak = r["પાકનું નામ"] || "-";
         
         let cleanMainId = String(entryId).split('-')[0];
-        let parentBill = (appData.Pesticide_Bill || []).find(b => String(b["એન્ટ્રી Id"] || "").trim() === cleanMainId) || {};
-        let totalBillAmt = parentBill["બીલની કુલ રકમ"] || parentBill["બીલની_કુલ_રકમ"] || 0;
+        let parentBill = (appData.Pesticide_Bill || []).find(b => 
+          String(b["એન્ટ્રી Id"] || b["Entry_ID"] || "").trim() === cleanMainId || 
+          String(b["બિલ નં"] || b["બીલ નં"] || "").trim() === String(billNo).trim()
+        ) || {};
+        
+        let totalBillAmt = parentBill["બીલની કુલ રકમ"] || parentBill["બીલની_કુલ_રકમ"] || parentBill["કુલ રકમ"] || parentBill["Total_Bill"] || 0;
         let farmerAmt = r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0;
 
         html += `<td>${billNo}</td><td><b>${davaName}</b></td><td>${davaType}</td><td>${wt}</td><td>${qty}</td><td>₹ ${bhav}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${pak}</td><td>₹ ${parseFloat(totalBillAmt).toFixed(2)}</td><td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td>`;
@@ -1123,8 +1127,12 @@
         let pak = r["પાકનું નામ"] || "-";
         
         let cleanMainId = String(entryId).split('-')[0];
-        let parentBill = (appData.Fertilizer_Bill || []).find(b => String(b["એન્ટ્રી Id"] || "").trim() === cleanMainId) || {};
-        let totalBillAmt = parentBill["બીલની કુલ રકમ"] || parentBill["બીલની_કુલ_રકમ"] || 0;
+        let parentBill = (appData.Fertilizer_Bill || []).find(b => 
+          String(b["એન્ટ્રી Id"] || b["Entry_ID"] || "").trim() === cleanMainId || 
+          String(b["બિલ નં"] || b["બીલ નં"] || "").trim() === String(billNo).trim()
+        ) || {};
+        
+        let totalBillAmt = parentBill["બીલની કુલ રકમ"] || parentBill["બીલની_કુલ_રકમ"] || parentBill["કુલ રકમ"] || parentBill["Total_Bill"] || 0;
         let farmerAmt = r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0;
 
         html += `<td>${billNo}</td><td><b>${khatarName}</b></td><td>${wt}</td><td>${qty}</td><td>₹ ${bhav}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${pak}</td><td>₹ ${parseFloat(totalBillAmt).toFixed(2)}</td><td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td>`;
@@ -1260,7 +1268,7 @@
         let foundItems = (appData.Pesticide_Items || []).filter(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(cleanId) === 0);
         let foundBill = (appData.Pesticide_Bill || []).find(r => 
           String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === cleanId || 
-          String(r["એન્ટ્રી Id"] || "").trim().indexOf(cleanId) === 0 ||
+          String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(cleanId) === 0 ||
           String(r["બિલ નં"] || r["બીલ નં"] || r["બિલ_નં"] || "").trim() === String(foundItems.length > 0 ? (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "") : "").trim()
         );
         let foundLedger = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || "").trim() === cleanId) || {};

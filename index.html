@@ -27,8 +27,12 @@
     
     .btn-submit { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; font-size: 15px; cursor: pointer; margin-top: 10px; font-weight: bold; border-radius: 3px; }
     .btn-submit:hover { background: #219653; }
-    .btn-delete { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; box-shadow: 0 2px 4px rgba(231,76,60,0.3); }
-    .btn-edit { background: linear-gradient(135deg, #f39c12, #d68910); color: white; border-radius: 6px; border: none; padding: 8px 16px; cursor: pointer; font-size: 13px; font-weight: bold; box-shadow: 0 2px 4px rgba(243,156,18,0.3); }
+    
+    /* Small Table Action Buttons */
+    .btn-table-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
+    .btn-table-edit { background: #f39c12; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
+    .table-actions-bar { display: none; gap: 8px; margin-bottom: 10px; padding: 6px 10px; background: #f8f9f9; border: 1px solid #d5dbdb; border-radius: 4px; align-items: center; }
+
     .btn-add-item { background: #2980b9; color: white; border: none; padding: 6px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; margin-bottom: 8px; }
     
     /* Colorful Status Badges */
@@ -43,15 +47,6 @@
     }
     .partner-sum-banner h4 { margin: 0 0 3px 0; font-size: 12px; opacity: 0.9; }
     .partner-sum-banner .sum-amount { font-size: 20px; font-weight: bold; }
-
-    /* Floating Action Bar styling */
-    .floating-action-bar {
-      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-      background: linear-gradient(135deg, #2c3e50, #34495e); color: white;
-      padding: 10px 20px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      display: none; align-items: center; gap: 12px; z-index: 999; animation: slideUp 0.3s ease;
-    }
-    @keyframes slideUp { from { bottom: -50px; opacity: 0; } to { bottom: 20px; opacity: 1; } }
 
     .readonly-bg { background-color: #f1f2f6; }
     .hidden-field { display: none !important; }
@@ -167,6 +162,7 @@
     <div id="subContentSalesView" class="sub-section" style="display:none;">
       <h3 style="text-align:center; color:#27ae60; margin-top:0;">📋 વેચાણ રેકોર્ડ્સ</h3>
       <div class="form-group"><input type="text" id="searchSales" placeholder="🔍 બિલ, ખરીદનાર કે ભાગીદારના નામથી શોધો..." oninput="filterTable('Sales')"></div>
+      <div id="actionBarSales" class="table-actions-bar"></div>
       <div id="tableContainerSales" style="overflow-x:auto;"></div>
     </div>
   </div>
@@ -231,6 +227,7 @@
     <div id="subContentMedView" class="sub-section" style="display:none;">
       <h3 style="text-align:center; color:#2980b9; margin-top:0;">📋 દવા આઇટમ રેકોર્ડ્સ</h3>
       <div class="form-group"><input type="text" id="searchMed" placeholder="🔍 બિલ, દવા કે પાકના નામથી શોધો..." oninput="filterTable('Med')"></div>
+      <div id="actionBarMed" class="table-actions-bar"></div>
       <div id="tableContainerMed" style="overflow-x:auto;"></div>
     </div>
   </div>
@@ -295,6 +292,7 @@
     <div id="subContentFertView" class="sub-section" style="display:none;">
       <h3 style="text-align:center; color:#d35400; margin-top:0;">📋 ખાતર આઇટમ રેકોર્ડ્સ</h3>
       <div class="form-group"><input type="text" id="searchFert" placeholder="🔍 બિલ, ખાતર કે પાકના નામથી શોધો..." oninput="filterTable('Fert')"></div>
+      <div id="actionBarFert" class="table-actions-bar"></div>
       <div id="tableContainerFert" style="overflow-x:auto;"></div>
     </div>
   </div>
@@ -349,6 +347,7 @@
     <div id="subContentTracView" class="sub-section" style="display:none;">
       <h3 style="text-align:center; color:#8e44ad; margin-top:0;">📋 ટ્રેક્ટર ખર્ચ રેકોર્ડ્સ</h3>
       <div class="form-group"><input type="text" id="searchTrac" placeholder="🔍 કામ કે માલિકના નામથી શોધો..." oninput="filterTable('Trac')"></div>
+      <div id="actionBarTrac" class="table-actions-bar"></div>
       <div id="tableContainerTrac" style="overflow-x:auto;"></div>
     </div>
   </div>
@@ -363,12 +362,6 @@
       <p style="text-align:center;">લોડ થઈ રહ્યું છે...</p>
     </div>
   </div>
-</div>
-
-<!-- Floating Action Bar for Selected Rows -->
-<div id="floatingActionBar" class="floating-action-bar">
-  <span id="selectedCountText" style="font-size:13px; font-weight:bold;">0 પસંદ કરેલ</span>
-  <div id="floatingButtonsContainer" style="display:flex; gap:8px;"></div>
 </div>
 
 <!-- Modal Pop-ups -->
@@ -481,24 +474,28 @@
       document.getElementById('sDate').value = new Date().toISOString().split('T')[0];
       document.getElementById('btnSales').innerText = "સેવ કરો"; document.getElementById('formTitleSales').innerText = "🌱 વેચાણ એન્ટ્રી";
       document.getElementById('subBtnSalesNew').innerText = "➕ નવી એન્ટ્રી"; document.getElementById('sBill').style.backgroundColor = "#fff"; document.getElementById('btnSales').style.display = "block";
+      document.getElementById('partnerBannerSales').style.display = 'none';
     } else if(tabName === 'Med') {
       document.getElementById('editMedId').value = ""; document.getElementById('medForm').reset();
       document.getElementById('medItemsContainer').innerHTML = ""; addMedItemRow();
       document.getElementById('mDate').value = new Date().toISOString().split('T')[0];
       document.getElementById('btnMed').innerText = "સેવ કરો"; document.getElementById('formTitleMed').innerText = "🧪 દવા ખર્ચ એન્ટ્રી";
       document.getElementById('subBtnMedNew').innerText = "➕ નવી એન્ટ્રી"; document.getElementById('mBill').style.backgroundColor = "#fff"; document.getElementById('btnMed').style.display = "block";
+      document.getElementById('partnerBannerMed').style.display = 'none';
     } else if(tabName === 'Fert') {
       document.getElementById('editFertId').value = ""; document.getElementById('fertForm').reset();
       document.getElementById('fertItemsContainer').innerHTML = ""; addFertItemRow();
       document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
       document.getElementById('btnFert').innerText = "સેવ કરો"; document.getElementById('formTitleFert').innerText = "🌾 ખાતર ખર્ચ એન્ટ્રી";
       document.getElementById('subBtnFertNew').innerText = "➕ નવી એન્ટ્રી"; document.getElementById('fBill').style.backgroundColor = "#fff"; document.getElementById('btnFert').style.display = "block";
+      document.getElementById('partnerBannerFert').style.display = 'none';
     } else if(tabName === 'Trac') {
       document.getElementById('editTracId').value = ""; document.getElementById('tracForm').reset();
       document.getElementById('tracItemsContainer').innerHTML = ""; addTracItemRow();
       document.getElementById('tDate').value = new Date().toISOString().split('T')[0];
       document.getElementById('btnTrac').innerText = "સેવ કરો"; document.getElementById('formTitleTrac').innerText = "🚜 ટ્રેક્ટર ખર્ચ એન્ટ્રી";
       document.getElementById('subBtnTracNew').innerText = "➕ નવી એન્ટ્રી";
+      document.getElementById('partnerBannerTrac').style.display = 'none';
     }
   }
 
@@ -515,6 +512,7 @@
       let contentNew = document.getElementById('subContent' + tabName + 'New');
       if(contentNew) contentNew.style.display = 'block';
       if(btnNew) btnNew.classList.add('active-sub');
+      updatePartnerSummary(tabName);
     } else {
       let contentView = document.getElementById('subContent' + tabName + 'View');
       if(contentView) contentView.style.display = 'block';
@@ -536,7 +534,7 @@
       if(pendingActionCallback) pendingActionCallback();
       pendingActionCallback = null;
     } else {
-      alert("ખોટો MPIN કોડ છે! કૃપા કરીને સાચો કોડ નાખો.");
+      alert("ખોટો પ્રોટેક્શન કોડ છે!");
     }
   }
 
@@ -628,15 +626,10 @@
 
   function updatePartnerSummary(sectionType) {
     let dateId = sectionType === 'Sales' ? 'sDate' : sectionType === 'Med' ? 'mDate' : sectionType === 'Fert' ? 'fDate' : 'tDate';
-    let bhagiyaId = sectionType === 'Sales' ? 'sBhagiya' : sectionType === 'Med' ? 'mBhagiya' : sectionType === 'Fert' ? 'fBhagiya' : 'tBhagiya';
-    
     let dateVal = document.getElementById(dateId).value;
-    let selectedBhagiya = document.getElementById(bhagiyaId).value;
     let banner = document.getElementById('partnerBanner' + sectionType);
 
-    if(!selectedBhagiya || selectedBhagiya === "NEW" || !dateVal) {
-      banner.style.display = 'none'; return;
-    }
+    if(!dateVal) { banner.style.display = 'none'; return; }
 
     let targetYear = getYear(dateVal);
     let totalSum = 0;
@@ -644,39 +637,35 @@
     if(sectionType === 'Sales' && appData.Sales_Ledger) {
       appData.Sales_Ledger.forEach(r => {
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
-        let rBhagiya = String(r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
-        if(rBhagiya === selectedBhagiya && rYear === targetYear) {
+        if(rYear === targetYear) {
           totalSum += parseFloat(r["કુલ રકમ (₹)"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
         }
       });
-      document.getElementById('bannerTitleSales').innerText = selectedBhagiya + " (" + targetYear + ") - કુલ વેચાણ";
+      document.getElementById('bannerTitleSales').innerText = "વર્ષ (" + targetYear + ") - કુલ ફાર્મ વેચાણ";
     } else if(sectionType === 'Med' && appData.Pesticide_Bill) {
       appData.Pesticide_Bill.forEach(r => {
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
-        let rBhagiya = String(r["ખેડૂનું નામ"] || r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
-        if(rBhagiya === selectedBhagiya && rYear === targetYear) {
+        if(rYear === targetYear) {
           totalSum += parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || r["કુલ રકમ"] || r["Total_Bill"] || 0);
         }
       });
-      document.getElementById('bannerTitleMed').innerText = selectedBhagiya + " (" + targetYear + ") - કુલ દવા ખર્ચ";
+      document.getElementById('bannerTitleMed').innerText = "વર્ષ (" + targetYear + ") - કુલ ફાર્મ દવા ખર્ચ";
     } else if(sectionType === 'Fert' && appData.Fertilizer_Bill) {
       appData.Fertilizer_Bill.forEach(r => {
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
-        let rBhagiya = String(r["ખેડૂનું નામ"] || r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
-        if(rBhagiya === selectedBhagiya && rYear === targetYear) {
+        if(rYear === targetYear) {
           totalSum += parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || r["કુલ રકમ"] || r["Total_Bill"] || 0);
         }
       });
-      document.getElementById('bannerTitleFert').innerText = selectedBhagiya + " (" + targetYear + ") - કુલ ખાતર ખર્ચ";
+      document.getElementById('bannerTitleFert').innerText = "વર્ષ (" + targetYear + ") - કુલ ફાર્મ ખાતર ખર્ચ";
     } else if(sectionType === 'Trac' && appData.Tractor_Expense) {
       appData.Tractor_Expense.forEach(r => {
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
-        let rBhagiya = String(r["હસ્તે"] || r["ભાગીદાર"] || r["Bhagiya"] || "").trim();
-        if(rBhagiya === selectedBhagiya && rYear === targetYear) {
+        if(rYear === targetYear) {
           totalSum += parseFloat(r["કુલ બિલ રકમ"] || r["કુલ ભાડું"] || 0);
         }
       });
-      document.getElementById('bannerTitleTrac').innerText = selectedBhagiya + " (" + targetYear + ") - કુલ ટ્રેક્ટર ખર્ચ";
+      document.getElementById('bannerTitleTrac').innerText = "વર્ષ (" + targetYear + ") - કુલ ફાર્મ ટ્રેક્ટર ખર્ચ";
     }
 
     document.getElementById('bannerVal' + sectionType).innerText = "₹ " + totalSum.toFixed(2);
@@ -1019,6 +1008,7 @@
   function renderTable(tabName) {
     currentActiveTab = tabName;
     let container = document.getElementById("tableContainer" + tabName);
+    let actionBar = document.getElementById("actionBar" + tabName);
     let rows = [];
     
     if(tabName === 'Sales') rows = appData['Sales_Ledger'] || [];
@@ -1026,7 +1016,11 @@
     else if(tabName === 'Fert') rows = appData['Fertilizer_Items'] || [];
     else if(tabName === 'Trac') rows = appData['Tractor_Expense'] || [];
     
-    if(rows.length === 0) { container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ રેકોર્ડ ઉપલબ્ધ નથી.</p>"; updateFloatingActionBar(); return; }
+    if(rows.length === 0) { 
+      container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ રેકોર્ડ ઉપલબ્ધ નથી.</p>"; 
+      if(actionBar) actionBar.style.display = 'none';
+      return; 
+    }
 
     let html = `<table><tr>
       <th><input type="checkbox" id="selectAll_${tabName}" onclick="toggleSelectAll(this, '${tabName}')"> બધા સિલેક્ટ કરો</th>
@@ -1052,14 +1046,13 @@
       if(!billNo) billNo = "-";
       if(!bhagiya) bhagiya = "-";
 
-      // Status Badge logic
       let rawStatus = r["બીલની સ્થિતિ (બાકી/જમા)"] || r["બીલની સ્થિતિ"] || r["સ્થિતિ"] || r["Status"] || "રોકડા";
       let statusStr = String(rawStatus).trim().toLowerCase();
       let isBaki = statusStr.includes("બાકી") || statusStr.includes("due") || statusStr.includes("pending");
       let statusBadge = isBaki ? `<span class="badge-baki">બાકી</span>` : `<span class="badge-jama">જમા / રોકડા</span>`;
 
       html += `<tr>
-        <td><input type="checkbox" class="row-select-${tabName}" value="${entryId}" onclick="updateFloatingActionBar()"></td>
+        <td><input type="checkbox" class="row-select-${tabName}" value="${entryId}" onclick="updateTableActionBar('${tabName}')"></td>
         <td><b>${entryId}</b></td>
         <td>${cleanDate}</td>`;
 
@@ -1121,46 +1114,45 @@
       html += `</tr>`;
     });
     container.innerHTML = html + `</table>`;
-    updateFloatingActionBar();
+    updateTableActionBar(tabName);
   }
 
   function toggleSelectAll(master, tabName) {
     let checkboxes = document.querySelectorAll('.row-select-' + tabName);
     checkboxes.forEach(cb => cb.checked = master.checked);
-    updateFloatingActionBar();
+    updateTableActionBar(tabName);
   }
 
-  function updateFloatingActionBar() {
-    let checkboxes = document.querySelectorAll('.row-select-' + currentActiveTab + ':checked');
-    let bar = document.getElementById('floatingActionBar');
-    let countText = document.getElementById('selectedCountText');
-    let btnContainer = document.getElementById('floatingButtonsContainer');
-    
+  function updateTableActionBar(tabName) {
+    let checkboxes = document.querySelectorAll('.row-select-' + tabName + ':checked');
+    let actionBar = document.getElementById('actionBar' + tabName);
+    if(!actionBar) return;
+
+    let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : 'Tractor_Expense';
+
     if(checkboxes.length > 0) {
-      bar.style.display = 'flex';
-      countText.innerText = checkboxes.length + " સિલેક્ટ કરેલ";
-      btnContainer.innerHTML = "";
-
-      let sheetKey = currentActiveTab === 'Sales' ? 'Sales_Ledger' : currentActiveTab === 'Med' ? 'Pesticide_Items' : currentActiveTab === 'Fert' ? 'Fertilizer_Items' : 'Tractor_Expense';
-
+      actionBar.style.display = 'flex';
       if(checkboxes.length === 1) {
         let singleId = checkboxes[0].value;
-        btnContainer.innerHTML = `
-          <button class="btn-edit" onclick="editRecord('${singleId}', '${currentActiveTab}')">✏️ એડિટ</button>
-          <button class="btn-delete" onclick="askMpinForDeleteSelected('${sheetKey}')">🗑️ ડિલીટ</button>
+        actionBar.innerHTML = `
+          <span style="font-size:12px; font-weight:bold; margin-right:5px;">1 સિલેક્ટ કરેલ:</span>
+          <button class="btn-table-edit" onclick="editRecord('${singleId}', '${tabName}')">✏️ એડિટ</button>
+          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ ડિલીટ</button>
         `;
       } else {
-        btnContainer.innerHTML = `
-          <button class="btn-delete" onclick="askMpinForDeleteSelected('${sheetKey}')">🗑️ પસંદ કરેલ ડિલીટ કરો</button>
+        actionBar.innerHTML = `
+          <span style="font-size:12px; font-weight:bold; margin-right:5px;">${checkboxes.length} સિલેક્ટ કરેલ:</span>
+          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ પસંદ કરેલ ડિલીટ કરો</button>
         `;
       }
     } else {
-      bar.style.display = 'none';
+      actionBar.style.display = 'none';
+      actionBar.innerHTML = "";
     }
   }
 
-  function askMpinForDeleteSelected(sheetKey) {
-    let checkedBoxes = document.querySelectorAll('.row-select-' + currentActiveTab + ':checked');
+  function askMpinForDeleteSelected(sheetKey, tabName) {
+    let checkedBoxes = document.querySelectorAll('.row-select-' + tabName + ':checked');
     if(checkedBoxes.length === 0) return alert("કૃપા કરીને ડિલીટ કરવા માટે ઓછામાં ઓછી એક એન્ટ્રી સિલેક્ટ કરો!");
 
     let idsToDelete = Array.from(checkedBoxes).map(cb => cb.value);
@@ -1168,6 +1160,9 @@
     askMpinAndExecute(() => {
       if(!confirm("શું તમે ખરેખર પસંદ કરેલી " + idsToDelete.length + " એન્ટ્રીઓ ડિલીટ કરવા માંગો છો?")) return;
       
+      let actionBar = document.getElementById('actionBar' + tabName);
+      if(actionBar) actionBar.innerHTML = `<span style="color:#e74c3c; font-weight:bold; font-size:12px;">⏳ ડિલીટ થઈ રહ્યું છે...</span>`;
+
       let promises = idsToDelete.map(id => {
         return fetch(SCRIPT_URL, {
           method: "POST",
@@ -1177,7 +1172,6 @@
 
       Promise.all(promises).then(() => {
         alert("પસંદ કરેલ એન્ટ્રીઓ સફળતાપૂર્વક ડિલીટ થઈ ગઈ!");
-        document.getElementById('floatingActionBar').style.display = 'none';
         fetchData();
       }).catch(err => alert("ભૂલ: " + err));
     });
@@ -1194,6 +1188,8 @@
 
   function editRecord(entryId, tabName) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    let actionBar = document.getElementById('actionBar' + tabName);
+    if(actionBar) actionBar.style.display = 'none';
 
     askMpinAndExecute(() => {
       if(tabName === 'Trac') {
@@ -1251,7 +1247,7 @@
         let foundItems = (appData.Pesticide_Items || []).filter(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(cleanId) === 0);
         let foundBill = (appData.Pesticide_Bill || []).find(r => 
           String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === cleanId || 
-          String(r["એન્ટ્રી Id"] || "").trim().indexOf(cleanId) === 0 ||
+          String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(cleanId) === 0 ||
           String(r["બિલ નં"] || r["બીલ નં"] || "").trim() === String(foundItems.length > 0 ? (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "") : "").trim()
         );
 
@@ -1459,7 +1455,7 @@
 
   function saveB() {
     let name = v("nbName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
-    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone"), v("nbAdd") ]);
+    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone", "nbAdd") ]);
     document.getElementById("modalBhagiya").style.display = "none";
   }
   function saveV() {

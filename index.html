@@ -140,7 +140,7 @@
     </div>
     
     <div id="subContentSalesNew" class="sub-section">
-      <h3 style="text-align:center; color:#27ae60; margin-top:0;">🌱 વેચાણ એન્ટ્રી</h3>
+      <h3 id="formTitleSales" style="text-align:center; color:#27ae60; margin-top:0;">🌱 વેચાણ એન્ટ્રી</h3>
       <div id="partnerBannerSales" class="partner-sum-banner">
         <h4>કુલ વેચાણ</h4>
         <div class="sum-amount" id="bannerValSales">₹ 0.00</div>
@@ -184,7 +184,7 @@
     </div>
 
     <div id="subContentMedNew" class="sub-section">
-      <h3 style="text-align:center; color:#2980b9; margin-top:0;">🧪 દવા ખર્ચ એન્ટ્રી</h3>
+      <h3 id="formTitleMed" style="text-align:center; color:#2980b9; margin-top:0;">🧪 દવા ખર્ચ એન્ટ્રી</h3>
       <div id="partnerBannerMed" class="partner-sum-banner">
         <h4>કુલ વેચાણ</h4>
         <div class="sum-amount" id="bannerValMed">₹ 0.00</div>
@@ -248,7 +248,7 @@
     </div>
 
     <div id="subContentFertNew" class="sub-section">
-      <h3 style="text-align:center; color:#d35400; margin-top:0;">🌾 ખાતર ખર્ચ એન્ટ્રી</h3>
+      <h3 id="formTitleFert" style="text-align:center; color:#d35400; margin-top:0;">🌾 ખાતર ખર્ચ એન્ટ્રી</h3>
       <div id="partnerBannerFert" class="partner-sum-banner">
         <h4>કુલ વેચાણ</h4>
         <div class="sum-amount" id="bannerValFert">₹ 0.00</div>
@@ -312,7 +312,7 @@
     </div>
 
     <div id="subContentTracNew" class="sub-section">
-      <h3 style="text-align:center; color:#8e44ad; margin-top:0;">🚜 ટ્રેક્ટર ખર્ચ એન્ટ્રી</h3>
+      <h3 id="formTitleTrac" style="text-align:center; color:#8e44ad; margin-top:0;">🚜 ટ્રેક્ટર ખર્ચ એન્ટ્રી</h3>
       <div id="partnerBannerTrac" class="partner-sum-banner">
         <h4>કુલ વેચાણ</h4>
         <div class="sum-amount" id="bannerValTrac">₹ 0.00</div>
@@ -481,6 +481,8 @@
         addSalesItemRow();
         document.getElementById('sDate').value = new Date().toISOString().split('T')[0];
         document.getElementById('btnSales').innerText = "સેવ કરો";
+        document.getElementById('formTitleSales').innerText = "🌱 વેચાણ એન્ટ્રી";
+        document.getElementById('subBtnSalesNew').innerText = "➕ નવી એન્ટ્રી";
         document.getElementById('sBill').style.backgroundColor = "#fff";
         document.getElementById('sBill').style.color = "#333";
         document.getElementById('btnSales').style.display = "block";
@@ -491,6 +493,8 @@
         addMedItemRow();
         document.getElementById('mDate').value = new Date().toISOString().split('T')[0];
         document.getElementById('btnMed').innerText = "સેવ કરો";
+        document.getElementById('formTitleMed').innerText = "🧪 દવા ખર્ચ એન્ટ્રી";
+        document.getElementById('subBtnMedNew').innerText = "➕ નવી એન્ટ્રી";
         document.getElementById('mBill').style.backgroundColor = "#fff";
         document.getElementById('mBill').style.color = "#333";
         document.getElementById('btnMed').style.display = "block";
@@ -501,6 +505,8 @@
         addFertItemRow();
         document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
         document.getElementById('btnFert').innerText = "સેવ કરો";
+        document.getElementById('formTitleFert').innerText = "🌾 ખાતર ખર્ચ એન્ટ્રી";
+        document.getElementById('subBtnFertNew').innerText = "➕ નવી એન્ટ્રી";
         document.getElementById('fBill').style.backgroundColor = "#fff";
         document.getElementById('fBill').style.color = "#333";
         document.getElementById('btnFert').style.display = "block";
@@ -511,6 +517,8 @@
         addTracItemRow();
         document.getElementById('tDate').value = new Date().toISOString().split('T')[0];
         document.getElementById('btnTrac').innerText = "સેવ કરો";
+        document.getElementById('formTitleTrac').innerText = "🚜 ટ્રેક્ટર ખર્ચ એન્ટ્રી";
+        document.getElementById('subBtnTracNew').innerText = "➕ નવી એન્ટ્રી";
       }
       let contentNew = document.getElementById('subContent' + tabName + 'New');
       if(contentNew) contentNew.style.display = 'block';
@@ -1176,6 +1184,8 @@
           document.getElementById("tHastak").value = foundItems[0]["હસ્તે"] || "";
           document.getElementById("editTracId").value = cleanTargetId;
           document.getElementById("btnTrac").innerText = "અપડેટ કરો";
+          document.getElementById("formTitleTrac").innerText = "🚜 ટ્રેક્ટર ખર્ચ અપડેટ";
+          document.getElementById("subBtnTracNew").innerText = "✏️ રેકોર્ડ અપડેટ કરો";
           
           document.getElementById("tracItemsContainer").innerHTML = "";
           foundItems.forEach(item => {
@@ -1192,7 +1202,7 @@
           updatePartnerSummary('Trac');
           alert("ટ્રેક્ટર એન્ટ્રી ફોર્મમાં સફળતાપૂર્વક લોડ થઈ ગઈ છે!");
         } else { 
-          alert("રેકોર્ડ મળ્યો નથી! (ID: " + cleanTargetId + ")"); 
+          alert("રેકોર્ડ મળ્યો નથી! પેટર્ન ID: " + cleanTargetId); 
         }
       } 
       else if(tabName === 'Sales') {
@@ -1208,6 +1218,9 @@
           document.getElementById("sBLidha").value = found["ભાગિયાએ લીધા? (Yes/No)"] || "No";
           document.getElementById("editEntryId").value = entryId;
           document.getElementById("btnSales").innerText = "અપડેટ કરો";
+          document.getElementById("formTitleSales").innerText = "🌱 વેચાણ અપડેટ";
+          document.getElementById("subBtnSalesNew").innerText = "✏️ રેકોર્ડ અપડેટ કરો";
+          
           document.getElementById("salesItemsContainer").innerHTML = "";
           addSalesItemRow(found["પાઉચ / નંગ"] || 0, found["કુલ વજન (કિલો"] || found["કુલ વજન (કિલો)"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
           updatePartnerSummary('Sales');
@@ -1221,11 +1234,15 @@
           switchSubTab('Med', 'New');
           document.getElementById("mDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
           document.getElementById("mBill").value = foundItems[0]["બિલ નં"] || "";
-          document.getElementById("mBhagiya").value = foundItems[0]["ભાગીદાર"] || "";
-          document.getElementById("mVepari").value = foundBill ? foundBill["વેપારી"] : "";
+          document.getElementById("mBhagiya").value = foundBill ? (foundBill["ખેડૂનું નામ"] || foundBill["ભાગીદાર"] || "") : (foundItems[0]["ભાગીદાર"] || "");
+          document.getElementById("mVepari").value = foundBill ? (foundBill["વેપારી"] || "") : "";
+          document.getElementById("mHastak").value = foundBill ? (foundBill["હસ્તે"] || "") : "";
           document.getElementById("mTax").value = foundBill ? foundBill["ટેક્સ%"] || foundBill["ટેક્સ"] : 0;
           document.getElementById("editMedId").value = entryId;
           document.getElementById("btnMed").innerText = "અપડેટ કરો";
+          document.getElementById("formTitleMed").innerText = "🧪 દવા ખર્ચ અપડેટ";
+          document.getElementById("subBtnMedNew").innerText = "✏️ રેકોર્ડ અપડેટ કરો";
+          
           document.getElementById("medItemsContainer").innerHTML = "";
           foundItems.forEach(item => {
             addMedItemRow(item["દવાનું નામ"] || "", item["વજન"] || "", item["પેકિંગ"] || "", item["નંગ"] || 1, item["ભાવ"] || "", item["પાકનું નામ"] || "");
@@ -1241,10 +1258,14 @@
           switchSubTab('Fert', 'New');
           document.getElementById("fDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
           document.getElementById("fBill").value = foundItems[0]["બિલ નં"] || "";
-          document.getElementById("fBhagiya").value = foundItems[0]["ભાગીદાર"] || "";
-          document.getElementById("fVepari").value = foundBill ? foundBill["વેપારી"] : "";
+          document.getElementById("fBhagiya").value = foundBill ? (foundBill["ખેડૂનું નામ"] || foundBill["ભાગીદાર"] || "") : (foundItems[0]["ભાગીદાર"] || "");
+          document.getElementById("fVepari").value = foundBill ? (foundBill["વેપારી"] || "") : "";
+          document.getElementById("fHastak").value = foundBill ? (foundBill["હસ્તે"] || "") : "";
           document.getElementById("editFertId").value = entryId;
           document.getElementById("btnFert").innerText = "અપડેટ કરો";
+          document.getElementById("formTitleFert").innerText = "🌾 ખાતર ખર્ચ અપડેટ";
+          document.getElementById("subBtnFertNew").innerText = "✏️ રેકોર્ડ અપડેટ કરો";
+          
           document.getElementById("fertItemsContainer").innerHTML = "";
           foundItems.forEach(item => {
             addFertItemRow(item["ખાતરનું નામ"] || "", item["વજન"] || "", item["પેકિંગ"] || "", item["નંગ/થેલી"] || 1, item["ભાવ"] || "", item["પાકનું નામ"] || "");
@@ -1260,10 +1281,10 @@
     e.preventDefault();
     let rows = document.querySelectorAll("#salesItemsContainer .item-row");
     if(rows.length === 0) return alert("કમ સે કમ એક આઇટમ ઉમેરો!");
-    document.getElementById("btnSales").innerText = "સેવ થઈ રહ્યું છે...";
+    let existingId = document.getElementById("editEntryId").value;
+    document.getElementById("btnSales").innerText = existingId ? "અપડેટ થઈ રહ્યું છે..." : "સેવ થઈ રહ્યું છે...";
     let date = v("sDate"), billNo = v("sBill") || "N/A", bhagiya = v("sBhagiya"), year = getYear(date);
     
-    let existingId = document.getElementById("editEntryId").value;
     let mainEntryId = existingId ? existingId : "SL-" + Math.floor(100000 + Math.random() * 900000);
 
     handlePhotoUpload("sPhoto", function(photoBase64) {
@@ -1293,12 +1314,12 @@
           if(res.status === "error" && !hasError) {
             hasError = true;
             alert(res.message);
-            document.getElementById("btnSales").innerText = "સેવ કરો";
+            document.getElementById("btnSales").innerText = existingId ? "અપડેટ કરો" : "સેવ કરો";
             return;
           }
           count++;
           if(!hasError && count === rows.length) {
-            alert("વેચાણ સફળતાપૂર્વક સેવ થઈ ગયું!"); 
+            alert(existingId ? "વેચાણ સફળતાપૂર્વક અપડેટ થઈ ગયું!" : "વેચાણ સફળતાપૂર્વક સેવ થઈ ગયું!"); 
             document.getElementById("btnSales").innerText = "સેવ કરો";
             document.getElementById("editEntryId").value = "";
             document.getElementById("salesForm").reset(); 
@@ -1311,7 +1332,7 @@
           if(!hasError) {
             hasError = true;
             alert("ભૂલ: " + err);
-            document.getElementById("btnSales").innerText = "સેવ કરો";
+            document.getElementById("btnSales").innerText = existingId ? "અપડેટ કરો" : "સેવ કરો";
           }
         });
       });
@@ -1322,7 +1343,8 @@
     e.preventDefault();
     let rows = document.querySelectorAll("#medItemsContainer .item-row");
     if(rows.length === 0) return alert("કમ સે કમ એક દવા ઉમેરો!");
-    document.getElementById("btnMed").innerText = "સેવ થઈ રહ્યું છે...";
+    let existingId = document.getElementById("editMedId").value;
+    document.getElementById("btnMed").innerText = existingId ? "અપડેટ થઈ રહ્યું છે..." : "સેવ થઈ રહ્યું છે...";
     let date = v("mDate"), billNo = v("mBill") || "N/A", bhagiya = v("mBhagiya"), year = getYear(date);
     let subTotal = parseFloat((document.getElementById("mSubTotal").value || "").replace("₹", "")) || 0;
     let tax = parseFloat(document.getElementById("mTax").value) || 0;
@@ -1331,11 +1353,10 @@
     let totalBill = parseFloat((document.getElementById("mTotalBill").value || "").replace("₹", "")) || 0;
     let inWords = convertToGujaratiWords(totalBill);
     
-    let existingId = document.getElementById("editMedId").value;
     let mainEntryId = existingId ? existingId : "ME-" + Math.floor(100000 + Math.random() * 900000);
 
     handlePhotoUpload("mPhoto", function(photoBase64) {
-      let billRow = [ year, mainEntryId, date, billNo, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
+      let billRow = [ year, mainEntryId, date, billNo, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords, v("mHastak") ];
       let itemRows = [];
       let totalFarmerAmt = 0;
       rows.forEach(row => {
@@ -1357,10 +1378,11 @@
       }).then(res => res.json()).then(res => {
         if(res.status === "error") {
           alert(res.message);
-          document.getElementById("btnMed").innerText = "સેવ કરો";
+          document.getElementById("btnMed").innerText = existingId ? "અપડેટ કરો" : "સેવ કરો";
           return;
         }
-        alert("દવા બિલ સફળતાપૂર્વક સેવ થઈ ગયું!"); document.getElementById("btnMed").innerText = "સેવ કરો";
+        alert(existingId ? "દવા બિલ સફળતાપૂર્વક અપડેટ થઈ ગયું!" : "દવા બિલ સફળતાપૂર્વક સેવ થઈ ગયું!"); 
+        document.getElementById("btnMed").innerText = "સેવ કરો";
         document.getElementById("editMedId").value = "";
         document.getElementById("medForm").reset(); document.getElementById("medItemsContainer").innerHTML = "";
         addMedItemRow(); document.getElementById("mSubTotal").value = "₹ 0.00"; document.getElementById("mTax").value = "0";
@@ -1376,7 +1398,8 @@
     e.preventDefault();
     let rows = document.querySelectorAll("#fertItemsContainer .item-row");
     if(rows.length === 0) return alert("કમ સે કમ એક ખાતર આઇટમ ઉમેરો!");
-    document.getElementById("btnFert").innerText = "સેવ થઈ રહ્યું છે...";
+    let existingId = document.getElementById("editFertId").value;
+    document.getElementById("btnFert").innerText = existingId ? "અપડેટ થઈ રહ્યું છે..." : "સેવ થઈ રહ્યું છે...";
     let date = v("fDate"), billNo = v("fBill") || "N/A", bhagiya = v("fBhagiya"), year = getYear(date);
     let subTotal = parseFloat((document.getElementById("fSubTotal").value || "").replace("₹", "")) || 0;
     let tax = parseFloat(document.getElementById("fTax").value) || 0;
@@ -1385,11 +1408,10 @@
     let totalBill = parseFloat((document.getElementById("fTotalBill").value || "").replace("₹", "")) || 0;
     let inWords = convertToGujaratiWords(totalBill);
 
-    let existingId = document.getElementById("editFertId").value;
     let mainEntryId = existingId ? existingId : "FE-" + Math.floor(100000 + Math.random() * 900000);
 
     handlePhotoUpload("fPhoto", function(photoBase64) {
-      let billRow = [ year, date, billNo, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords ];
+      let billRow = [ year, date, billNo, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords, v("fHastak") ];
       let itemRows = [];
       let totalFarmerAmt = 0;
       rows.forEach(row => {
@@ -1411,10 +1433,11 @@
       }).then(res => res.json()).then(res => {
         if(res.status === "error") {
           alert(res.message);
-          document.getElementById("btnFert").innerText = "સેવ કરો";
+          document.getElementById("btnFert").innerText = existingId ? "અપડેટ કરો" : "સેવ કરો";
           return;
         }
-        alert("ખાતર બિલ સફળતાપૂર્વક સેવ થઈ ગયું!"); document.getElementById("btnFert").innerText = "સેવ કરો";
+        alert(existingId ? "ખાતર બિલ સફળતાપૂર્વક અપડેટ થઈ ગયું!" : "ખાતર બિલ સફળતાપૂર્વક સેવ થઈ ગયું!"); 
+        document.getElementById("btnFert").innerText = "સેવ કરો";
         document.getElementById("editFertId").value = "";
         document.getElementById("fertForm").reset(); document.getElementById("fertItemsContainer").innerHTML = "";
         addFertItemRow(); document.getElementById("fSubTotal").value = "₹ 0.00"; document.getElementById("fTax").value = "0";
@@ -1430,9 +1453,9 @@
     e.preventDefault();
     let rows = document.querySelectorAll("#tracItemsContainer .item-row");
     if(rows.length === 0) return alert("કમ સે કમ એક કામ ઉમેરો!");
-    document.getElementById("btnTrac").innerText = "સેવ થઈ રહ્યું છે...";
-    let date = v("tDate"), year = getYear(date);
     let existingId = document.getElementById("editTracId").value;
+    document.getElementById("btnTrac").innerText = existingId ? "અપડેટ થઈ રહ્યું છે..." : "સેવ થઈ રહ્યું છે...";
+    let date = v("tDate"), year = getYear(date);
     let mainEntryId = existingId ? existingId : "TE-" + Math.floor(100000 + Math.random() * 900000);
 
     let rowDataArray = [];
@@ -1448,7 +1471,7 @@
       method: "POST",
       body: JSON.stringify({ action: "saveTractor", rowValuesArray: rowDataArray, editEntryId: existingId })
     }).then(res => res.json()).then(() => {
-      alert("ટ્રેક્ટર ખર્ચ સફળતાપૂર્વક સેવ થઈ ગયો!"); 
+      alert(existingId ? "ટ્રેક્ટર ખર્ચ સફળતાપૂર્વક અપડેટ થઈ ગયો!" : "ટ્રેક્ટર ખર્ચ સફળતાપૂર્વક સેવ થઈ ગયો!"); 
       document.getElementById("btnTrac").innerText = "સેવ કરો";
       document.getElementById("editTracId").value = "";
       document.getElementById("tracForm").reset(); 
@@ -1458,7 +1481,7 @@
       fetchData(); 
       switchTab('Dash');
     }).catch(err => {
-      document.getElementById("btnTrac").innerText = "સેવ કરો";
+      document.getElementById("btnTrac").innerText = existingId ? "અપડેટ કરો" : "સેવ કરો";
       alert("ભૂલ: " + err);
     });
   }

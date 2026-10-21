@@ -1050,7 +1050,28 @@
     document.getElementById("dashFarmerExpense").innerText = "₹ " + farmerExp.toFixed(2);
   }
 
-if(tabName === 'Sales') {
+  function renderTable(tabName) {
+    let container = document.getElementById("tableContainer" + tabName);
+    let rows = [];
+    
+    if(tabName === 'Sales') rows = appData['Sales_Ledger'] || [];
+    else if(tabName === 'Med') rows = appData['Pesticide_Items'] || [];
+    else if(tabName === 'Fert') rows = appData['Fertilizer_Items'] || [];
+    else if(tabName === 'Trac') rows = appData['Tractor_Expense'] || [];
+    
+    if(rows.length === 0) { container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ રેકોર્ડ ઉપલબ્ધ નથી.</p>"; return; }
+
+    let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : 'Tractor_Expense';
+    
+    let deleteBtnHtml = `<div style="margin-bottom:8px; text-align:left;">
+      <button class="btn-delete" onclick="askMpinForDeleteSelected('${sheetKey}')">🗑️ પસંદ કરેલ (✓) ડિલીટ કરો</button>
+    </div>`;
+
+    let html = deleteBtnHtml + `<table><tr>
+      <th><input type="checkbox" id="selectAll_${tabName}" onclick="toggleSelectAll(this, '${tabName}')"></th>
+      <th>એન્ટ્રી Id</th><th>તારીખ</th>`;
+
+    if(tabName === 'Sales') {
       html += `<th>બીલ નં</th><th>ખેડૂનું નામ</th><th>ખરીદનાર</th><th>પાક</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th>`;
     } else if(tabName === 'Med') {
       html += `<th>બીલ નં</th><th>દવાનું નામ</th><th>પ્રકાર</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>બિલની કુલ રકમ</th><th>ખેડૂ રકમ</th>`;
@@ -1087,7 +1108,6 @@ if(tabName === 'Sales') {
         let amt = r["રકમ"] || 0;
         let pak = r["પાકનું નામ"] || "-";
         
-        // બિલની કુલ રકમ અને ખેડૂ રકમ મેળવવા માટે
         let cleanMainId = String(entryId).split('-')[0];
         let parentBill = (appData.Pesticide_Bill || []).find(b => String(b["એન્ટ્રી Id"] || "").trim() === cleanMainId) || {};
         let totalBillAmt = parentBill["બીલની કુલ રકમ"] || parentBill["બીલની_કુલ_રકમ"] || 0;
@@ -1240,7 +1260,7 @@ if(tabName === 'Sales') {
         let foundItems = (appData.Pesticide_Items || []).filter(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(cleanId) === 0);
         let foundBill = (appData.Pesticide_Bill || []).find(r => 
           String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === cleanId || 
-          String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim().indexOf(cleanId) === 0 ||
+          String(r["એન્ટ્રી Id"] || "").trim().indexOf(cleanId) === 0 ||
           String(r["બિલ નં"] || r["બીલ નં"] || r["બિલ_નં"] || "").trim() === String(foundItems.length > 0 ? (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "") : "").trim()
         );
         let foundLedger = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || "").trim() === cleanId) || {};
@@ -1315,7 +1335,7 @@ if(tabName === 'Sales') {
 
           document.getElementById("editFertId").value = entryId;
           document.getElementById("btnFert").innerText = "અપડેટ કરો";
-          document.getElementById("formTitleFert", "🌾 ખાતર ખર્ચ અપડેટ");
+          document.getElementById("formTitleFert").innerText = "🌾 ખાતર ખર્ચ અપડેટ";
           document.getElementById("subBtnFertNew").innerText = "❌ કેન્સલ (રિટર્ન)";
           
           document.getElementById("fertItemsContainer").innerHTML = "";

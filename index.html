@@ -135,8 +135,8 @@
   <!-- 1. SALES SECTION -->
   <div id="formSales" class="section">
     <div class="sub-nav">
-      <button id="subBtnSalesNew" class="active-sub" onclick="switchSubTab('Sales', 'New')">➕ નવી એન્ટ્રી</button>
-      <button id="subBtnSalesView" onclick="switchSubTab('Sales', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
+      <button id="subBtnSalesNew" class="active-sub" onclick="handleSubNavClick('Sales', 'New')">➕ નવી એન્ટ્રી</button>
+      <button id="subBtnSalesView" onclick="handleSubNavClick('Sales', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
     </div>
     
     <div id="subContentSalesNew" class="sub-section">
@@ -179,8 +179,8 @@
   <!-- 2. MEDICINE SECTION -->
   <div id="formMed" class="section">
     <div class="sub-nav">
-      <button id="subBtnMedNew" class="active-sub" onclick="switchSubTab('Med', 'New')">➕ નવી એન્ટ્રી</button>
-      <button id="subBtnMedView" onclick="switchSubTab('Med', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
+      <button id="subBtnMedNew" class="active-sub" onclick="handleSubNavClick('Med', 'New')">➕ નવી એન્ટ્રી</button>
+      <button id="subBtnMedView" onclick="handleSubNavClick('Med', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
     </div>
 
     <div id="subContentMedNew" class="sub-section">
@@ -243,8 +243,8 @@
   <!-- 3. FERTILIZER SECTION -->
   <div id="formFert" class="section active">
     <div class="sub-nav">
-      <button id="subBtnFertNew" class="active-sub" onclick="switchSubTab('Fert', 'New')">➕ નવી એન્ટ્રી</button>
-      <button id="subBtnFertView" onclick="switchSubTab('Fert', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
+      <button id="subBtnFertNew" class="active-sub" onclick="handleSubNavClick('Fert', 'New')">➕ નવી એન્ટ્રી</button>
+      <button id="subBtnFertView" onclick="handleSubNavClick('Fert', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
     </div>
 
     <div id="subContentFertNew" class="sub-section">
@@ -307,8 +307,8 @@
   <!-- 4. TRACTOR SECTION -->
   <div id="formTrac" class="section">
     <div class="sub-nav">
-      <button id="subBtnTracNew" class="active-sub" onclick="switchSubTab('Trac', 'New')">➕ નવી એન્ટ્રી</button>
-      <button id="subBtnTracView" onclick="switchSubTab('Trac', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
+      <button id="subBtnTracNew" class="active-sub" onclick="handleSubNavClick('Trac', 'New')">➕ નવી એન્ટ્રી</button>
+      <button id="subBtnTracView" onclick="handleSubNavClick('Trac', 'View')">📋 બધી એન્ટ્રી જુઓ</button>
     </div>
 
     <div id="subContentTracNew" class="sub-section">
@@ -465,6 +465,68 @@
     if(tab === 'Gallery') renderGallery();
   }
 
+  function handleSubNavClick(tabName, subType) {
+    let editId = tabName === 'Sales' ? document.getElementById('editEntryId').value :
+                 tabName === 'Med' ? document.getElementById('editMedId').value :
+                 tabName === 'Fert' ? document.getElementById('editFertId').value :
+                 document.getElementById('editTracId').value;
+
+    if(editId && subType === 'New') {
+      if(!confirm("શું તમે અપડેટ મોડ કેન્સલ કરીને રિટર્ન જવા માંગો છો?")) return;
+      resetFormState(tabName);
+    }
+    switchSubTab(tabName, subType);
+  }
+
+  function resetFormState(tabName) {
+    if(tabName === 'Sales') {
+      document.getElementById('editEntryId').value = "";
+      document.getElementById('salesForm').reset();
+      document.getElementById('salesItemsContainer').innerHTML = "";
+      addSalesItemRow();
+      document.getElementById('sDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('btnSales').innerText = "સેવ કરો";
+      document.getElementById('formTitleSales').innerText = "🌱 વેચાણ એન્ટ્રી";
+      document.getElementById('subBtnSalesNew').innerText = "➕ નવી એન્ટ્રી";
+      document.getElementById('sBill').style.backgroundColor = "#fff";
+      document.getElementById('sBill').style.color = "#333";
+      document.getElementById('btnSales').style.display = "block";
+    } else if(tabName === 'Med') {
+      document.getElementById('editMedId').value = "";
+      document.getElementById('medForm').reset();
+      document.getElementById('medItemsContainer').innerHTML = "";
+      addMedItemRow();
+      document.getElementById('mDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('btnMed').innerText = "સેવ કરો";
+      document.getElementById('formTitleMed').innerText = "🧪 દવા ખર્ચ એન્ટ્રી";
+      document.getElementById('subBtnMedNew').innerText = "➕ નવી એન્ટ્રી";
+      document.getElementById('mBill').style.backgroundColor = "#fff";
+      document.getElementById('mBill').style.color = "#333";
+      document.getElementById('btnMed').style.display = "block";
+    } else if(tabName === 'Fert') {
+      document.getElementById('editFertId').value = "";
+      document.getElementById('fertForm').reset();
+      document.getElementById('fertItemsContainer').innerHTML = "";
+      addFertItemRow();
+      document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('btnFert').innerText = "સેવ કરો";
+      document.getElementById('formTitleFert').innerText = "🌾 ખાતર ખર્ચ એન્ટ્રી";
+      document.getElementById('subBtnFertNew').innerText = "➕ નવી એન્ટ્રી";
+      document.getElementById('fBill').style.backgroundColor = "#fff";
+      document.getElementById('fBill').style.color = "#333";
+      document.getElementById('btnFert').style.display = "block";
+    } else if(tabName === 'Trac') {
+      document.getElementById('editTracId').value = "";
+      document.getElementById('tracForm').reset();
+      document.getElementById('tracItemsContainer').innerHTML = "";
+      addTracItemRow();
+      document.getElementById('tDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('btnTrac').innerText = "સેવ કરો";
+      document.getElementById('formTitleTrac').innerText = "🚜 ટ્રેક્ટર ખર્ચ એન્ટ્રી";
+      document.getElementById('subBtnTracNew').innerText = "➕ નવી એન્ટ્રી";
+    }
+  }
+
   function switchSubTab(tabName, subType) {
     document.querySelectorAll('#form' + tabName + ' .sub-section').forEach(el => el.style.display = 'none');
     
@@ -474,56 +536,6 @@
     if(btnView) btnView.classList.remove('active-sub');
 
     if(subType === 'New') {
-      if(tabName === 'Sales') {
-        document.getElementById('editEntryId').value = "";
-        document.getElementById('salesForm').reset();
-        document.getElementById('salesItemsContainer').innerHTML = "";
-        addSalesItemRow();
-        document.getElementById('sDate').value = new Date().toISOString().split('T')[0];
-        document.getElementById('btnSales').innerText = "સેવ કરો";
-        document.getElementById('formTitleSales').innerText = "🌱 વેચાણ એન્ટ્રી";
-        document.getElementById('subBtnSalesNew').innerText = "➕ નવી એન્ટ્રી";
-        document.getElementById('subBtnSalesView').innerText = "📋 બધી એન્ટ્રી જુઓ";
-        document.getElementById('sBill').style.backgroundColor = "#fff";
-        document.getElementById('sBill').style.color = "#333";
-        document.getElementById('btnSales').style.display = "block";
-      } else if(tabName === 'Med') {
-        document.getElementById('editMedId').value = "";
-        document.getElementById('medForm').reset();
-        document.getElementById('medItemsContainer').innerHTML = "";
-        addMedItemRow();
-        document.getElementById('mDate').value = new Date().toISOString().split('T')[0];
-        document.getElementById('btnMed').innerText = "સેવ કરો";
-        document.getElementById('formTitleMed').innerText = "🧪 દવા ખર્ચ એન્ટ્રી";
-        document.getElementById('subBtnMedNew').innerText = "➕ નવી એન્ટ્રી";
-        document.getElementById('subBtnMedView').innerText = "📋 બધી એન્ટ્રી જુઓ";
-        document.getElementById('mBill').style.backgroundColor = "#fff";
-        document.getElementById('mBill').style.color = "#333";
-        document.getElementById('btnMed').style.display = "block";
-      } else if(tabName === 'Fert') {
-        document.getElementById('editFertId').value = "";
-        document.getElementById('fertForm').reset();
-        document.getElementById('fertItemsContainer').innerHTML = "";
-        addFertItemRow();
-        document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
-        document.getElementById('btnFert').innerText = "સેવ કરો";
-        document.getElementById('formTitleFert').innerText = "🌾 ખાતર ખર્ચ એન્ટ્રી";
-        document.getElementById('subBtnFertNew').innerText = "➕ નવી એન્ટ્રી";
-        document.getElementById('subBtnFertView').innerText = "📋 બધી એન્ટ્રી જુઓ";
-        document.getElementById('fBill').style.backgroundColor = "#fff";
-        document.getElementById('fBill').style.color = "#333";
-        document.getElementById('btnFert').style.display = "block";
-      } else if(tabName === 'Trac') {
-        document.getElementById('editTracId').value = "";
-        document.getElementById('tracForm').reset();
-        document.getElementById('tracItemsContainer').innerHTML = "";
-        addTracItemRow();
-        document.getElementById('tDate').value = new Date().toISOString().split('T')[0];
-        document.getElementById('btnTrac').innerText = "સેવ કરો";
-        document.getElementById('formTitleTrac').innerText = "🚜 ટ્રેક્ટર ખર્ચ એન્ટ્રી";
-        document.getElementById('subBtnTracNew').innerText = "➕ નવી એન્ટ્રી";
-        document.getElementById('subBtnTracView').innerText = "📋 બધી એન્ટ્રી જુઓ";
-      }
       let contentNew = document.getElementById('subContent' + tabName + 'New');
       if(contentNew) contentNew.style.display = 'block';
       if(btnNew) btnNew.classList.add('active-sub');
@@ -1233,15 +1245,24 @@
       }
       else if(tabName === 'Med') {
         let foundItems = (appData.Pesticide_Items || []).filter(r => String(r["એન્ટ્રી Id"] || "").trim().indexOf(String(entryId).trim()) === 0);
-        let foundBill = (appData.Pesticide_Bill || []).find(r => String(r["એન્ટ્રી Id"] || "").trim() === String(entryId).trim() || String(r["બિલ નં"] || "").trim() === String(foundItems.length > 0 ? foundItems[0]["બિલ નં"] : "").trim());
+        let foundBill = (appData.Pesticide_Bill || []).find(r => String(r["એન્ટ્રી Id"] || "").trim() === String(entryId).trim() || String(r["બિલ નં"] || r["બીલ નં"] || r["બિલ_નં"] || "").trim() === String(foundItems.length > 0 ? (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "") : "").trim());
         if(foundItems.length > 0) {
           switchSubTab('Med', 'New');
-          document.getElementById("mDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
-          document.getElementById("mBill").value = foundBill ? (foundBill["બિલ નં"] || foundBill["બિલ_નં"] || foundBill["Bill_No"] || foundItems[0]["બિલ નં"] || "") : (foundItems[0]["બિલ નં"] || "");
-          document.getElementById("mBhagiya").value = foundBill ? (foundBill["ખેડૂનું નામ"] || foundBill["ભાગીદાર"] || "") : (foundItems[0]["ભાગીદાર"] || "");
-          document.getElementById("mVepari").value = foundBill ? (foundBill["વેપારી"] || "") : "";
-          document.getElementById("mHastak").value = foundBill ? (foundBill["હસ્તે"] || "") : (foundItems[0]["હસ્તે"] || "");
-          document.getElementById("mTax").value = foundBill ? foundBill["ટેક્સ%"] || foundBill["ટેક્સ"] : 0;
+          document.getElementById("mDate").value = String(foundItems[0]["તારીખ"] || foundItems[0]["Date"] || "").split('T')[0];
+          
+          let billNoVal = foundBill ? (foundBill["બિલ નં"] || foundBill["બીલ નં"] || foundBill["બિલ_નં"] || foundBill["Bill_No"] || "") : (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "");
+          document.getElementById("mBill").value = billNoVal;
+
+          let bhagiyaVal = foundBill ? (foundBill["ખેડૂનું નામ"] || foundBill["ભાગીદાર"] || foundBill["Bhagiya"] || "") : (foundItems[0]["ભાગીદાર"] || foundItems[0]["ખેડૂનું નામ"] || "");
+          document.getElementById("mBhagiya").value = bhagiyaVal;
+
+          let vepariVal = foundBill ? (foundBill["વેપારી"] || foundBill["વેપારીનું_નામ"] || foundBill["વેપારીનું નામ"] || "") : "";
+          document.getElementById("mVepari").value = vepariVal;
+
+          let hastakVal = foundBill ? (foundBill["હસ્તે"] || foundBill["Hastak"] || "") : (foundItems[0]["હસ્તે"] || "");
+          document.getElementById("mHastak").value = hastakVal;
+
+          document.getElementById("mTax").value = foundBill ? (foundBill["ટેક્સ%"] || foundBill["ટેક્સ"] || 0) : 0;
           document.getElementById("editMedId").value = entryId;
           document.getElementById("btnMed").innerText = "અપડેટ કરો";
           document.getElementById("formTitleMed").innerText = "🧪 દવા ખર્ચ અપડેટ";
@@ -1249,7 +1270,14 @@
           
           document.getElementById("medItemsContainer").innerHTML = "";
           foundItems.forEach(item => {
-            addMedItemRow(item["દવાનું નામ"] || item["દવાનું_નામ"] || "", item["વજન"] || "", item["પેકિંગ"] || "", item["નંગ"] || item["નંગ/થેલી"] || 1, item["ભાવ"] || "", item["પાકનું નામ"] || "");
+            addMedItemRow(
+              item["દવાનું નામ"] || item["દવાનું_નામ"] || "", 
+              item["વજન"] || "", 
+              item["પેકિંગ"] || "", 
+              item["નંગ"] || item["નંગ/થેલી"] || 1, 
+              item["ભાવ"] || "", 
+              item["પાકનું નામ"] || item["પાકનું_નામ"] || ""
+            );
           });
           updatePartnerSummary('Med');
           alert("દવા એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
@@ -1257,14 +1285,23 @@
       }
       else if(tabName === 'Fert') {
         let foundItems = (appData.Fertilizer_Items || []).filter(r => String(r["એન્ટ્રી Id"] || "").trim().indexOf(String(entryId).trim()) === 0);
-        let foundBill = (appData.Fertilizer_Bill || []).find(r => String(r["એન્ટ્રી Id"] || "").trim() === String(entryId).trim() || String(r["બિલ નં"] || "").trim() === String(foundItems.length > 0 ? foundItems[0]["બિલ નં"] : "").trim());
+        let foundBill = (appData.Fertilizer_Bill || []).find(r => String(r["એન્ટ્રી Id"] || "").trim() === String(entryId).trim() || String(r["બિલ નં"] || r["બીલ નં"] || r["બિલ_નં"] || "").trim() === String(foundItems.length > 0 ? (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "") : "").trim());
         if(foundItems.length > 0) {
           switchSubTab('Fert', 'New');
-          document.getElementById("fDate").value = String(foundItems[0]["તારીખ"] || "").split('T')[0];
-          document.getElementById("fBill").value = foundBill ? (foundBill["બિલ નં"] || foundBill["બિલ_નં"] || foundBill["Bill_No"] || foundItems[0]["બિલ નં"] || "") : (foundItems[0]["બિલ નં"] || "");
-          document.getElementById("fBhagiya").value = foundBill ? (foundBill["ખેડૂનું નામ"] || foundBill["ભાગીદાર"] || "") : (foundItems[0]["ભાગીદાર"] || "");
-          document.getElementById("fVepari").value = foundBill ? (foundBill["વેપારી"] || "") : "";
-          document.getElementById("fHastak").value = foundBill ? (foundBill["હસ્તે"] || "") : (foundItems[0]["હસ્તે"] || "");
+          document.getElementById("fDate").value = String(foundItems[0]["તારીખ"] || foundItems[0]["Date"] || "").split('T')[0];
+          
+          let billNoVal = foundBill ? (foundBill["બિલ નં"] || foundBill["બીલ નં"] || foundBill["બિલ_નં"] || foundBill["Bill_No"] || "") : (foundItems[0]["બિલ નં"] || foundItems[0]["બીલ નં"] || "");
+          document.getElementById("fBill").value = billNoVal;
+
+          let bhagiyaVal = foundBill ? (foundBill["ખેડૂનું નામ"] || foundBill["ભાગીદાર"] || foundBill["Bhagiya"] || "") : (foundItems[0]["ભાગીદાર"] || foundItems[0]["ખેડૂનું નામ"] || "");
+          document.getElementById("fBhagiya").value = bhagiyaVal;
+
+          let vepariVal = foundBill ? (foundBill["વેપારી"] || foundBill["વેપારીનું_નામ"] || foundBill["વેપારીનું નામ"] || "") : "";
+          document.getElementById("fVepari").value = vepariVal;
+
+          let hastakVal = foundBill ? (foundBill["હસ્તે"] || foundBill["Hastak"] || "") : (foundItems[0]["હસ્તે"] || "");
+          document.getElementById("fHastak").value = hastakVal;
+
           document.getElementById("editFertId").value = entryId;
           document.getElementById("btnFert").innerText = "અપડેટ કરો";
           document.getElementById("formTitleFert").innerText = "🌾 ખાતર ખર્ચ અપડેટ";
@@ -1272,7 +1309,14 @@
           
           document.getElementById("fertItemsContainer").innerHTML = "";
           foundItems.forEach(item => {
-            addFertItemRow(item["ખાતરનું નામ"] || item["ખાતરનું_નામ"] || "", item["વજન"] || "", item["પેકિંગ"] || "", item["નંગ/થેલી"] || 1, item["ભાવ"] || "", item["પાકનું નામ"] || "");
+            addFertItemRow(
+              item["ખાતરનું નામ"] || item["ખાતરનું_નામ"] || "", 
+              item["વજન"] || "", 
+              item["પેકિંગ"] || "", 
+              item["નંગ/થેલી"] || 1, 
+              item["ભાવ"] || "", 
+              item["પાકનું નામ"] || item["પાકનું_નામ"] || ""
+            );
           });
           updatePartnerSummary('Fert');
           alert("ખાતર એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");

@@ -32,13 +32,11 @@
     .btn-back:hover { background: linear-gradient(135deg, #6c7a89, #7f8c8d); }
 
     .btn-table-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
-    .btn-table-edit { background: #f39c12; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
     .table-actions-bar { display: none; gap: 8px; margin-bottom: 10px; padding: 6px 10px; background: #f8f9f9; border: 1px solid #d5dbdb; border-radius: 4px; align-items: center; }
 
     .btn-add-item { background: #2980b9; color: white; border: none; padding: 6px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; margin-bottom: 8px; }
     
     .badge-jama { background-color: #27ae60; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; display: inline-block; }
-    .badge-baki { background-color: #e74c3c; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; display: inline-block; }
 
     .choice-container { display: flex; gap: 15px; margin: 25px 0; justify-content: center; }
     .choice-card-new { flex: 1; background: linear-gradient(135deg, #27ae60, #2ecc71); color: white; border-radius: 10px; padding: 25px 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
@@ -51,7 +49,6 @@
     .choice-card-view h3 { margin: 0 0 5px 0; font-size: 18px; }
     .choice-card-view p { margin: 0; font-size: 12px; opacity: 0.9; }
 
-    /* Top Banners Row (Left & Right layout) */
     .top-banners-row { display: flex; gap: 8px; margin-bottom: 12px; display: none; }
     .partner-sum-banner {
       flex: 1; background: linear-gradient(135deg, #16a085, #1abc9c);
@@ -467,8 +464,8 @@
               <option value="Tractor ખર્ચ માટે">Tractor ખર્ચ માટે</option>
               <option value="અન્ય ખર્ચ માટે">અન્ય ખર્ચ માટે</option>
               <option value="વેચાણ બીલ">વેચાણ બીલ</option>
-              <option value="ખાતર બીલ જમા">ખાતર બીલ જમા</option>
-              <option value="દવા બીલ જમા">દવા બીલ જમા</option>
+              <option value="ખાતર બિલ જમા">ખાતર બિલ જમા</option>
+              <option value="દવા બિલ જમા">દવા બિલ જમા</option>
               <option value="વેચાણ બીલ જમા">વેચાણ બીલ જમા</option>
             </select>
           </div>
@@ -684,6 +681,25 @@
     }
   }
 
+  function getCategoryBalanceVal(sectionType, partnerName) {
+    if(!partnerName || partnerName === "NEW") return 0;
+    let targetType = sectionType === 'Sales' ? 'વેચાણ બીલ' : sectionType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
+    let totalBal = 0;
+
+    if(appData.Upad_Ledger) {
+      appData.Upad_Ledger.forEach(r => {
+        let name = String(r["ભાગીદાર"] || r["ઉપાડ લેનાર"] || "").trim();
+        let type = String(r["એન્ટ્રી પ્રકાર"] || "").trim();
+        if(name === partnerName && type === targetType) {
+          let deb = parseFloat(r["ઉપાડ (Debit)"] || 0);
+          let cred = parseFloat(r["જમા (Credit)"] || 0);
+          totalBal += (deb - cred);
+        }
+      });
+    }
+    return totalBal;
+  }
+
   function updateCategoryBalance(sectionType) {
     let bhagiyaId = sectionType === 'Sales' ? 'sBhagiya' : sectionType === 'Med' ? 'mBhagiya' : 'fBhagiya';
     let valId = sectionType === 'Sales' ? 'balValSales' : sectionType === 'Med' ? 'balValMed' : 'balValFert';
@@ -698,21 +714,7 @@
       return;
     }
 
-    let targetType = sectionType === 'Sales' ? 'વેચાણ બીલ' : sectionType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
-    let totalBal = 0;
-
-    if(appData.Upad_Ledger) {
-      appData.Upad_Ledger.forEach(r => {
-        let name = String(r["ભાગીદાર"] || r["ઉપાડ લેનાર"] || "").trim();
-        let type = String(r["એન્ટ્રી પ્રકાર"] || "").trim();
-        if(name === selectedBhagiya && type === targetType) {
-          let deb = parseFloat(r["ઉપાડ (Debit)"] || 0);
-          let cred = parseFloat(r["જમા (Credit)"] || 0);
-          totalBal += (deb - cred);
-        }
-      });
-    }
-
+    let totalBal = getCategoryBalanceVal(sectionType, selectedBhagiya);
     if(valEl) valEl.innerText = "₹ " + totalBal.toFixed(2);
     if(rowBox) rowBox.style.display = 'flex';
   }
@@ -1345,6 +1347,83 @@
     });
     container.innerHTML = html + `</table>`;
     updateTableActionBar(tabName);
+  }
+
+  function handleBillWithUpadNotification(formType, billRow, itemRows, btnId, formElementId, successCallback) {
+    let partnerName = formType === 'Sales' ? billRow[4] : formType === 'Med' ? billRow[4] : billRow[4];
+    let billTotal = 0;
+    if(formType === 'Sales') {
+      billTotal = itemRows.reduce((sum, r) => sum + (parseFloat(r[6]) || 0), 0);
+    } else {
+      billTotal = parseFloat(billRow[10]) || 0; // Total bill amount index
+    }
+
+    let currentBal = getCategoryBalanceVal(formType, partnerName);
+    let categoryText = formType === 'Sales' ? 'વેચાણ બીલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
+    let upadEntryType = formType === 'Sales' ? 'વેચાણ બીલ જમા' : formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
+
+    let msg = "";
+    if(currentBal < billTotal) {
+      msg = "⚠️ " + categoryText + " માટે ઉપાડ બેલેન્સ ઓછું છે (₹ " + currentBal.toFixed(2) + "). શું આ બિલ ઉપાડમાં જમા કરવું છે?";
+    } else {
+      msg = "📋 આ બિલ (₹ " + billTotal.toFixed(2) + ") ઉપાડમાં જમા કરવું છે?";
+    }
+
+    let wantUpad = confirm(msg);
+
+    let actionName = formType === 'Sales' ? 'saveSales' : formType === 'Med' ? 'savePesticideBill' : 'saveFertilizerBill';
+    let payload = formType === 'Sales' ? { action: actionName, rowValues: billRow, editEntryId: document.getElementById('editEntryId').value } :
+                  { action: actionName, billRow: billRow, itemRows: itemRows, editEntryId: document.getElementById(formType === 'Med' ? 'editMedId' : 'editFertId').value };
+
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+      if(res.status === "error") {
+        alert("ભૂલ: " + res.message);
+        document.getElementById(btnId).innerText = "💾 સેવ કરો";
+        return;
+      }
+
+      if(wantUpad) {
+        let date = billRow[2];
+        let year = getYear(date);
+        let rand = Math.floor(1000 + Math.random() * 9000);
+        let entryId = "UP-" + date.replace(/-/g, '') + "-" + rand;
+        let provider = billRow[5] || "વેપારી";
+        let debit = 0;
+        let credit = billTotal;
+        let billNo = billRow[3] || "-";
+        let status = "જમા";
+        let closeYear = "N";
+        let totalOutstanding = 0;
+
+        let upadRowValues = [
+          year, entryId, date, partnerName, upadEntryType, provider, credit, "CASH", "-",
+          debit, credit, billNo, credit, categoryText, "બિલ જમા એન્ટ્રી", 0, 0,
+          status, "", closeYear, totalOutstanding
+        ];
+
+        return fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "saveUpadLedger", rowValues: upadRowValues })
+        });
+      }
+    })
+    .then(() => {
+      alert("એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
+      document.getElementById(btnId).innerText = "💾 સેવ કરો";
+      document.getElementById(formElementId).reset();
+      fetchData();
+      switchTab('Dash');
+      if(typeof successCallback === 'function') successCallback();
+    })
+    .catch(err => {
+      alert("ભૂલ: " + err);
+      document.getElementById(btnId).innerText = "💾 સેવ કરો";
+    });
   }
 
   function submitUpad(e) {

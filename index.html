@@ -1039,7 +1039,7 @@
     } else if(tabName === 'Fert') {
       html += `<th>બીલ નં</th><th>ખાતરનું નામ</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>બિલની કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th>`;
     } else if(tabName === 'Trac') {
-      html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બીલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th><th>સ્ટેટસ</th>`;
+      html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બીલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th><th>સ્ટેટস</th>`;
     }
     html += `</tr>`;
 
@@ -1100,7 +1100,7 @@
         let totalBillAmt = parentBill["બીલની કુલ રકમ"] || parentBill["બીલની_કુલ_રકમ"] || parentBill["બિલની કુલ રકમ"] || parentBill["Total_Bill"] || parentBill["કુલ રકમ"] || 0;
         let farmerAmt = r["ખેડૂ રકમ"] || r["ખેડૂ_રકમ"] || 0;
 
-        html += `<td>${billNo}</td><td><b>${khatarName}</b></td><td>${davaType}</td><td>${wt}</td><td>${qty}</td><td>₹ ${bhav}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${pak}</td><td>₹ ${parseFloat(totalBillAmt).toFixed(2)}</td><td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td><td>${statusBadge}</td>`;
+        html += `<td>${billNo}</td><td><b>${khatarName}</b></td><td>${wt}</td><td>${qty}</td><td>₹ ${bhav}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${pak}</td><td>₹ ${parseFloat(totalBillAmt).toFixed(2)}</td><td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td><td>${statusBadge}</td>`;
       } else if(tabName === 'Trac') {
         let owner = r["ટ્રેક્ટર માલિક"] || r["ડ્રાઈવર/માલિક"] || "-";
         let pak = r["પાકનું નામ"] || "-";
@@ -1257,7 +1257,7 @@
           document.getElementById("formTitleSales").innerText = "💰 વેચાણ અપડેટ";
           
           document.getElementById("salesItemsContainer").innerHTML = "";
-          addSalesItemRow(found["પાઉચ / નંગ"] || 0, found["કુલ વજન (કિલો"] || found["કુલ વજન (કិલો)"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
+          addSalesItemRow(found["પાઉચ / નંગ"] || 0, found["કુલ વજન (કિલો"] || found["કુલ વજન (કિલો)"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
           updatePartnerSummary('Sales');
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
@@ -1514,21 +1514,6 @@
 
   function v(id) { return document.getElementById(id).value; }
   
-  (function() {
-    // આ કોડ પેજ લોડ થતાની સાથે જ પેલા અણધારા ટેગ્સ (span_0 વગેરે) ઓટોમેટિક સાફ કરી નાખશે
-    let observer = new MutationObserver(function(mutations) {
-      document.querySelectorAll('*').forEach(el => {
-        if(el.childNodes.length === 1 && el.childNodes[0].nodeType === Node.TEXT_NODE) {
-          let txt = el.childNodes[0].nodeValue;
-          if(txt.includes('[span_') || txt.includes('(start_span)')) {
-            el.childNodes[0].nodeValue = txt.replace(/\[span_\d+\]\(start_span\)\[span_\d+\]/g, '').replace(/\(end_span\)/g, '');
-          }
-        }
-      });
-    });
-    observer.observe(document.body, { childList: true, subtree: true, characterData: true });
-  })();
-
   function getYear(dateString) {
     let d = new Date(dateString), m = d.getMonth() + 1, y = d.getFullYear();
     return (m >= 5) ? (y + "-" + (y + 1).toString().slice(-2)) : ((y - 1) + "-" + y.toString().slice(-2));

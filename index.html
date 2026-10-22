@@ -490,7 +490,7 @@
           <div class="form-group"><label>📌 Status:</label><select id="uStatus"><option value="ઉધાર">ઉધાર</option><option value="જમા">જમા</option></select></div>
           <div class="form-group"><label>🔄 Close Year (Y/N):</label><select id="uCloseYear"><option value="N">N</option><option value="Y">Y</option></select></div>
         </div>
-        <div class="form-group"><label>📷 ટ્રાન્ઝેક્શન ફોટો:</label><input type="file" id="uPhoto" accept="image/*" capture="environment"></div>
+        <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="uPhoto" accept="image/*" capture="environment"></div>
         <button type="submit" id="btnUpad" class="btn-submit">💾 સેવ કરો</button>
       </form>
     </div>
@@ -527,7 +527,7 @@
   </div>
 </div>
 
-<div id="modalBhagiya" class="modal"><div class="modal-content"><h3>➕ ભાગીદાર મેનેજમેન્ટ</h3><input type="text" id="nbName" placeholder="નામ" class="form-group"><input type="number" id="nbPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nbAdd" placeholder="ગામ" class="form-group"><input type="text" id="nbRoll" placeholder="Roll (દા.ત. Owner)" class="form-group"><button type="button" class="btn-submit" onclick="saveB()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Bhagiya_Master')">પસંદ કરેલ ભાગીદાર ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalBhagiya').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
+<div id="modalBhagiya" class="modal"><div class="modal-content"><h3>➕ ભાગીદાર મેનેજમેન્ટ</h3><input type="text" id="nbName" placeholder="નામ" class="form-group"><input type="number" id="nbPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nbAdd" placeholder="ગામ" class="form-group"><input type="text" id="nbRoll" placeholder="Roll (દા.ત. ખેડૂ / Owner)" class="form-group"><button type="button" class="btn-submit" onclick="saveB()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Bhagiya_Master')">પસંદ કરેલ ભાગીદાર ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalBhagiya').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
 
 <div id="modalVepari" class="modal"><div class="modal-content"><h3>➕ વેપારી મેનેજમેન્ટ</h3><input type="text" id="nvName" placeholder="નામ" class="form-group"><input type="number" id="nvPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nvCity" placeholder="ગામ" class="form-group"><select id="nvCategory" class="form-group"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="અન્ય વેપારી">અન્ય વેપારી</option></select><button type="button" class="btn-submit" onclick="saveV()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Merchant_Master')">પસંદ કરેલ વેપારી ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalVepari').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
 
@@ -704,13 +704,14 @@
 
   function populateData() {
     if(!appData.Bhagiya_Master) return;
-    let bhagiyas = [];
+    
+    // ૧. ઉપાડ લેનાર (uBhagiya) માં માત્ર Roll = ખેડૂ વાળા જ આવશે
+    let upadBhagiyas = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
       let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
-      // Roll = ખેડૂ વાળા નામો ઉપાડ લેનાર (uBhagiya) માંથી હટાવી દીધા છે
-      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && roll !== "ખેડૂ" && roll !== "farmer") {
-        bhagiyas.push(name.trim());
+      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "ખેડૂ" || roll === "farmer")) {
+        upadBhagiyas.push(name.trim());
       }
     });
     
@@ -718,18 +719,22 @@
     if(uBhagiyaSelect) {
       let cur = uBhagiyaSelect.value;
       uBhagiyaSelect.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
-      bhagiyas.forEach(b => uBhagiyaSelect.add(new Option(b, b)));
+      upadBhagiyas.forEach(b => uBhagiyaSelect.add(new Option(b, b)));
       uBhagiyaSelect.value = cur;
     }
 
-    // બાકીની bhagiyaList માટે પણ બધા ભાગીદારો સેટ કરો
+    // ૨. બાકીના ફોર્મ્સ માટે બધા ભાગીદારો
+    let allBhagiyas = [];
+    appData.Bhagiya_Master.forEach(r => {
+      let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
+      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ") allBhagiyas.push(name.trim());
+    });
+
     document.querySelectorAll('.bhagiyaList').forEach(sel => { 
       if(sel.id !== "uBhagiya") {
-        let cur = sel.value; sel.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
-        appData.Bhagiya_Master.forEach(r => {
-          let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
-          if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ") sel.add(new Option(name.trim(), name.trim()));
-        });
+        let cur = sel.value; 
+        sel.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
+        allBhagiyas.forEach(b => sel.add(new Option(b, b))); 
         sel.value = cur;
       }
     });

@@ -399,7 +399,7 @@
 
   <!-- 5. UPAD LEDGER SECTION -->
   <div id="formUpad" class="section">
-    <h3 style="text-align:center; color:#e67e22; margin-top:0;">💸 ભાગીદાર ઉપાડ લેજર</h3>
+    <h3 style="text-align:center; color:#e67e22; margin-top:0;">💸 ઉપાડ લેજર મેનેજમેન્ટ</h3>
     <div id="choiceUpad" class="choice-container">
       <div class="choice-card-new" onclick="switchSubTab('Upad', 'New')">
         <h3>➕ નવી એન્ટ્રી</h3>
@@ -420,7 +420,7 @@
           <div class="form-group"><label>🆔 એન્ટ્રી નં:</label><input type="text" id="uEntryId" readonly class="readonly-bg"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="uBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
+          <div class="form-group"><label>👤 ઉપાડ લેનાર:</label><select id="uBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
           <div class="form-group">
             <label>📌 એન્ટ્રી પ્રકાર:</label>
             <select id="uType" required onchange="handleUpadTypeChange(this)">
@@ -439,7 +439,7 @@
         </div>
         <div class="flex-row">
           <div class="form-group">
-            <label>🤝 આપનાર (માલિક/વેપારી):</label>
+            <label>🤝 આપનાર:</label>
             <select id="uProvider" required class="providerList">
               <option value="">-- પસંદ કરો --</option>
             </select>
@@ -466,10 +466,26 @@
           <div class="form-group"><label>📄 બિલ પ્રકાર:</label><input type="text" id="uBillType" placeholder="દવા / ખાતર વગેરે"></div>
         </div>
         <div class="form-group"><label>📝 વિગત:</label><input type="text" id="uDetails" placeholder="વધારાની માહિતી..."></div>
-        <div class="flex-row">
-          <div class="form-group"><label>📈 વ્યાજપાત્ર રકમ:</label><input type="number" id="uInterestAmt" step="0.01" value="0" oninput="calcInterest(this)"></div>
-          <div class="form-group"><label>📊 વ્યાજ (3%/M):</label><input type="text" id="uInterestCalc" class="readonly-bg" readonly value="₹ 0.00"></div>
+        
+        <!-- વ્યાજ ગણતરી સેક્શન -->
+        <div style="background: #fdfefe; border: 1px solid #d5dbdb; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+          <h4 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 13px;">📊 વ્યાજ ગણતરી (3% પ્રતિ મહિનો)</h4>
+          <div class="flex-row">
+            <div class="form-group"><label>શરૂઆતની તારીખ:</label><input type="date" id="uStartDate"></div>
+            <div class="form-group"><label>પૂરી થવાની તારીખ:</label><input type="date" id="uEndDate"></div>
+          </div>
+          <div class="flex-row" style="align-items: flex-end;">
+            <div class="form-group"><label>📈 વ્યાજપાત્ર રકમ:</label><input type="number" id="uInterestAmt" step="0.01" value="0"></div>
+            <div class="form-group">
+              <button type="button" onclick="calculateDateWiseInterest()" style="width: 100%; background: #2980b9; color: white; border: none; padding: 8px; border-radius: 3px; font-weight: bold; cursor: pointer; font-size: 12px;">🔄 તારીખ મુજબ વ્યાજ ગણો</button>
+            </div>
+          </div>
+          <div class="form-group" style="margin-top: 8px;">
+            <label>ગણતરી કરેલ વ્યાજ રકમ:</label>
+            <input type="text" id="uInterestCalc" class="readonly-bg" readonly value="₹ 0.00">
+          </div>
         </div>
+
         <div class="flex-row">
           <div class="form-group"><label>📌 Status:</label><select id="uStatus"><option value="ઉધાર">ઉધાર</option><option value="જમા">જમા</option></select></div>
           <div class="form-group"><label>🔄 Close Year (Y/N):</label><select id="uCloseYear"><option value="N">N</option><option value="Y">Y</option></select></div>
@@ -528,7 +544,7 @@
 
   window.onload = function() {
     let today = new Date().toISOString().split('T')[0];
-    ['sDate', 'mDate', 'fDate', 'tDate', 'uDate'].forEach(id => {
+    ['sDate', 'mDate', 'fDate', 'tDate', 'uDate', 'uStartDate', 'uEndDate'].forEach(id => {
       let el = document.getElementById(id);
       if(el) el.value = today;
     });
@@ -660,10 +676,30 @@
     }
   }
 
-  function calcInterest(el) {
-    let principal = parseFloat(el.value) || 0;
-    let interest = principal * 0.03; 
-    document.getElementById("uInterestCalc").value = "₹ " + interest.toFixed(2);
+  function calculateDateWiseInterest() {
+    let principal = parseFloat(document.getElementById("uInterestAmt").value) || 0;
+    let startStr = document.getElementById("uStartDate").value;
+    let endStr = document.getElementById("uEndDate").value;
+
+    if(!startStr || !endStr) {
+      alert("કૃપા કરીને શરૂઆતની અને પૂરી થવાની બંને તારીખ પસંદ કરો!");
+      return;
+    }
+
+    let d1 = new Date(startStr);
+    let d2 = new Date(endStr);
+    let diffTime = d2 - d1;
+    let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if(diffDays <= 0) {
+      alert("પૂરી થવાની તારીખ શરૂઆતની તારીખ પછીની હોવી જોઈએ!");
+      return;
+    }
+
+    let dailyRate = 0.03 / 30;
+    let interest = principal * dailyRate * diffDays;
+    document.getElementById("uInterestCalc").value = "₹ " + interest.toFixed(2) + " (" + diffDays + " દિવસો)";
+    alert("વ્યાજ સફળતાપૂર્વક ગણાઈ ગયું છે: ₹ " + interest.toFixed(2));
   }
 
   function populateData() {
@@ -678,7 +714,6 @@
       bhagiyas.forEach(b => sel.add(new Option(b, b))); sel.value = cur;
     });
     
-    // Populate Provider List for Upad (Excluding Roll=ખેડૂ and Type=દવા,ખાતર)
     let providers = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["Name"];
@@ -1176,14 +1211,14 @@
     } else if(tabName === 'Trac') {
       html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બીલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th><th>સ્ટેટસ</th>`;
     } else if(tabName === 'Upad') {
-      html += `<th>ભાગીદાર</th><th>પ્રકાર</th><th>આપનાર</th><th>ઉપાડ (Debit)</th><th>જમા (Credit)</th><th>બિલ નં</th><th>કુલ બાકી (Outstanding)</th><th>Status</th>`;
+      html += `<th>ઉપાડ લેનાર</th><th>પ્રકાર</th><th>આપનાર</th><th>ઉપાડ (Debit)</th><th>જમા (Credit)</th><th>બિલ નં</th><th>કુલ બાકી (Outstanding)</th><th>Status</th>`;
     }
     html += `</tr>`;
 
     rows.forEach((r, index) => {
       let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
       let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || index;
-      let bhagiya = r["ભાગીદાર"] || "-";
+      let bhagiya = r["ભાગીદાર"] || r["ઉપાડ લેનાર"] || "-";
 
       html += `<tr>
         <td><input type="checkbox" class="row-select-${tabName}" value="${entryId}" onclick="updateTableActionBar('${tabName}')"></td>
@@ -1237,7 +1272,8 @@
     let billType = v("uBillType") || "-";
     let details = v("uDetails") || "-";
     let interestAmt = parseFloat(v("uInterestAmt")) || 0;
-    let interestCalc = interestAmt * 0.03;
+    let interestCalcStr = document.getElementById("uInterestCalc").value;
+    let interestCalc = parseFloat(interestCalcStr.replace(/[^0-9.]/g, '')) || 0;
     let status = v("uStatus");
     let closeYear = v("uCloseYear");
     let totalOutstanding = 0; 

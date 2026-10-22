@@ -471,7 +471,7 @@
           <div class="form-group"><label>📊 વ્યાજ (3%/M):</label><input type="text" id="uInterestCalc" class="readonly-bg" readonly value="₹ 0.00"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>📌 Status:</label><select id="uStatus"><option value="Active">Active</option><option value="Closed">Closed</option></select></div>
+          <div class="form-group"><label>📌 Status:</label><select id="uStatus"><option value="ઉધાર">ઉધાર</option><option value="જમા">જમા</option></select></div>
           <div class="form-group"><label>🔄 Close Year (Y/N):</label><select id="uCloseYear"><option value="N">N</option><option value="Y">Y</option></select></div>
         </div>
         <div class="form-group"><label>📷 ટ્રાન્ઝેક્શન ફોટો:</label><input type="file" id="uPhoto" accept="image/*" capture="environment"></div>
@@ -511,16 +511,16 @@
   </div>
 </div>
 
-<div id="modalBhagiya" class="modal"><div class="modal-content"><h3>➕ ભાગીદાર મેનેજમેન્ટ</h3><input type="text" id="nbName" placeholder="નામ" class="form-group"><input type="number" id="nbPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nbAdd" placeholder="ગામ" class="form-group"><input type="text" id="nbRoll" placeholder="Roll (દા.ત. Owner/Partner)" class="form-group"><button type="button" class="btn-submit" onclick="saveB()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Bhagiya_Master')">પસંદ કરેલ ભાગીદાર ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalBhagiya').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
+<div id="modalBhagiya" class="modal"><div class="modal-content"><h3>➕ ભાગીદાર મેનેજમેન્ટ</h3><input type="text" id="nbName" placeholder="નામ" class="form-group"><input type="number" id="nbPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nbAdd" placeholder="ગામ" class="form-group"><input type="text" id="nbRoll" placeholder="Roll (દા.ત. Owner)" class="form-group"><button type="button" class="btn-submit" onclick="saveB()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Bhagiya_Master')">પસંદ કરેલ ભાગીદાર ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalBhagiya').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
 
-<div id="modalVepari" class="modal"><div class="modal-content"><h3>➕ વેપારી મેનેજમેન્ટ</h3><input type="text" id="nvName" placeholder="નામ" class="form-group"><input type="number" id="nvPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nvCity" placeholder="ગામ" class="form-group"><select id="nvCategory" class="form-group"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="દવા">દવા</option><option value="ખાતર">ખાતર</option></select><button type="button" class="btn-submit" onclick="saveV()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Merchant_Master')">પસંદ કરેલ વેપારી ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalVepari').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
+<div id="modalVepari" class="modal"><div class="modal-content"><h3>➕ વેપારી મેનેજમેન્ટ</h3><input type="text" id="nvName" placeholder="નામ" class="form-group"><input type="number" id="nvPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nvCity" placeholder="ગામ" class="form-group"><select id="nvCategory" class="form-group"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="અન્ય વેપારી">અન્ય વેપારી</option></select><button type="button" class="btn-submit" onclick="saveV()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Merchant_Master')">પસંદ કરેલ વેપારી ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalVepari').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
 
 <div id="modalFertilizer" class="modal"><div class="modal-content"><h3>➕ ખાતર મેનેજમેન્ટ</h3><input type="text" id="nfName" placeholder="ખાતરનું નામ (દા.ત. યુરિયા)" class="form-group"><button type="button" class="btn-submit" onclick="saveFertilizerMaster()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="deleteFertilizerMaster()">પસંદ કરેલ ખાતર ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalFertilizer').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
 
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-Ex55Jk3wfjbBq4yPtyB32Pw4QYAJqMR1n3dFgaJ9dfmRaLT3KHDBWkU1hoziwS5ENA/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw3nWUySmruQuPHxfUSejO8riTdqLTpafsdhQpxoyogBlnmu8Rco9f6jprzQJeqhAnGgw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -642,9 +642,7 @@
   }
 
   function handleUpadTypeChange(sel) {
-    let val = sel.value;
     let amtInput = document.getElementById("uAmount");
-    // જો જમા પ્રકાર હોય તો ડેબિટ ઝીરો અને ક્રેડિટ રકમ બનશે
     calcUpadDebitCredit(amtInput);
   }
 
@@ -664,7 +662,7 @@
 
   function calcInterest(el) {
     let principal = parseFloat(el.value) || 0;
-    let interest = principal * 0.03; // 3% per month
+    let interest = principal * 0.03; 
     document.getElementById("uInterestCalc").value = "₹ " + interest.toFixed(2);
   }
 
@@ -680,18 +678,22 @@
       bhagiyas.forEach(b => sel.add(new Option(b, b))); sel.value = cur;
     });
     
-    // Populate Provider List for Upad (Bhagiya with Roll + Merchant Master)
+    // Populate Provider List for Upad (Excluding Roll=ખેડૂ and Type=દવા,ખાતર)
     let providers = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["Name"];
-      let roll = r["Roll"] || r["રોલ"] || "ભાગીદાર";
-      if(name) providers.push(name + " (" + roll + ")");
+      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
+      if(name && roll !== "ખેડૂ" && roll !== "farmer") {
+        providers.push(name + " (" + (r["Roll"] || "ભાગીદાર") + ")");
+      }
     });
     if(appData.Merchant_Master) {
       appData.Merchant_Master.forEach(r => {
         let mName = r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"];
-        let mType = r["પ્રકાર"] || "વેપારી";
-        if(mName) providers.push(mName + " (" + mType + ")");
+        let mType = String(r["પ્રકાર"] || "").trim().toLowerCase();
+        if(mName && !mType.includes("દવા") && !mType.includes("ખાતર") && !mType.includes("medicine") && !mType.includes("fertilizer")) {
+          providers.push(mName + " (" + (r["પ્રકાર"] || "વેપારી") + ")");
+        }
       });
     }
     let uProvider = document.getElementById("uProvider");
@@ -1203,7 +1205,7 @@
         let farmerCost = r["ભાગિયાનો ખર્ચ"] || 0;
         html += `<td>${owner}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કામની વિગત"]||'-'}</td><td>${r["કલાક"]||0}</td><td>${r["મિનિટ"]||0}</td><td>₹ ${r["કલાકનો ભાવ"]||0}</td><td>₹ ${r["મિનિટનો ભાવ"]||0}</td><td>₹ ${parseFloat(totalAmt).toFixed(2)}</td><td>${r["બીલની સ્થિતિ"]||'-'}</td><td>${r["હસ્તે"]||'-'}</td><td>₹ ${parseFloat(farmerCost).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td>`;
       } else if(tabName === 'Upad') {
-        html += `<td><b>${bhagiya}</b></td><td>${r["એન્ટ્રી પ્રકાર"]||'-'}</td><td>${r["આપનાર"]||'-'}</td><td style="color:#c0392b; font-weight:bold;">₹ ${parseFloat(r["ઉપાડ (Debit)"]||0).toFixed(2)}</td><td style="color:#27ae60; font-weight:bold;">₹ ${parseFloat(r["જમા (Credit)"]||0).toFixed(2)}</td><td>${r["બિલ નં"]||'-'}</td><td style="color:#2980b9; font-weight:bold;">₹ ${parseFloat(r["Total Outstanding"]||0).toFixed(2)}</td><td><span class="badge-jama">${r["Status"]||'Active'}</span></td>`;
+        html += `<td><b>${bhagiya}</b></td><td>${r["એન્ટ્રી પ્રકાર"]||'-'}</td><td>${r["આપનાર"]||'-'}</td><td style="color:#c0392b; font-weight:bold;">₹ ${parseFloat(r["ઉપાડ (Debit)"]||0).toFixed(2)}</td><td style="color:#27ae60; font-weight:bold;">₹ ${parseFloat(r["જમા (Credit)"]||0).toFixed(2)}</td><td>${r["બિલ નં"]||'-'}</td><td style="color:#2980b9; font-weight:bold;">₹ ${parseFloat(r["Total Outstanding"]||0).toFixed(2)}</td><td><span class="badge-jama">${r["Status"]||'ઉધાર'}</span></td>`;
       }
 
       html += `</tr>`;
@@ -1238,7 +1240,7 @@
     let interestCalc = interestAmt * 0.03;
     let status = v("uStatus");
     let closeYear = v("uCloseYear");
-    let totalOutstanding = 0; // Backend will calculate based on previous history
+    let totalOutstanding = 0; 
 
     handlePhotoUpload("uPhoto", function(photoBase64) {
       let rowValues = [

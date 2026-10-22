@@ -536,7 +536,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwMhG0t3ySzyHIjE5WZ0NuVnz5ZgOI46etPpz-eOFoYA-cc7h880L_KU5mOGgCWwmWxMg/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKIADsHDt4-OG9uWBktn7iOWagY6NF-CY_tsQEsSadC2KZ_9DLgl8WjvPjvB-2NY13VA/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -707,11 +707,31 @@
     let bhagiyas = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
-      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ") bhagiyas.push(name.trim());
+      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
+      // Roll = ખેડૂ વાળા નામો ઉપાડ લેનાર (uBhagiya) માંથી હટાવી દીધા છે
+      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && roll !== "ખેડૂ" && roll !== "farmer") {
+        bhagiyas.push(name.trim());
+      }
     });
+    
+    let uBhagiyaSelect = document.getElementById("uBhagiya");
+    if(uBhagiyaSelect) {
+      let cur = uBhagiyaSelect.value;
+      uBhagiyaSelect.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
+      bhagiyas.forEach(b => uBhagiyaSelect.add(new Option(b, b)));
+      uBhagiyaSelect.value = cur;
+    }
+
+    // બાકીની bhagiyaList માટે પણ બધા ભાગીદારો સેટ કરો
     document.querySelectorAll('.bhagiyaList').forEach(sel => { 
-      let cur = sel.value; sel.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
-      bhagiyas.forEach(b => sel.add(new Option(b, b))); sel.value = cur;
+      if(sel.id !== "uBhagiya") {
+        let cur = sel.value; sel.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
+        appData.Bhagiya_Master.forEach(r => {
+          let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
+          if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ") sel.add(new Option(name.trim(), name.trim()));
+        });
+        sel.value = cur;
+      }
     });
     
     let providers = [];

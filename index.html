@@ -59,6 +59,14 @@
     .partner-sum-banner h4 { margin: 0 0 3px 0; font-size: 12px; opacity: 0.9; }
     .partner-sum-banner .sum-amount { font-size: 20px; font-weight: bold; }
 
+    .category-balance-box {
+      background: linear-gradient(135deg, #f39c12, #e67e22);
+      color: white; padding: 8px 12px; border-radius: 6px; margin-bottom: 10px;
+      text-align: center; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .category-balance-box h4 { margin: 0 0 2px 0; font-size: 11px; opacity: 0.95; }
+    .category-balance-box .bal-val { font-size: 16px; }
+
     .readonly-bg { background-color: #f1f2f6; }
     .hidden-field { display: none !important; }
     
@@ -110,22 +118,22 @@
 
   <!-- 0. DASHBOARD -->
   <div id="formDash" class="section active">
-    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📊 ફાર્મ ડેશબોર્ડ (વર્ષવાર સારાંશ)[cite: 1]</h3>
+    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📊 ફાર્મ ડેશબોર્ડ (વર્ષવાર સારાંશ)</h3>
     <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px;">
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #27ae60; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">💰 કુલ વેચાણ (Total Sales)[cite: 1]</h4>
-        <p id="dashTotalSales" style="margin:0; font-size: 18px; font-weight: bold; color: #16a085;">₹ 0.00[cite: 1]</p>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">💰 કુલ વેચાણ (Total Sales)</h4>
+        <p id="dashTotalSales" style="margin:0; font-size: 18px; font-weight: bold; color: #16a085;">₹ 0.00</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #2980b9; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 ખેડૂ વેચાણ હિસ્સો[cite: 1]</h4>
-        <p id="dashFarmerSales" style="margin:0; font-size: 18px; font-weight: bold; color: #2980b9;">₹ 0.00[cite: 1]</p>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 ખેડૂ વેચાણ હિસ્સો</h4>
+        <p id="dashFarmerSales" style="margin:0; font-size: 18px; font-weight: bold; color: #2980b9;">₹ 0.00</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #d35400; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">📉 કુલ ખર્ચ[cite: 1]</h4>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">📉 કુલ ખર્ચ</h4>
         <p id="dashTotalExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #d35400;">₹ 0.00</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #8e44ad; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 ખેડૂ ખર્ચ હિસ્સો[cite: 1]</h4>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 ખેડૂ ખર્ચ હિસ્સો</h4>
         <p id="dashFarmerExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #8e44ad;">₹ 0.00</p>
       </div>
     </div>
@@ -152,6 +160,10 @@
         <h4 id="bannerTitleSales">કુલ વેચાણ</h4>
         <div class="sum-amount" id="bannerValSales">₹ 0.00</div>
       </div>
+      <div id="balBoxSales" class="category-balance-box" style="display:none;">
+        <h4>વેચાણ બીલ બેલેન્સ</h4>
+        <div class="bal-val" id="balValSales">₹ 0.00</div>
+      </div>
       <form id="salesForm" onsubmit="submitSales(event)">
         <input type="hidden" id="editEntryId" value="">
         <div class="flex-row">
@@ -159,7 +171,7 @@
           <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="sBill" onblur="checkDuplicateBill(this, 'Sales_Ledger', 'btnSales')"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="sBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Sales');"></select></div>
+          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="sBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Sales'); updateCategoryBalance('Sales');"></select></div>
           <div class="form-group"><label>🛒 ખરીદનાર (વેપારી):</label><select id="sVepari" class="vepariList" required onchange="checkVepariNew(this)"></select></div>
         </div>
         <hr style="margin:10px 0;">
@@ -206,6 +218,10 @@
         <h4 id="bannerTitleMed">કુલ દવા ખર્ચ</h4>
         <div class="sum-amount" id="bannerValMed">₹ 0.00</div>
       </div>
+      <div id="balBoxMed" class="category-balance-box" style="display:none;">
+        <h4>દવા ખરીદી બેલેન્સ</h4>
+        <div class="bal-val" id="balValMed">₹ 0.00</div>
+      </div>
       <form id="medForm" onsubmit="submitMed(event)">
         <input type="hidden" id="editMedId" value="">
         <div class="flex-row">
@@ -213,7 +229,7 @@
           <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="mBill" onblur="checkDuplicateBill(this, 'Pesticide_Bill', 'btnMed')"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="mBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Med');"></select></div>
+          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="mBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Med'); updateCategoryBalance('Med');"></select></div>
           <div class="form-group"><label>🏬 દુકાન / વેપારી:</label><select id="mVepari" required onchange="checkMedVepariNew(this)"></select></div>
         </div>
         <hr style="margin:10px 0;">
@@ -280,6 +296,10 @@
         <h4 id="bannerTitleFert">કુલ ખાતર ખર્ચ</h4>
         <div class="sum-amount" id="bannerValFert">₹ 0.00</div>
       </div>
+      <div id="balBoxFert" class="category-balance-box" style="display:none;">
+        <h4>ખાતર ખરીદી બેલેન્સ</h4>
+        <div class="bal-val" id="balValFert">₹ 0.00</div>
+      </div>
       <form id="fertForm" onsubmit="submitFert(event)">
         <input type="hidden" id="editFertId" value="">
         <div class="flex-row">
@@ -287,7 +307,7 @@
           <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="fBill" onblur="checkDuplicateBill(this, 'Fertilizer_Bill', 'btnFert')"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="fBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Fert');"></select></div>
+          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="fBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Fert'); updateCategoryBalance('Fert');"></select></div>
           <div class="form-group"><label>🏬 વેપારી:</label><select id="fVepari" class="fertVepariList" required onchange="checkFertVepariNew(this)"></select></div>
         </div>
         <hr style="margin:10px 0;">
@@ -490,7 +510,7 @@
           <div class="form-group"><label>📌 Status:</label><select id="uStatus"><option value="ઉધાર">ઉધાર</option><option value="જમા">જમા</option></select></div>
           <div class="form-group"><label>🔄 Close Year (Y/N):</label><select id="uCloseYear"><option value="N">N</option><option value="Y">Y</option></select></div>
         </div>
-        <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="uPhoto" accept="image/*" capture="environment"></div>
+        <div class="form-group"><label>📷 ટ્રાન્ઝેક્શન ફોટો:</label><input type="file" id="uPhoto" accept="image/*" capture="environment"></div>
         <button type="submit" id="btnUpad" class="btn-submit">💾 સેવ કરો</button>
       </form>
     </div>
@@ -536,7 +556,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKIADsHDt4-OG9uWBktn7iOWagY6NF-CY_tsQEsSadC2KZ_9DLgl8WjvPjvB-2NY13VA/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw3nWUySmruQuPHxfUSejO8riTdqLTpafsdhQpxoyogBlnmu8Rco9f6jprzQJeqhAnGgw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -640,11 +660,45 @@
       if(contentView) contentView.style.display = 'none';
       if(tabName === 'Upad') setEntryIdDate(document.getElementById('uDate').value);
       updatePartnerSummary(tabName);
+      if(tabName === 'Med' || tabName === 'Fert' || tabName === 'Sales') updateCategoryBalance(tabName);
     } else {
       if(contentNew) contentNew.style.display = 'none';
       if(contentView) contentView.style.display = 'block';
       renderTable(tabName);
     }
+  }
+
+  function updateCategoryBalance(sectionType) {
+    let bhagiyaId = sectionType === 'Sales' ? 'sBhagiya' : sectionType === 'Med' ? 'mBhagiya' : 'fBhagiya';
+    let boxId = sectionType === 'Sales' ? 'balBoxSales' : sectionType === 'Med' ? 'balBoxMed' : 'balBoxFert';
+    let valId = sectionType === 'Sales' ? 'balValSales' : sectionType === 'Med' ? 'balValMed' : 'balValFert';
+    
+    let selectedBhagiya = document.getElementById(bhagiyaId).value;
+    let box = document.getElementById(boxId);
+    let valEl = document.getElementById(valId);
+
+    if(!selectedBhagiya || selectedBhagiya === "NEW") {
+      if(box) box.style.display = 'none';
+      return;
+    }
+
+    let targetType = sectionType === 'Sales' ? 'વેચાણ બીલ' : sectionType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
+    let totalBal = 0;
+
+    if(appData.Upad_Ledger) {
+      appData.Upad_Ledger.forEach(r => {
+        let name = String(r["ભાગીદાર"] || r["ઉપાડ લેનાર"] || "").trim();
+        let type = String(r["એન્ટ્રી પ્રકાર"] || "").trim();
+        if(name === selectedBhagiya && type === targetType) {
+          let deb = parseFloat(r["ઉપાડ (Debit)"] || 0);
+          let cred = parseFloat(r["જમા (Credit)"] || 0);
+          totalBal += (deb - cred);
+        }
+      });
+    }
+
+    if(valEl) valEl.innerText = "₹ " + totalBal.toFixed(2);
+    if(box) box.style.display = 'block';
   }
 
   function toggleTxId(sel) {

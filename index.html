@@ -51,21 +51,21 @@
     .choice-card-view h3 { margin: 0 0 5px 0; font-size: 18px; }
     .choice-card-view p { margin: 0; font-size: 12px; opacity: 0.9; }
 
+    /* Top Banners Row (Left & Right layout) */
+    .top-banners-row { display: flex; gap: 8px; margin-bottom: 12px; display: none; }
     .partner-sum-banner {
-      background: linear-gradient(135deg, #16a085, #1abc9c);
-      color: white; padding: 10px 15px; border-radius: 6px; margin-bottom: 12px;
-      display: none; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      flex: 1; background: linear-gradient(135deg, #16a085, #1abc9c);
+      color: white; padding: 8px 10px; border-radius: 6px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    .partner-sum-banner h4 { margin: 0 0 3px 0; font-size: 12px; opacity: 0.9; }
-    .partner-sum-banner .sum-amount { font-size: 20px; font-weight: bold; }
+    .partner-sum-banner h4 { margin: 0 0 2px 0; font-size: 11px; opacity: 0.9; }
+    .partner-sum-banner .sum-amount { font-size: 18px; font-weight: bold; }
 
     .category-balance-box {
-      background: linear-gradient(135deg, #f39c12, #e67e22);
-      color: white; padding: 8px 12px; border-radius: 6px; margin-bottom: 10px;
-      text-align: center; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      flex: 1; background: linear-gradient(135deg, #f39c12, #e67e22);
+      color: white; padding: 8px 10px; border-radius: 6px; text-align: center; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     .category-balance-box h4 { margin: 0 0 2px 0; font-size: 11px; opacity: 0.95; }
-    .category-balance-box .bal-val { font-size: 16px; }
+    .category-balance-box .bal-val { font-size: 18px; }
 
     .readonly-bg { background-color: #f1f2f6; }
     .hidden-field { display: none !important; }
@@ -156,14 +156,18 @@
     <div id="subContentSalesNew" class="sub-section">
       <button type="button" class="btn-back" onclick="backToChoice('Sales')">⬅️ પાછળ જાઓ</button>
       <h3 id="formTitleSales" style="text-align:center; color:#27ae60; margin-top:0;">💰 વેચાણ એન્ટ્રી</h3>
-      <div id="partnerBannerSales" class="partner-sum-banner">
-        <h4 id="bannerTitleSales">કુલ વેચાણ</h4>
-        <div class="sum-amount" id="bannerValSales">₹ 0.00</div>
+      
+      <div id="topBannersRowSales" class="top-banners-row">
+        <div id="partnerBannerSales" class="partner-sum-banner">
+          <h4 id="bannerTitleSales">કુલ ફાર્મ વેચાણ</h4>
+          <div class="sum-amount" id="bannerValSales">₹ 0.00</div>
+        </div>
+        <div id="balBoxSales" class="category-balance-box">
+          <h4>વેચાણ ઉપાડ બેલેન્સ</h4>
+          <div class="bal-val" id="balValSales">₹ 0.00</div>
+        </div>
       </div>
-      <div id="balBoxSales" class="category-balance-box" style="display:none;">
-        <h4>વેચાણ બીલ બેલેન્સ</h4>
-        <div class="bal-val" id="balValSales">₹ 0.00</div>
-      </div>
+
       <form id="salesForm" onsubmit="submitSales(event)">
         <input type="hidden" id="editEntryId" value="">
         <div class="flex-row">
@@ -214,14 +218,18 @@
     <div id="subContentMedNew" class="sub-section">
       <button type="button" class="btn-back" onclick="backToChoice('Med')">⬅️ પાછળ જાઓ</button>
       <h3 id="formTitleMed" style="text-align:center; color:#2980b9; margin-top:0;">🧪 દવા ખર્ચ એન્ટ્રી</h3>
-      <div id="partnerBannerMed" class="partner-sum-banner">
-        <h4 id="bannerTitleMed">કુલ દવા ખર્ચ</h4>
-        <div class="sum-amount" id="bannerValMed">₹ 0.00</div>
+      
+      <div id="topBannersRowMed" class="top-banners-row">
+        <div id="partnerBannerMed" class="partner-sum-banner">
+          <h4 id="bannerTitleMed">કુલ ફાર્મ દવા ખર્ચ</h4>
+          <div class="sum-amount" id="bannerValMed">₹ 0.00</div>
+        </div>
+        <div id="balBoxMed" class="category-balance-box">
+          <h4>દવા ખરીદી માટે ઉપાડ બેલેન્સ</h4>
+          <div class="bal-val" id="balValMed">₹ 0.00</div>
+        </div>
       </div>
-      <div id="balBoxMed" class="category-balance-box" style="display:none;">
-        <h4>દવા ખરીદી બેલેન્સ</h4>
-        <div class="bal-val" id="balValMed">₹ 0.00</div>
-      </div>
+
       <form id="medForm" onsubmit="submitMed(event)">
         <input type="hidden" id="editMedId" value="">
         <div class="flex-row">
@@ -292,14 +300,18 @@
     <div id="subContentFertNew" class="sub-section">
       <button type="button" class="btn-back" onclick="backToChoice('Fert')">⬅️ પાછળ જાઓ</button>
       <h3 id="formTitleFert" style="text-align:center; color:#d35400; margin-top:0;">🌾 ખાતર ખર્ચ એન્ટ્રી</h3>
-      <div id="partnerBannerFert" class="partner-sum-banner">
-        <h4 id="bannerTitleFert">કુલ ખાતર ખર્ચ</h4>
-        <div class="sum-amount" id="bannerValFert">₹ 0.00</div>
+      
+      <div id="topBannersRowFert" class="top-banners-row">
+        <div id="partnerBannerFert" class="partner-sum-banner">
+          <h4 id="bannerTitleFert">કુલ ફાર્મ ખાતર ખર્ચ</h4>
+          <div class="sum-amount" id="bannerValFert">₹ 0.00</div>
+        </div>
+        <div id="balBoxFert" class="category-balance-box">
+          <h4>ખાતર ખરીદી માટે ઉપાડ બેલેન્સ</h4>
+          <div class="bal-val" id="balValFert">₹ 0.00</div>
+        </div>
       </div>
-      <div id="balBoxFert" class="category-balance-box" style="display:none;">
-        <h4>ખાતર ખરીદી બેલેન્સ</h4>
-        <div class="bal-val" id="balValFert">₹ 0.00</div>
-      </div>
+
       <form id="fertForm" onsubmit="submitFert(event)">
         <input type="hidden" id="editFertId" value="">
         <div class="flex-row">
@@ -370,10 +382,14 @@
     <div id="subContentTracNew" class="sub-section">
       <button type="button" class="btn-back" onclick="backToChoice('Trac')">⬅️ પાછળ જાઓ</button>
       <h3 id="formTitleTrac" style="text-align:center; color:#8e44ad; margin-top:0;">🚜 ટ્રેક્ટર ખર્ચ એન્ટ્રી</h3>
-      <div id="partnerBannerTrac" class="partner-sum-banner">
-        <h4 id="bannerTitleTrac">કુલ ટ્રેક્ટર ખર્ચ</h4>
-        <div class="sum-amount" id="bannerValTrac">₹ 0.00</div>
+      
+      <div id="topBannersRowTrac" class="top-banners-row" style="display:flex;">
+        <div id="partnerBannerTrac" class="partner-sum-banner" style="display:block;">
+          <h4 id="bannerTitleTrac">કુલ ફાર્મ ટ્રેક્ટર ખર્ચ</h4>
+          <div class="sum-amount" id="bannerValTrac">₹ 0.00</div>
+        </div>
       </div>
+
       <form id="tracForm" onsubmit="submitTrac(event)">
         <input type="hidden" id="editTracId" value="">
         <div class="flex-row">
@@ -670,15 +686,15 @@
 
   function updateCategoryBalance(sectionType) {
     let bhagiyaId = sectionType === 'Sales' ? 'sBhagiya' : sectionType === 'Med' ? 'mBhagiya' : 'fBhagiya';
-    let boxId = sectionType === 'Sales' ? 'balBoxSales' : sectionType === 'Med' ? 'balBoxMed' : 'balBoxFert';
     let valId = sectionType === 'Sales' ? 'balValSales' : sectionType === 'Med' ? 'balValMed' : 'balValFert';
+    let rowId = sectionType === 'Sales' ? 'topBannersRowSales' : sectionType === 'Med' ? 'topBannersRowMed' : 'topBannersRowFert';
     
     let selectedBhagiya = document.getElementById(bhagiyaId).value;
-    let box = document.getElementById(boxId);
+    let rowBox = document.getElementById(rowId);
     let valEl = document.getElementById(valId);
 
     if(!selectedBhagiya || selectedBhagiya === "NEW") {
-      if(box) box.style.display = 'none';
+      if(rowBox) rowBox.style.display = 'none';
       return;
     }
 
@@ -698,7 +714,7 @@
     }
 
     if(valEl) valEl.innerText = "₹ " + totalBal.toFixed(2);
-    if(box) box.style.display = 'block';
+    if(rowBox) rowBox.style.display = 'flex';
   }
 
   function toggleTxId(sel) {
@@ -759,7 +775,6 @@
   function populateData() {
     if(!appData.Bhagiya_Master) return;
     
-    // ૧. ઉપાડ લેનાર (uBhagiya) માં માત્ર Roll = ખેડૂ વાળા જ આવશે
     let upadBhagiyas = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
@@ -777,7 +792,6 @@
       uBhagiyaSelect.value = cur;
     }
 
-    // ૨. બાકીના ફોર્મ્સ માટે બધા ભાગીદારો
     let allBhagiyas = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
@@ -881,9 +895,13 @@
     if(sectionType === 'Upad') return;
     let dateId = sectionType === 'Sales' ? 'sDate' : sectionType === 'Med' ? 'mDate' : sectionType === 'Fert' ? 'fDate' : 'tDate';
     let dateVal = document.getElementById(dateId).value;
+    let bannerRow = document.getElementById('topBannersRow' + sectionType);
     let banner = document.getElementById('partnerBanner' + sectionType);
 
-    if(!dateVal) { banner.style.display = 'none'; return; }
+    if(!dateVal) { 
+      if(banner) banner.style.display = 'none'; 
+      return; 
+    }
 
     let targetYear = getYear(dateVal);
     let totalSum = 0;
@@ -923,7 +941,8 @@
     }
 
     document.getElementById('bannerVal' + sectionType).innerText = "₹ " + totalSum.toFixed(2);
-    banner.style.display = 'block';
+    if(bannerRow) bannerRow.style.display = 'flex';
+    if(banner) banner.style.display = 'block';
   }
 
   function addSalesItemRow(pauch=0, weight="", bhav20="", pak="", kRakam="") {

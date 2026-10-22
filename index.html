@@ -28,6 +28,10 @@
     .btn-submit { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; font-size: 15px; cursor: pointer; margin-top: 10px; font-weight: bold; border-radius: 3px; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .btn-submit:hover { background: #219653; }
     
+    /* Stylish Back Button */
+    .btn-back { background: linear-gradient(135deg, #7f8c8d, #95a5a6); color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.2s; }
+    .btn-back:hover { background: linear-gradient(135deg, #6c7a89, #7f8c8d); }
+
     /* Small Table Action Buttons */
     .btn-table-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
     .btn-table-edit { background: #f39c12; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
@@ -39,12 +43,17 @@
     .badge-jama { background-color: #27ae60; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; display: inline-block; }
     .badge-baki { background-color: #e74c3c; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; display: inline-block; }
 
-    /* Choice Menu Cards */
-    .choice-container { display: flex; gap: 15px; margin: 20px 0; justify-content: center; }
-    .choice-card { flex: 1; background: linear-gradient(135deg, #f8f9f9, #ebedef); border: 2px solid #bdc3c7; border-radius: 8px; padding: 25px 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 3px 6px rgba(0,0,0,0.05); }
-    .choice-card:hover { transform: translateY(-3px); box-shadow: 0 5px 12px rgba(0,0,0,0.12); border-color: #16a085; background: #fff; }
-    .choice-card h3 { margin: 0 0 8px 0; color: #2c3e50; font-size: 16px; }
-    .choice-card p { margin: 0; color: #7f8c8d; font-size: 12px; }
+    /* Colorful & Attractive Choice Menu Cards */
+    .choice-container { display: flex; gap: 15px; margin: 25px 0; justify-content: center; }
+    .choice-card-new { flex: 1; background: linear-gradient(135deg, #27ae60, #2ecc71); color: white; border-radius: 10px; padding: 25px 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
+    .choice-card-new:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(39, 174, 96, 0.4); }
+    .choice-card-new h3 { margin: 0 0 5px 0; font-size: 18px; }
+    .choice-card-new p { margin: 0; font-size: 12px; opacity: 0.9; }
+
+    .choice-card-view { flex: 1; background: linear-gradient(135deg, #2980b9, #3498db); color: white; border-radius: 10px; padding: 25px 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3); }
+    .choice-card-view:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(41, 128, 185, 0.4); }
+    .choice-card-view h3 { margin: 0 0 5px 0; font-size: 18px; }
+    .choice-card-view p { margin: 0; font-size: 12px; opacity: 0.9; }
 
     /* Year Summary Banner styling */
     .partner-sum-banner {
@@ -105,22 +114,22 @@
 
   <!-- 0. DASHBOARD -->
   <div id="formDash" class="section active">
-    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📊 ફાર્મ ડેશબોર્ડ (વર્ષવાર સારાંશ)[span_0](start_span)[span_0](end_span)</h3>
+    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📊 ફાર્મ ડેશબોર્ડ (વર્ષવાર સારાંશ)[span_1](start_span)[span_1](end_span)</h3>
     <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px;">
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #27ae60; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">💰 કુલ વેચાણ (Total Sales)[span_1](start_span)[span_1](end_span)</h4>
-        <p id="dashTotalSales" style="margin:0; font-size: 18px; font-weight: bold; color: #16a085;">₹ 0.00[span_2](start_span)[span_2](end_span)</p>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">💰 કુલ વેચાણ (Total Sales)[span_2](start_span)[span_2](end_span)</h4>
+        <p id="dashTotalSales" style="margin:0; font-size: 18px; font-weight: bold; color: #16a085;">₹ 0.00[span_3](start_span)[span_3](end_span)</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #2980b9; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 ખેડૂ વેચાણ હિસ્સો[span_3](start_span)[span_3](end_span)</h4>
-        <p id="dashFarmerSales" style="margin:0; font-size: 18px; font-weight: bold; color: #2980b9;">₹ 0.00[span_4](start_span)[span_4](end_span)</p>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 ખેડૂ વેચાણ હિસ્સો[span_4](start_span)[span_4](end_span)</h4>
+        <p id="dashFarmerSales" style="margin:0; font-size: 18px; font-weight: bold; color: #2980b9;">₹ 0.00[span_5](start_span)[span_5](end_span)</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #d35400; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">📉 કુલ ખર્ચ[span_5](start_span)[span_5](end_span)</h4>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">📉 કુલ ખર્ચ[span_6](start_span)[span_6](end_span)</h4>
         <p id="dashTotalExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #d35400;">₹ 0.00</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #8e44ad; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 ખેડૂ ખર્ચ હિસ્સો[span_6](start_span)[span_6](end_span)</h4>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 ખેડૂ ખર્ચ હિસ્સો[span_7](start_span)[span_7](end_span)</h4>
         <p id="dashFarmerExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #8e44ad;">₹ 0.00</p>
       </div>
     </div>
@@ -130,18 +139,18 @@
   <div id="formSales" class="section">
     <h3 style="text-align:center; color:#27ae60; margin-top:0;">💰 વેચાણ મેનેજમેન્ટ</h3>
     <div id="choiceSales" class="choice-container">
-      <div class="choice-card" onclick="switchSubTab('Sales', 'New')">
+      <div class="choice-card-new" onclick="switchSubTab('Sales', 'New')">
         <h3>➕ નવી એન્ટ્રી</h3>
         <p>નવું બિલ કે વેચાણ રેકોર્ડ દાખલ કરો</p>
       </div>
-      <div class="choice-card" onclick="switchSubTab('Sales', 'View')">
+      <div class="choice-card-view" onclick="switchSubTab('Sales', 'View')">
         <h3>📋 બધી એન્ટ્રી</h3>
         <p>જૂના રેકોર્ડ્સ જુઓ, શોધો અથવા એડિટ કરો</p>
       </div>
     </div>
     
     <div id="subContentSalesNew" class="sub-section">
-      <button type="button" onclick="backToChoice('Sales')" style="background:#7f8c8d; color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; margin-bottom:10px;">⬅️ પાછળ જાઓ</button>
+      <button type="button" class="btn-back" onclick="backToChoice('Sales')">⬅️ પાછળ જાઓ</button>
       <h3 id="formTitleSales" style="text-align:center; color:#27ae60; margin-top:0;">💰 વેચાણ એન્ટ્રી</h3>
       <div id="partnerBannerSales" class="partner-sum-banner">
         <h4 id="bannerTitleSales">કુલ વેચાણ</h4>
@@ -172,7 +181,7 @@
     </div>
 
     <div id="subContentSalesView" class="sub-section">
-      <button type="button" onclick="backToChoice('Sales')" style="background:#7f8c8d; color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; margin-bottom:10px;">⬅️ પાછળ જાઓ</button>
+      <button type="button" class="btn-back" onclick="backToChoice('Sales')">⬅️ પાછળ જાઓ</button>
       <h3 style="text-align:center; color:#27ae60; margin-top:0;">📋 વેચાણ રેકોર્ડ્સ</h3>
       <div class="form-group"><input type="text" id="searchSales" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterTable('Sales')"></div>
       <div id="actionBarSales" class="table-actions-bar"></div>
@@ -184,18 +193,18 @@
   <div id="formMed" class="section">
     <h3 style="text-align:center; color:#2980b9; margin-top:0;">🧪 દવા ખર્ચ મેનેજમેન્ટ</h3>
     <div id="choiceMed" class="choice-container">
-      <div class="choice-card" onclick="switchSubTab('Med', 'New')">
+      <div class="choice-card-new" onclick="switchSubTab('Med', 'New')">
         <h3>➕ નવી એન્ટ્રી</h3>
         <p>નવું દવા બિલ કે ખર્ચ દાખલ કરો</p>
       </div>
-      <div class="choice-card" onclick="switchSubTab('Med', 'View')">
+      <div class="choice-card-view" onclick="switchSubTab('Med', 'View')">
         <h3>📋 બધી એન્ટ્રી</h3>
         <p>દવાના જૂના રેકોર્ડ્સ જુઓ અને મેનેજ કરો</p>
       </div>
     </div>
 
     <div id="subContentMedNew" class="sub-section">
-      <button type="button" onclick="backToChoice('Med')" style="background:#7f8c8d; color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; margin-bottom:10px;">⬅️ પાછળ જાઓ</button>
+      <button type="button" class="btn-back" onclick="backToChoice('Med')">⬅️ પાછળ જાઓ</button>
       <h3 id="formTitleMed" style="text-align:center; color:#2980b9; margin-top:0;">🧪 દવા ખર્ચ એન્ટ્રી</h3>
       <div id="partnerBannerMed" class="partner-sum-banner">
         <h4 id="bannerTitleMed">કુલ દવા ખર્ચ</h4>
@@ -246,7 +255,7 @@
     </div>
 
     <div id="subContentMedView" class="sub-section">
-      <button type="button" onclick="backToChoice('Med')" style="background:#7f8c8d; color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; margin-bottom:10px;">⬅️ પાછળ જાઓ</button>
+      <button type="button" class="btn-back" onclick="backToChoice('Med')">⬅️ પાછળ જાઓ</button>
       <h3 style="text-align:center; color:#2980b9; margin-top:0;">📋 દવા આઇટમ રેકોર્ડ્સ</h3>
       <div class="form-group"><input type="text" id="searchMed" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterTable('Med')"></div>
       <div id="actionBarMed" class="table-actions-bar"></div>
@@ -258,18 +267,18 @@
   <div id="formFert" class="section">
     <h3 style="text-align:center; color:#d35400; margin-top:0;">🌾 ખાતર ખર્ચ મેનેજમેન્ટ</h3>
     <div id="choiceFert" class="choice-container">
-      <div class="choice-card" onclick="switchSubTab('Fert', 'New')">
+      <div class="choice-card-new" onclick="switchSubTab('Fert', 'New')">
         <h3>➕ નવી એન્ટ્રી</h3>
         <p>નવું ખાતર બિલ કે ખર્ચ દાખલ કરો</p>
       </div>
-      <div class="choice-card" onclick="switchSubTab('Fert', 'View')">
+      <div class="choice-card-view" onclick="switchSubTab('Fert', 'View')">
         <h3>📋 બધી એન્ટ્રી</h3>
         <p>ખાતરના જૂના રેકોર્ડ્સ જુઓ અને મેનેજ કરો</p>
       </div>
     </div>
 
     <div id="subContentFertNew" class="sub-section">
-      <button type="button" onclick="backToChoice('Fert')" style="background:#7f8c8d; color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; margin-bottom:10px;">⬅️ પાછળ જાઓ</button>
+      <button type="button" class="btn-back" onclick="backToChoice('Fert')">⬅️ પાછળ જાઓ</button>
       <h3 id="formTitleFert" style="text-align:center; color:#d35400; margin-top:0;">🌾 ખાતર ખર્ચ એન્ટ્રી</h3>
       <div id="partnerBannerFert" class="partner-sum-banner">
         <h4 id="bannerTitleFert">કુલ ખાતર ખર્ચ</h4>
@@ -320,7 +329,7 @@
     </div>
 
     <div id="subContentFertView" class="sub-section">
-      <button type="button" onclick="backToChoice('Fert')" style="background:#7f8c8d; color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; margin-bottom:10px;">⬅️ પાછળ જાઓ</button>
+      <button type="button" class="btn-back" onclick="backToChoice('Fert')">⬅️ પાછળ જાઓ</button>
       <h3 style="text-align:center; color:#d35400; margin-top:0;">📋 ખાતર આઇટમ રેકોર્ડ્સ</h3>
       <div class="form-group"><input type="text" id="searchFert" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterTable('Fert')"></div>
       <div id="actionBarFert" class="table-actions-bar"></div>
@@ -332,18 +341,18 @@
   <div id="formTrac" class="section">
     <h3 style="text-align:center; color:#8e44ad; margin-top:0;">🚜 ટ્રેક્ટર ખર્ચ મેનેજમેન્ટ</h3>
     <div id="choiceTrac" class="choice-container">
-      <div class="choice-card" onclick="switchSubTab('Trac', 'New')">
+      <div class="choice-card-new" onclick="switchSubTab('Trac', 'New')">
         <h3>➕ નવી એન્ટ્રી</h3>
         <p>નવું ટ્રેક્ટર કામ કે ખર્ચ દાખલ કરો</p>
       </div>
-      <div class="choice-card" onclick="switchSubTab('Trac', 'View')">
+      <div class="choice-card-view" onclick="switchSubTab('Trac', 'View')">
         <h3>📋 બધી એન્ટ્રી</h3>
         <p>ટ્રેક્ટરના જૂના રેકોર્ડ્સ જુઓ અને મેનેજ કરો</p>
       </div>
     </div>
 
     <div id="subContentTracNew" class="sub-section">
-      <button type="button" onclick="backToChoice('Trac')" style="background:#7f8c8d; color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; margin-bottom:10px;">⬅️ પાછળ જાઓ</button>
+      <button type="button" class="btn-back" onclick="backToChoice('Trac')">⬅️ પાછળ જાઓ</button>
       <h3 id="formTitleTrac" style="text-align:center; color:#8e44ad; margin-top:0;">🚜 ટ્રેક્ટર ખર્ચ એન્ટ્રી</h3>
       <div id="partnerBannerTrac" class="partner-sum-banner">
         <h4 id="bannerTitleTrac">કુલ ટ્રેક્ટર ખર્ચ</h4>
@@ -384,7 +393,7 @@
     </div>
 
     <div id="subContentTracView" class="sub-section">
-      <button type="button" onclick="backToChoice('Trac')" style="background:#7f8c8d; color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; margin-bottom:10px;">⬅️ પાછળ જાઓ</button>
+      <button type="button" class="btn-back" onclick="backToChoice('Trac')">⬅️ પાછળ જાઓ</button>
       <h3 style="text-align:center; color:#8e44ad; margin-top:0;">📋 ટ્રેક્ટર ખર્ચ રેકોર્ડ્સ</h3>
       <div class="form-group"><input type="text" id="searchTrac" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterTable('Trac')"></div>
       <div id="actionBarTrac" class="table-actions-bar"></div>

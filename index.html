@@ -1355,7 +1355,7 @@
     if(formType === 'Sales') {
       billTotal = itemRows.reduce((sum, r) => sum + (parseFloat(r[6]) || 0), 0);
     } else {
-      billTotal = parseFloat(billRow[10]) || 0; // Total bill amount index
+      billTotal = parseFloat(billRow[10]) || 0;
     }
 
     let currentBal = getCategoryBalanceVal(formType, partnerName);
@@ -1384,7 +1384,7 @@
       if(res.status === "error") {
         alert("ભૂલ: " + res.message);
         document.getElementById(btnId).innerText = "💾 સેવ કરો";
-        return;
+        return Promise.reject(res.message);
       }
 
       if(wantUpad) {
@@ -1421,7 +1421,7 @@
       if(typeof successCallback === 'function') successCallback();
     })
     .catch(err => {
-      alert("ભૂલ: " + err);
+      if(err) alert("ભૂલ: " + err);
       document.getElementById(btnId).innerText = "💾 સેવ કરો";
     });
   }

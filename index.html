@@ -590,7 +590,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2G09FElRtroBdXLKlAtcXYUhW16pHi3j-Spf6_0pA7h8GBzgUBwTyhSBrPWfICu6ANg/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyx_Lo_lwKf4MKgs9q-BxXUesgxQstAcUK6YIRG51SJwB986P9BeO6JunYIPAxwBJjyUw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -1158,6 +1158,26 @@
     calcMedBill();
   }
 
+  function getCropShare(cropName) {
+    if (!cropName) return 0;
+    let match = cropName.match(/\((.*?)\)/);
+    if (match) { 
+      let val = parseFloat(match[1]); 
+      if (!isNaN(val)) return val <= 1 ? val * 100 : val; 
+    }
+    if (!appData.Crop_Master) return 0;
+    let cleanInputName = cropName.split('(')[0].trim();
+    let crop = appData.Crop_Master.find(c => {
+      let masterName = String(c["પાકનું નામ"] || "").split('(')[0].trim();
+      return masterName === cleanInputName;
+    });
+    if (!crop) return 0;
+    let share = crop["ભાગ_ટકા"] || 0;
+    let parsedShare = parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
+    if (parsedShare > 0 && parsedShare <= 1) parsedShare = parsedShare * 100;
+    return parsedShare;
+  }
+
   function calcMedBill() {
     let rows = document.querySelectorAll("#medItemsContainer .item-row");
     let subTotal = 0;
@@ -1178,7 +1198,9 @@
       let type = row.querySelector('.mType').value.trim();
       let share = (type === "નીંદામણ") ? 100 : getCropShare(row.querySelector('.pakList').value);
       row.querySelector('.mKShare').value = share;
-      row.querySelector('.sKRakam').value = "₹ " + (totalBill * (share / 100)).toFixed(2);
+      let itemAmt = parseFloat((row.querySelector('.mTotal').value || "").replace("₹", "")) || 0;
+      let baseForShare = (rows.length === 1 && totalBill > 0) ? totalBill : itemAmt;
+      row.querySelector('.sKRakam').value = "₹ " + (baseForShare * (share / 100)).toFixed(2);
     });
   }
 
@@ -1204,15 +1226,10 @@
     rows.forEach(row => {
       let pakSelectVal = row.querySelector('.pakList').value;
       let share = getCropShare(pakSelectVal);
-      if (share === 0 && pakSelectVal) {
-        let match = pakSelectVal.match(/\((.*?)\)/);
-        if (match) {
-          let val = parseFloat(match[1]);
-          if (!isNaN(val)) share = val <= 1 ? val * 100 : val;
-        }
-      }
       row.querySelector('.fKShare').value = share;
-      let farmerAmt = totalBill * (share / 100);
+      let itemAmt = parseFloat((row.querySelector('.fAmt').value || "").replace("₹", "")) || 0;
+      let baseForShare = (rows.length === 1 && totalBill > 0) ? totalBill : itemAmt;
+      let farmerAmt = baseForShare * (share / 100);
       let farmerAmtBox = row.querySelector('.sKRakam');
       if(farmerAmtBox) farmerAmtBox.value = "₹ " + farmerAmt.toFixed(2);
     });
@@ -1736,17 +1753,6 @@
     } else { callback(""); }
   }
 
-  let getCropShare = function(cropName) {
-    if (!cropName) return 0;
-    let match = cropName.match(/\((.*?)\)/);
-    if (match) { let val = parseFloat(match[1]); if (!isNaN(val)) return val <= 1 ? val * 100 : val; }
-    if (!appData.Crop_Master) return 0;
-    let crop = appData.Crop_Master.find(c => String(c["પાકનું નામ"]).trim() === String(cropName).trim());
-    if (!crop) return 0;
-    let share = crop["ભાગ_ટકા"] || 0;
-    return parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
-  };
-
   function v(id) { return document.getElementById(id).value; }
   
   function getYear(dateString) {
@@ -1783,7 +1789,6 @@
   function verifyMpinAndProceed() {
     let entered = document.getElementById("inputMpin").value;
     if(entered === CORRECT_MPIN) {
-      document.getElementById("modalMpin").style.div = "none"; // Safe
       document.getElementById("modalMpin").style.display = "none";
       if(pendingActionCallback) pendingActionCallback();
       pendingActionCallback = null;

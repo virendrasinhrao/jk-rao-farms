@@ -1,7 +1,7 @@
 <!-- 
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated Date & Time: 24 October 2026, 12:12 AM
+  Updated Date & Time: 24 October 2026, 12:08 AM
   Feature: Complete Original Code with Exact Code 2 Farmer Share Calculation Logic Integrated
 -->
 <!DOCTYPE html>
@@ -596,7 +596,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  // Updated Date & Time: 24 October 2026, 12:12 AM
+  // Updated Date & Time: 23 October 2026, 11:35 PM
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyx_Lo_lwKf4MKgs9q-BxXUesgxQstAcUK6YIRG51SJwB986P9BeO6JunYIPAxwBJjyUw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
@@ -1122,7 +1122,7 @@
     calcTracRow(el);
   }
 
-  // --- Code 2 વાળું અસલ calcSalesRow લૉજિક ---
+  // --- અહીં કોડ 2 વાળું અસલ calcSalesRow લૉજિક મૂક્યું છે ---
   function calcSalesRow(el) {
     let row = el.closest('.item-row');
     let w = parseFloat(row.querySelector('.sWeight').value) || 0;
@@ -1166,7 +1166,7 @@
     calcMedBill();
   }
 
-  // --- Code 2 વાળું અસલ getCropShare લૉજિક ---
+  // --- કોડ 2 વાળું અસલ getCropShare લૉજિક ---
   let getCropShare = function(cropName) {
     if (!cropName) return 0;
     let match = cropName.match(/\((.*?)\)/);

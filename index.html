@@ -1,8 +1,8 @@
 <!-- 
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated Date & Time: 24 October 2026, 01:05 AM
-  Feature: Fixed Delete Button Styling and Added Edit Button for Upad Table View
+  Updated Date & Time: 24 October 2026, 01:25 AM
+  Feature: Upad Table View Action Bar with Conditional Edit and Delete (with Warning) Buttons
 -->
 <!DOCTYPE html>
 <html>
@@ -600,8 +600,8 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  // Updated Date & Time: 24 October 2026, 01:05 AM
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxfwL1dwlF2f9aGjlMcUPf7X2ru2_sOc-RnKEfEqOh4YxWLRCDHaQqeJ5c3JKxtLzyQ/exec";
+  // Updated Date & Time: 24 October 2026, 01:20 AM
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyx_Lo_lwKf4MKgs9q-BxXUesgxQstAcUK6YIRG51SJwB986P9BeO6JunYIPAxwBJjyUw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -1184,7 +1184,6 @@
     calcMedBill();
   }
 
-  // --- Code 2 વાળું અસલ getCropShare લૉજિક ---
   let getCropShare = function(cropName) {
     if (!cropName) return 0;
     let match = cropName.match(/\((.*?)\)/);
@@ -1372,7 +1371,7 @@
     } else if(tabName === 'Trac') {
       html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બીલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th><th>સ્ટેટસ</th>`;
     } else if(tabName === 'Upad') {
-      html += `<th>ઉપાડ લેનાર</th><th>પ્રકાર</th><th>આપનાર</th><th>ઉપાડ (Debit)</th><th>જમા (Credit)</th><th>બિલ નં</th><th>કુલ બાકી (Outstanding)</th><th>Status</th>`;
+      html += `<th>ઉપાડ લેનાર</th><th>પ્રકાર</th><th>આપનાર</th><th>ઉપાડ (Debit)</th><th>જમા (Credit)</th><th>બિલ નં</th><th>કુલ બાકી (Outstanding)</th><th>Status</th><th>ક્રિયા</th>`;
     }
     html += `</tr>`;
 
@@ -1401,7 +1400,7 @@
         let farmerCost = r["ભાગિયાનો ખર્ચ"] || 0;
         html += `<td>${owner}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કામની વિગત"]||'-'}</td><td>${r["કલાક"]||0}</td><td>${r["મિનિટ"]||0}</td><td>₹ ${r["કલાકનો ભાવ"]||0}</td><td>₹ ${r["મિનિટનો ભાવ"]||0}</td><td>₹ ${parseFloat(totalAmt).toFixed(2)}</td><td>${r["બીલની સ્થિતિ"]||'-'}</td><td>${r["હસ્તે"]||'-'}</td><td>₹ ${parseFloat(farmerCost).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td>`;
       } else if(tabName === 'Upad') {
-        html += `<td><b>${bhagiya}</b></td><td>${r["એન્ટ્રી પ્રકાર"]||'-'}</td><td>${r["આપનાર"]||'-'}</td><td style="color:#c0392b; font-weight:bold;">₹ ${parseFloat(r["ઉપાડ (Debit)"]||0).toFixed(2)}</td><td style="color:#27ae60; font-weight:bold;">₹ ${parseFloat(r["જમા (Credit)"]||0).toFixed(2)}</td><td>${r["બિલ નં"]||'-'}</td><td style="color:#2980b9; font-weight:bold;">₹ ${parseFloat(r["Total Outstanding"]||0).toFixed(2)}</td><td><span class="badge-jama">${r["Status"]||'ઉધાર'}</span></td>`;
+        html += `<td><b>${bhagiya}</b></td><td>${r["એન્ટ્રી પ્રકાર"]||'-'}</td><td>${r["આપનાર"]||'-'}</td><td style="color:#c0392b; font-weight:bold;">₹ ${parseFloat(r["ઉપાડ (Debit)"]||0).toFixed(2)}</td><td style="color:#27ae60; font-weight:bold;">₹ ${parseFloat(r["જમા (Credit)"]||0).toFixed(2)}</td><td>${r["બિલ નં"]||'-'}</td><td style="color:#2980b9; font-weight:bold;">₹ ${parseFloat(r["Total Outstanding"]||0).toFixed(2)}</td><td><span class="badge-jama">${r["Status"]||'ઉધાર'}</span></td><td><button class="btn-edit" onclick="askMpinForEdit('Upad', '${entryId}')">એડિટ</button></td>`;
       }
 
       html += `</tr>`;

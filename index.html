@@ -1,8 +1,8 @@
 <!-- 
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated Date & Time: 24 October 2026, 12:40 AM
-  Feature: Complete Original Code with convertToGujaratiWords & Exact Code 2 Farmer Share Calculation Logic
+  Updated Date & Time: 24 October 2026, 01:05 AM
+  Feature: Fixed Delete Button Styling and Added Edit Button for Upad Table View
 -->
 <!DOCTYPE html>
 <html>
@@ -38,6 +38,10 @@
     .btn-back:hover { background: linear-gradient(135deg, #6c7a89, #7f8c8d); }
 
     .btn-table-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
+    .btn-delete { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
+    .btn-delete:hover { background: #c0392b; }
+    .btn-edit { background: #f39c12; color: white; border-radius: 4px; border: none; padding: 5px 10px; cursor: pointer; font-size: 12px; font-weight: bold; }
+
     .table-actions-bar { display: none; gap: 8px; margin-bottom: 10px; padding: 6px 10px; background: #f8f9f9; border: 1px solid #d5dbdb; border-radius: 4px; align-items: center; }
 
     .btn-add-item { background: #2980b9; color: white; border: none; padding: 6px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; margin-bottom: 8px; }
@@ -596,8 +600,8 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  // Updated Date & Time: 24 October 2026, 12:12 AM
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxfwL1dwlF2f9aGjlMcUPf7X2ru2_sOc-RnKEfEqOh4YxWLRCDHaQqeJ5c3JKxtLzyQ/exec";
+  // Updated Date & Time: 24 October 2026, 01:05 AM
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyx_Lo_lwKf4MKgs9q-BxXUesgxQstAcUK6YIRG51SJwB986P9BeO6JunYIPAxwBJjyUw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};

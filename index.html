@@ -160,7 +160,7 @@
           <div class="sum-amount" id="bannerValSales">₹ 0.00</div>
         </div>
         <div id="balBoxSales" class="category-balance-box">
-          <h4>વેચાણ ઉપાડ બેલેન્સ</h4>
+          <h4>વેચાણ બીલ</h4>
           <div class="bal-val" id="balValSales">₹ 0.00</div>
         </div>
       </div>
@@ -222,7 +222,7 @@
           <div class="sum-amount" id="bannerValMed">₹ 0.00</div>
         </div>
         <div id="balBoxMed" class="category-balance-box">
-          <h4>દવા ખરીદી માટે ઉપાડ બેલેન્સ</h4>
+          <h4>દવા ખરીદી માટે</h4>
           <div class="bal-val" id="balValMed">₹ 0.00</div>
         </div>
       </div>
@@ -304,7 +304,7 @@
           <div class="sum-amount" id="bannerValFert">₹ 0.00</div>
         </div>
         <div id="balBoxFert" class="category-balance-box">
-          <h4>ખાતર ખરીદી માટે ઉપાડ બેલેન્સ</h4>
+          <h4>ખાતર ખરીદી માટે</h4>
           <div class="bal-val" id="balValFert">₹ 0.00</div>
         </div>
       </div>
@@ -466,7 +466,7 @@
               <option value="વેચાણ બીલ">વેચાણ બીલ</option>
               <option value="ખાતર બિલ જમા">ખાતર બિલ જમા</option>
               <option value="દવા બિલ જમા">દવા બિલ જમા</option>
-              <option value="વેચાણ બીલ જમા">વેચાણ બીલ જમા</option>
+              <option value="વેચાણ બિલ જમા">વેચાણ બિલ જમા</option>
             </select>
           </div>
         </div>
@@ -549,6 +549,18 @@
   </div>
 </div>
 
+<!-- Custom Confirmation Modal for Upad Bill Link -->
+<div id="modalUpadConfirm" class="modal">
+  <div class="modal-content" style="text-align:center;">
+    <h3 style="color:#e67e22; margin-top:0;">💸 ઉપાડ લેજર જમા એન્ટ્રી</h3>
+    <p id="upadConfirmMsg" style="font-size:13px; color:#555; margin-bottom:15px;"></p>
+    <div style="display: flex; gap: 10px;">
+      <button type="button" class="btn-submit" style="background:#27ae60;" onclick="confirmUpadAction(true)">હા (જમા લો)</button>
+      <button type="button" class="btn-submit" style="background:#e74c3c;" onclick="confirmUpadAction(false)">ના (માત્ર બિલ સેવ કરો)</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal Pop-ups -->
 <div id="modalMpin" class="modal">
   <div class="modal-content" style="text-align:center;">
@@ -574,6 +586,7 @@
   let pendingActionCallback = null;
   let appData = {};
   let currentActiveTab = 'Sales';
+  let pendingBillData = null;
 
   window.onload = function() {
     let today = new Date().toISOString().split('T')[0];
@@ -1191,7 +1204,7 @@
       }
       row.querySelector('.fKShare').value = share;
       let farmerAmt = totalBill * (share / 100);
-      let farmerAmtBox = row.querySelector('.sKRakam') || row.querySelector('.fKRakam');
+      let farmerAmtBox = row.querySelector('.sKRakam');
       if(farmerAmtBox) farmerAmtBox.value = "₹ " + farmerAmt.toFixed(2);
     });
   }
@@ -1349,12 +1362,9 @@
     updateTableActionBar(tabName);
   }
 
-  // --- SUBMIT FORMS WITH NOTIFICATION & UPAD LINK ---
+  // --- NEW BILL SAVE & MODAL NOTIFICATION HANDLERS ---
   function submitSalesForm(e) {
     e.preventDefault();
-    let btn = document.getElementById("btnSales");
-    btn.innerText = "સેવ થઈ રહ્યું છે...";
-    
     let date = v("sDate");
     let year = getYear(date);
     let entryId = "SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000);
@@ -1385,15 +1395,11 @@
     });
 
     let mainBillRow = [year, entryId, date, billNo, bhagiya, vepari, totalBillAmt, status, hastak, bLidha, ""];
-
-    handleBillWithUpadNotification('Sales', mainBillRow, itemRows, 'btnSales', 'salesForm');
+    triggerUpadConfirmationModal('Sales', mainBillRow, itemRows, 'btnSales', 'salesForm');
   }
 
   function submitMedForm(e) {
     e.preventDefault();
-    let btn = document.getElementById("btnMed");
-    btn.innerText = "સેવ થઈ રહ્યું છે...";
-
     let date = v("mDate");
     let year = getYear(date);
     let entryId = "MED-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000);
@@ -1428,15 +1434,11 @@
     });
 
     let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status];
-
-    handleBillWithUpadNotification('Med', billRow, itemRows, 'btnMed', 'medForm');
+    triggerUpadConfirmationModal('Med', billRow, itemRows, 'btnMed', 'medForm');
   }
 
   function submitFertForm(e) {
     e.preventDefault();
-    let btn = document.getElementById("btnFert");
-    btn.innerText = "સેવ થઈ રહ્યું છે...";
-
     let date = v("fDate");
     let year = getYear(date);
     let entryId = "FERT-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000);
@@ -1460,7 +1462,7 @@
       let weight = r.querySelector('.fWeight').value || 0;
       let pack = r.querySelector('.fPack').value || "";
       let qty = r.querySelector('.fQty').value || 1;
-      let bhav = r.querySelector('.fBhav').value || 0;
+      let bhav = parseFloat(r.querySelector('.fBhav').value) || 0;
       let amt = parseFloat(r.querySelector('.fAmt').value.replace("₹", "").trim()) || 0;
       let pak = r.querySelector('.pakList').value;
       let kShare = r.querySelector('.fKShare').value || 0;
@@ -1471,22 +1473,15 @@
     });
 
     let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, details];
-
-    handleBillWithUpadNotification('Fert', billRow, itemRows, 'btnFert', 'fertForm');
+    triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm');
   }
 
-  function handleBillWithUpadNotification(formType, billRow, itemRows, btnId, formElementId) {
+  function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId) {
     let partnerName = billRow[4];
-    let billTotal = 0;
-    if(formType === 'Sales') {
-      billTotal = itemRows.reduce((sum, r) => sum + (parseFloat(r[11]) || 0), 0);
-    } else {
-      billTotal = parseFloat(billRow[10]) || 0;
-    }
+    let billTotal = (formType === 'Sales') ? itemRows.reduce((sum, r) => sum + (parseFloat(r[11]) || 0), 0) : parseFloat(billRow[10]) || 0;
 
     let currentBal = getCategoryBalanceVal(formType, partnerName);
     let categoryText = formType === 'Sales' ? 'વેચાણ બીલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
-    let upadEntryType = formType === 'Sales' ? 'વેચાણ બીલ જમા' : formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
 
     let msg = "";
     if(currentBal < billTotal) {
@@ -1495,7 +1490,21 @@
       msg = "📋 આ બિલ (₹ " + billTotal.toFixed(2) + ") ઉપાડમાં જમા કરવું છે?";
     }
 
-    let wantUpad = confirm(msg);
+    pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText };
+    document.getElementById("upadConfirmMsg").innerText = msg;
+    document.getElementById("modalUpadConfirm").style.display = "block";
+  }
+
+  function confirmUpadAction(wantUpad) {
+    document.getElementById("modalUpadConfirm").style.display = "none";
+    if(!pendingBillData) return;
+
+    let { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText } = pendingBillData;
+    let partnerName = billRow[4];
+    let upadEntryType = formType === 'Sales' ? 'વેચાણ બિલ જમા' : formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
+
+    let btn = document.getElementById(btnId);
+    if(btn) btn.innerText = "સેવ થઈ રહ્યું છે...";
 
     let actionName = formType === 'Sales' ? 'saveSales' : formType === 'Med' ? 'savePesticideBill' : 'saveFertilizerBill';
     let payload = formType === 'Sales' ? { action: actionName, rowValues: billRow, editEntryId: document.getElementById('editEntryId').value } :
@@ -1509,7 +1518,7 @@
     .then(res => {
       if(res.status === "error") {
         alert("ભૂલ: " + res.message);
-        document.getElementById(btnId).innerText = "💾 સેવ કરો";
+        if(btn) btn.innerText = "💾 સેવ કરો";
         return Promise.reject(res.message);
       }
 
@@ -1540,14 +1549,16 @@
     })
     .then(() => {
       alert("એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
-      document.getElementById(btnId).innerText = "💾 સેવ કરો";
+      if(btn) btn.innerText = "💾 સેવ કરો";
       document.getElementById(formElementId).reset();
+      pendingBillData = null;
       fetchData();
       switchTab('Dash');
     })
     .catch(err => {
       if(err) alert("ભૂલ: " + err);
-      document.getElementById(btnId).innerText = "💾 સેવ કરો";
+      if(btn) btn.innerText = "💾 સેવ કરો";
+      pendingBillData = null;
     });
   }
 

@@ -115,22 +115,22 @@
 
   <!-- 0. DASHBOARD -->
   <div id="formDash" class="section active">
-    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📊 ફાર્મ ડેશબોર્ડ (વર્ષવાર સારાંશ)[span_0](start_span)[span_0](end_span)</h3>
+    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📊 ફાર્મ ડેશબોર્ડ (વર્ષવાર સારાંશ)</h3>
     <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px;">
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #27ae60; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">💰 કુલ વેચાણ (Total Sales)[span_1](start_span)[span_1](end_span)</h4>
-        <p id="dashTotalSales" style="margin:0; font-size: 18px; font-weight: bold; color: #16a085;">₹ 0.00[span_2](start_span)[span_2](end_span)</p>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">💰 કુલ વેચાણ (Total Sales)[cite: 1]</h4>
+        <p id="dashTotalSales" style="margin:0; font-size: 18px; font-weight: bold; color: #16a085;">₹ 0.00</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #2980b9; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 ખેડૂ વેચાણ હિસ્સો[span_3](start_span)[span_3](end_span)</h4>
-        <p id="dashFarmerSales" style="margin:0; font-size: 18px; font-weight: bold; color: #2980b9;">₹ 0.00[span_4](start_span)[span_4](end_span)</p>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 ખેડૂ વેચાણ હિસ્સો</h4>
+        <p id="dashFarmerSales" style="margin:0; font-size: 18px; font-weight: bold; color: #2980b9;">₹ 0.00</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #d35400; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">📉 કુલ ખર્ચ[span_5](start_span)[span_5](end_span)</h4>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">📉 કુલ ખર્ચ</h4>
         <p id="dashTotalExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #d35400;">₹ 0.00</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #8e44ad; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 ખેડૂ ખર્ચ હિસ્સો[span_6](start_span)[span_6](end_span)</h4>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 ખેડૂ ખર્ચ હિસ્સો</h4>
         <p id="dashFarmerExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #8e44ad;">₹ 0.00</p>
       </div>
     </div>
@@ -1319,7 +1319,7 @@
           document.getElementById("fTax").value = foundBill ? (foundBill["ટેક્સ%"] || foundBill["ટેક્સ"] || 0) : 0;
           document.getElementById("editFertId").value = entryId;
           document.getElementById("btnFert").innerText = "અપડેટ કરો";
-          document.getElementById("formTitleFert").innerText = "🌾 ખાતર ખર્ચ અપડેટ";
+          document.getElementById("formTitleFert", "🌾 ખાતર ખર્ચ અપડેટ");
           
           document.getElementById("fertItemsContainer").innerHTML = "";
           foundItems.forEach(item => {
@@ -1384,169 +1384,4 @@
     let date = v("mDate"), billNo = v("mBill") || "N/A", bhagiya = v("mBhagiya"), year = getYear(date);
     let subTotal = parseFloat((document.getElementById("mSubTotal").value || "").replace("₹", "")) || 0;
     let tax = parseFloat(document.getElementById("mTax").value) || 0;
-    let gst = parseFloat((document.getElementById("mGst").value || "").replace("₹", "")) || 0;
-    let cst = parseFloat((document.getElementById("mCst").value || "").replace("₹", "")) || 0;
-    let totalBill = parseFloat((document.getElementById("mTotalBill").value || "").replace("₹", "")) || 0;
-    let inWords = convertToGujaratiWords(totalBill);
-    let mainEntryId = existingId ? existingId : "ME-" + Math.floor(100000 + Math.random() * 900000);
-
-    handlePhotoUpload("mPhoto", function(photoBase64) {
-      let billRow = [ year, mainEntryId, date, billNo, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords, v("mHastak") ];
-      let itemRows = []; let totalFarmerAmt = 0;
-      rows.forEach(row => {
-        let mTotVal = parseFloat((row.querySelector(".mTotal").value || "").replace("₹", "")) || 0;
-        let mFarmVal = parseFloat((row.querySelector(".sKRakam") ? row.querySelector(".sKRakam").value : row.querySelector(".mKRakam").value || "").replace("₹", "")) || 0;
-        totalFarmerAmt += mFarmVal;
-        itemRows.push([ year, mainEntryId, date, billNo, row.querySelector(".davaList").value, row.querySelector(".mType").value, row.querySelector(".mWeight").value, row.querySelector(".mPack").value, row.querySelector(".mQty").value, row.querySelector(".mBhav").value, mTotVal, row.querySelector(".pakList").value, row.querySelector(".mKShare").value, mFarmVal ]);
-      });
-      let ledgerRow = [ year, mainEntryId, date, bhagiya, "દવા ખર્ચ", totalFarmerAmt, v("mStatus"), v("mVepari") ];
-      fetch(SCRIPT_URL, {
-        method: "POST", body: JSON.stringify({ action: "savePesticideBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow, editEntryId: existingId })
-      }).then(res => res.json()).then(res => {
-        if(res.status === "error") { alert(res.message); document.getElementById("btnMed").innerText = "💾 સેવ કરો"; return; }
-        alert(existingId ? "દવા બિલ સફળતાપૂર્વક અપડેટ થઈ ગયું!" : "દવા બિલ સફળતાપૂર્વક સેવ થઈ ગયું!"); 
-        document.getElementById("btnMed").innerText = "💾 સેવ કરો"; document.getElementById("editMedId").value = "";
-        document.getElementById("medForm").reset(); document.getElementById("medItemsContainer").innerHTML = "";
-        addMedItemRow(); document.getElementById("mDate").value = new Date().toISOString().split('T')[0];
-        fetchData(); switchTab('Dash');
-      });
-    });
-  }
-
-  function submitFert(e) {
-    e.preventDefault();
-    let rows = document.querySelectorAll("#fertItemsContainer .item-row");
-    if(rows.length === 0) return alert("કમ સે કમ એક ખાતર આઇટમ ઉમેરો!");
-    let existingId = document.getElementById("editFertId").value;
-    document.getElementById("btnFert").innerText = existingId ? "અપડેટ થઈ રહ્યું છે..." : "સેવ થઈ રહ્યું છે...";
-    let date = v("fDate"), billNo = v("fBill") || "N/A", bhagiya = v("fBhagiya"), year = getYear(date);
-    let subTotal = parseFloat((document.getElementById("fSubTotal").value || "").replace("₹", "")) || 0;
-    let tax = parseFloat(document.getElementById("fTax").value) || 0;
-    let gst = parseFloat((document.getElementById("mGst2").value || "").replace("₹", "")) || 0;
-    let cst = parseFloat((document.getElementById("mCst2").value || "").replace("₹", "")) || 0;
-    let totalBill = parseFloat((document.getElementById("fTotalBill").value || "").replace("₹", "")) || 0;
-    let inWords = convertToGujaratiWords(totalBill);
-    let mainEntryId = existingId ? existingId : "FE-" + Math.floor(100000 + Math.random() * 900000);
-
-    handlePhotoUpload("fPhoto", function(photoBase64) {
-      let billRow = [ year, mainEntryId, date, billNo, v("fVepari"), v("fBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords, v("fHastak") ];
-      let itemRows = []; let totalFarmerAmt = 0;
-      rows.forEach(row => {
-        let qty = parseFloat(row.querySelector(".fQty").value) || 1, bhav = parseFloat(row.querySelector(".fBhav").value) || 0;
-        let amt = parseFloat((row.querySelector(".fAmt").value || "").replace("₹", "")) || (qty * bhav);
-        let fFarmVal = parseFloat((row.querySelector(".sKRakam") ? row.querySelector(".sKRakam").value : row.querySelector(".mKRakam").value || "").replace("₹", "")) || 0;
-        totalFarmerAmt += fFarmVal;
-        itemRows.push([ year, mainEntryId, date, billNo, row.querySelector(".khatarList").value, row.querySelector(".fWeight").value, row.querySelector(".fPack").value, qty, bhav, amt, row.querySelector(".pakList").value, row.querySelector(".fKShare").value, fFarmVal ]);
-      });
-      let ledgerRow = [ year, mainEntryId, date, bhagiya, "ખાતર ખર્ચ", totalFarmerAmt, v("fStatus"), v("fVepari") ];
-      fetch(SCRIPT_URL, {
-        method: "POST", body: JSON.stringify({ action: "saveFertilizerBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow, editEntryId: existingId })
-      }).then(res => res.json()).then(res => {
-        if(res.status === "error") { alert(res.message); document.getElementById("btnFert").innerText = "💾 સેવ કરો"; return; }
-        alert(existingId ? "ખાતર બિલ સફળતાપૂર્વક અપડેટ થઈ ગયું!" : "ખાતર બિલ સફળતાપૂર્વક સેવ થઈ ગયું!"); 
-        document.getElementById("btnFert").innerText = "💾 સેવ કરો"; document.getElementById("editFertId").value = "";
-        document.getElementById("fertForm").reset(); document.getElementById("fertItemsContainer").innerHTML = "";
-        addFertItemRow(); document.getElementById("fDate").value = new Date().toISOString().split('T')[0];
-        fetchData(); switchTab('Dash');
-      });
-    });
-  }
-
-  function submitTrac(e) {
-    e.preventDefault();
-    let rows = document.querySelectorAll("#tracItemsContainer .item-row");
-    if(rows.length === 0) return alert("કમ સે કમ એક કામ ઉમેરો!");
-    let existingId = document.getElementById("editTracId").value;
-    document.getElementById("btnTrac").innerText = existingId ? "અપડેટ થઈ રહ્યું છે..." : "સેવ થઈ રહ્યું છે...";
-    let date = v("tDate"), year = getYear(date);
-    let mainEntryId = existingId ? existingId : "TE-" + Math.floor(100000 + Math.random() * 900000);
-
-    let rowDataArray = [];
-    rows.forEach((row, index) => {
-      let entryId = mainEntryId + (rows.length > 1 ? "-" + (index + 1) : "");
-      let total = parseFloat((row.querySelector(".tTotal").value || "").replace("₹", "").trim()) || 0; 
-      let farmerCost = parseFloat((row.querySelector(".sKRakam").value || "").replace("₹", "").trim()) || 0;
-      rowDataArray.push([year, entryId, date, v("tDriver"), row.querySelector(".pakList").value, row.querySelector(".tWork").value, parseFloat(row.querySelector(".tHrs").value) || 0, parseFloat(row.querySelector(".tMin").value) || 0, parseFloat(row.querySelector(".tRate").value) || 0, parseFloat(row.querySelector(".tMinRate").value) || 0, total, v("tStatus"), v("tHastak"), farmerCost]);
-    });
-
-    fetch(SCRIPT_URL, {
-      method: "POST", body: JSON.stringify({ action: "saveTractor", rowValuesArray: rowDataArray, editEntryId: existingId })
-    }).then(res => res.json()).then(() => {
-      alert(existingId ? "ટ્રેક્ટર ખર્ચ સફળતાપૂર્વક અપડેટ થઈ ગયો!" : "ટ્રેક્ટર ખર્ચ સફળતાપૂર્વક સેવ થઈ ગયું!"); 
-      document.getElementById("btnTrac").innerText = "💾 સેવ કરો"; document.getElementById("editTracId").value = "";
-      document.getElementById("tracForm").reset(); document.getElementById("tracItemsContainer").innerHTML = "";
-      addTracItemRow(); document.getElementById("tDate").value = new Date().toISOString().split('T')[0];
-      fetchData(); switchTab('Dash');
-    }).catch(err => { document.getElementById("btnTrac").innerText = "💾 સેવ કરો"; alert("ભૂલ: " + err); });
-  }
-
-  function saveB() {
-    let name = v("nbName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
-    saveData("saveBhagiya", [ getYear(v("sDate")), name, v("nbPhone"), v("nbAdd") ]);
-    document.getElementById("modalBhagiya").style.display = "none";
-  }
-  function saveV() {
-    let name = v("nvName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
-    saveData("saveVepari", [ name, v("nvPhone"), v("nvCity"), v("nvCategory") ]);
-    document.getElementById("modalVepari").style.display = "none";
-  }
-  function saveC() {
-    let name = v("ncName").trim(), share = v("ncShare"); if(name == "") return alert("નામ જરૂરી છે!");
-    saveData("saveCrop", [ name, share + "%" ]);
-    document.getElementById("modalCrop").style.display = "none";
-  }
-
-  function saveData(action, rowValues) {
-    fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: action, rowValues: rowValues }) })
-    .then(res => res.json()).then(() => { alert("સફળતાપૂર્વક ઉમેરાઈ ગયું!"); fetchData(); }).catch(err => alert("ભૂલ: " + err));
-  }
-
-  function handlePhotoUpload(fileInputId, callback) {
-    let fileInput = document.getElementById(fileInputId);
-    if(fileInput && fileInput.files[0]) {
-      let reader = new FileReader();
-      reader.onload = function(e) { callback(e.target.result); };
-      reader.readAsDataURL(fileInput.files[0]);
-    } else { callback(""); }
-  }
-
-  let getCropShare = function(cropName) {
-    if (!cropName) return 0;
-    let match = cropName.match(/\((.*?)\)/);
-    if (match) { let val = parseFloat(match[1]); if (!isNaN(val)) return val <= 1 ? val * 100 : val; }
-    if (!appData.Crop_Master) return 0;
-    let crop = appData.Crop_Master.find(c => String(c["પાકનું નામ"]).trim() === String(cropName).trim());
-    if (!crop) return 0;
-    let share = crop["ભાગ_ટકા"] || 0;
-    return parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
-  };
-
-  function v(id) { return document.getElementById(id).value; }
-  
-  function getYear(dateString) {
-    let d = new Date(dateString), m = d.getMonth() + 1, y = d.getFullYear();
-    return (m >= 5) ? (y + "-" + (y + 1).toString().slice(-2)) : ((y - 1) + "-" + y.toString().slice(-2));
-  }
-
-  function renderGallery() {
-    let container = document.getElementById("galleryContainer");
-    if(!container) return;
-    let photos = appData.Photo_Gallery || [];
-    if(photos.length === 0) { container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ ફોટો ઉપલબ્ધ નથી.</p>"; return; }
-    let html = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>પ્રકાર</th><th>ફોટો</th><th>ક્રિયા</th></tr>`;
-    photos.forEach(p => {
-      let imgTag = p["Photo_Link"] ? `<a href="${p["Photo_Link"]}" target="_blank"><img src="${p["Photo_Link"]}" style="width:40px; height:40px; object-fit:cover;"></a>` : "ના";
-      html += `<tr><td>${String(p["Date"]||'').split('T')[0]}</td><td>${p["Bill_No"]||''}</td><td>${p["Bhagiya"]||''}</td><td>${p["Category"]||''}</td><td>${imgTag}</td><td><button class="btn-delete" onclick="askMpinForDeleteSelected('Photo_Gallery')">ડિલિટ</button></td></tr>`;
-    });
-    container.innerHTML = html + `</table>`;
-  }
-
-  function filterGallery() {
-    let query = document.getElementById("searchGallery").value.toLowerCase();
-    document.querySelectorAll("#galleryContainer tr").forEach((row, i) => {
-      if(i === 0) return; row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
-    });
-  }
-</script>
-</body>
-</html>
+    let gst = parseFloat((document.getElementById("mGst").value || "").replace("₹", "")) ||

@@ -1158,18 +1158,16 @@
     calcMedBill();
   }
 
-  // --- ડાયરેક્ટ ગુણાકાર માટેનું ફંક્શન (શીટમાંથી ભાગ_ટકા અથવા કૌંસમાંથી સીધો હિસ્સો લેશે) ---
-  function getCropShare(cropName) {
-    if (!cropName) return 0;
+  // --- જૂના અને સાચા વર્કિંગ લૉજિક મુજબનું ફંક્શન ---
+  let getCropShare = function(cropName) {
+    if (!cropName) return 0.5; // જો પાક સિલેક્ટ ના કર્યો હોય તો ડિફોલ્ટ 0.5 (50%)
     
-    // ૧. જો કૌંસમાં પોઇન્ટ કે ટકા હોય (દા.ત. વાલોળ(0.5) કે તુવેર(.5))
+    // ૧. કૌંસમાંથી આંકડો કાઢવો (દા.ત. વાલોળ(0.5) કે તુવેર(.5))
     let match = cropName.match(/\((.*?)\)/);
     if (match) { 
-      let rawVal = match[1].trim();
-      let val = parseFloat(rawVal); 
+      let val = parseFloat(match[1]); 
       if (!isNaN(val)) {
-        if (val <= 1) return val; // 0.5, 0.33, 0.2 સીધા જ આવશે
-        return val / 100; // 50 હોય તો 0.5 થઈ જશે
+        return val <= 1 ? val : val / 100; 
       }
     }
     
@@ -1177,19 +1175,19 @@
     if (appData.Crop_Master) {
       let cleanInputName = cropName.split('(')[0].trim();
       let crop = appData.Crop_Master.find(c => {
-        let masterName = String(c["પાકનું નામ"] || "").split('(')[0].trim();
+        let masterName = String(c["પાકનું નામ"] || c["પાકનું_નામ"] || "").split('(')[0].trim();
         return masterName === cleanInputName;
       });
       if (crop) {
-        let share = crop["ભાગ_ટકા"] || 0;
-        let parsedShare = parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
+        let share = crop["ભાગ_ટકા"] !== undefined ? crop["ભાગ_ટકા"] : (crop["ભાગ ટકા"] !== undefined ? crop["ભાગ ટકા"] : Object.values(crop)[1]);
+        let parsedShare = parseFloat(String(share).replace(/[^0-9.]/g, '')) || 0;
         if (parsedShare > 1) parsedShare = parsedShare / 100;
         if (parsedShare > 0) return parsedShare;
       }
     }
     
-    return 0.5; // જો કંઈ ન મળે તો ડિફોલ્ટ 50% (0.5) પકડી લેશે જેથી 0 ન થાય
-  }
+    return 0.5; // સેફ્ટી માટે ડિફોલ્ટ 50%
+  };
 
   function calcMedBill() {
     let rows = document.querySelectorAll("#medItemsContainer .item-row");

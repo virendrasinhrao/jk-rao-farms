@@ -1158,35 +1158,37 @@
     calcMedBill();
   }
 
-  // --- ચોક્કસ ગણતરી માટે સુધારેલું getCropShare (સીધો મલ્ટીપ્લાયર 0.5, 0.33 રિટર્ન કરશે) ---
+  // --- ડાયરેક્ટ ગુણાકાર માટેનું ફંક્શન (શીટમાંથી ભાગ_ટકા અથવા કૌંસમાંથી સીધો હિસ્સો લેશે) ---
   function getCropShare(cropName) {
     if (!cropName) return 0;
     
-    // કૌંસમાંથી આંકડો કાઢવો (દા.ત. વાલોળ(0.5) કે વાલોળ(.5) માંથી 0.5 કે .5)
+    // ૧. જો કૌંસમાં પોઇન્ટ કે ટકા હોય (દા.ત. વાલોળ(0.5) કે તુવેર(.5))
     let match = cropName.match(/\((.*?)\)/);
     if (match) { 
       let rawVal = match[1].trim();
       let val = parseFloat(rawVal); 
       if (!isNaN(val)) {
-        // જો વેલ્યુ દશાંશમાં હોય (દા.ત. 0.5, 0.33, 0.2) તો તે સીધી જ રિટર્ન કરો
-        if (val <= 1) return val;
-        // જો ટકાવારીમાં હોય (દા.ત. 50) તો તેને 100 થી ભાગીને 0.5 બનાવો
-        return val / 100; 
+        if (val <= 1) return val; // 0.5, 0.33, 0.2 સીધા જ આવશે
+        return val / 100; // 50 હોય તો 0.5 થઈ જશે
       }
     }
     
-    if (!appData.Crop_Master) return 0;
+    // ૨. જો Crop_Master શીટમાંથી શોધવું પડે
+    if (appData.Crop_Master) {
+      let cleanInputName = cropName.split('(')[0].trim();
+      let crop = appData.Crop_Master.find(c => {
+        let masterName = String(c["પાકનું નામ"] || "").split('(')[0].trim();
+        return masterName === cleanInputName;
+      });
+      if (crop) {
+        let share = crop["ભાગ_ટકા"] || 0;
+        let parsedShare = parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
+        if (parsedShare > 1) parsedShare = parsedShare / 100;
+        if (parsedShare > 0) return parsedShare;
+      }
+    }
     
-    let cleanInputName = cropName.split('(')[0].trim();
-    let crop = appData.Crop_Master.find(c => {
-      let masterName = String(c["પાકનું નામ"] || "").split('(')[0].trim();
-      return masterName === cleanInputName;
-    });
-    if (!crop) return 0;
-    let share = crop["ભાગ_ટકા"] || 0;
-    let parsedShare = parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
-    if (parsedShare > 1) parsedShare = parsedShare / 100;
-    return parsedShare;
+    return 0.5; // જો કંઈ ન મળે તો ડિફોલ્ટ 50% (0.5) પકડી લેશે જેથી 0 ન થાય
   }
 
   function calcMedBill() {
@@ -1265,7 +1267,7 @@
     let work = row.querySelector('.tWork').value;
     let s = getCropShare(row.querySelector('.pakList').value);
     let finalMultiplier = s;
-    if(s == 0.2 || s == 0.20) finalMultiplier = 0.2; // Custom logic if needed
+    if(s == 0.2 || s == 0.20) finalMultiplier = 0.2;
     row.querySelector('.sKShare').value = (finalMultiplier * 100).toFixed(0) + "%";
     row.querySelector('.sKRakam').value = "₹ " + (total * finalMultiplier).toFixed(2);
     

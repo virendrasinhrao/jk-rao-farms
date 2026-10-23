@@ -1129,9 +1129,12 @@
     row.querySelector('.sBhav1').value = "₹ " + b1.toFixed(2);
     let total = w * b1;
     row.querySelector('.sTotal').value = "₹ " + total.toFixed(2);
+    
+    // અહિયાં ફેરફાર કર્યો છે: જો હિસ્સો પોઇન્ટમાં (દા.ત. 0.5 કે .5) હોય તો સીધો ગુણાકાર થશે
     let s = getCropShare(row.querySelector('.pakList').value);
     row.querySelector('.sKShare').value = s;
-    row.querySelector('.sKRakam').value = "₹ " + (total * (s/100)).toFixed(2);
+    let multiplier = s > 1 ? s / 100 : s;
+    row.querySelector('.sKRakam').value = "₹ " + (total * multiplier).toFixed(2);
   }
 
   function onMedSelectRow(sel) {
@@ -1164,15 +1167,16 @@
     calcMedBill();
   }
 
-  // --- અહીં આપણે તમારા કોડનું અસલ getCropShare ફંક્શન સુધારી દીધું છે જેથી 'વાલોળ(0.5)' કે 'તુવેર(.5)' માંથી 0 ની જગ્યાએ સાચો હિસ્સો પકડાય ---
+  // --- બિલકુલ અસલ getCropShare ફંક્શન જેમાં પોઇન્ટ (.5, 0.5) ની વેલ્યુ 0 ન થાય તેવું સેટ કર્યું છે ---
   let getCropShare = function(cropName) {
     if (!cropName) return 0;
     
-    // ૧. કૌંસમાંથી વેલ્યુ મેળવવી (દા.ત. 0.5, .5, 0.33 કે 50)
+    // ૧. કૌંસમાંથી આંકડો કાઢવો (દા.ત. વાલોળ(0.5) કે તુવેર(.5))
     let match = cropName.match(/\((.*?)\)/);
     if (match) { 
       let val = parseFloat(match[1]); 
       if (!isNaN(val)) {
+        // જો val 0.5 કે .5 હોય તો એને સીધા જ રિટર્ન કરો અથવા ટકાવારી જોઈતી હોય તો સેટ કરો
         return val <= 1 ? val * 100 : val; 
       }
     }
@@ -1218,7 +1222,8 @@
       let type = row.querySelector('.mType').value.trim();
       let share = (type === "નીંદામણ") ? 100 : getCropShare(row.querySelector('.pakList').value);
       row.querySelector('.mKShare').value = share;
-      row.querySelector('.sKRakam').value = "₹ " + (totalBill * (share / 100)).toFixed(2);
+      let multiplier = share > 1 ? share / 100 : share;
+      row.querySelector('.sKRakam').value = "₹ " + (totalBill * multiplier).toFixed(2);
     });
   }
 
@@ -1252,7 +1257,8 @@
         }
       }
       row.querySelector('.fKShare').value = share;
-      let farmerAmt = totalBill * (share / 100);
+      let multiplier = share > 1 ? share / 100 : share;
+      let farmerAmt = totalBill * multiplier;
       let farmerAmtBox = row.querySelector('.sKRakam') || row.querySelector('.fKRakam');
       if(farmerAmtBox) farmerAmtBox.value = "₹ " + farmerAmt.toFixed(2);
     });
@@ -1274,7 +1280,8 @@
     if(s == 20) finalS = 0;
     else if(s == 50 && (work=="પાળા" || work=="નિકો" || work=="હળામણ")) finalS = 100;
     row.querySelector('.sKShare').value = finalS;
-    row.querySelector('.sKRakam').value = "₹ " + (total * (finalS / 100)).toFixed(2);
+    let multiplier = finalS > 1 ? finalS / 100 : finalS;
+    row.querySelector('.sKRakam').value = "₹ " + (total * multiplier).toFixed(2);
     
     calcTracTotal();
   }
@@ -1776,6 +1783,40 @@
     } else { callback(""); }
   }
 
+  // --- અહીં તમારું અસલ getCropShare ફંક્શન સુધારી દીધું છે જેથી 'વાલોળ(0.5)' કે 'તુવેર(.5)' માંથી ખેડૂ રકમ 0 ન આવે ---
+  let getCropShare = function(cropName) {
+    if (!cropName) return 0;
+    
+    // ૧. કૌંસમાંથી વેલ્યુ મેળવવી (દા.ત. 0.5, .5, 0.33 કે 50)
+    let match = cropName.match(/\((.*?)\)/);
+    if (match) { 
+      let val = parseFloat(match[1]); 
+      if (!isNaN(val)) {
+        return val <= 1 ? val * 100 : val; 
+      }
+    }
+    
+    if (!appData.Crop_Master) return 0;
+    
+    // ૨. Crop_Master શીટમાંથી નામ મેચ કરવું
+    let cleanInputName = String(cropName).split('(')[0].trim().toLowerCase();
+    let crop = appData.Crop_Master.find(c => {
+      let masterNameObj = c["પાકનું નામ"] || c["પાકનું_નામ"] || Object.values(c)[0] || "";
+      let masterName = String(masterNameObj).split('(')[0].trim().toLowerCase();
+      return masterName === cleanInputName;
+    });
+
+    if (!crop) return 0;
+    let share = crop["ભાગ_ટકા"] !== undefined ? crop["ભાગ_ટકા"] : (crop["ભાગ ટકા"] !== undefined ? crop["ભાગ ટકા"] : Object.values(crop)[1]);
+    let parsedShare = parseFloat(String(share).replace(/[^0-9.]/g, '')) || 0;
+    
+    if (parsedShare > 0 && parsedShare <= 1) {
+      parsedShare = parsedShare * 100;
+    }
+    
+    return parsedShare;
+  };
+
   function v(id) { return document.getElementById(id).value; }
   
   function getYear(dateString) {
@@ -1810,7 +1851,7 @@
   }
 
   function verifyMpinAndProceed() {
-    let entered = document.getElementById("inputMpin").value;
+    let entered = document.getElementById("inputMpin", "").value;
     if(entered === CORRECT_MPIN) {
       document.getElementById("modalMpin").style.display = "none";
       if(pendingActionCallback) pendingActionCallback();

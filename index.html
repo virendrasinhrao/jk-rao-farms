@@ -549,7 +549,7 @@
   </div>
 </div>
 
-<!-- Custom Confirmation Modal with Select Dropdown for Upad Bill Link -->
+<!-- Custom Confirmation Modal with Select Dropdown (હા / ના / કેન્સલ) -->
 <div id="modalUpadConfirm" class="modal">
   <div class="modal-content" style="text-align:center;">
     <h3 style="color:#e67e22; margin-top:0;">💸 ઉપાડ લેજર જમા એન્ટ્રી</h3>
@@ -565,7 +565,7 @@
 
     <div style="display: flex; gap: 10px; margin-top: 15px;">
       <button type="button" class="btn-submit" style="background:#27ae60;" onclick="confirmUpadActionModal()">કન્ફર્મ કરો</button>
-      <button type="button" class="btn-submit" style="background:#7f8c8d;" onclick="document.getElementById('modalUpadConfirm').style.display='none'">કેન્સલ</button>
+      <button type="button" class="btn-submit" style="background:#e74c3c;" onclick="document.getElementById('modalUpadConfirm').style.display='none'">કેન્સલ</button>
     </div>
   </div>
 </div>
@@ -1783,6 +1783,7 @@
   function verifyMpinAndProceed() {
     let entered = document.getElementById("inputMpin").value;
     if(entered === CORRECT_MPIN) {
+      document.getElementById("modalMpin").style.div = "none"; // Safe
       document.getElementById("modalMpin").style.display = "none";
       if(pendingActionCallback) pendingActionCallback();
       pendingActionCallback = null;

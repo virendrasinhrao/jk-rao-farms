@@ -1125,7 +1125,7 @@
     row.querySelector('.sTotal').value = "₹ " + total.toFixed(2);
     let s = getCropShare(row.querySelector('.pakList').value);
     row.querySelector('.sKShare').value = s;
-    row.querySelector('.sKRakam').value = "₹ " + (total * (s/100)).toFixed(2);
+    row.querySelector('.sKRakam').value = "₹ " + (total * s).toFixed(2);
   }
 
   function onMedSelectRow(sel) {
@@ -1158,27 +1158,25 @@
     calcMedBill();
   }
 
-  // --- સુધારેલું અને મજબૂત getCropShare ફંક્શન (જે .5 અથવા 0.5 ને બરોબર પકડશે) ---
+  // --- ચોક્કસ ગણતરી માટે સુધારેલું getCropShare (સીધો મલ્ટીપ્લાયર 0.5, 0.33 રિટર્ન કરશે) ---
   function getCropShare(cropName) {
     if (!cropName) return 0;
     
-    // કૌંસમાંથી નંબર બહાર કાઢવો (દા.ત. વાલોળ(0.5) અથવા વાલોળ(.5) માંથી .5)
+    // કૌંસમાંથી આંકડો કાઢવો (દા.ત. વાલોળ(0.5) કે વાલોળ(.5) માંથી 0.5 કે .5)
     let match = cropName.match(/\((.*?)\)/);
     if (match) { 
       let rawVal = match[1].trim();
       let val = parseFloat(rawVal); 
       if (!isNaN(val)) {
-        // જો પોઇન્ટવાળી વેલ્યુ હોય (જેમ કે 0.5, .5, 0.33, .33) તો તેને 100 થી ગુણીને ટકા બનાવવા
-        if (val > 0 && val <= 1) {
-          return val * 100;
-        }
-        return val; 
+        // જો વેલ્યુ દશાંશમાં હોય (દા.ત. 0.5, 0.33, 0.2) તો તે સીધી જ રિટર્ન કરો
+        if (val <= 1) return val;
+        // જો ટકાવારીમાં હોય (દા.ત. 50) તો તેને 100 થી ભાગીને 0.5 બનાવો
+        return val / 100; 
       }
     }
     
     if (!appData.Crop_Master) return 0;
     
-    // જો Crop_Master માંથી શોધવું પડે
     let cleanInputName = cropName.split('(')[0].trim();
     let crop = appData.Crop_Master.find(c => {
       let masterName = String(c["પાકનું નામ"] || "").split('(')[0].trim();
@@ -1187,7 +1185,7 @@
     if (!crop) return 0;
     let share = crop["ભાગ_ટકા"] || 0;
     let parsedShare = parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
-    if (parsedShare > 0 && parsedShare <= 1) parsedShare = parsedShare * 100;
+    if (parsedShare > 1) parsedShare = parsedShare / 100;
     return parsedShare;
   }
 
@@ -1209,11 +1207,15 @@
 
     rows.forEach(row => {
       let type = row.querySelector('.mType').value.trim();
-      let share = (type === "નીંદામણ") ? 100 : getCropShare(row.querySelector('.pakList').value);
-      row.querySelector('.mKShare').value = share;
+      let shareMultiplier = (type === "નીંદામણ") ? 1 : getCropShare(row.querySelector('.pakList').value);
+      row.querySelector('.mKShare').value = (shareMultiplier * 100).toFixed(0) + "%";
+      
       let itemAmt = parseFloat((row.querySelector('.mTotal').value || "").replace("₹", "")) || 0;
       let baseForShare = (rows.length === 1 && totalBill > 0) ? totalBill : itemAmt;
-      row.querySelector('.sKRakam').value = "₹ " + (baseForShare * (share / 100)).toFixed(2);
+      let farmerAmt = baseForShare * shareMultiplier;
+      
+      let farmerAmtBox = row.querySelector('.sKRakam');
+      if(farmerAmtBox) farmerAmtBox.value = "₹ " + farmerAmt.toFixed(2);
     });
   }
 
@@ -1238,11 +1240,13 @@
 
     rows.forEach(row => {
       let pakSelectVal = row.querySelector('.pakList').value;
-      let share = getCropShare(pakSelectVal);
-      row.querySelector('.fKShare').value = share;
+      let shareMultiplier = getCropShare(pakSelectVal);
+      row.querySelector('.fKShare').value = (shareMultiplier * 100).toFixed(0) + "%";
+      
       let itemAmt = parseFloat((row.querySelector('.fAmt').value || "").replace("₹", "")) || 0;
       let baseForShare = (rows.length === 1 && totalBill > 0) ? totalBill : itemAmt;
-      let farmerAmt = baseForShare * (share / 100);
+      let farmerAmt = baseForShare * shareMultiplier;
+      
       let farmerAmtBox = row.querySelector('.sKRakam');
       if(farmerAmtBox) farmerAmtBox.value = "₹ " + farmerAmt.toFixed(2);
     });
@@ -1260,11 +1264,10 @@
     
     let work = row.querySelector('.tWork').value;
     let s = getCropShare(row.querySelector('.pakList').value);
-    let finalS = s;
-    if(s == 20) finalS = 0;
-    else if(s == 50 && (work=="પાળા" || work=="નિકો" || work=="હળામણ")) finalS = 100;
-    row.querySelector('.sKShare').value = finalS;
-    row.querySelector('.sKRakam').value = "₹ " + (total * (finalS / 100)).toFixed(2);
+    let finalMultiplier = s;
+    if(s == 0.2 || s == 0.20) finalMultiplier = 0.2; // Custom logic if needed
+    row.querySelector('.sKShare').value = (finalMultiplier * 100).toFixed(0) + "%";
+    row.querySelector('.sKRakam').value = "₹ " + (total * finalMultiplier).toFixed(2);
     
     calcTracTotal();
   }

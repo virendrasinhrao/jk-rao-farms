@@ -1,8 +1,8 @@
 <!-- 
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated Date & Time: 24 October 2026, 12:08 AM
-  Feature: Complete Original Code with Exact Code 2 Farmer Share Calculation Logic Integrated
+  Updated Date & Time: 24 October 2026, 12:40 AM
+  Feature: Complete Original Code with convertToGujaratiWords & Exact Code 2 Farmer Share Calculation Logic
 -->
 <!DOCTYPE html>
 <html>
@@ -596,7 +596,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  // Updated Date & Time: 23 October 2026, 11:35 PM
+  // Updated Date & Time: 24 October 2026, 12:12 AM
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyx_Lo_lwKf4MKgs9q-BxXUesgxQstAcUK6YIRG51SJwB986P9BeO6JunYIPAxwBJjyUw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
@@ -801,6 +801,21 @@
     let interest = principal * dailyRate * diffDays;
     document.getElementById("uInterestCalc").value = "₹ " + interest.toFixed(2) + " (" + diffDays + " દિવસો)";
     alert("વ્યાજ સફળતાપૂર્વક ગણાઈ ગયું છે: ₹ " + interest.toFixed(2));
+  }
+
+  function convertToGujaratiWords(amount) {
+    let units = ['', 'એક', 'બે', 'ત્રણ', 'ચાર', 'પાંચ', 'છ', 'સાત', 'આઠ', 'નવ', 'દસ', 'અગિયાર', 'બાર', 'તેર', 'ચોદ', 'પંદર', 'સોળ', 'સત્તર', 'અઢાર', 'ઓગણીસ'];
+    let tens = ['', '', 'વીસ', 'ત્રીસ', 'ચાલીસ', 'પચાસ', 'સાઈઠ', 'સિત્તેર', 'અંશી', 'નવું'];
+    let intPart = Math.floor(amount);
+    if (intPart === 0) return "અંકે રૂપિયા શૂન્ય પૂરા";
+    let words = "";
+    if (intPart >= 1000) { let th = Math.floor(intPart / 1000); words += units[th] + " હજાર "; intPart %= 1000; }
+    if (intPart >= 100) { let hu = Math.floor(intPart / 100); words += units[hu] + "સો "; intPart %= 100; }
+    if (intPart > 0) {
+      if (intPart < 20) { words += units[intPart] + " "; }
+      else { let t = Math.floor(intPart / 10); let u = intPart % 10; words += (units[u] ? units[u] + " " : "") + (tens[t] || '') + " "; }
+    }
+    return "અંકે રૂપિયા " + words.trim() + " પૂરા";
   }
 
   function populateData() {
@@ -1122,7 +1137,6 @@
     calcTracRow(el);
   }
 
-  // --- અહીં કોડ 2 વાળું અસલ calcSalesRow લૉજિક મૂક્યું છે ---
   function calcSalesRow(el) {
     let row = el.closest('.item-row');
     let w = parseFloat(row.querySelector('.sWeight').value) || 0;
@@ -1166,7 +1180,7 @@
     calcMedBill();
   }
 
-  // --- કોડ 2 વાળું અસલ getCropShare લૉજિક ---
+  // --- Code 2 વાળું અસલ getCropShare લૉજિક ---
   let getCropShare = function(cropName) {
     if (!cropName) return 0;
     let match = cropName.match(/\((.*?)\)/);

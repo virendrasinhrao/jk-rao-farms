@@ -549,14 +549,23 @@
   </div>
 </div>
 
-<!-- Custom Confirmation Modal for Upad Bill Link -->
+<!-- Custom Confirmation Modal with Select Dropdown for Upad Bill Link -->
 <div id="modalUpadConfirm" class="modal">
   <div class="modal-content" style="text-align:center;">
     <h3 style="color:#e67e22; margin-top:0;">💸 ઉપાડ લેજર જમા એન્ટ્રી</h3>
-    <p id="upadConfirmMsg" style="font-size:13px; color:#555; margin-bottom:15px;"></p>
-    <div style="display: flex; gap: 10px;">
-      <button type="button" class="btn-submit" style="background:#27ae60;" onclick="confirmUpadAction(true)">હા (જમા લો)</button>
-      <button type="button" class="btn-submit" style="background:#e74c3c;" onclick="confirmUpadAction(false)">ના (માત્ર બિલ સેવ કરો)</button>
+    <p id="upadConfirmMsg" style="font-size:13px; color:#555; margin-bottom:10px;"></p>
+    
+    <div class="form-group" style="text-align:left;">
+      <label><b>ઉપાડમાં જમા કરવું છે?:</b></label>
+      <select id="upadChoiceSelect" style="font-weight:bold; font-size:14px; background:#e8f8f5; color:#27ae60;">
+        <option value="yes">હા (જમા લો)</option>
+        <option value="no">ના (માત્ર બિલ સેવ કરો)</option>
+      </select>
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-top: 15px;">
+      <button type="button" class="btn-submit" style="background:#27ae60;" onclick="confirmUpadActionModal()">કન્ફર્મ કરો</button>
+      <button type="button" class="btn-submit" style="background:#7f8c8d;" onclick="document.getElementById('modalUpadConfirm').style.display='none'">કેન્સલ</button>
     </div>
   </div>
 </div>
@@ -1362,7 +1371,7 @@
     updateTableActionBar(tabName);
   }
 
-  // --- NEW BILL SAVE & MODAL NOTIFICATION HANDLERS ---
+  // --- SUBMIT BILL FORMS ---
   function submitSalesForm(e) {
     e.preventDefault();
     let date = v("sDate");
@@ -1485,23 +1494,26 @@
 
     let msg = "";
     if(currentBal < billTotal) {
-      msg = "⚠️ " + categoryText + " માટે ઉપાડ બેલેન્સ ઓછું છે (₹ " + currentBal.toFixed(2) + "). શું આ બિલ ઉપાડમાં જમા કરવું છે?";
+      msg = "⚠️ " + categoryText + " માટે ઉપાડ બેલેન્સ ઓછું છે (₹ " + currentBal.toFixed(2) + ").";
     } else {
-      msg = "📋 આ બિલ (₹ " + billTotal.toFixed(2) + ") ઉપાડમાં જમા કરવું છે?";
+      msg = "📋 આ બિલની રકમ ₹ " + billTotal.toFixed(2) + " છે.";
     }
 
     pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText };
-    document.getElementById("upadConfirmMsg").innerText = msg;
+    document.getElementById("upadConfirmMsg").innerText = msg + " શું આ બિલ ઉપાડમાં જમા કરવું છે?";
+    document.getElementById("upadChoiceSelect").value = "yes";
     document.getElementById("modalUpadConfirm").style.display = "block";
   }
 
-  function confirmUpadAction(wantUpad) {
+  function confirmUpadActionModal() {
     document.getElementById("modalUpadConfirm").style.display = "none";
     if(!pendingBillData) return;
 
     let { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText } = pendingBillData;
     let partnerName = billRow[4];
     let upadEntryType = formType === 'Sales' ? 'વેચાણ બિલ જમા' : formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
+    let choice = document.getElementById("upadChoiceSelect").value;
+    let wantUpad = (choice === "yes");
 
     let btn = document.getElementById(btnId);
     if(btn) btn.innerText = "સેવ થઈ રહ્યું છે...";

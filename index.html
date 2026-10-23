@@ -1,8 +1,8 @@
 <!-- 
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated Date & Time: 23 October 2026, 11:35 PM
-  Feature: Exact Farmer Share Calculation Logic from Code 2 Integrated Without Any Other Changes
+  Updated Date & Time: 24 October 2026, 12:12 AM
+  Feature: Complete Original Code with Exact Code 2 Farmer Share Calculation Logic Integrated
 -->
 <!DOCTYPE html>
 <html>
@@ -596,7 +596,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  // Updated Date & Time: 23 October 2026, 11:35 PM
+  // Updated Date & Time: 24 October 2026, 12:12 AM
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyx_Lo_lwKf4MKgs9q-BxXUesgxQstAcUK6YIRG51SJwB986P9BeO6JunYIPAxwBJjyUw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
@@ -1122,7 +1122,7 @@
     calcTracRow(el);
   }
 
-  // --- વેચાણ રકમ ગણતરી (Code 2 મુજબ ફિક્સ કરેલ) ---
+  // --- Code 2 વાળું અસલ calcSalesRow લૉજિક ---
   function calcSalesRow(el) {
     let row = el.closest('.item-row');
     let w = parseFloat(row.querySelector('.sWeight').value) || 0;
@@ -1131,8 +1131,6 @@
     row.querySelector('.sBhav1').value = "₹ " + b1.toFixed(2);
     let total = w * b1;
     row.querySelector('.sTotal').value = "₹ " + total.toFixed(2);
-    
-    // Code 2 ની સાચી પદ્ધતિ: getCropShare સીધો મલ્ટીપ્લાયર (0.5 કે 1) આપે છે
     let s = getCropShare(row.querySelector('.pakList').value);
     row.querySelector('.sKShare').value = s;
     row.querySelector('.sKRakam').value = "₹ " + (total * s).toFixed(2);
@@ -1168,14 +1166,11 @@
     calcMedBill();
   }
 
-  // --- Code 2 માંથી લીધેલું અસલ અને 100% સચોટ getCropShare લૉજિક ---
+  // --- Code 2 વાળું અસલ getCropShare લૉજિક ---
   let getCropShare = function(cropName) {
     if (!cropName) return 0;
     let match = cropName.match(/\((.*?)\)/);
-    if (match) { 
-      let val = parseFloat(match[1]); 
-      if (!isNaN(val)) return val <= 1 ? val : val / 100; 
-    }
+    if (match) { let val = parseFloat(match[1]); if (!isNaN(val)) return val <= 1 ? val : val / 100; }
     if (!appData.Crop_Master) return 0;
     let crop = appData.Crop_Master.find(c => String(c["પાકનું નામ"]).trim() === String(cropName).trim());
     if (!crop) return 0;
@@ -1257,8 +1252,8 @@
     let work = row.querySelector('.tWork').value;
     let s = getCropShare(row.querySelector('.pakList').value);
     let finalS = s;
-    if(s == 0.20 || s == 0.2) finalS = 0.2;
-    else if(s == 0.50 && (work=="પાળા" || work=="નિકો" || work=="હળામણ")) finalS = 1;
+    if(s == 0.2 || s == 0.20) finalS = 0.2;
+    else if(s == 0.5 && (work=="પાળા" || work=="નિકો" || work=="હળામણ")) finalS = 1;
     row.querySelector('.sKShare').value = finalS;
     row.querySelector('.sKRakam').value = "₹ " + (total * finalS).toFixed(2);
     

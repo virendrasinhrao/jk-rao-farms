@@ -1433,7 +1433,7 @@ function submitSalesForm(e) {
       let pak = r.querySelector('.pakList').value;
       let pauch = r.querySelector('.sPauch').value || 0;
       let weight = r.querySelector('.sWeight').value || 0;
-      let bhav20 = r.querySelector('.sBhav20').value || 0;
+      let bhav20 = parseFloat(r.querySelector('.sBhav20').value) || 0;
       let bhav1 = r.querySelector('.sBhav1').value.replace("₹", "").trim();
       let total = parseFloat(r.querySelector('.sTotal').value.replace("₹", "").trim()) || 0;
       let kShare = r.querySelector('.sKShare').value || 0;
@@ -1445,6 +1445,8 @@ function submitSalesForm(e) {
     });
 
     let mainBillRow = [year, entryId, date, billNo, bhagiya, vepari, totalBillAmt, status, hastak, bLidha, ""];
+    
+    // આ લાઈનથી વેચાણ બિલ ઉપાડમાં જમા લેવું કે નહીં એનું મોડલ અને વોર્નિંગ સિસ્ટમ પાછી ચાલુ થઈ જશે
     triggerUpadConfirmationModal('Sales', mainBillRow, itemRows, 'btnSales', 'salesForm');
   }
   function submitMedForm(e) {

@@ -1417,7 +1417,7 @@ function submitSalesForm(e) {
     e.preventDefault();
     let date = v("sDate");
     let year = getYear(date);
-    let entryId = document.getElementById("editEntryId").value || ("SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
+    let entryId = "SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000);
     let billNo = v("sBill") || "N/A";
     let bhagiya = v("sBhagiya");
     let vepari = v("sVepari");
@@ -1431,57 +1431,21 @@ function submitSalesForm(e) {
 
     rows.forEach((r, index) => {
       let pak = r.querySelector('.pakList').value;
-      let pauch = parseFloat(r.querySelector('.sPauch').value) || 0;
-      let weight = parseFloat(r.querySelector('.sWeight').value) || 0;
-      let bhav20 = parseFloat(r.querySelector('.sBhav20').value) || 0;
-      let bhav1Str = r.querySelector('.sBhav1').value.replace("₹", "").trim();
-      let bhav1 = parseFloat(bhav1Str) || 0;
+      let pauch = r.querySelector('.sPauch').value || 0;
+      let weight = r.querySelector('.sWeight').value || 0;
+      let bhav20 = r.querySelector('.sBhav20').value || 0;
+      let bhav1 = r.querySelector('.sBhav1').value.replace("₹", "").trim();
       let total = parseFloat(r.querySelector('.sTotal').value.replace("₹", "").trim()) || 0;
-      let kShare = parseFloat(r.querySelector('.sKShare').value) || 0;
+      let kShare = r.querySelector('.sKShare').value || 0;
       let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
       
       totalBillAmt += total;
       let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-      
-      // ૧૮ કૉલમનો પરફેક્ટ ક્રમ (છેલ્લે ૧૭ નંબર પર ફોટો)
-      itemRows.push([year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha, ""]);
+      itemRows.push([year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha]);
     });
 
-    handlePhotoUpload("sPhoto", function(photoBase64) {
-      let mainRow = itemRows.length > 0 ? itemRows[0] : [year, entryId, date, billNo, bhagiya, vepari, "", 0, 0, 0, 0, 0, 0, 0, status, hastak, bLidha, ""];
-      if(photoBase64) mainRow[17] = photoBase64;
-
-      let payload = {
-        action: "saveSales",
-        rowValues: mainRow,
-        editEntryId: document.getElementById('editEntryId').value
-      };
-
-      let btn = document.getElementById('btnSales');
-      if(btn) btn.innerText = "સેવ થઈ રહ્યું છે...";
-
-      fetch(SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify(payload)
-      })
-      .then(res => res.json())
-      .then(res => {
-        if(res.status === "error") {
-          alert("ભૂલ: " + res.message);
-          if(btn) btn.innerText = "💾 સેવ કરો";
-          return;
-        }
-        alert("વેચાણ બિલ સફળતાપૂર્વક સેવ થઈ ગયું!");
-        if(btn) btn.innerText = "💾 સેવ કરો";
-        document.getElementById('salesForm').reset();
-        fetchData();
-        switchTab('Dash');
-      })
-      .catch(err => {
-        alert("ભૂલ: " + err);
-        if(btn) btn.innerText = "💾 સેવ કરો";
-      });
-    });
+    let mainBillRow = [year, entryId, date, billNo, bhagiya, vepari, totalBillAmt, status, hastak, bLidha, ""];
+    triggerUpadConfirmationModal('Sales', mainBillRow, itemRows, 'btnSales', 'salesForm');
   }
   function submitMedForm(e) {
     e.preventDefault();

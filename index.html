@@ -1413,11 +1413,11 @@
   }
 
   // --- SUBMIT BILL FORMS ---
-  function submitSalesForm(e) {
+function submitSalesForm(e) {
     e.preventDefault();
     let date = v("sDate");
     let year = getYear(date);
-    let entryId = "SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000);
+    let entryId = document.getElementById("editEntryId").value || ("SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
     let billNo = v("sBill") || "N/A";
     let bhagiya = v("sBhagiya");
     let vepari = v("sVepari");
@@ -1443,14 +1443,46 @@
       totalBillAmt += total;
       let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
       
-      // શીટના હેડિંગ મુજબ સાચો ક્રમ (પાઉચ, વજન, ભાવ વગેરે બરાબર નંબરમાં જશે)
-      itemRows.push([year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha]);
+      // ૧૮ કૉલમનો પરફેક્ટ ક્રમ (છેલ્લે ૧૭ નંબર પર ફોટો)
+      itemRows.push([year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha, ""]);
     });
 
-    let mainBillRow = [year, entryId, date, billNo, bhagiya, vepari, totalBillAmt, status, hastak, bLidha, ""];
-    triggerUpadConfirmationModal('Sales', mainBillRow, itemRows, 'btnSales', 'salesForm');
-  }
+    handlePhotoUpload("sPhoto", function(photoBase64) {
+      let mainRow = itemRows.length > 0 ? itemRows[0] : [year, entryId, date, billNo, bhagiya, vepari, "", 0, 0, 0, 0, 0, 0, 0, status, hastak, bLidha, ""];
+      if(photoBase64) mainRow[17] = photoBase64;
 
+      let payload = {
+        action: "saveSales",
+        rowValues: mainRow,
+        editEntryId: document.getElementById('editEntryId').value
+      };
+
+      let btn = document.getElementById('btnSales');
+      if(btn) btn.innerText = "સેવ થઈ રહ્યું છે...";
+
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(res => {
+        if(res.status === "error") {
+          alert("ભૂલ: " + res.message);
+          if(btn) btn.innerText = "💾 સેવ કરો";
+          return;
+        }
+        alert("વેચાણ બિલ સફળતાપૂર્વક સેવ થઈ ગયું!");
+        if(btn) btn.innerText = "💾 સેવ કરો";
+        document.getElementById('salesForm').reset();
+        fetchData();
+        switchTab('Dash');
+      })
+      .catch(err => {
+        alert("ભૂલ: " + err);
+        if(btn) btn.innerText = "💾 સેવ કરો";
+      });
+    });
+  }
   function submitMedForm(e) {
     e.preventDefault();
     let date = v("mDate");

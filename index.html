@@ -1432,11 +1432,11 @@ function submitSalesForm(e) {
     rows.forEach((r, index) => {
       let pak = r.querySelector('.pakList').value;
       let pauch = r.querySelector('.sPauch').value || 0;
-      let weight = r.querySelector('.sWeight').value || 0;
+      let weight = parseFloat(r.querySelector('.sWeight').value) || 0;
       let bhav20 = parseFloat(r.querySelector('.sBhav20').value) || 0;
       let bhav1 = r.querySelector('.sBhav1').value.replace("₹", "").trim();
       let total = parseFloat(r.querySelector('.sTotal').value.replace("₹", "").trim()) || 0;
-      let kShare = r.querySelector('.sKShare').value || 0;
+      let kShare = parseFloat(r.querySelector('.sKShare').value) || 0;
       let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
       
       totalBillAmt += total;
@@ -1445,9 +1445,45 @@ function submitSalesForm(e) {
     });
 
     let mainBillRow = [year, entryId, date, billNo, bhagiya, vepari, totalBillAmt, status, hastak, bLidha, ""];
-    
-    // આ લાઈનથી વેચાણ બિલ ઉપાડમાં જમા લેવું કે નહીં એનું મોડલ અને વોર્નિંગ સિસ્ટમ પાછી ચાલુ થઈ જશે
-    triggerUpadConfirmationModal('Sales', mainBillRow, itemRows, 'btnSales', 'salesForm');
+
+    // **અહીં શરત મૂકી દીધી:**
+    // જો કુલ રકમ 0.00 કે તેથી ઓછી હોય, તો પેલી "ઉપાડમાં જમા લેવું કે નહીં" વાળી વોર્નિંગ/મોડલ વગર સીધું જ બિલ સેવ થઈ જશે.
+    // અને જો રકમ 0.00 થી વધારે હશે, તો જ પેલી વોર્નિંગ/મોડલ દેખાશે.
+    if (totalBillAmt <= 0) {
+      // રકમ 0 હોય ત્યારે મોડલ વગર સીધું સેવ કરવા માટેનું લોજિક
+      let btn = document.getElementById('btnSales');
+      if(btn) btn.innerText = "સેવ થઈ રહ્યું છે...";
+
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "saveSales",
+          rowValues: mainBillRow,
+          editEntryId: document.getElementById('editEntryId').value
+        })
+      })
+      .then(res => res.json())
+      .then(res => {
+        if(res.status === "error") {
+          alert("ભૂલ: " + res.message);
+          if(btn) btn.innerText = "💾 સેવ કરો";
+          return;
+        }
+        alert("વેચાણ બિલ સફળતાપૂર્વକ સેવ થઈ ગયું!");
+        if(btn) btn.innerText = "💾 સેવ કરો";
+        document.getElementById('salesForm').reset();
+        fetchData();
+        switchTab('Dash');
+      })
+      .catch(err => {
+        alert("ભૂલ: " + err);
+        if(btn) btn.innerText = "💾 સેવ કરો";
+      });
+
+    } else {
+      // જો રકમ 0 કરતાં વધારે હોય, તો પેલી "જમા લેવું કે નહીં" વાળી વોર્નિંગ/મોડલ દેખાશે
+      triggerUpadConfirmationModal('Sales', mainBillRow, itemRows, 'btnSales', 'salesForm');
+    }
   }
   function submitSalesForm(e) {
     e.preventDefault();

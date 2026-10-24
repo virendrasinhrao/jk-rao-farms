@@ -1449,43 +1449,41 @@ function submitSalesForm(e) {
     // આ લાઈનથી વેચાણ બિલ ઉપાડમાં જમા લેવું કે નહીં એનું મોડલ અને વોર્નિંગ સિસ્ટમ પાછી ચાલુ થઈ જશે
     triggerUpadConfirmationModal('Sales', mainBillRow, itemRows, 'btnSales', 'salesForm');
   }
-  function submitMedForm(e) {
+  function submitSalesForm(e) {
     e.preventDefault();
-    let date = v("mDate");
+    let date = v("sDate");
     let year = getYear(date);
-    let entryId = "MED-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000);
-    let billNo = v("mBill") || "N/A";
-    let bhagiya = v("mBhagiya");
-    let vepari = v("mVepari");
-    let subTotal = parseFloat(v("mSubTotal").replace("₹", "").trim()) || 0;
-    let tax = parseFloat(v("mTax")) || 0;
-    let gst = parseFloat(v("mGst").replace("₹", "").trim()) || 0;
-    let cst = parseFloat(v("mCst").replace("₹", "").trim()) || 0;
-    let totalBill = parseFloat(v("mTotalBill").replace("₹", "").trim()) || 0;
-    let words = v("mTotalWords");
-    let hastak = v("mHastak");
-    let status = v("mStatus");
+    let entryId = "SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000);
+    let billNo = v("sBill") || "N/A";
+    let bhagiya = v("sBhagiya");
+    let vepari = v("sVepari");
+    let status = v("sStatus");
+    let hastak = v("sHastak");
+    let bLidha = v("sBLidha");
 
-    let rows = document.querySelectorAll("#medItemsContainer .item-row");
+    let rows = document.querySelectorAll("#salesItemsContainer .item-row");
     let itemRows = [];
-    rows.forEach((r, index) => {
-      let dava = r.querySelector('.davaList').value;
-      let mType = r.querySelector('.mType').value;
-      let weight = r.querySelector('.mWeight').value || 0;
-      let pack = r.querySelector('.mPack').value || "";
-      let qty = r.querySelector('.mQty').value || 1;
-      let bhav = r.querySelector('.mBhav').value || 0;
-      let amt = parseFloat(r.querySelector('.mTotal').value.replace("₹", "").trim()) || 0;
-      let pak = r.querySelector('.pakList').value;
-      let kShare = r.querySelector('.mKShare').value || 0;
-      let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
+    let totalBillAmt = 0;
 
+    rows.forEach((r, index) => {
+      let pak = r.querySelector('.pakList').value;
+      let pauch = r.querySelector('.sPauch').value || 0;
+      let weight = parseFloat(r.querySelector('.sWeight').value) || 0;
+      let bhav20 = parseFloat(r.querySelector('.sBhav20').value) || 0;
+      let bhav1 = r.querySelector('.sBhav1').value.replace("₹", "").trim();
+      let total = parseFloat(r.querySelector('.sTotal').value.replace("₹", "").trim()) || 0;
+      let kShare = parseFloat(r.querySelector('.sKShare').value) || 0;
+      let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
+      
+      totalBillAmt += total;
       let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-      itemRows.push([year, rId, date, billNo, bhagiya, vepari, dava, mType, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
+      itemRows.push([year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha]);
     });
 
-    let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status];
-    triggerUpadConfirmationModal('Med', billRow, itemRows, 'btnMed', 'medForm');
+    let mainBillRow = [year, entryId, date, billNo, bhagiya, vepari, totalBillAmt, status, hastak, bLidha, ""];
+    
+    // આ કોડથી ઉપાડનું મોડલ અને એના બધા બોક્સ યથાવત દેખાશે
+    triggerUpadConfirmationModal('Sales', mainBillRow, itemRows, 'btnSales', 'salesForm');
   }
 
   function submitFertForm(e) {

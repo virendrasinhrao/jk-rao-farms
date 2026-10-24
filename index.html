@@ -1561,25 +1561,36 @@ function submitSalesForm(e) {
     triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm');
   }
 
-  function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId) {
+    function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId) {
     let partnerName = billRow[4];
     let billTotal = (formType === 'Sales') ? itemRows.reduce((sum, r) => sum + (parseFloat(r[11]) || 0), 0) : parseFloat(billRow[10]) || 0;
 
     let currentBal = getCategoryBalanceVal(formType, partnerName);
     let categoryText = formType === 'Sales' ? 'વેચાણ બીલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
 
-    let msg = "";
-    if(currentBal < billTotal) {
-      msg = "⚠️ " + categoryText + " માટે ઉપાડ બેલેન્સ ઓછું છે (₹ " + currentBal.toFixed(2) + ").";
+    let msgElement = document.getElementById("upadConfirmMsg");
+    let choiceGroup = document.getElementById("upadChoiceGroup"); // અથવા તમારા ડ્રોપડાઉન વાળા ડિવની ID
+
+    // **માત્ર વોર્નિંગ અને ડ્રોપડાઉન હાઇડ કરવાનું લોજિક:**
+    if (currentBal <= 0) {
+      // જો બેલેન્સ 0 હોય, તો વોર્નિંગ અને ડ્રોપડાઉન બંને દેખાવા જ ન જોઈએ
+      if (msgElement) msgElement.style.display = "none";
+      if (choiceGroup) choiceGroup.style.display = "none";
+      document.getElementById("upadChoiceSelect").value = "no";
     } else {
-      msg = "📋 આ બિલની રકમ ₹ " + billTotal.toFixed(2) + " છે.";
+      // જો બેલેન્સ 0 કરતા વધારે હોય, તો બંને દેખાવા જોઈએ
+      if (msgElement) {
+        msgElement.style.display = "block";
+        msgElement.innerText = "⚠️ " + categoryText + " માટે ઉપાડ બેલેન્સ ઓછું છે (₹ " + currentBal.toFixed(2) + "). શું આ બિલ ઉપાડમાં જમા કરવું છે?";
+      }
+      if (choiceGroup) choiceGroup.style.display = "block";
+      document.getElementById("upadChoiceSelect").value = "yes";
     }
 
     pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText };
-    document.getElementById("upadConfirmMsg").innerText = msg + " શું આ બિલ ઉપાડમાં જમા કરવું છે?";
-    document.getElementById("upadChoiceSelect").value = "yes";
     document.getElementById("modalUpadConfirm").style.display = "block";
   }
+
 
   function confirmUpadActionModal() {
     document.getElementById("modalUpadConfirm").style.display = "none";

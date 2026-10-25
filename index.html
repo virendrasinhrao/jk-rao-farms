@@ -1,8 +1,8 @@
 <!-- 
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated Date & Time: 24 October 2026, 02:10 AM
-  Feature: Fixed Category Balance to Properly Deduct Credit/Bill Deposit Entries from Upad Ledger
+  Updated Date & Time: 24 October 2026, 01:38 AM
+  Feature: Upad Table Action Bar with Both Edit and Delete Buttons for Single Selection
 -->
 <!DOCTYPE html>
 <html>
@@ -600,7 +600,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  // Updated Date & Time: 24 October 2026, 02:10 AM
+  // Updated Date & Time: 24 October 2026, 01:38 AM
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyx_Lo_lwKf4MKgs9q-BxXUesgxQstAcUK6YIRG51SJwB986P9BeO6JunYIPAxwBJjyUw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
@@ -717,19 +717,16 @@
   function getCategoryBalanceVal(sectionType, partnerName) {
     if(!partnerName || partnerName === "NEW") return 0;
     let targetType = sectionType === 'Sales' ? 'વેચાણ બીલ' : sectionType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
-    let creditType = sectionType === 'Sales' ? 'વેચાણ બિલ જમા' : sectionType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
     let totalBal = 0;
 
     if(appData.Upad_Ledger) {
       appData.Upad_Ledger.forEach(r => {
         let name = String(r["ભાગીદાર"] || r["ઉપાડ લેનાર"] || "").trim();
         let type = String(r["એન્ટ્રી પ્રકાર"] || "").trim();
-        if(name === partnerName) {
-          if(type === targetType) {
-            totalBal += (parseFloat(r["ઉપાડ (Debit)"] || 0) - parseFloat(r["જમા (Credit)"] || 0));
-          } else if(type === creditType) {
-            totalBal -= parseFloat(r["જમા (Credit)"] || r["ઉપાડ (Debit)"] || 0);
-          }
+        if(name === partnerName && type === targetType) {
+          let deb = parseFloat(r["ઉપાડ (Debit)"] || 0);
+          let cred = parseFloat(r["જમા (Credit)"] || 0);
+          totalBal += (deb - cred);
         }
       });
     }
@@ -1412,12 +1409,88 @@
     updateTableActionBar(tabName);
   }
 
+  function updateTableActionBar(tabName) {
+    let checkboxes = document.querySelectorAll('.row-select-' + tabName + ':checked');
+    let actionBar = document.getElementById('actionBar' + tabName);
+    if(!actionBar) return;
+
+    let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : tabName === 'Trac' ? 'Tractor_Expense' : 'Upad_Ledger';
+
+    if(checkboxes.length > 0) {
+      actionBar.style.display = 'flex';
+      if(checkboxes.length === 1) {
+        let singleId = checkboxes[0].value;
+        actionBar.innerHTML = `
+          <span style="font-size:12px; font-weight:bold; margin-right:5px;">1 સિલેક્ટ કરેલ:</span>
+          <button class="btn-edit" onclick="editSingleRecord('${sheetKey}', '${singleId}')">✏️ એડિટ</button>
+          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ ડિલીટ</button>
+        `;
+      } else {
+        actionBar.innerHTML = `
+          <span style="font-size:12px; font-weight:bold; margin-right:5px;">${checkboxes.length} સિલેક્ટ કરેલ:</span>
+          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ પસંદ કરેલ ડિલીટ કરો (Warning)</button>
+        `;
+      }
+    } else {
+      actionBar.style.display = 'none';
+      actionBar.innerHTML = "";
+    }
+  }
+
+  function editSingleRecord(sheetKey, entryId) {
+    askMpinAndExecute(() => {
+      if(sheetKey === 'Sales_Ledger') {
+        let found = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
+        if(found) {
+          switchSubTab('Sales', 'New');
+          document.getElementById("sDate").value = String(found["તારીખ"] || "").split('T')[0];
+          document.getElementById("sBill").value = found["બીલ નં"] || found["બિલ નં"] || "";
+          document.getElementById("sBhagiya").value = found["ભાગીદાર"] || "";
+          document.getElementById("sVepari").value = found["ખરીદનાર"] || "";
+          document.getElementById("sStatus").value = found["બીલની સ્થિતિ"] || "રોકડા / જમા";
+          document.getElementById("sHastak").value = found["હસ્તે"] || "";
+          document.getElementById("sBLidha").value = found["ભાગિયાએ લીધા?"] || "No";
+          document.getElementById("editEntryId").value = entryId;
+          document.getElementById("btnSales").innerText = "અપડેટ કરો";
+          document.getElementById("salesItemsContainer").innerHTML = "";
+          addSalesItemRow(found["પાઉચ / નંગ"] || 0, found["કુલ વજન (કિલો)"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
+          updatePartnerSummary('Sales');
+          alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+      } else if(sheetKey === 'Upad_Ledger') {
+        let found = (appData.Upad_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
+        if(found) {
+          switchSubTab('Upad', 'New');
+          document.getElementById("uDate").value = String(found["તારીખ"] || "").split('T')[0];
+          document.getElementById("uEntryId").value = entryId;
+          document.getElementById("uBhagiya").value = found["ઉપાડ લેનાર"] || found["ભાગીદાર"] || "";
+          document.getElementById("uType").value = found["એન્ટ્રી પ્રકાર"] || "";
+          document.getElementById("uProvider").value = found["આપનાર"] || "";
+          let amt = parseFloat(found["ઉપાડ (Debit)"] || found["જમા (Credit)"] || 0);
+          document.getElementById("uAmount").value = amt;
+          calcUpadDebitCredit(document.getElementById("uAmount"));
+          document.getElementById("uTxType").value = found["ટ્રાન્ઝેક્શન પ્રકાર"] || "CASH";
+          document.getElementById("uTxId").value = found["Transaction ID"] || "";
+          document.getElementById("uBillNo").value = found["બિલ નં"] || "";
+          document.getElementById("uBillType").value = found["બિલ પ્રકાર"] || "";
+          document.getElementById("uDetails").value = found["વિગત"] || "";
+          document.getElementById("uStatus").value = found["Status"] || "ઉધાર";
+          document.getElementById("uCloseYear").value = found["Close Year"] || "N";
+          document.getElementById("btnUpad").innerText = "અપડેટ કરો";
+          alert("ઉપાડ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+      } else {
+        alert("આ સેクション માટે એડિટ સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે.");
+      }
+    });
+  }
+
   // --- SUBMIT BILL FORMS ---
   function submitSalesForm(e) {
     e.preventDefault();
     let date = v("sDate");
     let year = getYear(date);
-    let entryId = "SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000);
+    let entryId = document.getElementById("editEntryId").value || ("SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
     let billNo = v("sBill") || "N/A";
     let bhagiya = v("sBhagiya");
     let vepari = v("sVepari");
@@ -1452,7 +1525,7 @@
     e.preventDefault();
     let date = v("mDate");
     let year = getYear(date);
-    let entryId = "MED-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000);
+    let entryId = document.getElementById("editMedId").value || ("MED-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
     let billNo = v("mBill") || "N/A";
     let bhagiya = v("mBhagiya");
     let vepari = v("mVepari");
@@ -1491,7 +1564,7 @@
     e.preventDefault();
     let date = v("fDate");
     let year = getYear(date);
-    let entryId = "FERT-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000);
+    let entryId = document.getElementById("editFertId").value || ("FERT-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
     let billNo = v("fBill") || "N/A";
     let bhagiya = v("fBhagiya");
     let vepari = v("fVepari");
@@ -1711,36 +1784,6 @@
     }
   }
 
-  function editSingleRecord(sheetKey, entryId) {
-    askMpinAndExecute(() => {
-      if(sheetKey === 'Upad_Ledger') {
-        let found = (appData.Upad_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
-        if(found) {
-          switchSubTab('Upad', 'New');
-          document.getElementById("uDate").value = String(found["તારીખ"] || "").split('T')[0];
-          document.getElementById("uEntryId").value = entryId;
-          document.getElementById("uBhagiya").value = found["ભાગીદાર"] || found["ઉપાડ લેનાર"] || "";
-          document.getElementById("uType").value = found["એન્ટ્રી પ્રકાર"] || "";
-          document.getElementById("uProvider").value = found["આપનાર"] || "";
-          let amt = parseFloat(found["ઉપાડ (Debit)"] || found["જમા (Credit)"] || 0);
-          document.getElementById("uAmount").value = amt;
-          calcUpadDebitCredit(document.getElementById("uAmount"));
-          document.getElementById("uTxType").value = found["ટ્રાન્ઝેક્શન પ્રકાર"] || "CASH";
-          document.getElementById("uTxId").value = found["Transaction ID"] || "";
-          document.getElementById("uBillNo").value = found["બિલ નં"] || "";
-          document.getElementById("uBillType").value = found["બિલ પ્રકાર"] || "";
-          document.getElementById("uDetails").value = found["વિગત"] || "";
-          document.getElementById("uStatus").value = found["Status"] || "ઉધાર";
-          document.getElementById("uCloseYear").value = found["Close Year"] || "N";
-          document.getElementById("btnUpad").innerText = "અપડેટ કરો";
-          alert("ઉપાડ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
-        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
-      } else {
-        alert("આ સેクション માટે એડિટ સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે.");
-      }
-    });
-  }
-
   function askMpinForDeleteSelected(sheetKey, tabName) {
     let checkedBoxes = document.querySelectorAll('.row-select-' + tabName + ':checked');
     if(checkedBoxes.length === 0) return alert("કૃપા કરીને ડિલીટ કરવા માટે ઓછામાં ઓછી એક એન્ટ્રી સિલેક્ટ કરો!");
@@ -1852,3 +1895,4 @@
 </script>
 </body>
 </html>
+

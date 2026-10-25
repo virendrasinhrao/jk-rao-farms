@@ -1512,8 +1512,27 @@
       
       totalBillAmt += total;
       let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-      itemRows.push([year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha]);
-    });
+            itemRows.push([
+        year,             // A: વર્ષ
+        rId,              // B: એન્ટ્રી Id
+        date,             // C: તારીખ
+        billNo,           // D: બિલ નં.
+        bhagiya,          // E: ભાગીદાર
+        vepari,           // F: ખરીદનાર
+        pak,              // G: પાકનું નામ
+        pauch,            // H: પાઉચ
+        weight,           // I: કુલ વજન
+        bhav20,           // J: ભાવ 20Kg
+        bhav1,            // K: ભાવ પ્રતિ કિલો
+        total,            // L: કુલ રકમ
+        kShare,           // M: ખેડૂ હિસ્સો
+        kRakam,           // N: ખેડૂ રકમ
+        status,           // O: બિલની સ્થિતિ
+        hastak,           // P: હસ્તે
+        bLidha,           // Q: ભાગિયાએ લીધા?
+        ""                // R: બિલનો ફોટો
+      ]);
+
 
     let mainBillRow = [year, entryId, date, billNo, bhagiya, vepari, totalBillAmt, status, hastak, bLidha, ""];
     

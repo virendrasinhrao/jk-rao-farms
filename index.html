@@ -1,7 +1,8 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated Date & Time: 25 October 2026
+  Updated Date & Time: 24 October 2026, 01:38 AM
+  Feature: Upad Table Action Bar with Both Edit and Delete Buttons for Single Selection
 -->
 <!DOCTYPE html>
 <html>
@@ -236,7 +237,7 @@
         </div>
       </div>
 
-      <form id="medForm" onsubmit="submitMed(event)">
+      <form id="medForm" onsubmit="submitMedForm(event)">
         <input type="hidden" id="editMedId" value="">
         <div class="flex-row">
           <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="mDate" required onchange="updatePartnerSummary('Med')"></div>
@@ -564,7 +565,7 @@
     <h3 style="color:#e67e22; margin-top:0;">💸 ઉપાડ લેજર જમા એન્ટ્રી</h3>
     <p id="upadConfirmMsg" style="font-size:13px; color:#555; margin-bottom:10px;"></p>
     
-    <div class="form-group" style="text-align:left;" id="upadChoiceGroup">
+    <div class="form-group" style="text-align:left;">
       <label><b>ઉપાડમાં જમા કરવું છે?:</b></label>
       <select id="upadChoiceSelect" style="font-weight:bold; font-size:14px; background:#e8f8f5; color:#27ae60;">
         <option value="yes">હા (જમા લો)</option>
@@ -599,7 +600,8 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzn-uk_KMPDFE6K84iJ92lcoPfCTKaNecsdqNnzjRhREOeHdXU8cugjyajxmzdUtaGc_w/exec";
+  // Updated Date & Time: 24 October 2026, 01:38 AM
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyx_Lo_lwKf4MKgs9q-BxXUesgxQstAcUK6YIRG51SJwB986P9BeO6JunYIPAxwBJjyUw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -1356,21 +1358,22 @@
       return; 
     }
 
-    let html = `<table><thead><tr>
+    let html = `<table><tr>
       <th><input type="checkbox" id="selectAll_${tabName}" onclick="toggleSelectAll(this, '${tabName}')"> બધા સિલેક્ટ કરો</th>
       <th>એન્ટ્રી Id</th><th>તારીખ</th>`;
 
     if(tabName === 'Sales') {
-      html += `<th>બીલ નં</th><th>ખેડૂનું નામ</th><th>ખરીદનાર</th><th>પાક</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th><th>સ્ટેટસ</th></tr></thead><tbody>`;
+      html += `<th>બીલ નં</th><th>ખેડૂનું નામ</th><th>ખરીદનાર</th><th>પાક</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th><th>સ્ટેટસ</th>`;
     } else if(tabName === 'Med') {
-      html += `<th>બીલ નં</th><th>દવાનું નામ</th><th>પ્રકાર</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>બિલની કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th></tr></thead><tbody>`;
+      html += `<th>બીલ નં</th><th>દવાનું નામ</th><th>પ્રકાર</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>બિલની કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th>`;
     } else if(tabName === 'Fert') {
-      html += `<th>બીલ નં</th><th>ખાતરનું નામ</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>બિલની કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th></tr></thead><tbody>`;
+      html += `<th>બીલ નં</th><th>ખાતરનું નામ</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>બિલની કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th>`;
     } else if(tabName === 'Trac') {
-      html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બીલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th><th>સ્ટેટસ</th></tr></thead><tbody>`;
+      html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બીલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th><th>સ્ટેટસ</th>`;
     } else if(tabName === 'Upad') {
-      html += `<th>ઉપાડ લેનાર</th><th>પ્રકાર</th><th>આપનાર</th><th>ઉપાડ (Debit)</th><th>જમા (Credit)</th><th>બિલ નં</th><th>કુલ બાકી (Outstanding)</th><th>Status</th></tr></thead><tbody>`;
+      html += `<th>ઉપાડ લેનાર</th><th>પ્રકાર</th><th>આપનાર</th><th>ઉપાડ (Debit)</th><th>જમા (Credit)</th><th>બિલ નં</th><th>કુલ બાકી (Outstanding)</th><th>Status</th>`;
     }
+    html += `</tr>`;
 
     rows.forEach((r, index) => {
       let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
@@ -1402,7 +1405,7 @@
 
       html += `</tr>`;
     });
-    container.innerHTML = html + `</tbody></table>`;
+    container.innerHTML = html + `</table>`;
     updateTableActionBar(tabName);
   }
 
@@ -1454,13 +1457,35 @@
           updatePartnerSummary('Sales');
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+      } else if(sheetKey === 'Upad_Ledger') {
+        let found = (appData.Upad_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
+        if(found) {
+          switchSubTab('Upad', 'New');
+          document.getElementById("uDate").value = String(found["તારીખ"] || "").split('T')[0];
+          document.getElementById("uEntryId").value = entryId;
+          document.getElementById("uBhagiya").value = found["ઉપાડ લેનાર"] || found["ભાગીદાર"] || "";
+          document.getElementById("uType").value = found["એન્ટ્રી પ્રકાર"] || "";
+          document.getElementById("uProvider").value = found["આપનાર"] || "";
+          let amt = parseFloat(found["ઉપાડ (Debit)"] || found["જમા (Credit)"] || 0);
+          document.getElementById("uAmount").value = amt;
+          calcUpadDebitCredit(document.getElementById("uAmount"));
+          document.getElementById("uTxType").value = found["ટ્રાન્ઝેક્શન પ્રકાર"] || "CASH";
+          document.getElementById("uTxId").value = found["Transaction ID"] || "";
+          document.getElementById("uBillNo").value = found["બિલ નં"] || "";
+          document.getElementById("uBillType").value = found["બિલ પ્રકાર"] || "";
+          document.getElementById("uDetails").value = found["વિગત"] || "";
+          document.getElementById("uStatus").value = found["Status"] || "ઉધાર";
+          document.getElementById("uCloseYear").value = found["Close Year"] || "N";
+          document.getElementById("btnUpad").innerText = "અપડેટ કરો";
+          alert("ઉપાડ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       } else {
         alert("આ સેクション માટે એડિટ સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે.");
       }
     });
   }
 
-  // --- SUBMIT SALES FORM (કૉલમ A થી R ના સાચા ક્રમ સાથે) ---
+  // --- SUBMIT BILL FORMS (Fixed with proper response validation) ---
   function submitSalesForm(e) {
     e.preventDefault();
     let date = v("sDate");
@@ -1475,6 +1500,7 @@
 
     let rows = document.querySelectorAll("#salesItemsContainer .item-row");
     let itemRows = [];
+    let totalBillAmt = 0;
 
     rows.forEach((r, index) => {
       let pak = r.querySelector('.pakList').value;
@@ -1486,42 +1512,191 @@
       let kShare = r.querySelector('.sKShare').value || 0;
       let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
       
+      totalBillAmt += total;
       let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-      
-      // કૉલમ A થી R નો એકદમ પરફેક્ટ ક્રમ:
-      itemRows.push([
-        year,             // A: વર્ષ
-        rId,              // B: એન્ટ્રી Id
-        date,             // C: તારીખ
-        billNo,           // D: બિલ નં.
-        bhagiya,          // E: ભાગીદાર
-        vepari,           // F: ખરીદનાર
-        pak,              // G: પાકનું નામ
-        pauch,            // H: પાઉચ
-        weight,           // I: કુલ વજન
-        bhav20,           // J: ભાવ 20Kg
-        bhav1,            // K: ભાવ પ્રતિ કિલો
-        total,            // L: કુલ રકમ
-        kShare,           // M: ખેડૂ હિસ્સો
-        kRakam,           // N: ખેડૂ રકમ
-        status,           // O: બિલની સ્થિતિ
-        hastak,           // P: હસ્તે
-        bLidha,           // Q: ભાગિયાએ લીધા?
-        ""                // R: બિલનો ફોટો
-      ]);
+      itemRows.push([year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha]);
     });
+
+    let mainBillRow = [year, entryId, date, billNo, bhagiya, vepari, totalBillAmt, status, hastak, bLidha, ""];
+    triggerUpadConfirmationModal('Sales', mainBillRow, itemRows, 'btnSales', 'salesForm');
+  }
+
+  function submitMedForm(e) {
+    e.preventDefault();
+    let date = v("mDate");
+    let year = getYear(date);
+    let entryId = document.getElementById("editMedId").value || ("MED-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
+    let billNo = v("mBill") || "N/A";
+    let bhagiya = v("mBhagiya");
+    let vepari = v("mVepari");
+    let subTotal = parseFloat(v("mSubTotal").replace("₹", "").trim()) || 0;
+    let tax = parseFloat(v("mTax")) || 0;
+    let gst = parseFloat(v("mGst").replace("₹", "").trim()) || 0;
+    let cst = parseFloat(v("mCst").replace("₹", "").trim()) || 0;
+    let totalBill = parseFloat(v("mTotalBill").replace("₹", "").trim()) || 0;
+    let words = v("mTotalWords");
+    let hastak = v("mHastak");
+    let status = v("mStatus");
+
+    let rows = document.querySelectorAll("#medItemsContainer .item-row");
+    let itemRows = [];
+    rows.forEach((r, index) => {
+      let dava = r.querySelector('.davaList').value;
+      let mType = r.querySelector('.mType').value;
+      let weight = r.querySelector('.mWeight').value || 0;
+      let pack = r.querySelector('.mPack').value || "";
+      let qty = r.querySelector('.mQty').value || 1;
+      let bhav = r.querySelector('.mBhav').value || 0;
+      let amt = parseFloat(r.querySelector('.mTotal').value.replace("₹", "").trim()) || 0;
+      let pak = r.querySelector('.pakList').value;
+      let kShare = r.querySelector('.mKShare').value || 0;
+      let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
+
+      let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
+      itemRows.push([year, rId, date, billNo, bhagiya, vepari, dava, mType, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
+    });
+
+    let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status];
+    triggerUpadConfirmationModal('Med', billRow, itemRows, 'btnMed', 'medForm');
+  }
+
+  function submitFertForm(e) {
+    e.preventDefault();
+    let date = v("fDate");
+    let year = getYear(date);
+    let entryId = document.getElementById("editFertId").value || ("FERT-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
+    let billNo = v("fBill") || "N/A";
+    let bhagiya = v("fBhagiya");
+    let vepari = v("fVepari");
+    let subTotal = parseFloat(v("fSubTotal").replace("₹", "").trim()) || 0;
+    let tax = parseFloat(v("fTax")) || 0;
+    let gst = parseFloat(v("mGst2").replace("₹", "").trim()) || 0;
+    let cst = parseFloat(v("mCst2").replace("₹", "").trim()) || 0;
+    let totalBill = parseFloat(v("fTotalBill").replace("₹", "").trim()) || 0;
+    let words = v("fTotalWords");
+    let hastak = v("fHastak");
+    let status = v("fStatus");
+    let details = v("fDetails") || "-";
+
+    let rows = document.querySelectorAll("#fertItemsContainer .item-row");
+    let itemRows = [];
+    rows.forEach((r, index) => {
+      let khatar = r.querySelector('.khatarList').value;
+      let weight = r.querySelector('.fWeight').value || 0;
+      let pack = r.querySelector('.fPack').value || "";
+      let qty = r.querySelector('.fQty').value || 1;
+      let bhav = parseFloat(r.querySelector('.fBhav').value) || 0;
+      let amt = parseFloat(r.querySelector('.fAmt').value.replace("₹", "").trim()) || 0;
+      let pak = r.querySelector('.pakList').value;
+      let kShare = r.querySelector('.fKShare').value || 0;
+      let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
+
+      let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
+      itemRows.push([year, rId, date, billNo, bhagiya, vepari, khatar, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
+    });
+
+    let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, details];
+    triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm');
+  }
+
+  function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId) {
+    let partnerName = billRow[4];
+    let billTotal = (formType === 'Sales') ? itemRows.reduce((sum, r) => sum + (parseFloat(r[11]) || 0), 0) : parseFloat(billRow[10]) || 0;
+
+    let currentBal = getCategoryBalanceVal(formType, partnerName);
+    let categoryText = formType === 'Sales' ? 'વેચાણ બીલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
+
+    let msg = "";
+    if(currentBal < billTotal) {
+      msg = "⚠️ " + categoryText + " માટે ઉપાડ બેલેન્સ ઓછું છે (₹ " + currentBal.toFixed(2) + ").";
+    } else {
+      msg = "📋 આ બિલની રકમ ₹ " + billTotal.toFixed(2) + " છે.";
+    }
+
+    pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText };
+    document.getElementById("upadConfirmMsg").innerText = msg + " શું આ બિલ ઉપાડમાં જમા કરવું છે?";
+    document.getElementById("upadChoiceSelect").value = "yes";
+    document.getElementById("modalUpadConfirm").style.display = "block";
+  }
+
+  function confirmUpadActionModal() {
+    document.getElementById("modalUpadConfirm").style.display = "none";
+    if(!pendingBillData) return;
+
+    let { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText } = pendingBillData;
+    let partnerName = billRow[4];
+    let upadEntryType = formType === 'Sales' ? 'વેચાણ બિલ જમા' : formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
+    let choice = document.getElementById("upadChoiceSelect").value;
+    let wantUpad = (choice === "yes");
+
+    let btn = document.getElementById(btnId);
+    if(btn) btn.innerText = "સેવ થઈ રહ્યું છે...";
+
+    let actionName = formType === 'Sales' ? 'saveSales' : formType === 'Med' ? 'savePesticideBill' : 'saveFertilizerBill';
+    let payload = formType === 'Sales' ? { action: actionName, rowValues: billRow, editEntryId: document.getElementById('editEntryId').value } :
+                        { action: actionName, billRow: billRow, itemRows: itemRows, editEntryId: document.getElementById(formType === 'Med' ? 'editMedId' : 'editFertId').value };
 
     fetch(SCRIPT_URL, {
       method: "POST",
-      body: JSON.stringify({ action: "saveSales", itemRows: itemRows })
-    }).then(res => res.json()).then(res => {
-      alert("વેચાણ સફળતાપૂર્વક સેવ થઈ ગયું!");
-      document.getElementById("salesForm").reset();
-      document.getElementById("salesItemsContainer").innerHTML = "";
-      addSalesItemRow();
+      body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+      // ➔ નિષ્ફળતા ચકાસણી: જો સર્વર પરથી એરર આવે તો અહી જ અટકી જશે
+      if(!res || res.status === "error") {
+        let errText = res && res.message ? res.message : "અજ્ઞાત ભૂલ";
+        alert("❌ નિષ્ફળ (Failed): ડેટા ગૂગલ શીટમાં સેવ થયો નથી! (Error: " + errText + ")");
+        if(btn) btn.innerText = "💾 સેવ કરો";
+        return Promise.reject(errText);
+      }
+
+      if(wantUpad) {
+        let date = billRow[2];
+        let year = getYear(date);
+        let rand = Math.floor(1000 + Math.random() * 9000);
+        let entryId = "UP-" + date.replace(/-/g, '') + "-" + rand;
+        let provider = billRow[5] || "વેપારી";
+        let debit = 0;
+        let credit = billTotal;
+        let billNo = billRow[3] || "-";
+        let status = "જમા";
+        let closeYear = "N";
+        let totalOutstanding = 0;
+
+        let upadRowValues = [
+          year, entryId, date, partnerName, upadEntryType, provider, credit, "CASH", "-",
+          debit, credit, billNo, credit, categoryText, "બિલ જમા એન્ટ્રી", 0, 0,
+          status, "", closeYear, totalOutstanding
+        ];
+
+        return fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "saveUpadLedger", rowValues: upadRowValues })
+        })
+        .then(resUpad => resUpad.json())
+        .then(resU => {
+          if(!resU || resU.status === "error") {
+            alert("⚠️ ચેતવણી: બિલ સેવ થઈ ગયું પણ ઉપાડ જમા કરવામાં ભૂલ આવી: " + (resU ? resU.message : ""));
+          }
+        });
+      }
+    })
+    .then(() => {
+      // જો ઉપર કોઈ પણ ભૂલ વગર સફળ થાય તો જ આ મેસેજ આવશે
+      alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
+      if(btn) btn.innerText = "💾 સેવ કરો";
+      document.getElementById(formElementId).reset();
+      pendingBillData = null;
       fetchData();
       switchTab('Dash');
-    }).catch(err => alert("ભૂલ: " + err));
+    })
+    .catch(err => {
+      if(err && err !== "undefined") {
+        console.error("Save Error:", err);
+      }
+      if(btn) btn.innerText = "💾 સેવ કરો";
+      pendingBillData = null;
+    });
   }
 
   function submitUpad(e) {
@@ -1566,12 +1741,12 @@
       })
       .then(res => res.json())
       .then(res => {
-        if(res.status === "error") {
-          alert("ભૂલ: " + res.message);
+        if(!res || res.status === "error") {
+          alert("❌ નિષ્ફળ (Failed): ઉપાડ એન્ટ્રી સેવ થઈ નથી! (Error: " + (res ? res.message : "Unknown") + ")");
           btn.innerText = "💾 સેવ કરો";
           return;
         }
-        alert("ઉપાડ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
+        alert("✅ ઉપાડ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
         btn.innerText = "💾 સેવ કરો";
         document.getElementById("upadForm").reset();
         document.getElementById("uDate").value = new Date().toISOString().split('T')[0];
@@ -1580,7 +1755,7 @@
         switchTab('Dash');
       })
       .catch(err => {
-        alert("ભૂલ: " + err);
+        alert("❌ નિષ્ફળ (Failed): સર્વર સાથે કનેક્શન થઈ શક્યું નથી! ભૂલ: " + err);
         btn.innerText = "💾 સેવ કરો";
       });
     });
@@ -1592,6 +1767,34 @@
     updateTableActionBar(tabName);
   }
 
+  function updateTableActionBar(tabName) {
+    let checkboxes = document.querySelectorAll('.row-select-' + tabName + ':checked');
+    let actionBar = document.getElementById('actionBar' + tabName);
+    if(!actionBar) return;
+
+    let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : tabName === 'Trac' ? 'Tractor_Expense' : 'Upad_Ledger';
+
+    if(checkboxes.length > 0) {
+      actionBar.style.display = 'flex';
+      if(checkboxes.length === 1) {
+        let singleId = checkboxes[0].value;
+        actionBar.innerHTML = `
+          <span style="font-size:12px; font-weight:bold; margin-right:5px;">1 સિલેક્ટ કરેલ:</span>
+          <button class="btn-edit" onclick="editSingleRecord('${sheetKey}', '${singleId}')">✏️ એડિટ</button>
+          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ ડિલીટ</button>
+        `;
+      } else {
+        actionBar.innerHTML = `
+          <span style="font-size:12px; font-weight:bold; margin-right:5px;">${checkboxes.length} સિલેક્ટ કરેલ (Warning):</span>
+          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ પસંદ કરેલ ડિલીટ કરો</button>
+        `;
+      }
+    } else {
+      actionBar.style.display = 'none';
+      actionBar.innerHTML = "";
+    }
+  }
+
   function askMpinForDeleteSelected(sheetKey, tabName) {
     let checkedBoxes = document.querySelectorAll('.row-select-' + tabName + ':checked');
     if(checkedBoxes.length === 0) return alert("કૃપા કરીને ડિલીટ કરવા માટે ઓછામાં ઓછી એક એન્ટ્રી સિલેક્ટ કરો!");
@@ -1599,7 +1802,7 @@
     let idsToDelete = Array.from(checkedBoxes).map(cb => cb.value);
 
     askMpinAndExecute(() => {
-      if(!confirm("⚠️ સાવધાન: શું તમે ખરેખર પસંદ કરેલી " + idsToDelete.length + " એન્ટ્રીઓ ડિલીટ કરવા માંગો છો?")) return;
+      if(!confirm("⚠️ સાવધાન: શું તમે ખરેખર પસંદ કરેલી " + idsToDelete.length + " એન્ટ્રીઓ ડિલીટ કરવા માંગો છો? આ ક્રિયા પાછી નહીં ખેંચી શકાય!")) return;
       
       let promises = idsToDelete.map(id => {
         return fetch(SCRIPT_URL, {

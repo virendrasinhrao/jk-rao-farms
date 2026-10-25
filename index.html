@@ -1490,30 +1490,86 @@
     e.preventDefault();
     let rows = document.querySelectorAll("#salesItemsContainer .item-row");
     if(rows.length === 0) return alert("કમ સે કમ એક આઇટમ ઉમેરો!");
-    let existingId = document.getElementById("editEntryId").value;
-    document.getElementById("btnSales").innerText = existingId ? "અપડેટ થઈ રહ્યું છે..." : "સેવ થઈ રહ્યું છે...";
-    let date = v("sDate"), billNo = v("sBill") || "N/A", bhagiya = v("sBhagiya"), year = getYear(date);
     
+    let existingId = document.getElementById("editEntryId").value;
+    let btn = document.getElementById("btnSales");
+    btn.innerText = existingId ? "અપડેટ થઈ રહ્યું છે..." : "સેવ થઈ રહ્યું છે...";
+    
+    let date = v("sDate"), billNo = v("sBill") || "N/A", bhagiya = v("sBhagiya"), year = getYear(date);
     let mainEntryId = existingId ? existingId : "SL-" + Math.floor(100000 + Math.random() * 900000);
 
     handlePhotoUpload("sPhoto", function(photoBase64) {
-      if(photoBase64) {
+      if(photoBase64 && existingId) {
         let photoRow = [ year, mainEntryId, date, billNo, bhagiya, "વેચાણ", photoBase64 ];
         fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "savePhoto", rowValues: photoRow }) });
-			   
-	}
-      let count = 0, hasError = false;
+      }
+
+      let itemRows = [];
+      let totalBillAmt = 0;
+
       rows.forEach((row, index) => {
         let entryId = mainEntryId + (rows.length > 1 ? "-" + (index + 1) : "");
         let sTotalVal = parseFloat((row.querySelector(".sTotal").value || "").replace("₹", "")) || 0;
         let sFarmerVal = parseFloat((row.querySelector(".sKRakam").value || "").replace("₹", "")) || 0;
+        totalBillAmt += sTotalVal;
 
-					
         let rowData = [
           year, entryId, date, billNo, bhagiya, v("sVepari"), row.querySelector(".pakList").value, 
           row.querySelector(".sPauch").value, row.querySelector(".sWeight").value, row.querySelector(".sBhav20").value, 
           row.querySelector(".sBhav1").value, sTotalVal, row.querySelector(".sKShare").value, 
-          sFarmerVal, v("sStatus"), v("sHastak"), v("sBLidha")
+          sFarmerVal, v("sStatus"), v("sHastak"), v("sBLidha"), photoBase64 || ""
+        ];
+        itemRows.push(rowData);
+      });
+
+      let mainBillRow = [ year, mainEntryId, date, billNo, bhagiya, v("sVepari"), totalBillAmt, v("sStatus"), v("sHastak"), v("sBLidha"), photoBase64 || "" ];
+
+      // ઉપાડ બેલેન્સ ચેક કરવા માટેનું લોજિક
+      let currentBal = getCategoryBalanceVal ? getCategoryBalanceVal('Sales', bhagiya) : 0;
+      
+      if(currentBal <= 0 || existingId) {
+        // જો બેલેન્સ 0 કે માઇનસ હોય અથવા એડિટ મોડ હોય, તો સીધું સેવ કરો
+        let payload = { action: "saveSales", rowValues: itemRows[0], editEntryId: existingId };
+        
+        fetch(SCRIPT_URL, { 
+          method: "POST", 
+          body: JSON.stringify(payload) 
+        })
+        .then(res => res.json())
+        .then(res => {
+          if(res.status === "error") {
+            alert(res.message);
+            btn.innerText = existingId ? "અપડેટ કરો" : "સેવ કરો";
+            return;
+          }
+          alert(existingId ? "વેચાણ સફળતાપૂર્વક અપડેટ થઈ ગયું!" : "વેચાણ સફળતાપૂર્વક સેવ થઈ ગયું!"); 
+          btn.innerText = "સેવ કરો";
+          document.getElementById("editEntryId").value = "";
+          document.getElementById("salesForm").reset(); 
+          document.getElementById("salesItemsContainer").innerHTML = "";
+          addSalesItemRow(); 
+          document.getElementById("sDate").value = new Date().toISOString().split('T')[0];
+          fetchData(); 
+          switchTab('Dash');
+        }).catch(err => {
+          alert("ભૂલ: " + err);
+          btn.innerText = existingId ? "અપડેટ કરો" : "સેવ કરો";
+        });
+      } else {
+        // જો બેલેન્સ પ્લસ હોય તો મોડલ અથવા કન્ફર્મેશન માટે
+        btn.innerText = "સેવ કરો";
+        alert("આ ભાગીદારનું ઉપાડ બેલેન્સ ₹ " + currentBal.toFixed(2) + " છે.");
+        let payload = { action: "saveSales", rowValues: itemRows[0], editEntryId: existingId };
+        fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) })
+        .then(res => res.json())
+        .then(() => {
+          alert("વેચાણ સફળતાપૂર્વક સેવ થઈ ગયું!");
+          fetchData();
+          switchTab('Dash');
+        });
+      }
+    });
+  }
   function submitMedForm(e) {
     e.preventDefault();
     let date = v("mDate");

@@ -565,7 +565,6 @@
     <h3 style="color:#e67e22; margin-top:0;">💸 ઉપાડ લેજર જમા એન્ટ્રી</h3>
     <p id="upadConfirmMsg" style="font-size:13px; color:#555; margin-bottom:10px;"></p>
     
-    <!-- લેબલ અને ડ્રોપડાઉન બંને upadChoiceGroup ની અંદર છે -->
     <div class="form-group" style="text-align:left;" id="upadChoiceGroup">
       <label><b>ઉપાડમાં જમા કરવું છે?:</b></label>
       <select id="upadChoiceSelect" style="font-weight:bold; font-size:14px; background:#e8f8f5; color:#27ae60;">
@@ -1519,7 +1518,15 @@
     });
 
     let mainBillRow = [year, entryId, date, billNo, bhagiya, vepari, totalBillAmt, status, hastak, bLidha, ""];
-    triggerUpadConfirmationModal('Sales', mainBillRow, itemRows, 'btnSales', 'salesForm');
+    
+    let currentBal = getCategoryBalanceVal('Sales', bhagiya);
+    if (currentBal <= 0) {
+      pendingBillData = { formType: 'Sales', billRow: mainBillRow, itemRows: itemRows, btnId: 'btnSales', formElementId: 'salesForm', billTotal: totalBillAmt, categoryText: 'વેચાણ બીલ' };
+      document.getElementById("upadChoiceSelect").value = "no";
+      confirmUpadActionModal();
+    } else {
+      triggerUpadConfirmationModal('Sales', mainBillRow, itemRows, 'btnSales', 'salesForm');
+    }
   }
 
   function submitMedForm(e) {
@@ -1558,7 +1565,15 @@
     });
 
     let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status];
-    triggerUpadConfirmationModal('Med', billRow, itemRows, 'btnMed', 'medForm');
+    
+    let currentBal = getCategoryBalanceVal('Med', bhagiya);
+    if (currentBal <= 0) {
+      pendingBillData = { formType: 'Med', billRow: billRow, itemRows: itemRows, btnId: 'btnMed', formElementId: 'medForm', billTotal: totalBill, categoryText: 'દવા ખરીદી માટે' };
+      document.getElementById("upadChoiceSelect").value = "no";
+      confirmUpadActionModal();
+    } else {
+      triggerUpadConfirmationModal('Med', billRow, itemRows, 'btnMed', 'medForm');
+    }
   }
 
   function submitFertForm(e) {
@@ -1597,7 +1612,15 @@
     });
 
     let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, details];
-    triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm');
+    
+    let currentBal = getCategoryBalanceVal('Fert', bhagiya);
+    if (currentBal <= 0) {
+      pendingBillData = { formType: 'Fert', billRow: billRow, itemRows: itemRows, btnId: 'btnFert', formElementId: 'fertForm', billTotal: totalBill, categoryText: 'ખાતર ખરીદી માટે' };
+      document.getElementById("upadChoiceSelect").value = "no";
+      confirmUpadActionModal();
+    } else {
+      triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm');
+    }
   }
 
   function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId) {
@@ -1610,7 +1633,6 @@
     let msgElement = document.getElementById("upadConfirmMsg");
     let choiceGroup = document.getElementById("upadChoiceGroup");
 
-    // જો બેલેન્સ 0 કે તેથી ઓછું હોય, તો વોર્નિંગ અને ડ્રોપડાઉન બંને સંપૂર્ણપણે હાઇડ થઈ જશે
     if (currentBal <= 0) {
       if (msgElement) msgElement.style.display = "none";
       if (choiceGroup) choiceGroup.style.display = "none";

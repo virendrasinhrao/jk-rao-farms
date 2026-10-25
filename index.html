@@ -1486,49 +1486,34 @@
   }
 
   // --- SUBMIT BILL FORMS ---
-  function submitSalesForm(e) {
+ function submitSales(e) {
     e.preventDefault();
-    let date = v("sDate");
-    let year = getYear(date);
-    let entryId = document.getElementById("editEntryId").value || ("SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
-    let billNo = v("sBill") || "N/A";
-    let bhagiya = v("sBhagiya");
-    let vepari = v("sVepari");
-    let status = v("sStatus");
-    let hastak = v("sHastak");
-    let bLidha = v("sBLidha");
-
     let rows = document.querySelectorAll("#salesItemsContainer .item-row");
-    let itemRows = [];
-    let totalBillAmt = 0;
-
-    rows.forEach((r, index) => {
-      let pak = r.querySelector('.pakList').value;
-      let pauch = r.querySelector('.sPauch').value || 0;
-      let weight = r.querySelector('.sWeight').value || 0;
-      let bhav20 = r.querySelector('.sBhav20').value || 0;
-      let bhav1 = r.querySelector('.sBhav1').value.replace("₹", "").trim();
-      let total = parseFloat(r.querySelector('.sTotal').value.replace("₹", "").trim()) || 0;
-      let kShare = r.querySelector('.sKShare').value || 0;
-      let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
-      
-      totalBillAmt += total;
-      let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-      itemRows.push([year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha]);
-    });
-
-    let mainBillRow = [year, entryId, date, billNo, bhagiya, vepari, totalBillAmt, status, hastak, bLidha, ""];
+    if(rows.length === 0) return alert("કમ સે કમ એક આઇટમ ઉમેરો!");
+    let existingId = document.getElementById("editEntryId").value;
+    document.getElementById("btnSales").innerText = existingId ? "અપડેટ થઈ રહ્યું છે..." : "સેવ થઈ રહ્યું છે...";
+    let date = v("sDate"), billNo = v("sBill") || "N/A", bhagiya = v("sBhagiya"), year = getYear(date);
     
-    let currentBal = getCategoryBalanceVal('Sales', bhagiya);
-    if (currentBal <= 0) {
-      pendingBillData = { formType: 'Sales', billRow: mainBillRow, itemRows: itemRows, btnId: 'btnSales', formElementId: 'salesForm', billTotal: totalBillAmt, categoryText: 'વેચાણ બીલ' };
-      document.getElementById("upadChoiceSelect").value = "no";
-      confirmUpadActionModal();
-    } else {
-      triggerUpadConfirmationModal('Sales', mainBillRow, itemRows, 'btnSales', 'salesForm');
-    }
-  }
+    let mainEntryId = existingId ? existingId : "SL-" + Math.floor(100000 + Math.random() * 900000);
 
+    handlePhotoUpload("sPhoto", function(photoBase64) {
+      if(photoBase64) {
+        let photoRow = [ year, mainEntryId, date, billNo, bhagiya, "વેચાણ", photoBase64 ];
+        fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "savePhoto", rowValues: photoRow }) });
+			   
+	}
+      let count = 0, hasError = false;
+      rows.forEach((row, index) => {
+        let entryId = mainEntryId + (rows.length > 1 ? "-" + (index + 1) : "");
+        let sTotalVal = parseFloat((row.querySelector(".sTotal").value || "").replace("₹", "")) || 0;
+        let sFarmerVal = parseFloat((row.querySelector(".sKRakam").value || "").replace("₹", "")) || 0;
+
+					
+        let rowData = [
+          year, entryId, date, billNo, bhagiya, v("sVepari"), row.querySelector(".pakList").value, 
+          row.querySelector(".sPauch").value, row.querySelector(".sWeight").value, row.querySelector(".sBhav20").value, 
+          row.querySelector(".sBhav1").value, sTotalVal, row.querySelector(".sKShare").value, 
+          sFarmerVal, v("sStatus"), v("sHastak"), v("sBLidha")
   function submitMedForm(e) {
     e.preventDefault();
     let date = v("mDate");

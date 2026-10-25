@@ -599,8 +599,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  // Updated Date & Time: 25 October 2026
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz9BbsHI30gqzCEXZLdNUfFCLU_PvNzN1jb8a2_eItfQQIZ6vvxmXmiT8frPgvOwGkJvQ/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyx_Lo_lwKf4MKgs9q-BxXUesgxQstAcUK6YIRG51SJwB986P9BeO6JunYIPAxwBJjyUw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -1455,35 +1454,13 @@
           updatePartnerSummary('Sales');
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
-      } else if(sheetKey === 'Upad_Ledger') {
-        let found = (appData.Upad_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
-        if(found) {
-          switchSubTab('Upad', 'New');
-          document.getElementById("uDate").value = String(found["તારીખ"] || "").split('T')[0];
-          document.getElementById("uEntryId").value = entryId;
-          document.getElementById("uBhagiya").value = found["ઉપાડ લેનાર"] || found["ભાગીદાર"] || "";
-          document.getElementById("uType").value = found["એન્ટ્રી પ્રકાર"] || "";
-          document.getElementById("uProvider").value = found["આપનાર"] || "";
-          let amt = parseFloat(found["ઉપાડ (Debit)"] || found["જમા (Credit)"] || 0);
-          document.getElementById("uAmount").value = amt;
-          calcUpadDebitCredit(document.getElementById("uAmount"));
-          document.getElementById("uTxType").value = found["ટ્રાન્ઝેક્શન પ્રકાર"] || "CASH";
-          document.getElementById("uTxId").value = found["Transaction ID"] || "";
-          document.getElementById("uBillNo").value = found["બિલ નં"] || "";
-          document.getElementById("uBillType").value = found["બિલ પ્રકાર"] || "";
-          document.getElementById("uDetails").value = found["વિગત"] || "";
-          document.getElementById("uStatus").value = found["Status"] || "ઉધાર";
-          document.getElementById("uCloseYear").value = found["Close Year"] || "N";
-          document.getElementById("btnUpad").innerText = "અપડેટ કરો";
-          alert("ઉપાડ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
-        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       } else {
         alert("આ સેクション માટે એડિટ સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે.");
       }
     });
   }
 
-  // --- SUBMIT SALES FORM ---
+  // --- SUBMIT SALES FORM (કૉલમ A થી R ના સાચા ક્રમ સાથે) ---
   function submitSalesForm(e) {
     e.preventDefault();
     let date = v("sDate");
@@ -1498,7 +1475,6 @@
 
     let rows = document.querySelectorAll("#salesItemsContainer .item-row");
     let itemRows = [];
-    let totalBillAmt = 0;
 
     rows.forEach((r, index) => {
       let pak = r.querySelector('.pakList').value;
@@ -1510,9 +1486,10 @@
       let kShare = r.querySelector('.sKShare').value || 0;
       let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
       
-      totalBillAmt += total;
       let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-            itemRows.push([
+      
+      // કૉલમ A થી R નો એકદમ પરફેક્ટ ક્રમ:
+      itemRows.push([
         year,             // A: વર્ષ
         rId,              // B: એન્ટ્રી Id
         date,             // C: તારીખ
@@ -1532,242 +1509,19 @@
         bLidha,           // Q: ભાગિયાએ લીધા?
         ""                // R: બિલનો ફોટો
       ]);
-
-
-    let mainBillRow = [year, entryId, date, billNo, bhagiya, vepari, totalBillAmt, status, hastak, bLidha, ""];
-    
-    let currentBal = getCategoryBalanceVal('Sales', bhagiya);
-    if (currentBal <= 0) {
-      pendingBillData = { formType: 'Sales', billRow: mainBillRow, itemRows: itemRows, btnId: 'btnSales', formElementId: 'salesForm', billTotal: totalBillAmt, categoryText: 'વેચાણ બીલ' };
-      document.getElementById("upadChoiceSelect").value = "no";
-      confirmUpadActionModal();
-    } else {
-      triggerUpadConfirmationModal('Sales', mainBillRow, itemRows, 'btnSales', 'salesForm');
-    }
-  }
-
-  // --- SUBMIT MED FORM (દવા માટે 0 બેલેન્સ ઓટો-સેવ લોજિક સાથે) ---
-  function submitMed(e) {
-    e.preventDefault();
-    let rows = document.querySelectorAll("#medItemsContainer .item-row");
-    if(rows.length === 0) return alert("કમ સે કમ એક દવા ઉમેરો!");
-    let existingId = document.getElementById("editMedId").value;
-    document.getElementById("btnMed").innerText = existingId ? "અપડેટ થઈ રહ્યું છે..." : "સેવ થઈ રહ્યું છે...";
-    let date = v("mDate"), billNo = v("mBill") || "N/A", bhagiya = v("mBhagiya"), year = getYear(date);
-    let subTotal = parseFloat((document.getElementById("mSubTotal").value || "").replace("₹", "")) || 0;
-    let tax = parseFloat(document.getElementById("mTax").value) || 0;
-    let gst = parseFloat((document.getElementById("mGst").value || "").replace("₹", "")) || 0;
-    let cst = parseFloat((document.getElementById("mCst").value || "").replace("₹", "")) || 0;
-    let totalBill = parseFloat((document.getElementById("mTotalBill").value || "").replace("₹", "")) || 0;
-    let inWords = convertToGujaratiWords(totalBill);
-    
-    let mainEntryId = existingId ? existingId : "ME-" + Math.floor(100000 + Math.random() * 900000);
-
-    handlePhotoUpload("mPhoto", function(photoBase64) {
-      let billRow = [ year, mainEntryId, date, billNo, v("mVepari"), v("mBhagiya"), subTotal, tax, gst, cst, totalBill, photoBase64, inWords, v("mHastak") ];
-      let itemRows = [];
-      let totalFarmerAmt = 0;
-      rows.forEach(row => {
-        let mTotVal = parseFloat((row.querySelector(".mTotal").value || "").replace("₹", "")) || 0;
-        let mFarmVal = parseFloat((row.querySelector(".sKRakam") ? row.querySelector(".sKRakam").value : row.querySelector(".mKRakam").value || "").replace("₹", "")) || 0;
-        totalFarmerAmt += mFarmVal;
-
-        itemRows.push([
-          year, mainEntryId, date, billNo, row.querySelector(".davaList").value, row.querySelector(".mType").value,
-          row.querySelector(".mWeight").value, row.querySelector(".mPack").value, row.querySelector(".mQty").value,
-          row.querySelector(".mBhav").value, mTotVal,
-          row.querySelector(".pakList").value, row.querySelector(".mKShare").value, mFarmVal
-        ]);
-      });
-      let ledgerRow = [ year, mainEntryId, date, bhagiya, "દવા ખર્ચ", totalFarmerAmt, v("mStatus"), v("mVepari") ];
-      
-      let currentBal = getCategoryBalanceVal('Med', bhagiya);
-      if (currentBal <= 0 && !existingId) {
-        pendingBillData = { formType: 'Med', billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow, btnId: 'btnMed', formElementId: 'medForm', billTotal: totalBill, categoryText: 'દવા ખરીદી માટે' };
-        document.getElementById("upadChoiceSelect").value = "no";
-        confirmUpadActionModal();
-      } else if (existingId) {
-        executeMedSave(billRow, itemRows, ledgerRow, existingId);
-      } else {
-        triggerUpadConfirmationModal('Med', billRow, itemRows, 'btnMed', 'medForm');
-      }
     });
-  }
 
-  function executeMedSave(billRow, itemRows, ledgerRow, existingId) {
     fetch(SCRIPT_URL, {
       method: "POST",
-      body: JSON.stringify({ action: "savePesticideBill", billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow, editEntryId: existingId })
+      body: JSON.stringify({ action: "saveSales", itemRows: itemRows })
     }).then(res => res.json()).then(res => {
-      if(res.status === "error") {
-        alert(res.message);
-        document.getElementById("btnMed").innerText = existingId ? "અપડેટ કરો" : "સેવ કરો";
-        return;
-      }
-      alert(existingId ? "દવા બિલ સફળતાપૂર્વક અપડેટ થઈ ગયું!" : "દવા બિલ સફળતાપૂર્વક સેવ થઈ ગયું!"); 
-      document.getElementById("btnMed").innerText = "સેવ કરો";
-      document.getElementById("editMedId").value = "";
-      document.getElementById("medForm").reset(); document.getElementById("medItemsContainer").innerHTML = "";
-      addMedItemRow(); document.getElementById("mSubTotal").value = "₹ 0.00"; document.getElementById("mTax").value = "0";
-      document.getElementById("mGst").value = "₹ 0.00"; document.getElementById("mCst").value = "₹ 0.00";
-      document.getElementById("mTotalBill").value = "₹ 0.00"; document.getElementById("mTotalWords").value = "અંકે રૂપિયા શૂન્ય પૂરા";
-      document.getElementById("mDate").value = new Date().toISOString().split('T')[0];
-      fetchData(); switchTab('Dash');
-    });
-  }
-
-  // --- SUBMIT FERT FORM ---
-  function submitFertForm(e) {
-    e.preventDefault();
-    let date = v("fDate");
-    let year = getYear(date);
-    let entryId = document.getElementById("editFertId").value || ("FERT-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
-    let billNo = v("fBill") || "N/A";
-    let bhagiya = v("fBhagiya");
-    let vepari = v("fVepari");
-    let subTotal = parseFloat(v("fSubTotal").replace("₹", "").trim()) || 0;
-    let tax = parseFloat(v("fTax")) || 0;
-    let gst = parseFloat(v("mGst2").replace("₹", "").trim()) || 0;
-    let cst = parseFloat(v("mCst2").replace("₹", "").trim()) || 0;
-    let totalBill = parseFloat(v("fTotalBill").replace("₹", "").trim()) || 0;
-    let words = v("fTotalWords");
-    let hastak = v("fHastak");
-    let status = v("fStatus");
-    let details = v("fDetails") || "-";
-
-    let rows = document.querySelectorAll("#fertItemsContainer .item-row");
-    let itemRows = [];
-    rows.forEach((r, index) => {
-      let khatar = r.querySelector('.khatarList').value;
-      let weight = r.querySelector('.fWeight').value || 0;
-      let pack = r.querySelector('.fPack').value || "";
-      let qty = r.querySelector('.fQty').value || 1;
-      let bhav = parseFloat(r.querySelector('.fBhav').value) || 0;
-      let amt = parseFloat(r.querySelector('.fAmt').value.replace("₹", "").trim()) || 0;
-      let pak = r.querySelector('.pakList').value;
-      let kShare = r.querySelector('.fKShare').value || 0;
-      let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
-
-      let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-      itemRows.push([year, rId, date, billNo, bhagiya, vepari, khatar, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
-    });
-
-    let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, details];
-    
-    let currentBal = getCategoryBalanceVal('Fert', bhagiya);
-    if (currentBal <= 0) {
-      pendingBillData = { formType: 'Fert', billRow: billRow, itemRows: itemRows, btnId: 'btnFert', formElementId: 'fertForm', billTotal: totalBill, categoryText: 'ખાતર ખરીદી માટે' };
-      document.getElementById("upadChoiceSelect").value = "no";
-      confirmUpadActionModal();
-    } else {
-      triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm');
-    }
-  }
-
-  function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId, ledgerRow=null) {
-    let partnerName = formType === 'Med' ? billRow[5] : billRow[4];
-    let billTotal = (formType === 'Sales') ? itemRows.reduce((sum, r) => sum + (parseFloat(r[11]) || 0), 0) : parseFloat(billRow[10]) || 0;
-
-    let currentBal = getCategoryBalanceVal(formType, partnerName);
-    let categoryText = formType === 'Sales' ? 'વેચાણ બીલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
-
-    let msgElement = document.getElementById("upadConfirmMsg");
-    let choiceGroup = document.getElementById("upadChoiceGroup");
-
-    if (currentBal <= 0) {
-      if (msgElement) msgElement.style.display = "none";
-      if (choiceGroup) choiceGroup.style.display = "none";
-      document.getElementById("upadChoiceSelect").value = "no";
-    } else {
-      if (msgElement) {
-        msgElement.style.display = "block";
-        msgElement.innerText = "⚠️ " + categoryText + " માટે ઉપાડ બેલેન્સ ઓછું છે (₹ " + currentBal.toFixed(2) + "). શું આ બિલ ઉપાડમાં જમા કરવું છે?";
-      }
-      if (choiceGroup) choiceGroup.style.display = "block";
-      document.getElementById("upadChoiceSelect").value = "yes";
-    }
-
-    pendingBillData = { formType, billRow, itemRows, ledgerRow, btnId, formElementId, billTotal, categoryText };
-    document.getElementById("modalUpadConfirm").style.display = "block";
-  }
-
-  function confirmUpadActionModal() {
-    document.getElementById("modalUpadConfirm").style.display = "none";
-    if(!pendingBillData) return;
-
-    let { formType, billRow, itemRows, ledgerRow, btnId, formElementId, billTotal, categoryText } = pendingBillData;
-    let partnerName = formType === 'Med' ? billRow[5] : billRow[4];
-    let upadEntryType = formType === 'Sales' ? 'વેચાણ બિલ જમા' : formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
-    let choice = document.getElementById("upadChoiceSelect").value;
-    let wantUpad = (choice === "yes");
-
-    let btn = document.getElementById(btnId);
-    if(btn) btn.innerText = "સેવ થઈ રહ્યું છે...";
-
-    let actionName = formType === 'Sales' ? 'saveSales' : formType === 'Med' ? 'savePesticideBill' : 'saveFertilizerBill';
-    let payload = formType === 'Sales' ? { action: actionName, rowValues: billRow, editEntryId: document.getElementById('editEntryId').value } :
-                  formType === 'Med' ? { action: actionName, billRow: billRow, itemRows: itemRows, ledgerRow: ledgerRow, editEntryId: document.getElementById('editMedId').value } :
-                  { action: actionName, billRow: billRow, itemRows: itemRows, editEntryId: document.getElementById('editFertId').value };
-
-    fetch(SCRIPT_URL, {
-      method: "POST",
-      body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(res => {
-      if(res.status === "error") {
-        alert("ભૂલ: " + res.message);
-        if(btn) btn.innerText = "💾 સેવ કરો";
-        return Promise.reject(res.message);
-      }
-
-      if(wantUpad) {
-        let date = billRow[2];
-        let year = getYear(date);
-        let rand = Math.floor(1000 + Math.random() * 9000);
-        let entryId = "UP-" + date.replace(/-/g, '') + "-" + rand;
-        let provider = formType === 'Med' ? (billRow[4] || "વેપારી") : (billRow[5] || "વેપારી");
-        let debit = 0;
-        let credit = billTotal;
-        let billNo = billRow[3] || "-";
-        let status = "જમા";
-        let closeYear = "N";
-        let totalOutstanding = 0;
-
-        let upadRowValues = [
-          year, entryId, date, partnerName, upadEntryType, provider, credit, "CASH", "-",
-          debit, credit, billNo, credit, categoryText, "બિલ જમા એન્ટ્રી", 0, 0,
-          status, "", closeYear, totalOutstanding
-        ];
-
-        return fetch(SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "saveUpadLedger", rowValues: upadRowValues })
-        });
-      }
-    })
-    .then(() => {
-      alert("એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
-      if(btn) btn.innerText = "💾 સેવ કરો";
-      document.getElementById(formElementId).reset();
-      if(formType === 'Med') {
-        document.getElementById("editMedId").value = "";
-        document.getElementById("medItemsContainer").innerHTML = "";
-        addMedItemRow();
-        document.getElementById("mSubTotal").value = "₹ 0.00"; document.getElementById("mTax").value = "0";
-        document.getElementById("mGst").value = "₹ 0.00"; document.getElementById("mCst").value = "₹ 0.00";
-        document.getElementById("mTotalBill").value = "₹ 0.00"; document.getElementById("mTotalWords").value = "અંકે રૂપિયા શૂન્ય પૂરા";
-        document.getElementById("mDate").value = new Date().toISOString().split('T')[0];
-      }
-      pendingBillData = null;
+      alert("વેચાણ સફળતાપૂર્વક સેવ થઈ ગયું!");
+      document.getElementById("salesForm").reset();
+      document.getElementById("salesItemsContainer").innerHTML = "";
+      addSalesItemRow();
       fetchData();
       switchTab('Dash');
-    })
-    .catch(err => {
-      if(err) alert("ભૂલ: " + err);
-      if(btn) btn.innerText = "💾 સેવ કરો";
-      pendingBillData = null;
-    });
+    }).catch(err => alert("ભૂલ: " + err));
   }
 
   function submitUpad(e) {
@@ -1826,7 +1580,7 @@
         switchTab('Dash');
       })
       .catch(err => {
-        alert("ભૂल: " + err);
+        alert("ભૂલ: " + err);
         btn.innerText = "💾 સેવ કરો";
       });
     });
@@ -1838,34 +1592,6 @@
     updateTableActionBar(tabName);
   }
 
-  function updateTableActionBar(tabName) {
-    let checkboxes = document.querySelectorAll('.row-select-' + tabName + ':checked');
-    let actionBar = document.getElementById('actionBar' + tabName);
-    if(!actionBar) return;
-
-    let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : tabName === 'Trac' ? 'Tractor_Expense' : 'Upad_Ledger';
-
-    if(checkboxes.length > 0) {
-      actionBar.style.display = 'flex';
-      if(checkboxes.length === 1) {
-        let singleId = checkboxes[0].value;
-        actionBar.innerHTML = `
-          <span style="font-size:12px; font-weight:bold; margin-right:5px;">1 સિલેક્ટ કરેલ:</span>
-          <button class="btn-edit" onclick="editSingleRecord('${sheetKey}', '${singleId}')">✏️ એડિટ</button>
-          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ ડિલીટ</button>
-        `;
-      } else {
-        actionBar.innerHTML = `
-          <span style="font-size:12px; font-weight:bold; margin-right:5px;">${checkboxes.length} સિલેક્ટ કરેલ (Warning):</span>
-          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ પસંદ કરેલ ડિલીટ કરો</button>
-        `;
-      }
-    } else {
-      actionBar.style.display = 'none';
-      actionBar.innerHTML = "";
-    }
-  }
-
   function askMpinForDeleteSelected(sheetKey, tabName) {
     let checkedBoxes = document.querySelectorAll('.row-select-' + tabName + ':checked');
     if(checkedBoxes.length === 0) return alert("કૃપા કરીને ડિલીટ કરવા માટે ઓછામાં ઓછી એક એન્ટ્રી સિલેક્ટ કરો!");
@@ -1873,7 +1599,7 @@
     let idsToDelete = Array.from(checkedBoxes).map(cb => cb.value);
 
     askMpinAndExecute(() => {
-      if(!confirm("⚠️ સાવધાન: શું તમે ખરેખર પસંદ કરેલી " + idsToDelete.length + " એન્ટ્રીઓ ડિલીટ કરવા માંગો છો? આ ક્રિયા પાછી નહીં ખેંચી શકાય!")) return;
+      if(!confirm("⚠️ સાવધાન: શું તમે ખરેખર પસંદ કરેલી " + idsToDelete.length + " એન્ટ્રીઓ ડિલીટ કરવા માંગો છો?")) return;
       
       let promises = idsToDelete.map(id => {
         return fetch(SCRIPT_URL, {

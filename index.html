@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Latest Apps Script Web URL Configured
+  Updated: Correct Category Filter for Orange Box Balance in Sales, Med, and Fert
 -->
 <!DOCTYPE html>
 <html>
@@ -103,6 +103,11 @@
   </style>
 </head>
 <body>
+
+<!-- ➔ Last Updated Timestamp: 2026-10-26 23:55:00 IST -->
+<div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
+  📅 તારીખ: 26/10/2026 | ⏰ સમય: 23:55 IST
+</div>
 
 <div class="header-bar">
   <h2 style="margin:0; font-size: 16px;">🌾 J K Rao Farms (POS Billing)</h2>
@@ -599,7 +604,6 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  // ➔ Updated with your new Apps Script Web URL
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw_IapL5AnHLBXuin8x15Z_rQgTyTLA_I5C1iPcXOswxkpF7w5b9ZKDQVkvvYUKLlXW9Q/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
@@ -713,11 +717,23 @@
     }
   }
 
+  // ➔ Fixed Category Balance Logic for Sales, Medicine, and Fertilizer separately
   function getCategoryBalanceVal(sectionType, partnerName) {
     if(!partnerName || partnerName === "NEW") return 0;
     
-    let targetType = sectionType === 'Sales' ? 'વેચાણ બીલ' : sectionType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
-    let altType = sectionType === 'Sales' ? 'વેચાણ બિલ જમા' : sectionType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
+    let targetType = '';
+    let altType = '';
+    
+    if(sectionType === 'Sales') {
+      targetType = 'વેચાણ બીલ';
+      altType = 'વેચાણ બિલ જમા';
+    } else if(sectionType === 'Med') {
+      targetType = 'દવા ખરીદી માટે';
+      altType = 'દવા બિલ જમા';
+    } else if(sectionType === 'Fert') {
+      targetType = 'ખાતર ખરીદી માટે';
+      altType = 'ખાતર બિલ જમા';
+    }
     
     let dateId = sectionType === 'Sales' ? 'sDate' : sectionType === 'Med' ? 'mDate' : 'fDate';
     let dateVal = document.getElementById(dateId) ? document.getElementById(dateId).value : new Date().toISOString().split('T')[0];
@@ -733,7 +749,7 @@
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
 
         if(name === partnerName && rYear === targetYear) {
-          if(type === targetType || type === altType || type.includes("વેચાણ") || type.includes("બિલ") || type.includes("ખરીદી")) {
+          if(type === targetType || type === altType) {
             let deb = parseFloat(r["ઉપાડ (Debit)"] || r["ઉપાડ"] || r["Debit"] || 0);
             let cred = parseFloat(r["જમા (Credit)"] || r["જમા"] || r["Credit"] || 0);
             totalDebit += deb;
@@ -1620,7 +1636,6 @@
     triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm');
   }
 
-  // ➔ Fully corrected trigger function: Displays Orange Box Category Balance (currentBal) instead of item farmerShareTotal
   function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId) {
     let partnerName = (formType === 'Sales') ? document.getElementById("sBhagiya").value : billRow[4];
     let billTotal = 0;
@@ -1685,7 +1700,7 @@
         let upadEntryType = formType === 'Sales' ? 'વેચાણ બિલ જમા' : formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
         
         let debit = 0;
-        let credit = currentBal; // ➔ Crediting the Orange box balance amount
+        let credit = currentBal; 
         let status = "જમા";
         let closeYear = "N";
         let totalOutstanding = 0;

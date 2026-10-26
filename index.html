@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Fertilizer & Medicine Delete Action Fix (Deletes both Items and Bill simultaneously)
+  Updated: Modal Message now displays Orange Box Category Balance instead of Farmer Share
 -->
 <!DOCTYPE html>
 <html>
@@ -566,6 +566,7 @@
     
     <div class="form-group" style="text-align:left;">
       <label><b>ઉપાડમાં જમા કરવું છે?:</b></label>
+      <!-- ➔ Initial value "ના (માત્ર બિલ સેવ કરો)" with Violet Color -->
       <select id="upadChoiceSelect" style="font-weight:bold; font-size:14px; background:#f4ecf7; color:#8e44ad; border: 2px solid #8e44ad;">
         <option value="no">ના (માત્ર બિલ સેવ કરો)</option>
         <option value="yes">હા (જમા લો)</option>
@@ -1471,7 +1472,7 @@
           document.getElementById("sStatus").value = found["બીલની સ્થિતિ"] || "રોકડા / જમા";
           document.getElementById("sHastak").value = found["હસ્તે"] || "";
           document.getElementById("sBLidha").value = found["ભાગિયાએ લીધા?"] || "No";
-          document.getElementById("editEntryId").value = entryId;
+          document.getElementById("editEntryId").value =entryId;
           document.getElementById("btnSales").innerText = "અપડેટ કરો";
           document.getElementById("salesItemsContainer").innerHTML = "";
           addSalesItemRow(found["પાઉચ / નંગ"] || 0, found["કુલ વજન (કિલો)"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
@@ -1506,7 +1507,6 @@
     });
   }
 
-  // --- SUBMIT BILL FORMS (Sales, Med, Fert) ---
   function submitSalesForm(e) {
     e.preventDefault();
     let date = v("sDate");
@@ -1620,17 +1620,16 @@
     triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm');
   }
 
-  // ➔ Updated trigger function with 0 balance check for Sales, Med, and Fert
   function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId) {
     let partnerName = (formType === 'Sales') ? document.getElementById("sBhagiya").value : billRow[4];
     let farmerShareTotal = 0;
 
     if(formType === 'Sales') {
-      itemRows.forEach(r => { farmerShareTotal += parseFloat(r[13]) || 0; }); // N column (ખેડૂ રકમ)
+      itemRows.forEach(r => { farmerShareTotal += parseFloat(r[13]) || 0; });
     } else if(formType === 'Med') {
-      itemRows.forEach(r => { farmerShareTotal += parseFloat(r[16]) || 0; }); // Q column (ખેડૂ રકમ)
+      itemRows.forEach(r => { farmerShareTotal += parseFloat(r[16]) || 0; });
     } else if(formType === 'Fert') {
-      itemRows.forEach(r => { farmerShareTotal += parseFloat(r[15]) || 0; }); // P column (ખેડૂ રકમ)
+      itemRows.forEach(r => { farmerShareTotal += parseFloat(r[15]) || 0; });
     }
 
     let billTotal = 0;
@@ -1643,7 +1642,6 @@
     let currentBal = getCategoryBalanceVal(formType, partnerName);
     let categoryText = formType === 'Sales' ? 'વેચાણ બીલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
 
-    // ➔ Logic: Show modal ONLY if currentBal > 0
     if (currentBal > 0) {
       pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, farmerShareTotal };
       let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (ખેડૂ ઉપાડ : ₹ " + farmerShareTotal.toFixed(2) + ") શું આ બિલ ઉપાડમાં જમા કરવું છે?";
@@ -1696,7 +1694,7 @@
         let upadEntryType = formType === 'Sales' ? 'વેચાણ બિલ જમા' : formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
         
         let debit = 0;
-        let credit = farmerShareTotal; // ➔ ખેડૂ રકમ જેટલી રકમ જમા થશે
+        let credit = farmerShareTotal; 
         let status = "જમા";
         let closeYear = "N";
         let totalOutstanding = 0;
@@ -1845,7 +1843,6 @@
         let deleteAction = "deleteRecord";
         let payload = { action: deleteAction, entryId: id, sheetName: sheetKey };
 
-        // ➔ Fix for Fertilizer & Medicine: Delete both Items and Bill simultaneously
         if (sheetKey === 'Fertilizer_Items') {
           Promise.all([
             fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "deleteRecord", entryId: id, sheetName: "Fertilizer_Items" }) }),

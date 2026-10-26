@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Modal message strictly showing Orange Box Category Balance (currentBal)
+  Updated: Latest Apps Script Web URL Configured
 -->
 <!DOCTYPE html>
 <html>
@@ -599,6 +599,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
+  // ➔ Updated with your new Apps Script Web URL
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw_IapL5AnHLBXuin8x15Z_rQgTyTLA_I5C1iPcXOswxkpF7w5b9ZKDQVkvvYUKLlXW9Q/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
@@ -1619,7 +1620,7 @@
     triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm');
   }
 
-  // ➔ Updated trigger function: Displays Orange Box Category Balance (currentBal) in the Modal message
+  // ➔ Fully corrected trigger function: Displays Orange Box Category Balance (currentBal) instead of item farmerShareTotal
   function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId) {
     let partnerName = (formType === 'Sales') ? document.getElementById("sBhagiya").value : billRow[4];
     let billTotal = 0;
@@ -1633,13 +1634,13 @@
     let categoryText = formType === 'Sales' ? 'વેચાણ બીલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
 
     if (currentBal > 0) {
-      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName };
+      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal };
       let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (ખેડૂ ઉપાડ : ₹ " + currentBal.toFixed(2) + ") શું આ બિલ ઉપાડમાં જમા કરવું છે?";
       document.getElementById("upadConfirmMsg").innerText = msg;
       document.getElementById("upadChoiceSelect").value = "no";
       document.getElementById("modalUpadConfirm").style.display = "block";
     } else {
-      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName };
+      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal };
       document.getElementById("upadChoiceSelect").value = "no";
       confirmUpadActionModal();
     }
@@ -1649,7 +1650,7 @@
     document.getElementById("modalUpadConfirm").style.display = "none";
     if(!pendingBillData) return;
 
-    let { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName } = pendingBillData;
+    let { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal } = pendingBillData;
     let choice = document.getElementById("upadChoiceSelect").value;
     let wantUpad = (choice === "yes");
 
@@ -1684,7 +1685,7 @@
         let upadEntryType = formType === 'Sales' ? 'વેચાણ બિલ જમા' : formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
         
         let debit = 0;
-        let credit = billTotal; 
+        let credit = currentBal; // ➔ Crediting the Orange box balance amount
         let status = "જમા";
         let closeYear = "N";
         let totalOutstanding = 0;

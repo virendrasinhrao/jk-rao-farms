@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Modal Message now displays Orange Box Category Balance instead of Farmer Share
+  Updated: Modal message strictly showing Orange Box Category Balance (currentBal)
 -->
 <!DOCTYPE html>
 <html>
@@ -566,7 +566,6 @@
     
     <div class="form-group" style="text-align:left;">
       <label><b>ઉપાડમાં જમા કરવું છે?:</b></label>
-      <!-- ➔ Initial value "ના (માત્ર બિલ સેવ કરો)" with Violet Color -->
       <select id="upadChoiceSelect" style="font-weight:bold; font-size:14px; background:#f4ecf7; color:#8e44ad; border: 2px solid #8e44ad;">
         <option value="no">ના (માત્ર બિલ સેવ કરો)</option>
         <option value="yes">હા (જમા લો)</option>
@@ -1472,7 +1471,7 @@
           document.getElementById("sStatus").value = found["બીલની સ્થિતિ"] || "રોકડા / જમા";
           document.getElementById("sHastak").value = found["હસ્તે"] || "";
           document.getElementById("sBLidha").value = found["ભાગિયાએ લીધા?"] || "No";
-          document.getElementById("editEntryId").value =entryId;
+          document.getElementById("editEntryId").value = entryId;
           document.getElementById("btnSales").innerText = "અપડેટ કરો";
           document.getElementById("salesItemsContainer").innerHTML = "";
           addSalesItemRow(found["પાઉચ / નંગ"] || 0, found["કુલ વજન (કિલો)"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
@@ -1620,18 +1619,9 @@
     triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm');
   }
 
+  // ➔ Updated trigger function: Displays Orange Box Category Balance (currentBal) in the Modal message
   function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId) {
     let partnerName = (formType === 'Sales') ? document.getElementById("sBhagiya").value : billRow[4];
-    let farmerShareTotal = 0;
-
-    if(formType === 'Sales') {
-      itemRows.forEach(r => { farmerShareTotal += parseFloat(r[13]) || 0; });
-    } else if(formType === 'Med') {
-      itemRows.forEach(r => { farmerShareTotal += parseFloat(r[16]) || 0; });
-    } else if(formType === 'Fert') {
-      itemRows.forEach(r => { farmerShareTotal += parseFloat(r[15]) || 0; });
-    }
-
     let billTotal = 0;
     if(formType === 'Sales') {
       itemRows.forEach(r => { billTotal += parseFloat(r[11]) || 0; });
@@ -1643,13 +1633,13 @@
     let categoryText = formType === 'Sales' ? 'વેચાણ બીલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
 
     if (currentBal > 0) {
-      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, farmerShareTotal };
-      let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (ખેડૂ ઉપાડ : ₹ " + farmerShareTotal.toFixed(2) + ") શું આ બિલ ઉપાડમાં જમા કરવું છે?";
+      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName };
+      let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (ખેડૂ ઉપાડ : ₹ " + currentBal.toFixed(2) + ") શું આ બિલ ઉપાડમાં જમા કરવું છે?";
       document.getElementById("upadConfirmMsg").innerText = msg;
       document.getElementById("upadChoiceSelect").value = "no";
       document.getElementById("modalUpadConfirm").style.display = "block";
     } else {
-      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, farmerShareTotal };
+      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName };
       document.getElementById("upadChoiceSelect").value = "no";
       confirmUpadActionModal();
     }
@@ -1659,7 +1649,7 @@
     document.getElementById("modalUpadConfirm").style.display = "none";
     if(!pendingBillData) return;
 
-    let { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, farmerShareTotal } = pendingBillData;
+    let { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName } = pendingBillData;
     let choice = document.getElementById("upadChoiceSelect").value;
     let wantUpad = (choice === "yes");
 
@@ -1694,7 +1684,7 @@
         let upadEntryType = formType === 'Sales' ? 'વેચાણ બિલ જમા' : formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
         
         let debit = 0;
-        let credit = farmerShareTotal; 
+        let credit = billTotal; 
         let status = "જમા";
         let closeYear = "N";
         let totalOutstanding = 0;

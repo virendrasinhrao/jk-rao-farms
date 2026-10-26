@@ -1,8 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated Date & Time: 24 October 2026, 01:38 AM
-  Feature: Upad Table Action Bar with Both Edit and Delete Buttons for Single Selection
+  Updated: Column Alignment Fixed (Sales A-R Exact Order)
 -->
 <!DOCTYPE html>
 <html>
@@ -600,7 +599,6 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  // Updated Date & Time: 24 October 2026, 01:38 AM
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyx_Lo_lwKf4MKgs9q-BxXUesgxQstAcUK6YIRG51SJwB986P9BeO6JunYIPAxwBJjyUw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
@@ -1485,7 +1483,7 @@
     });
   }
 
-  // --- SUBMIT BILL FORMS (Fixed with proper response validation) ---
+  // --- SUBMIT SALES FORM (કૉલમ A થી R નો એકદમ સાચો અને ચોક્કસ ક્રમ) ---
   function submitSalesForm(e) {
     e.preventDefault();
     let date = v("sDate");
@@ -1500,7 +1498,6 @@
 
     let rows = document.querySelectorAll("#salesItemsContainer .item-row");
     let itemRows = [];
-    let totalBillAmt = 0;
 
     rows.forEach((r, index) => {
       let pak = r.querySelector('.pakList').value;
@@ -1512,13 +1509,57 @@
       let kShare = r.querySelector('.sKShare').value || 0;
       let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
       
-      totalBillAmt += total;
       let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-      itemRows.push([year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha]);
+      
+      // કૉલમ A થી R નો ૧૮ ફીલ્ડ્સવાળો ચોક્કસ ક્રમ:
+      itemRows.push([
+        year,       // A
+        rId,        // B
+        date,       // C
+        billNo,     // D
+        bhagiya,    // E
+        vepari,     // F
+        pak,        // G
+        pauch,      // H
+        weight,     // I
+        bhav20,     // J
+        bhav1,      // K
+        total,      // L
+        kShare,     // M
+        kRakam,     // N
+        status,     // O
+        hastak,     // P
+        bLidha,     // Q
+        ""          // R (બિલનો ફોટો)
+      ]);
     });
 
-    let mainBillRow = [year, entryId, date, billNo, bhagiya, vepari, totalBillAmt, status, hastak, bLidha, ""];
-    triggerUpadConfirmationModal('Sales', mainBillRow, itemRows, 'btnSales', 'salesForm');
+    let btn = document.getElementById("btnSales");
+    btn.innerText = "સેવ થઈ રહ્યું છે...";
+
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "saveSales", itemRows: itemRows, editEntryId: document.getElementById('editEntryId').value })
+    })
+    .then(res => res.json())
+    .then(res => {
+      if(!res || res.status === "error") {
+        alert("❌ નિષ્ફળ (Failed): ડેટા ગૂગલ શીટમાં સેવ થયો નથી! (Error: " + (res ? res.message : "Unknown") + ")");
+        btn.innerText = "💾 સેવ કરો";
+        return;
+      }
+      alert("✅ વેચાણ સફળતાપૂર્વક સેવ થઈ ગયું!");
+      btn.innerText = "💾 સેવ કરો";
+      document.getElementById("salesForm").reset();
+      document.getElementById("salesItemsContainer").innerHTML = "";
+      addSalesItemRow();
+      fetchData();
+      switchTab('Dash');
+    })
+    .catch(err => {
+      alert("❌ નિષ્ફળ (Failed): સર્વર સાથે કનેક્શન થઈ શક્યું નથી! ભૂલ: " + err);
+      btn.innerText = "💾 સેવ કરો";
+    });
   }
 
   function submitMedForm(e) {
@@ -1642,7 +1683,6 @@
     })
     .then(res => res.json())
     .then(res => {
-      // ➔ નિષ્ફળતા ચકાસણી: જો સર્વર પરથી એરર આવે તો અહી જ અટકી જશે
       if(!res || res.status === "error") {
         let errText = res && res.message ? res.message : "અજ્ઞાત ભૂલ";
         alert("❌ નિષ્ફળ (Failed): ડેટા ગૂગલ શીટમાં સેવ થયો નથી! (Error: " + errText + ")");
@@ -1682,7 +1722,6 @@
       }
     })
     .then(() => {
-      // જો ઉપર કોઈ પણ ભૂલ વગર સફળ થાય તો જ આ મેસેજ આવશે
       alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
       if(btn) btn.innerText = "💾 સેવ કરો";
       document.getElementById(formElementId).reset();

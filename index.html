@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Column Alignment Fixed (Sales A-R Exact Order)
+  Updated: Sales Bill Upad Modal Restored & Category Balance Auto-Deduct Fixed
 -->
 <!DOCTYPE html>
 <html>
@@ -1483,7 +1483,7 @@
     });
   }
 
-  // --- SUBMIT SALES FORM (કૉલમ A થી R નો એકદમ સાચો અને ચોક્કસ ક્રમ) ---
+  // --- SUBMIT SALES FORM (Modal & Balance Deduction Fixed) ---
   function submitSalesForm(e) {
     e.preventDefault();
     let date = v("sDate");
@@ -1511,55 +1511,13 @@
       
       let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
       
-      // કૉલમ A થી R નો ૧૮ ફીલ્ડ્સવાળો ચોક્કસ ક્રમ:
       itemRows.push([
-        year,       // A
-        rId,        // B
-        date,       // C
-        billNo,     // D
-        bhagiya,    // E
-        vepari,     // F
-        pak,        // G
-        pauch,      // H
-        weight,     // I
-        bhav20,     // J
-        bhav1,      // K
-        total,      // L
-        kShare,     // M
-        kRakam,     // N
-        status,     // O
-        hastak,     // P
-        bLidha,     // Q
-        ""          // R (બિલનો ફોટો)
+        year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha, ""
       ]);
     });
 
-    let btn = document.getElementById("btnSales");
-    btn.innerText = "સેવ થઈ રહ્યું છે...";
-
-    fetch(SCRIPT_URL, {
-      method: "POST",
-      body: JSON.stringify({ action: "saveSales", itemRows: itemRows, editEntryId: document.getElementById('editEntryId').value })
-    })
-    .then(res => res.json())
-    .then(res => {
-      if(!res || res.status === "error") {
-        alert("❌ નિષ્ફળ (Failed): ડેટા ગૂગલ શીટમાં સેવ થયો નથી! (Error: " + (res ? res.message : "Unknown") + ")");
-        btn.innerText = "💾 સેવ કરો";
-        return;
-      }
-      alert("✅ વેચાણ સફળતાપૂર્વક સેવ થઈ ગયું!");
-      btn.innerText = "💾 સેવ કરો";
-      document.getElementById("salesForm").reset();
-      document.getElementById("salesItemsContainer").innerHTML = "";
-      addSalesItemRow();
-      fetchData();
-      switchTab('Dash');
-    })
-    .catch(err => {
-      alert("❌ નિષ્ફળ (Failed): સર્વર સાથે કનેક્શન થઈ શક્યું નથી! ભૂલ: " + err);
-      btn.innerText = "💾 સેવ કરો";
-    });
+    // મોડલ ટ్రిગર કરો જેથી 'હા / ના' પૂછી શકાય
+    triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm');
   }
 
   function submitMedForm(e) {
@@ -1641,20 +1599,20 @@
   }
 
   function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId) {
-    let partnerName = billRow[4];
-    let billTotal = (formType === 'Sales') ? itemRows.reduce((sum, r) => sum + (parseFloat(r[11]) || 0), 0) : parseFloat(billRow[10]) || 0;
+    let partnerName = (formType === 'Sales') ? document.getElementById("sBhagiya").value : billRow[4];
+    let billTotal = 0;
+    if(formType === 'Sales') {
+      itemRows.forEach(r => { billTotal += parseFloat(r[11]) || 0; });
+    } else {
+      billTotal = parseFloat(billRow[10]) || 0;
+    }
 
     let currentBal = getCategoryBalanceVal(formType, partnerName);
     let categoryText = formType === 'Sales' ? 'વેચાણ બીલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
 
-    let msg = "";
-    if(currentBal < billTotal) {
-      msg = "⚠️ " + categoryText + " માટે ઉપાડ બેલેન્સ ઓછું છે (₹ " + currentBal.toFixed(2) + ").";
-    } else {
-      msg = "📋 આ બિલની રકમ ₹ " + billTotal.toFixed(2) + " છે.";
-    }
+    let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (હાલનું બેલેન્સ: ₹ " + currentBal.toFixed(2) + ")";
 
-    pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText };
+    pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName };
     document.getElementById("upadConfirmMsg").innerText = msg + " શું આ બિલ ઉપાડમાં જમા કરવું છે?";
     document.getElementById("upadChoiceSelect").value = "yes";
     document.getElementById("modalUpadConfirm").style.display = "block";
@@ -1664,9 +1622,7 @@
     document.getElementById("modalUpadConfirm").style.display = "none";
     if(!pendingBillData) return;
 
-    let { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText } = pendingBillData;
-    let partnerName = billRow[4];
-    let upadEntryType = formType === 'Sales' ? 'વેચાણ બિલ જમા' : formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
+    let { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName } = pendingBillData;
     let choice = document.getElementById("upadChoiceSelect").value;
     let wantUpad = (choice === "yes");
 
@@ -1674,7 +1630,7 @@
     if(btn) btn.innerText = "સેવ થઈ રહ્યું છે...";
 
     let actionName = formType === 'Sales' ? 'saveSales' : formType === 'Med' ? 'savePesticideBill' : 'saveFertilizerBill';
-    let payload = formType === 'Sales' ? { action: actionName, rowValues: billRow, editEntryId: document.getElementById('editEntryId').value } :
+    let payload = formType === 'Sales' ? { action: actionName, itemRows: itemRows, editEntryId: document.getElementById('editEntryId').value } :
                         { action: actionName, billRow: billRow, itemRows: itemRows, editEntryId: document.getElementById(formType === 'Med' ? 'editMedId' : 'editFertId').value };
 
     fetch(SCRIPT_URL, {
@@ -1691,14 +1647,18 @@
       }
 
       if(wantUpad) {
-        let date = billRow[2];
+        let date = formType === 'Sales' ? document.getElementById("sDate").value : billRow[2];
         let year = getYear(date);
         let rand = Math.floor(1000 + Math.random() * 9000);
         let entryId = "UP-" + date.replace(/-/g, '') + "-" + rand;
-        let provider = billRow[5] || "વેપારી";
+        let provider = formType === 'Sales' ? document.getElementById("sVepari").value : (billRow[5] || "વેપારી");
+        let billNo = formType === 'Sales' ? (document.getElementById("sBill").value || "N/A") : (billRow[3] || "-");
+        
+        let upadEntryType = formType === 'Sales' ? 'વેચાણ બિલ જમા' : formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
+        
+        // ➔ અહીં જમા (Credit) તરીકે એન્ટ્રી થશે, જેથી બેલેન્સમાંથી રકમ કપાઈ જશે (Debit - Credit)
         let debit = 0;
-        let credit = billTotal;
-        let billNo = billRow[3] || "-";
+        let credit = billTotal; 
         let status = "જમા";
         let closeYear = "N";
         let totalOutstanding = 0;

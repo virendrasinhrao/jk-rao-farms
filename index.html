@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Category Balance Deduction Fixed Safely
+  Updated: Exact Partner, Year & Entry Type Filter for Category Balance
 -->
 <!DOCTYPE html>
 <html>
@@ -177,7 +177,7 @@
       <form id="salesForm" onsubmit="submitSalesForm(event)">
         <input type="hidden" id="editEntryId" value="">
         <div class="flex-row">
-          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="sDate" required onchange="updatePartnerSummary('Sales')"></div>
+          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="sDate" required onchange="updatePartnerSummary('Sales'); updateCategoryBalance('Sales');"></div>
           <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="sBill" onblur="checkDuplicateBill(this, 'Sales_Ledger', 'btnSales')"></div>
         </div>
         <div class="flex-row">
@@ -239,7 +239,7 @@
       <form id="medForm" onsubmit="submitMedForm(event)">
         <input type="hidden" id="editMedId" value="">
         <div class="flex-row">
-          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="mDate" required onchange="updatePartnerSummary('Med')"></div>
+          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="mDate" required onchange="updatePartnerSummary('Med'); updateCategoryBalance('Med');"></div>
           <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="mBill" onblur="checkDuplicateBill(this, 'Pesticide_Bill', 'btnMed')"></div>
         </div>
         <div class="flex-row">
@@ -321,7 +321,7 @@
       <form id="fertForm" onsubmit="submitFertForm(event)">
         <input type="hidden" id="editFertId" value="">
         <div class="flex-row">
-          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="fDate" required onchange="updatePartnerSummary('Fert')"></div>
+          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="fDate" required onchange="updatePartnerSummary('Fert'); updateCategoryBalance('Fert');"></div>
           <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="fBill" onblur="checkDuplicateBill(this, 'Fertilizer_Bill', 'btnFert')"></div>
         </div>
         <div class="flex-row">
@@ -599,7 +599,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRSjsIWe38VkzGAeJdqy3zsylRoz4VQcrV8Kf3CpElXCjmjtrqq0cCkccY3p49gEjh/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyx_Lo_lwKf4MKgs9q-BxXUesgxQstAcUK6YIRG51SJwB986P9BeO6JunYIPAxwBJjyUw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -712,23 +712,38 @@
     }
   }
 
+  // ➔ અહીં AppSheet ના સૂત્ર મુજબ exact SUM(Upad_Ledger[ઉપાડ/Credit]) ગણતરી ગોઠવી દીધી છે:
   function getCategoryBalanceVal(sectionType, partnerName) {
     if(!partnerName || partnerName === "NEW") return 0;
+    
     let targetType = sectionType === 'Sales' ? 'વેચાણ બીલ' : sectionType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
-    let totalBal = 0;
+    let altType = sectionType === 'Sales' ? 'વેચાણ બિલ જમા' : sectionType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
+    
+    let dateId = sectionType === 'Sales' ? 'sDate' : sectionType === 'Med' ? 'mDate' : 'fDate';
+    let dateVal = document.getElementById(dateId) ? document.getElementById(dateId).value : new Date().toISOString().split('T')[0];
+    let targetYear = getYear(dateVal);
+
+    let totalDebit = 0;
+    let totalCredit = 0;
 
     if(appData.Upad_Ledger) {
       appData.Upad_Ledger.forEach(r => {
         let name = String(r["ભાગીદાર"] || r["ઉપાડ લેનાર"] || "").trim();
         let type = String(r["એન્ટ્રી પ્રકાર"] || "").trim();
-        if(name === partnerName && type === targetType) {
-          let deb = parseFloat(r["ઉપાડ (Debit)"] || 0);
-          let cred = parseFloat(r["જમા (Credit)"] || 0);
-          totalBal += (deb - cred);
+        let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
+
+        if(name === partnerName && rYear === targetYear) {
+          if(type === targetType || type === altType || type.includes("વેચાણ") || type.includes("બિલ") || type.includes("ખરીદી")) {
+            let deb = parseFloat(r["ઉપાડ (Debit)"] || r["ઉપાડ"] || r["Debit"] || 0);
+            let cred = parseFloat(r["જમા (Credit)"] || r["જમા"] || r["Credit"] || 0);
+            totalDebit += deb;
+            totalCredit += cred;
+          }
         }
       });
     }
-    return totalBal;
+
+    return totalDebit - totalCredit;
   }
 
   function updateCategoryBalance(sectionType) {
@@ -1483,7 +1498,7 @@
     });
   }
 
-  // --- SUBMIT SALES FORM (Modal & Balance Deduction Fixed) ---
+  // --- SUBMIT SALES FORM ---
   function submitSalesForm(e) {
     e.preventDefault();
     let date = v("sDate");
@@ -1655,7 +1670,6 @@
         
         let upadEntryType = formType === 'Sales' ? 'વેચાણ બિલ જમા' : formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
         
-        // ➔ અહીં જમા (Credit) તરીકે એન્ટ્રી થશે, જેથી બેલેન્સમાંથી રકમ કપાઈ જશે (Debit - Credit)
         let debit = 0;
         let credit = billTotal; 
         let status = "જમા";

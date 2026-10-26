@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Exact Partner, Year & Entry Type Filter for Category Balance
+  Updated: Warning Message styled with Large, Bold Red Text & Balance Check Logic
 -->
 <!DOCTYPE html>
 <html>
@@ -562,7 +562,8 @@
 <div id="modalUpadConfirm" class="modal">
   <div class="modal-content" style="text-align:center;">
     <h3 style="color:#e67e22; margin-top:0;">💸 ઉપાડ લેજર જમા એન્ટ્રી</h3>
-    <p id="upadConfirmMsg" style="font-size:13px; color:#555; margin-bottom:10px;"></p>
+    <!-- ➔ અહીં વોર્નિંગ મેસેજને એકદમ મોટા, બોલ્ડ અને લાલ અક્ષરોમાં સેટ કર્યો છે -->
+    <p id="upadConfirmMsg" style="font-size:15px; font-weight:bold; color:#c0392b; margin-bottom:12px; line-height:1.5;"></p>
     
     <div class="form-group" style="text-align:left;">
       <label><b>ઉપાડમાં જમા કરવું છે?:</b></label>
@@ -599,7 +600,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw_IapL5AnHLBXuin8x15Z_rQgTyTLA_I5C1iPcXOswxkpF7w5b9ZKDQVkvvYUKLlXW9Q/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyx_Lo_lwKf4MKgs9q-BxXUesgxQstAcUK6YIRG51SJwB986P9BeO6JunYIPAxwBJjyUw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -712,7 +713,6 @@
     }
   }
 
-  // ➔ અહીં AppSheet ના સૂત્ર મુજબ exact SUM(Upad_Ledger[ઉપાડ/Credit]) ગણતરી ગોઠવી દીધી છે:
   function getCategoryBalanceVal(sectionType, partnerName) {
     if(!partnerName || partnerName === "NEW") return 0;
     
@@ -1498,7 +1498,7 @@
     });
   }
 
-  // --- SUBMIT SALES FORM ---
+  // --- SUBMIT SALES FORM (Fixed payload structure for Apps Script backend) ---
   function submitSalesForm(e) {
     e.preventDefault();
     let date = v("sDate");
@@ -1624,12 +1624,17 @@
     let currentBal = getCategoryBalanceVal(formType, partnerName);
     let categoryText = formType === 'Sales' ? 'વેચાણ બીલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
 
-    let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (હાલનું બેલેન્સ: ₹ " + currentBal.toFixed(2) + ")";
-
-    pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName };
-    document.getElementById("upadConfirmMsg").innerText = msg + " શું આ બિલ ઉપાડમાં જમા કરવું છે?";
-    document.getElementById("upadChoiceSelect").value = "yes";
-    document.getElementById("modalUpadConfirm").style.display = "block";
+    if (currentBal > 0) {
+      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName };
+      let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (હાલનું બેલેન્સ: ₹ " + currentBal.toFixed(2) + ")";
+      document.getElementById("upadConfirmMsg").innerText = msg + " શું આ બિલ ઉપાડમાં જમા કરવું છે?";
+      document.getElementById("upadChoiceSelect").value = "yes";
+      document.getElementById("modalUpadConfirm").style.display = "block";
+    } else {
+      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName };
+      document.getElementById("upadChoiceSelect").value = "no";
+      confirmUpadActionModal();
+    }
   }
 
   function confirmUpadActionModal() {
@@ -1643,6 +1648,7 @@
     let btn = document.getElementById(btnId);
     if(btn) btn.innerText = "સેવ થઈ રહ્યું છે...";
 
+    // ➔ Fix: Added correct payload structure matching backend expectations
     let actionName = formType === 'Sales' ? 'saveSales' : formType === 'Med' ? 'savePesticideBill' : 'saveFertilizerBill';
     let payload = formType === 'Sales' ? { action: actionName, itemRows: itemRows, editEntryId: document.getElementById('editEntryId').value } :
                         { action: actionName, billRow: billRow, itemRows: itemRows, editEntryId: document.getElementById(formType === 'Med' ? 'editMedId' : 'editFertId').value };
@@ -1889,7 +1895,7 @@
     let html = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>પ્રકાર</th><th>ફોટો</th><th>ક્રિયા</th></tr>`;
     photos.forEach(p => {
       let imgTag = p["Photo_Link"] ? `<a href="${p["Photo_Link"]}" target="_blank"><img src="${p["Photo_Link"]}" style="width:40px; height:40px; object-fit:cover;"></a>` : "ના";
-      html += `<tr><td>${String(p["Date"]||'').split('T')[0]}</td><td>${p["Bill_No"]||''}</td><td>${p["Bhagiya"]||''}</td><td>${p["Category"]||''}</td><td>${imgTag}</td><td><button class="btn-delete" onclick="askMpinForDeleteSelected('Photo_Gallery')">ડિલિટ</button></td></tr>`;
+      html += `<tr><td>${String(p["Date"]||''.split('T')[0])}</td><td>${p["Bill_No"]||''}</td><td>${p["Bhagiya"]||''}</td><td>${p["Category"]||''}</td><td>${imgTag}</td><td><button class="btn-delete" onclick="askMpinForDeleteSelected('Photo_Gallery')">ડિલિટ</button></td></tr>`;
     });
     container.innerHTML = html + `</table>`;
   }

@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Warning Message styled with Large, Bold Red Text & Balance Check Logic
+  Updated: Modal Message Text Updated, Violet Dropdown Default & Dynamic Section Orange Box Titles Fixed
 -->
 <!DOCTYPE html>
 <html>
@@ -169,7 +169,7 @@
           <div class="sum-amount" id="bannerValSales">₹ 0.00</div>
         </div>
         <div id="balBoxSales" class="category-balance-box" style="display: block;">
-          <h4>વેચાણ બીલ બેલેન્સ</h4>
+          <h4 id="balTitleSales">ખેડૂ વેચાણ, ઉપાડ</h4>
           <div class="bal-val" id="balValSales">₹ 0.00</div>
         </div>
       </div>
@@ -231,7 +231,7 @@
           <div class="sum-amount" id="bannerValMed">₹ 0.00</div>
         </div>
         <div id="balBoxMed" class="category-balance-box" style="display: block;">
-          <h4>દવા ખરીદી બેલેન્સ</h4>
+          <h4 id="balTitleMed">ખેડૂ દવા માટે, ઉપાડ</h4>
           <div class="bal-val" id="balValMed">₹ 0.00</div>
         </div>
       </div>
@@ -313,7 +313,7 @@
           <div class="sum-amount" id="bannerValFert">₹ 0.00</div>
         </div>
         <div id="balBoxFert" class="category-balance-box" style="display: block;">
-          <h4>ખાતર ખરીદી બેલેન્સ</h4>
+          <h4 id="balTitleFert">ખેડૂ ખાતર માટે, ઉપાડ</h4>
           <div class="bal-val" id="balValFert">₹ 0.00</div>
         </div>
       </div>
@@ -558,18 +558,18 @@
   </div>
 </div>
 
-<!-- Custom Confirmation Modal with Select Dropdown (હા / ના / કેન્સલ) -->
+<!-- Custom Confirmation Modal with Select Dropdown -->
 <div id="modalUpadConfirm" class="modal">
   <div class="modal-content" style="text-align:center;">
     <h3 style="color:#e67e22; margin-top:0;">💸 ઉપાડ લેજર જમા એન્ટ્રી</h3>
-    <!-- ➔ અહીં વોર્નિંગ મેસેજને એકદમ મોટા, બોલ્ડ અને લાલ અક્ષરોમાં સેટ કર્યો છે -->
     <p id="upadConfirmMsg" style="font-size:15px; font-weight:bold; color:#c0392b; margin-bottom:12px; line-height:1.5;"></p>
     
     <div class="form-group" style="text-align:left;">
       <label><b>ઉપાડમાં જમા કરવું છે?:</b></label>
-      <select id="upadChoiceSelect" style="font-weight:bold; font-size:14px; background:#e8f8f5; color:#27ae60;">
-        <option value="yes">હા (જમા લો)</option>
+      <!-- ➔ Initial value "ના (માત્ર બિલ સેવ કરો)" with Violet Color -->
+      <select id="upadChoiceSelect" style="font-weight:bold; font-size:14px; background:#f4ecf7; color:#8e44ad; border: 2px solid #8e44ad;">
         <option value="no">ના (માત્ર બિલ સેવ કરો)</option>
+        <option value="yes">હા (જમા લો)</option>
       </select>
     </div>
 
@@ -600,7 +600,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw_IapL5AnHLBXuin8x15Z_rQgTyTLA_I5C1iPcXOswxkpF7w5b9ZKDQVkvvYUKLlXW9Q/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyx_Lo_lwKf4MKgs9q-BxXUesgxQstAcUK6YIRG51SJwB986P9BeO6JunYIPAxwBJjyUw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -750,10 +750,19 @@
     let bhagiyaId = sectionType === 'Sales' ? 'sBhagiya' : sectionType === 'Med' ? 'mBhagiya' : 'fBhagiya';
     let valId = sectionType === 'Sales' ? 'balValSales' : sectionType === 'Med' ? 'balValMed' : 'balValFert';
     let rowId = sectionType === 'Sales' ? 'topBannersRowSales' : sectionType === 'Med' ? 'topBannersRowMed' : 'topBannersRowFert';
+    let titleId = sectionType === 'Sales' ? 'balTitleSales' : sectionType === 'Med' ? 'balTitleMed' : 'balTitleFert';
     
     let selectedBhagiya = document.getElementById(bhagiyaId).value;
     let rowBox = document.getElementById(rowId);
     let valEl = document.getElementById(valId);
+    let titleEl = document.getElementById(titleId);
+
+    // ➔ Dynamic Titles for Orange Boxes
+    if(titleEl) {
+      if(sectionType === 'Sales') titleEl.innerText = "ખેડૂ વેચાણ, ઉપાડ";
+      else if(sectionType === 'Med') titleEl.innerText = "ખેડૂ દવા માટે, ઉપાડ";
+      else if(sectionType === 'Fert') titleEl.innerText = "ખેડૂ ખાતર માટે, ઉપાડ";
+    }
 
     if(!selectedBhagiya || selectedBhagiya === "NEW") {
       if(rowBox) rowBox.style.display = 'none';
@@ -1498,7 +1507,7 @@
     });
   }
 
-  // --- SUBMIT SALES FORM (Fixed payload structure for Apps Script backend) ---
+  // --- SUBMIT SALES FORM ---
   function submitSalesForm(e) {
     e.preventDefault();
     let date = v("sDate");
@@ -1626,9 +1635,10 @@
 
     if (currentBal > 0) {
       pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName };
-      let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (હાલનું બેલેન્સ: ₹ " + currentBal.toFixed(2) + ")";
+      // ➔ Updated Warning Message Format: "📋 આ બિલની કુલ રકમ ₹ 250.00 છે. (ખેડૂ ઉપાડ : ₹ 200.00) શું આ બિલ ઉપાડમાં જમા કરવું છે?"
+      let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (ખેડૂ ઉપાડ : ₹ " + currentBal.toFixed(2) + ")";
       document.getElementById("upadConfirmMsg").innerText = msg + " શું આ બિલ ઉપાડમાં જમા કરવું છે?";
-      document.getElementById("upadChoiceSelect").value = "yes";
+      document.getElementById("upadChoiceSelect").value = "no"; // Default to 'no'
       document.getElementById("modalUpadConfirm").style.display = "block";
     } else {
       pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName };
@@ -1648,7 +1658,6 @@
     let btn = document.getElementById(btnId);
     if(btn) btn.innerText = "સેવ થઈ રહ્યું છે...";
 
-    // ➔ Fix: Added correct payload structure matching backend expectations
     let actionName = formType === 'Sales' ? 'saveSales' : formType === 'Med' ? 'savePesticideBill' : 'saveFertilizerBill';
     let payload = formType === 'Sales' ? { action: actionName, itemRows: itemRows, editEntryId: document.getElementById('editEntryId').value } :
                         { action: actionName, billRow: billRow, itemRows: itemRows, editEntryId: document.getElementById(formType === 'Med' ? 'editMedId' : 'editFertId').value };
@@ -1692,7 +1701,7 @@
           method: "POST",
           body: JSON.stringify({ action: "saveUpadLedger", rowValues: upadRowValues })
         })
-        .then(resUpad => resUpad.json())
+        .then(resUpad => res.json())
         .then(resU => {
           if(!resU || resU.status === "error") {
             alert("⚠️ ચેતવણી: બિલ સેવ થઈ ગયું પણ ઉપાડ જમા કરવામાં ભૂલ આવી: " + (resU ? resU.message : ""));
@@ -1895,7 +1904,7 @@
     let html = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>પ્રકાર</th><th>ફોટો</th><th>ક્રિયા</th></tr>`;
     photos.forEach(p => {
       let imgTag = p["Photo_Link"] ? `<a href="${p["Photo_Link"]}" target="_blank"><img src="${p["Photo_Link"]}" style="width:40px; height:40px; object-fit:cover;"></a>` : "ના";
-      html += `<tr><td>${String(p["Date"]||''.split('T')[0])}</td><td>${p["Bill_No"]||''}</td><td>${p["Bhagiya"]||''}</td><td>${p["Category"]||''}</td><td>${imgTag}</td><td><button class="btn-delete" onclick="askMpinForDeleteSelected('Photo_Gallery')">ડિલિટ</button></td></tr>`;
+      html += `<tr><td>${String(p["Date"]||'').split('T')[0]}</td><td>${p["Bill_No"]||''}</td><td>${p["Bhagiya"]||''}</td><td>${p["Category"]||''}</td><td>${imgTag}</td><td><button class="btn-delete" onclick="askMpinForDeleteSelected('Photo_Gallery')">ડિલિટ</button></td></tr>`;
     });
     container.innerHTML = html + `</table>`;
   }

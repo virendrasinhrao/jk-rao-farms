@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Complete Frontend with Sales Photo Upload & Fixed Parameter Order
+  Updated: Fixed Sales Columns (Status, Hastak, BLidha, Photo) & Duplicate Bill Validation Button Restored
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 27/10/2026 | ⏰ સમય: 00:45 IST
+  📅 તારીખ: 27/10/2026 | ⏰ સમય: 01:00 IST
 </div>
 
 <div class="header-bar">
@@ -603,7 +603,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzzZGwmH03zVhg7HOTo6Xf2g8ulb6PnXhjLBEKBNA_akaajs2-cDCQ9m2vtXaYw_Cfog/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw_IapL5AnHLBXuin8x15Z_rQgTyTLA_I5C1iPcXOswxkpF7w5b9ZKDQVkvvYUKLlXW9Q/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -1104,7 +1104,7 @@
     container.appendChild(div); populateData(); 
     if(khatar) div.querySelector('.khatarList').value = khatar;
     if(pak) div.querySelector('.fPack').value = pack;
-    if(pak) div.querySelector('.pakList').value = pak;
+    if(pak) div.querySelector('.pakList').value = pack;
     if(bhav) calcFertBill();
   }
 
@@ -1723,6 +1723,11 @@
       alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
       if(btn) btn.innerText = "💾 સેવ કરો";
       document.getElementById(formElementId).reset();
+      
+      // ➔ Restoring duplicate check button display state after successful save
+      let submitBtn = document.getElementById(btnId);
+      if(submitBtn) submitBtn.style.display = "block";
+
       pendingBillData = null;
       fetchData();
       switchTab('Dash');
@@ -1731,7 +1736,8 @@
       if(err && err !== "undefined") {
         console.error("Save Error:", err);
       }
-      if(btn) btn.innerText = "💾 સેવ કરો";
+      let submitBtn = document.getElementById(btnId);
+      if(submitBtn) submitBtn.style.display = "block";
       pendingBillData = null;
     });
   }

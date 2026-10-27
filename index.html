@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Correct Category Filter for Orange Box Balance in Sales, Med, and Fert
+  Updated: Complete Frontend with Sales Photo Upload & Fixed Parameter Order
 -->
 <!DOCTYPE html>
 <html>
@@ -104,9 +104,8 @@
 </head>
 <body>
 
-<!-- ➔ Last Updated Timestamp: 2026-10-26 23:55:00 IST -->
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 26/10/2026 | ⏰ સમય: 23:55 IST
+  📅 તારીખ: 27/10/2026 | ⏰ સમય: 00:45 IST
 </div>
 
 <div class="header-bar">
@@ -604,7 +603,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxs1cR8syW-pzt6UttS2IlJD8csvZcgL42atOrXRwdtG_XMIrwyutlvo0GqZgFBnVbnqA/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw_IapL5AnHLBXuin8x15Z_rQgTyTLA_I5C1iPcXOswxkpF7w5b9ZKDQVkvvYUKLlXW9Q/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -717,30 +716,19 @@
     }
   }
 
-  // ➔ Fixed Category Balance Logic for Sales, Medicine, and Fertilizer separately
   function getCategoryBalanceVal(sectionType, partnerName) {
     if(!partnerName || partnerName === "NEW") return 0;
     
-    let targetType = '';
-    let altType = '';
-    
-    if(sectionType === 'Sales') {
-      targetType = 'વેચાણ બીલ';
-      altType = 'વેચાણ બિલ જમા';
-    } else if(sectionType === 'Med') {
-      targetType = 'દવા ખરીદી માટે';
-      altType = 'દવા બિલ જમા';
-    } else if(sectionType === 'Fert') {
-      targetType = 'ખાતર ખરીદી માટે';
-      altType = 'ખાતર બિલ જમા';
-    }
+    let targetType = '', altType = '';
+    if(sectionType === 'Sales') { targetType = 'વેચાણ બીલ'; altType = 'વેચાણ બિલ જમા'; }
+    else if(sectionType === 'Med') { targetType = 'દવા ખરીદી માટે'; altType = 'દવા બિલ જમા'; }
+    else if(sectionType === 'Fert') { targetType = 'ખાતર ખરીદી માટે'; altType = 'ખાતર બિલ જમા'; }
     
     let dateId = sectionType === 'Sales' ? 'sDate' : sectionType === 'Med' ? 'mDate' : 'fDate';
     let dateVal = document.getElementById(dateId) ? document.getElementById(dateId).value : new Date().toISOString().split('T')[0];
     let targetYear = getYear(dateVal);
 
-    let totalDebit = 0;
-    let totalCredit = 0;
+    let totalDebit = 0, totalCredit = 0;
 
     if(appData.Upad_Ledger) {
       appData.Upad_Ledger.forEach(r => {
@@ -1538,24 +1526,26 @@
     let rows = document.querySelectorAll("#salesItemsContainer .item-row");
     let itemRows = [];
 
-    rows.forEach((r, index) => {
-      let pak = r.querySelector('.pakList').value;
-      let pauch = r.querySelector('.sPauch').value || 0;
-      let weight = r.querySelector('.sWeight').value || 0;
-      let bhav20 = r.querySelector('.sBhav20').value || 0;
-      let bhav1 = r.querySelector('.sBhav1').value.replace("₹", "").trim();
-      let total = parseFloat(r.querySelector('.sTotal').value.replace("₹", "").trim()) || 0;
-      let kShare = r.querySelector('.sKShare').value || 0;
-      let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
-      
-      let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-      
-      itemRows.push([
-        year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha, ""
-      ]);
-    });
+    handlePhotoUpload("sPhoto", function(photoBase64) {
+      rows.forEach((r, index) => {
+        let pak = r.querySelector('.pakList').value;
+        let pauch = r.querySelector('.sPauch').value || 0;
+        let weight = r.querySelector('.sWeight').value || 0;
+        let bhav20 = r.querySelector('.sBhav20').value || 0;
+        let bhav1 = r.querySelector('.sBhav1').value.replace("₹", "").trim();
+        let total = parseFloat(r.querySelector('.sTotal').value.replace("₹", "").trim()) || 0;
+        let kShare = r.querySelector('.sKShare').value || 0;
+        let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
+        
+        let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
+        
+        itemRows.push([
+          year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha, photoBase64
+        ]);
+      });
 
-    triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm');
+      triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm');
+    });
   }
 
   function submitMedForm(e) {
@@ -1577,24 +1567,27 @@
 
     let rows = document.querySelectorAll("#medItemsContainer .item-row");
     let itemRows = [];
-    rows.forEach((r, index) => {
-      let dava = r.querySelector('.davaList').value;
-      let mType = r.querySelector('.mType').value;
-      let weight = r.querySelector('.mWeight').value || 0;
-      let pack = r.querySelector('.mPack').value || "";
-      let qty = r.querySelector('.mQty').value || 1;
-      let bhav = r.querySelector('.mBhav').value || 0;
-      let amt = parseFloat(r.querySelector('.mTotal').value.replace("₹", "").trim()) || 0;
-      let pak = r.querySelector('.pakList').value;
-      let kShare = r.querySelector('.mKShare').value || 0;
-      let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
 
-      let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-      itemRows.push([year, rId, date, billNo, bhagiya, vepari, dava, mType, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
+    handlePhotoUpload("mPhoto", function(photoBase64) {
+      rows.forEach((r, index) => {
+        let dava = r.querySelector('.davaList').value;
+        let mType = r.querySelector('.mType').value;
+        let weight = r.querySelector('.mWeight').value || 0;
+        let pack = r.querySelector('.mPack').value || "";
+        let qty = r.querySelector('.mQty').value || 1;
+        let bhav = r.querySelector('.mBhav').value || 0;
+        let amt = parseFloat(r.querySelector('.mTotal').value.replace("₹", "").trim()) || 0;
+        let pak = r.querySelector('.pakList').value;
+        let kShare = r.querySelector('.mKShare').value || 0;
+        let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
+
+        let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
+        itemRows.push([year, rId, date, billNo, bhagiya, vepari, dava, mType, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
+      });
+
+      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, photoBase64];
+      triggerUpadConfirmationModal('Med', billRow, itemRows, 'btnMed', 'medForm');
     });
-
-    let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status];
-    triggerUpadConfirmationModal('Med', billRow, itemRows, 'btnMed', 'medForm');
   }
 
   function submitFertForm(e) {
@@ -1617,23 +1610,26 @@
 
     let rows = document.querySelectorAll("#fertItemsContainer .item-row");
     let itemRows = [];
-    rows.forEach((r, index) => {
-      let khatar = r.querySelector('.khatarList').value;
-      let weight = r.querySelector('.fWeight').value || 0;
-      let pack = r.querySelector('.fPack').value || "";
-      let qty = r.querySelector('.fQty').value || 1;
-      let bhav = parseFloat(r.querySelector('.fBhav').value) || 0;
-      let amt = parseFloat(r.querySelector('.fAmt').value.replace("₹", "").trim()) || 0;
-      let pak = r.querySelector('.pakList').value;
-      let kShare = r.querySelector('.fKShare').value || 0;
-      let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
 
-      let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-      itemRows.push([year, rId, date, billNo, bhagiya, vepari, khatar, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
+    handlePhotoUpload("fPhoto", function(photoBase64) {
+      rows.forEach((r, index) => {
+        let khatar = r.querySelector('.khatarList').value;
+        let weight = r.querySelector('.fWeight').value || 0;
+        let pack = r.querySelector('.fPack').value || "";
+        let qty = r.querySelector('.fQty').value || 1;
+        let bhav = parseFloat(r.querySelector('.fBhav').value) || 0;
+        let amt = parseFloat(r.querySelector('.fAmt').value.replace("₹", "").trim()) || 0;
+        let pak = r.querySelector('.pakList').value;
+        let kShare = r.querySelector('.fKShare').value || 0;
+        let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
+
+        let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
+        itemRows.push([year, rId, date, billNo, bhagiya, vepari, khatar, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
+      });
+
+      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, details, photoBase64];
+      triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm');
     });
-
-    let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, details];
-    triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm');
   }
 
   function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId) {

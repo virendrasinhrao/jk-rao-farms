@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Configured with New Apps Script Web URL & Complete Sales/Bill Fields
+  Updated: Complete Frontend with wantUpad Flag for Sales Ledger
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 27/10/2026 | ⏰ સમય: 11:06 IST
+  📅 તારીખ: 27/10/2026 | ⏰ સમય: 02:40 IST
 </div>
 
 <div class="header-bar">
@@ -603,7 +603,6 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  // ➔ Updated with your new Apps Script Web URL
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxCCgeao92QRnhZP9rslgeRaXo3HRBHFiJWZkzMcjpFi5zyl4RRRJtWxj2oMfiqxVGMAg/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
@@ -1670,8 +1669,8 @@
     if(btn) btn.innerText = "સેવ થઈ રહ્યું છે...";
 
     let actionName = formType === 'Sales' ? 'saveSales' : formType === 'Med' ? 'savePesticideBill' : 'saveFertilizerBill';
-    let payload = formType === 'Sales' ? { action: actionName, itemRows: itemRows, editEntryId: document.getElementById('editEntryId').value } :
-                        { action: actionName, billRow: billRow, itemRows: itemRows, editEntryId: document.getElementById(formType === 'Med' ? 'editMedId' : 'editFertId').value };
+    let payload = formType === 'Sales' ? { action: actionName, itemRows: itemRows, editEntryId: document.getElementById('editEntryId').value, wantUpad: wantUpad } :
+                        { action: actionName, billRow: billRow, itemRows: itemRows, editEntryId: document.getElementById(formType === 'Med' ? 'editMedId' : 'editFertId').value, wantUpad: wantUpad };
 
     fetch(SCRIPT_URL, {
       method: "POST",
@@ -1686,16 +1685,15 @@
         return Promise.reject(errText);
       }
 
-      if(wantUpad) {
-        let date = formType === 'Sales' ? document.getElementById("sDate").value : billRow[2];
+      if(wantUpad && formType === 'Sales') {
+        let date = document.getElementById("sDate").value;
         let year = getYear(date);
         let rand = Math.floor(1000 + Math.random() * 9000);
         let entryId = "UP-" + date.replace(/-/g, '') + "-" + rand;
-        let provider = formType === 'Sales' ? document.getElementById("sVepari").value : (billRow[5] || "વેપારી");
-        let billNo = formType === 'Sales' ? (document.getElementById("sBill").value || "N/A") : (billRow[3] || "-");
+        let provider = document.getElementById("sVepari").value;
+        let billNo = document.getElementById("sBill").value || "N/A";
         
-        let upadEntryType = formType === 'Sales' ? 'વેચાણ બિલ જમા' : formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
-        
+        let upadEntryType = 'વેચાણ બિલ જમા';
         let debit = 0;
         let credit = currentBal; 
         let status = "જમા";
@@ -1954,7 +1952,6 @@
   }
 
   function verifyMpinAndProceed() {
-    let entered = document.getElementById("inputMpin.value"); // Fixed
     let enteredMpin = document.getElementById("inputMpin").value;
     if(enteredMpin === CORRECT_MPIN) {
       document.getElementById("modalMpin").style.display = "none";

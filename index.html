@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Fixed Sales Columns (Status, Hastak, BLidha, Photo) & Duplicate Bill Validation Button Restored
+  Updated: Configured with New Apps Script Web URL & Complete Sales/Bill Fields
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 27/10/2026 | ⏰ સમય: 01:00 IST
+  📅 તારીખ: 27/10/2026 | ⏰ સમય: 11:06 IST
 </div>
 
 <div class="header-bar">
@@ -603,7 +603,8 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw_IapL5AnHLBXuin8x15Z_rQgTyTLA_I5C1iPcXOswxkpF7w5b9ZKDQVkvvYUKLlXW9Q/exec";
+  // ➔ Updated with your new Apps Script Web URL
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxCCgeao92QRnhZP9rslgeRaXo3HRBHFiJWZkzMcjpFi5zyl4RRRJtWxj2oMfiqxVGMAg/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -1104,7 +1105,7 @@
     container.appendChild(div); populateData(); 
     if(khatar) div.querySelector('.khatarList').value = khatar;
     if(pak) div.querySelector('.fPack').value = pack;
-    if(pak) div.querySelector('.pakList').value = pack;
+    if(pak) div.querySelector('.pakList').value = pak;
     if(bhav) calcFertBill();
   }
 
@@ -1473,9 +1474,9 @@
           document.getElementById("sBill").value = found["બીલ નં"] || found["બિલ નં"] || "";
           document.getElementById("sBhagiya").value = found["ભાગીદાર"] || "";
           document.getElementById("sVepari").value = found["ખરીદનાર"] || "";
-          document.getElementById("sStatus").value = found["બીલની સ્થિતિ"] || "રોકડા / જમા";
-          document.getElementById("sHastak").value = found["હસ્તે"] || "";
-          document.getElementById("sBLidha").value = found["ભાગિયાએ લીધા?"] || "No";
+          document.getElementById("sStatus").value = found["બીલની સ્થિતિ (બાકી/જમા)"] || found["બીલની સ્થિતિ"] || "રોકડા / જમા";
+          document.getElementById("sHastak").value = found["પૈસા કોણે લીધા (હસ્તે)"] || found["હસ્તે"] || "";
+          document.getElementById("sBLidha").value = found["ખેડૂએ પૈસા લીધા? (Yes/No)"] || found["ભાગિયાએ લીધા?"] || "No";
           document.getElementById("editEntryId").value = entryId;
           document.getElementById("btnSales").innerText = "અપડેટ કરો";
           document.getElementById("salesItemsContainer").innerHTML = "";
@@ -1724,7 +1725,6 @@
       if(btn) btn.innerText = "💾 સેવ કરો";
       document.getElementById(formElementId).reset();
       
-      // ➔ Restoring duplicate check button display state after successful save
       let submitBtn = document.getElementById(btnId);
       if(submitBtn) submitBtn.style.display = "block";
 
@@ -1954,8 +1954,9 @@
   }
 
   function verifyMpinAndProceed() {
-    let entered = document.getElementById("inputMpin").value;
-    if(entered === CORRECT_MPIN) {
+    let entered = document.getElementById("inputMpin.value"); // Fixed
+    let enteredMpin = document.getElementById("inputMpin").value;
+    if(enteredMpin === CORRECT_MPIN) {
       document.getElementById("modalMpin").style.display = "none";
       if(pendingActionCallback) pendingActionCallback();
       pendingActionCallback = null;

@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Final Aligned Table-Type Summary Box for Hastak Filter
+  Final Code with Fixed Edit Form Loading (Hastak & Pauch) & Aligned Summary Box
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 29/10/2026 | ⏰ સમય: 01:30 IST
+  📅 તારીખ: 29/10/2026 | ⏰ સમય: 01:35 IST
 </div>
 
 <div class="header-bar">
@@ -580,8 +580,8 @@
       </div>
     </div>
 
-    <!-- ➔ ટેબલ ટાઇપ આકર્ષક કૉલમ ગ્રીડ સારાંશ બોક્સ -->
-    <div id="latestRecordSummary" style="background: linear-gradient(135deg, #eafaf1, #d4efdf); border-left: 5px solid #27ae60; padding: 14px; border-radius: 6px; margin-bottom: 12px; display: none; box-shadow: 0 2px 5px rgba(0,0,0,0.08);">
+    <!-- ➔ ટેબલ ટાઇપ અલાઇન્ડ આકર્ષક સારાંશ બોક્સ -->
+    <div id="latestRecordSummary" style="background: linear-gradient(135deg, #eafaf1, #d4efdf); border-left: 5px solid #27ae60; padding: 14px; border-radius: 6px; margin-bottom: 12px; display: none; box-shadow: 0 2px 5px rgba(0,0,0,0.08); max-width: 350px;">
       <p id="latestRecordText" style="margin:0;"></p>
     </div>
 
@@ -1535,12 +1535,18 @@
           document.getElementById("sBhagiya").value = found["ભાગીદાર"] || "";
           document.getElementById("sVepari").value = found["ખરીદનાર"] || "";
           document.getElementById("sStatus").value = found["બીલની સ્થિતિ (બાકી/જમા)"] || found["બીલની સ્થિતિ"] || "રોકડા / જમા";
-          document.getElementById("sHastak").value = found["પૈસા કોણે લીધા (હસ્તે)"] || found["હસ્તે"] || "";
+          
+          // ➔ એડિટ કરતી વખતે હસ્તે અને પાઉચ બરાબર લોડ થાય તે માટે
+          document.getElementById("sHastak").value = found["હસ્તે"] || found["Hastak"] || found["પૈસા કોણે લીધા (હસ્તે)"] || "";
           document.getElementById("sBLidha").value = found["ખેડૂએ પૈસા લીધા? (Yes/No)"] || found["ભાગિયાએ લીધા?"] || "No";
+          
           document.getElementById("editEntryId").value = entryId;
           document.getElementById("btnSales").innerText = "અપડેટ કરો";
           document.getElementById("salesItemsContainer").innerHTML = "";
-          addSalesItemRow(found["પાઉચ / નંગ"] || 0, found["કુલ વજન (કિલો)"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
+          
+          let pauchVal = found["પાઉચ નં."] || found["પાઉચ / નંગ"] || found["Total_Pauch"] || 0;
+          addSalesItemRow(pauchVal, found["કુલ વજન (કિલો)"] || found["કુલ વજન (કિલો"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || found["૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
+          
           updatePartnerSummary('Sales');
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
@@ -1978,7 +1984,7 @@
     });
   }
 
-  // 📂 Bill_Record ટેબલ રેન્ડર અને 'હસ્તે' ફિલ્ટર (ટેબલ ટાઇપ ગ્રીડ ફોર્મેટ સાથે)
+  // 📂 Bill_Record ટેબલ રેન્ડર અને ટેબલ ટાઇપ અલાઇન્ડ સારાંશ બૉક્સ
   function renderBillRecordTable() {
     let container = document.getElementById("tableContainerBillRec");
     let summaryBox = document.getElementById("latestRecordSummary");
@@ -2009,7 +2015,7 @@
       return matchHastak && matchSearch;
     });
 
-    // ➔ સરદારની ઈચ્છા મુજબ ટેબલ ટાઇપ અલાઇન્ડ સારાંશ બૉક્સ
+    // ➔ સરદારની ઈચ્છા મુજબ ટેબલ ટાઇપ અલાઇન્ડ ફોર્મેટ
     if(selectedHastak && filteredRows.length > 0) {
       let totalBills = filteredRows.length;
       let totalPauchSum = 0;

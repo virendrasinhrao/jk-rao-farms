@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Final Elegant & Structured Column-Style Summary Box
+  Final Aligned Table-Type Summary Box for Hastak Filter
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 29/10/2026 | ⏰ સમય: 01:25 IST
+  📅 તારીખ: 29/10/2026 | ⏰ સમય: 01:30 IST
 </div>
 
 <div class="header-bar">
@@ -580,7 +580,7 @@
       </div>
     </div>
 
-    <!-- ➔ આકર્ષક, કલરફુલ અને કૉલમ ટાઇપ સેટિંગ વાળું સારાંશ બોક્સ -->
+    <!-- ➔ ટેબલ ટાઇપ આકર્ષક કૉલમ ગ્રીડ સારાંશ બોક્સ -->
     <div id="latestRecordSummary" style="background: linear-gradient(135deg, #eafaf1, #d4efdf); border-left: 5px solid #27ae60; padding: 14px; border-radius: 6px; margin-bottom: 12px; display: none; box-shadow: 0 2px 5px rgba(0,0,0,0.08);">
       <p id="latestRecordText" style="margin:0;"></p>
     </div>
@@ -1978,7 +1978,7 @@
     });
   }
 
-  // 📂 Bill_Record ટેબલ રેન્ડર અને માંગ્યા મુજબનું વ્યવસ્થિત, કલરફુલ અને સ્ટ્રક્ચર્ડ સારાંશ બોક્સ
+  // 📂 Bill_Record ટેબલ રેન્ડર અને 'હસ્તે' ફિલ્ટર (ટેબલ ટાઇપ ગ્રીડ ફોર્મેટ સાથે)
   function renderBillRecordTable() {
     let container = document.getElementById("tableContainerBillRec");
     let summaryBox = document.getElementById("latestRecordSummary");
@@ -2009,7 +2009,7 @@
       return matchHastak && matchSearch;
     });
 
-    // ➔ તમે માંગેલી સ્ટાઇલ અને કૉલમ ટાઇપ સેટિંગ મુજબનું આકર્ષક આઉટપુટ
+    // ➔ સરદારની ઈચ્છા મુજબ ટેબલ ટાઇપ અલાઇન્ડ સારાંશ બૉક્સ
     if(selectedHastak && filteredRows.length > 0) {
       let totalBills = filteredRows.length;
       let totalPauchSum = 0;
@@ -2026,25 +2026,24 @@
       let finalAmount = parseFloat(latest["કુલ જમા રકમ"] || latest["Cumulative_Amount"] || totalAmountSum).toFixed(2);
 
       summaryText.innerHTML = `
-        <div style="font-size: 16px; color: #117a65; font-weight: bold; margin-bottom: 8px; border-bottom: 2px solid #a3e4d7; padding-bottom: 4px;">
-          👤 હસ્તે: ${selectedHastak} પાસે
+        <div style="font-size: 16px; color: #117a65; font-weight: bold; margin-bottom: 6px; border-bottom: 2px solid #a3e4d7; padding-bottom: 4px;">
+          ${selectedHastak}
         </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; text-align: left;">
-          <div style="background: #ffffff; padding: 6px 10px; border-radius: 4px; border: 1px solid #a3e4d7;">
-            <div style="font-size: 11px; color: #7f8c8d;">📅 તારીખ સુધી</div>
-            <div style="font-size: 13px; font-weight: bold; color: #d35400;">${lDate}</div>
+        <div style="font-size: 13px; color: #d35400; font-weight: bold; margin-bottom: 8px;">
+          તારીખ સુધીની બીલની વિગત (${lDate})
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px; font-size: 14px; background: #ffffff; padding: 8px 12px; border-radius: 4px; border: 1px solid #a3e4d7; max-width: 320px;">
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: #2c3e50; font-weight: bold;">કુલ બીલ :</span>
+            <span style="font-weight: bold; color: #c0392b; text-align: right; min-width: 60px;">${totalBills}</span>
           </div>
-          <div style="background: #ffffff; padding: 6px 10px; border-radius: 4px; border: 1px solid #a3e4d7;">
-            <div style="font-size: 11px; color: #7f8c8d;">📋 કુલ બીલ</div>
-            <div style="font-size: 15px; font-weight: bold; color: #c0392b;">${totalBills} નંગ</div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: #2c3e50; font-weight: bold;">કુલ પાઉચ :</span>
+            <span style="font-weight: bold; color: #2980b9; text-align: right; min-width: 60px;">${finalPauch}</span>
           </div>
-          <div style="background: #ffffff; padding: 6px 10px; border-radius: 4px; border: 1px solid #a3e4d7;">
-            <div style="font-size: 11px; color: #7f8c8d;">📦 કુલ પાઉચ</div>
-            <div style="font-size: 15px; font-weight: bold; color: #2980b9;">${finalPauch}</div>
-          </div>
-          <div style="background: #ffffff; padding: 6px 10px; border-radius: 4px; border: 1px solid #a3e4d7;">
-            <div style="font-size: 11px; color: #7f8c8d;">💰 કુલ જમા રકમ</div>
-            <div style="font-size: 15px; font-weight: bold; color: #8e44ad;">₹ ${finalAmount}</div>
+          <div style="display: flex; justify-content: space-between; border-top: 1px dashed #bdc3c7; padding-top: 4px; margin-top: 2px;">
+            <span style="color: #2c3e50; font-weight: bold;">કુલ રકમ :</span>
+            <span style="font-weight: bold; color: #8e44ad; text-align: right; min-width: 60px;">₹ ${finalAmount}</span>
           </div>
         </div>
       `;

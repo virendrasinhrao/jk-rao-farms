@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Final HTML Code with Direct Table Rendering & Flexible Hastak Matching
+  Final Code with Bold & Colored Summary View for Hastak Filter
 -->
 <!DOCTYPE html>
 <html>
@@ -94,7 +94,6 @@
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
     .modal-content { background: white; margin: 10% auto; padding: 15px; width: 90%; max-width: 350px; border-radius: 6px; }
     
-    /* ➔ ટેબલની Width પહોળી અને Text Wrap અટકાવવા માટે */
     table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; min-width: 900px; }
     th, td { border: 1px solid #ccc; padding: 10px 14px; text-align: center; white-space: nowrap; }
     th { background-color: #34495e; color: white; }
@@ -106,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 29/10/2026 | ⏰ સમય: 01:10 IST
+  📅 તારીખ: 29/10/2026 | ⏰ સમય: 01:20 IST
 </div>
 
 <div class="header-bar">
@@ -581,10 +580,9 @@
       </div>
     </div>
 
-    <!-- ➔ છેલ્લો રેકોર્ડ / કુલ સારાંશ બતાવવા માટેનું બૉક્સ -->
-    <div id="latestRecordSummary" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #16a085; padding: 10px; border-radius: 4px; margin-bottom: 10px; display: none;">
-      <h4 style="margin:0 0 3px 0; color:#2c3e50; font-size: 12px;">📌 પસંદ કરેલ હસ્તે માટે છેલ્લો રેકોર્ડ અને અપડેટ્સ:</h4>
-      <p id="latestRecordText" style="margin:0; font-size: 13px; font-weight: bold; color: #16a085;"></p>
+    <!-- ➔ માંગ્યા મુજબ બોલ્ડ અને કલરફુલ છેલ્લો રેકોર્ડ સારાંશ બોક્સ -->
+    <div id="latestRecordSummary" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #16a085; padding: 12px; border-radius: 6px; margin-bottom: 12px; display: none; line-height: 1.6;">
+      <p id="latestRecordText" style="margin:0; font-size: 14px; color: #2c3e50;"></p>
     </div>
 
     <div id="tableContainerBillRec" style="overflow-x:auto;">
@@ -919,7 +917,7 @@
       }
     });
 
-    // ➔ હસ્તે ડ્રોપ-ડાઉન ભરવા માટેનું મજબૂત લૉજિક
+    // ➔ હસ્તે ડ્રોપ-ડાઉન મજબૂત રીતે ભરો
     let filterHastakSelect = document.getElementById("filterHastak");
     if(filterHastakSelect) {
       let curFilter = filterHastakSelect.value;
@@ -1980,7 +1978,7 @@
     });
   }
 
-  // 📂 Bill_Record ટેબલ રેન્ડર અને 'હસ્તે' ફિલ્ટર (એકદમ પરફેક્ટ અને લવચીક મૅચિંગ સાથે)
+  // 📂 Bill_Record ટેબલ રેન્ડર અને માંગ્યા મુજબનું બોલ્ડ અને કલરફુલ સારાંશ બોક્સ
   function renderBillRecordTable() {
     let container = document.getElementById("tableContainerBillRec");
     let summaryBox = document.getElementById("latestRecordSummary");
@@ -1998,7 +1996,7 @@
     let searchQuery = document.getElementById("searchBillRec") ? document.getElementById("searchBillRec").value.toLowerCase().trim() : "";
 
     let filteredRows = rows.filter(r => {
-      // ➔ શીટમાં રહેલી કોઈપણ સંભવિત કૉલમમાંથી હસ્તે નું નામ મેળવો
+      // ➔ શીટમાંથી હસ્તે નું નામ મેળવીને સાફ કરો
       let hVal = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || r["હસ્તે "] || "").trim();
       let bNo = String(r["બીલ નં"] || r["બિલ નં"] || "").toLowerCase();
       let dt = String(r["તારીખ"] || "").toLowerCase();
@@ -2006,29 +2004,41 @@
       let targetHastak = selectedHastak.toLowerCase();
       let cleanHVal = hVal.toLowerCase();
 
-      // ➔ સુપર ફ્લેક્સિબલ મૅચિંગ: નામ ગમે તે રીતે લખેલું હોય તો પણ પકડી લેશે
       let matchHastak = !targetHastak || cleanHVal === targetHastak || cleanHVal.includes(targetHastak) || targetHastak.includes(cleanHVal);
       let matchSearch = !searchQuery || bNo.includes(searchQuery) || dt.includes(searchQuery) || cleanHVal.includes(searchQuery);
 
       return matchHastak && matchSearch;
     });
 
-    // ➔ જો હસ્તે સિલેક્ટ કર્યું હોય, તો તેનો છેલ્લો રેકોર્ડ અને કુલ સરવાળો બતાવો
+    // ➔ હસ્તે સિલેક્ટ કર્યા પછી તમે માંગેલી સ્ટાઇલ મુજબનું બોલ્ડ અને કલરફુલ આઉટપુટ
     if(selectedHastak && filteredRows.length > 0) {
+      let totalBills = filteredRows.length;
+      let totalPauchSum = 0;
+      let totalAmountSum = 0;
       let latest = filteredRows[filteredRows.length - 1]; // છેલ્લી એન્ટ્રી
       let lDate = String(latest["તારીખ"] || "").split('T')[0];
-      let lPauch = latest["કુલ પાઉચ"] || 0;
-      let lAmount = parseFloat(latest["કુલ જમા રકમ"] || 0).toFixed(2);
-      let lBill = latest["બીલ નં"] || latest["બિલ નં"] || "-";
 
-      summaryText.innerHTML = `હસ્તે: <b>${selectedHastak}</b> | છેલ્લી તારીખ: <b>${lDate}</b> | બિલ નં: <b>${lBill}</b> | કુલ પાઉચ: <span style="color:#2980b9;">${lPauch}</span> | કુલ જમા રકમ: <span style="color:#8e44ad;">₹ ${lAmount}</span>`;
+      filteredRows.forEach(r => {
+        totalPauchSum += parseFloat(r["પાઉચ નં."] || r["Total_Pauch"] || 0);
+        totalAmountSum += parseFloat(r["રકમ"] || r["Amount"] || 0);
+      });
+
+      let finalPauch = latest["કુલ પાઉચ"] || latest["Cumulative_Pauch"] || totalPauchSum;
+      let finalAmount = parseFloat(latest["કુલ જમા રકમ"] || latest["Cumulative_Amount"] || totalAmountSum).toFixed(2);
+
+      summaryText.innerHTML = `
+        <span style="font-size: 15px; color: #2c3e50;"><b>${selectedHastak}</b> પાસે</span><br>
+        <span style="font-size: 14px; color: #333;">તારીખ: <b style="color: #d35400;">${lDate}</b> સુધી કુલ બીલ : <b style="font-size: 16px; color: #c0392b;">${totalBills}</b></span><br>
+        <span style="font-size: 14px; color: #333;">કુલ પાઉચ: <b style="font-size: 16px; color: #2980b9;">${finalPauch}</b></span><br>
+        <span style="font-size: 14px; color: #333;">કુલ જમા રકમ: <b style="font-size: 18px; color: #8e44ad;">₹ ${finalAmount}</b> જમા થયેલ છે</span>
+      `;
       if(summaryBox) summaryBox.style.display = "block";
     } else {
       if(summaryBox) summaryBox.style.display = "none";
     }
 
     if(filteredRows.length === 0) {
-      container.innerHTML = "<p style='text-align:center; color:#c0392b; font-weight:bold;'>⚠️ આ હસ્તે માટે 'Bill_Record' શીટમાં મૅચ થતો કોઈ રેકોર્ડ મળ્યો નથી.</p>";
+      container.innerHTML = "<p style='text-align:center; color:#c0392b; font-weight:bold;'>⚠️ આ હસ્તે માટે કોઈ રેકોર્ડ મળ્યો નથી.</p>";
       return;
     }
 

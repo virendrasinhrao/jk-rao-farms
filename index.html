@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Clean & Error-Free Version
+  Updated: Fixed Hastak Display in Bill Record Table View
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 28/10/2026 | ⏰ સમય: 16:00 IST
+  📅 તારીખ: 28/10/2026 | ⏰ સમય: 16:15 IST
 </div>
 
 <div class="header-bar">
@@ -1933,7 +1933,7 @@
     });
   }
 
-  // 📂 Bill_Record ટેબલ રેન્ડર કરવા માટેનું ફંક્શન
+  // 📂 Bill_Record ટેબલ રેન્ડર કરવા માટેનું ફંક્શન (હસ્તે અને બધી વિગતો પરફેક્ટ સાથે)
   function renderBillRecordTable() {
     let container = document.getElementById("tableContainerBillRec");
     if(!container) return;
@@ -1963,11 +1963,14 @@
       let photoVal = r["Photo"] || r["બિલનો ફોટો"] || "";
       let photoLink = photoVal ? `<a href="${photoVal.replace('=HYPERLINK("','').split('"')[0]}" target="_blank">બિલ જુઓ</a>` : "-";
 
+      // ➔ હસ્તે નું નામ સરખી રીતે મેળવવા માટે બધી સંભવિત કી ચેક કરો
+      let hastakVal = r["હસ્તે"] || r["હસ્તે "] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "-";
+
       html += `<tr>
         <td>${r["વર્ષ"] || r["Year"] || '-'}</td>
         <td><b>${r["એન્ટ્રી Id"] || r["Entry_ID"] || '-'}</b></td>
         <td>${cleanDate}</td>
-        <td>${r["હસ્તે"] || r["Hastak"] || '-'}</td>
+        <td><b>${hastakVal}</b></td>
         <td><b>${r["બીલ નં"] || r["બિલ નં"] || '-'}</b></td>
         <td>${r["પાઉચ નં."] || r["Total_Pauch"] || 0}</td>
         <td>₹ ${parseFloat(r["રકમ"] || r["Amount"] || 0).toFixed(2)}</td>

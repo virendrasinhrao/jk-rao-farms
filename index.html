@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Secure Hastak Dropdown (Fallback to Bhagiya_Master if Bill_Record is empty) & Wide Tables
+  Updated: Exact & Flexible Hastak Matching, Wide Tables, Secure Dropdown & Latest Record Summary
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 28/10/2026 | ⏰ સમય: 23:51 IST
+  📅 તારીખ: 29/10/2026 | ⏰ સમય: 00:01 IST
 </div>
 
 <div class="header-bar">
@@ -633,7 +633,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  // ➔ તમારો નવો સેટ કરેલો Web App URL અહીં અપડેટ છે
+  // ➔ તમારો સેટ કરેલો Web App URL
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwx65QbgJPn_6SvDv_a_qkb6qSlqsuT5Vbi-dEEQA-rgrTOynDrqnHWPhNPdgnmeWK3yA/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
@@ -918,7 +918,7 @@
       }
     });
 
-    // ➔ હસ્તે ડ્રોપ-ડાઉન ભરવા માટે સુરક્ષિત અને મજબૂત લૉજિક (Bill_Record + Bhagiya_Master Fallback)
+    // ➔ હસ્તે ડ્રોપ-ડાઉન ભરવા માટે સુરક્ષિત લૉજિક
     let filterHastakSelect = document.getElementById("filterHastak");
     if(filterHastakSelect) {
       let curFilter = filterHastakSelect.value;
@@ -1979,7 +1979,7 @@
     });
   }
 
-  // 📂 Bill_Record ટેબલ રેન્ડર અને 'હસ્તે' ફિલ્ટર સાથે છેલ્લો રેકોર્ડ બતાવવા માટેનું ફંક્શન
+  // 📂 Bill_Record ટેબલ રેન્ડર અને 'હસ્તે' ફિલ્ટર (સુરક્ષિત મૅચિંગ સાથે)
   function renderBillRecordTable() {
     let container = document.getElementById("tableContainerBillRec");
     let summaryBox = document.getElementById("latestRecordSummary");
@@ -2001,7 +2001,10 @@
       let bNo = String(r["બીલ નં"] || r["બિલ નં"] || "").toLowerCase();
       let dt = String(r["તારીખ"] || "").toLowerCase();
 
-      let matchHastak = !selectedHastak || hVal === selectedHastak;
+      let targetHastak = selectedHastak.toLowerCase();
+
+      // ➔ નામ મૅચ કરવા માટે સુરક્ષિત લૉજિક
+      let matchHastak = !targetHastak || hVal.toLowerCase() === targetHastak || hVal.toLowerCase().includes(targetHastak);
       let matchSearch = !searchQuery || bNo.includes(searchQuery) || dt.includes(searchQuery) || hVal.toLowerCase().includes(searchQuery);
 
       return matchHastak && matchSearch;

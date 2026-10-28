@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Fixed r is not defined error & Full Feature Integration
+  Updated: Fixed Bill Record Table View with Total Pouch & Total Amount columns
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 28/10/2026 | ⏰ સમય: 10:35 IST
+  📅 તારીખ: 28/10/2026 | ⏰ સમય: 14:15 IST
 </div>
 
 <div class="header-bar">
@@ -615,7 +615,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxevep481-iPB4BganNkyJcZ0dGzQj-BrD34eg1w_MJmFTj7oIBHfXk_s6x1vmhmDQE2g/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxCCWL6bs8amMa9dmnyd4tNDuRaaa3za7OZIg2oH5fKBM7yCXg1AJAL8BNLDZ78M3l-/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -1929,6 +1929,7 @@
     });
   }
 
+  // 📂 Bill_Record ટેબલ રેન્ડર કરવા માટેનું અપડેટ કરેલું ફંક્શન
   function renderBillRecordTable() {
     let container = document.getElementById("tableContainerBillRec");
     if(!container) return;
@@ -1948,6 +1949,7 @@
       <th>પાઉચ નં.</th>
       <th>રકમ</th>
       <th>જમા / બાકી</th>
+      <th>કુલ પાઉચ</th>
       <th>કુલ જમા રકમ</th>
       <th>Photo</th>
     </tr>`;
@@ -1963,9 +1965,10 @@
         <td>${cleanDate}</td>
         <td>${r["હસ્તે"] || '-'}</td>
         <td><b>${r["બિલ નં"] || '-'}</b></td>
-        <td style="font-weight:bold; color:#2980b9;">${r["પાઉચ નં."] || 0}</td>
-        <td style="font-weight:bold; color:#27ae60;">₹ ${parseFloat(r["રકમ"] || 0).toFixed(2)}</td>
+        <td>${r["પાઉચ નં."] || 0}</td>
+        <td>₹ ${parseFloat(r["રકમ"] || 0).toFixed(2)}</td>
         <td>${r["જમા / બાકી"] || '-'}</td>
+        <td style="font-weight:bold; color:#2980b9;">${r["કુલ પાઉચ"] || 0}</td>
         <td style="font-weight:bold; color:#8e44ad;">₹ ${parseFloat(r["કુલ જમા રકમ"] || 0).toFixed(2)}</td>
         <td>${photoLink}</td>
       </tr>`;

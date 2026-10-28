@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Fixed Bill Record Table View with Total Pouch & Total Amount columns
+  Clean & Error-Free Version
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 28/10/2026 | ⏰ સમય: 14:15 IST
+  📅 તારીખ: 28/10/2026 | ⏰ સમય: 16:00 IST
 </div>
 
 <div class="header-bar">
@@ -615,7 +615,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPFK9vh2i9EAR2wcz-B7NM4xOZnFZUhwEE6WBH95qY7Y_ojCD9qd5UrNIPvSHmj4XNIg/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxCCWL6bs8amMa9dmnyd4tNDuRaaa3za7OZIg2oH5fKBM7yCXg1AJAL8BNLDZ78M3l-/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -645,7 +645,11 @@
     let icon = document.getElementById("refreshIcon");
     if(icon) icon.className = "spin";
     fetch(SCRIPT_URL).then(res => res.json()).then(res => {
-      appData = res.data || {}; populateData(); updateDashboard(); renderGallery(); renderBillRecordTable();
+      appData = res.data || {}; 
+      populateData(); 
+      updateDashboard(); 
+      renderGallery(); 
+      renderBillRecordTable();
       ['Sales', 'Med', 'Fert', 'Trac', 'Upad'].forEach(t => renderTable(t));
       if(icon) icon.className = "";
     }).catch(err => { if(icon) icon.className = ""; alert("ભૂલ: " + err); });
@@ -1929,7 +1933,7 @@
     });
   }
 
-  // 📂 Bill_Record ટેબલ રેન્ડર કરવા માટેનું અપડેટ કરેલું ફંક્શન
+  // 📂 Bill_Record ટેબલ રેન્ડર કરવા માટેનું ફંક્શન
   function renderBillRecordTable() {
     let container = document.getElementById("tableContainerBillRec");
     if(!container) return;
@@ -1955,21 +1959,21 @@
     </tr>`;
 
     rows.forEach(r => {
-      let cleanDate = String(r["તારીખ"] || "").split('T')[0];
+      let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
       let photoVal = r["Photo"] || r["બિલનો ફોટો"] || "";
       let photoLink = photoVal ? `<a href="${photoVal.replace('=HYPERLINK("','').split('"')[0]}" target="_blank">બિલ જુઓ</a>` : "-";
 
       html += `<tr>
-        <td>${r["વર્ષ"] || '-'}</td>
-        <td><b>${r["એન્ટ્રી Id"] || '-'}</b></td>
+        <td>${r["વર્ષ"] || r["Year"] || '-'}</td>
+        <td><b>${r["એન્ટ્રી Id"] || r["Entry_ID"] || '-'}</b></td>
         <td>${cleanDate}</td>
-        <td>${r["હસ્તે"] || '-'}</td>
-        <td><b>${r["બિલ નં"] || '-'}</b></td>
-        <td>${r["પાઉચ નં."] || 0}</td>
-        <td>₹ ${parseFloat(r["રકમ"] || 0).toFixed(2)}</td>
-        <td>${r["જમા / બાકી"] || '-'}</td>
-        <td style="font-weight:bold; color:#2980b9;">${r["કુલ પાઉચ"] || 0}</td>
-        <td style="font-weight:bold; color:#8e44ad;">₹ ${parseFloat(r["કુલ જમા રકમ"] || 0).toFixed(2)}</td>
+        <td>${r["હસ્તે"] || r["Hastak"] || '-'}</td>
+        <td><b>${r["બીલ નં"] || r["બિલ નં"] || '-'}</b></td>
+        <td>${r["પાઉચ નં."] || r["Total_Pauch"] || 0}</td>
+        <td>₹ ${parseFloat(r["રકમ"] || r["Amount"] || 0).toFixed(2)}</td>
+        <td>${r["જમા / બાકી"] || r["Status"] || '-'}</td>
+        <td style="font-weight:bold; color:#2980b9;">${r["કુલ પાઉચ"] || r["Cumulative_Pauch"] || 0}</td>
+        <td style="font-weight:bold; color:#8e44ad;">₹ ${parseFloat(r["કુલ જમા રકમ"] || r["Cumulative_Amount"] || 0).toFixed(2)}</td>
         <td>${photoLink}</td>
       </tr>`;
     });

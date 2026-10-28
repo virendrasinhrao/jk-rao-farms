@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Final Code with Fixed Edit Form Loading (Hastak & Pauch) & Clean Table Headers
+  Final Complete Code with Correct Sheet Column Mapping for Edit
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 29/10/2026 | ⏰ સમય: 02:25 IST
+  📅 તારીખ: 29/10/2026 | ⏰ સમય: 02:40 IST
 </div>
 
 <div class="header-bar">
@@ -1446,7 +1446,6 @@
       return; 
     }
 
-    // ➔ હેડર ક્લીન કર્યું જેથી "બધા સિલેક્ટ કરો" અને "એન્ટ્રી Id" ભેગા ન થાય
     let html = `<table><tr>
       <th style="width: 40px;"><input type="checkbox" id="selectAll_${tabName}" onclick="toggleSelectAll(this, '${tabName}')"></th>
       <th>એન્ટ્રી Id</th><th>તારીખ</th>`;
@@ -1537,16 +1536,16 @@
           document.getElementById("sVepari").value = found["ખરીદનાર"] || "";
           document.getElementById("sStatus").value = found["બીલની સ્થિતિ (બાકી/જમા)"] || found["બીલની સ્થિતિ"] || "રોકડા / જમા";
           
-          // ➔ એડિટ કરતી વખતે હસ્તે અને પાઉચ ખાલી ન આવે તે માટે મજબૂત કી ચેકિંગ
-          document.getElementById("sHastak").value = found["હસ્તે"] || found["Hastak"] || found["પૈસા કોણે લીધા (હસ્તે)"] || "";
+          // ➔ સુનિશ્ચિત કરો કે હસ્તે અને પાઉચ બરાબર લોડ થાય
+          document.getElementById("sHastak").value = found["પૈસા કોણે લીધા (હસ્તે)"] || found["હસ્તે"] || "";
           document.getElementById("sBLidha").value = found["ખેડૂએ પૈસા લીધા? (Yes/No)"] || found["ભાગિયાએ લીધા?"] || "No";
           
           document.getElementById("editEntryId").value = entryId;
           document.getElementById("btnSales").innerText = "અપડેટ કરો";
           document.getElementById("salesItemsContainer").innerHTML = "";
           
-          let pauchVal = found["પાઉચ નં."] || found["પાઉચ / નંગ"] || found["Total_Pauch"] || 0;
-          addSalesItemRow(pauchVal, found["કુલ વજન (કિલો)"] || found["કુલ વજન (કિલો"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || found["૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
+          let pauchVal = found["પાઉચ / નંગ"] || found["પાઉચ નં."] || 0;
+          addSalesItemRow(pauchVal, found["કુલ વજન (કિલો)"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
           
           updatePartnerSummary('Sales');
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
@@ -1985,7 +1984,7 @@
     });
   }
 
-  // 📂 Bill_Record ટેબલ રેન્ડર અને સરદારની ઈચ્છા મુજબનું ટેબલ ટાઇપ અલાઇન્ડ સારાંશ બોક્સ
+  // 📂 Bill_Record ટેબલ રેન્ડર અને સરદારની સૂચના મુજબનું અલાઇન્ડ સારાંશ બૉક્સ
   function renderBillRecordTable() {
     let container = document.getElementById("tableContainerBillRec");
     let summaryBox = document.getElementById("latestRecordSummary");
@@ -2016,7 +2015,6 @@
       return matchHastak && matchSearch;
     });
 
-    // ➔ સરદારની સૂચના મુજબ ટેબલ ટાઇપ અલાઇન્ડ ફોર્મેટિંગ
     if(selectedHastak && filteredRows.length > 0) {
       let totalBills = filteredRows.length;
       let totalPauchSum = 0;

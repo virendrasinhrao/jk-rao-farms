@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated with your new Script URL & Hastak Filter & Wide Tables
+  Updated: Secure Hastak Dropdown (Fallback to Bhagiya_Master if Bill_Record is empty) & Wide Tables
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 28/10/2026 | ⏰ સમય: 16:50 IST
+  📅 તારીખ: 28/10/2026 | ⏰ સમય: 23:51 IST
 </div>
 
 <div class="header-bar">
@@ -918,17 +918,28 @@
       }
     });
 
-    // ➔ Bill_Record માંથી સીધા જ એક્ટિવ હસ્તે ના નામો ભરો
+    // ➔ હસ્તે ડ્રોપ-ડાઉન ભરવા માટે સુરક્ષિત અને મજબૂત લૉજિક (Bill_Record + Bhagiya_Master Fallback)
     let filterHastakSelect = document.getElementById("filterHastak");
     if(filterHastakSelect) {
       let curFilter = filterHastakSelect.value;
       let uniqueHastakSet = new Set();
+
       if(appData.Bill_Record) {
         appData.Bill_Record.forEach(r => {
           let h = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "").trim();
           if(h && h !== "-") uniqueHastakSet.add(h);
         });
       }
+
+      if(uniqueHastakSet.size === 0 && appData.Bhagiya_Master) {
+        appData.Bhagiya_Master.forEach(r => {
+          let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
+          if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ") {
+            uniqueHastakSet.add(name.trim());
+          }
+        });
+      }
+
       filterHastakSelect.innerHTML = '<option value="">-- બધા હસ્તે (All) --</option>';
       uniqueHastakSet.forEach(b => filterHastakSelect.add(new Option(b, b)));
       filterHastakSelect.value = curFilter;

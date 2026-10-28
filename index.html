@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Fixed Hastak Display in Bill Record Table View
+  Updated: Table width expanded & Hastak dropdown filter with latest record view
 -->
 <!DOCTYPE html>
 <html>
@@ -94,8 +94,9 @@
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
     .modal-content { background: white; margin: 10% auto; padding: 15px; width: 90%; max-width: 350px; border-radius: 6px; }
     
-    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 11px; }
-    th, td { border: 1px solid #ccc; padding: 6px; text-align: center; }
+    /* ➔ ટેબલની Width વધારી અને Text Wrap ઓછો કરવા માટે padding તથા white-space સેટ કર્યું છે */
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; min-width: 850px; }
+    th, td { border: 1px solid #ccc; padding: 10px 12px; text-align: center; white-space: nowrap; }
     th { background-color: #34495e; color: white; }
     
     .item-row { background: #fdfefe; padding: 8px; border: 1px solid #dcdde1; border-radius: 4px; margin-bottom: 8px; position: relative; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
@@ -105,7 +106,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 28/10/2026 | ⏰ સમય: 16:15 IST
+  📅 તારીખ: 28/10/2026 | ⏰ સમય: 16:30 IST
 </div>
 
 <div class="header-bar">
@@ -565,9 +566,27 @@
   <!-- 7. BILL RECORD SECTION -->
   <div id="formBillRec" class="section">
     <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📂 બિલ રેકોર્ડ્સ (Bill Record)</h3>
-    <div class="form-group">
-      <input type="text" id="searchBillRec" placeholder="🔍 બિલ નંબર, તારીખ અથવા હસ્તેથી શોધો..." oninput="filterBillRecordTable()">
+    
+    <!-- ➔ હસ્તે ફિલ્ટર માટેનું ડ્રોપ-ડાઉન અને સર્ચ બાર -->
+    <div class="flex-row" style="margin-bottom: 10px;">
+      <div class="form-group">
+        <label>👤 હસ્તે ફિલ્ટર કરો:</label>
+        <select id="filterHastak" onchange="filterBillRecordTable()">
+          <option value="">-- બધા હસ્તે (All) --</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>🔍 શોધખોળ:</label>
+        <input type="text" id="searchBillRec" placeholder="બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterBillRecordTable()">
+      </div>
     </div>
+
+    <!-- ➔ છેલ્લો રેકોર્ડ / કુલ સારાંશ બતાવવા માટેનું બૉક્સ -->
+    <div id="latestRecordSummary" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #16a085; padding: 10px; border-radius: 4px; margin-bottom: 10px; display: none;">
+      <h4 style="margin:0 0 3px 0; color:#2c3e50; font-size: 12px;">📌 પસંદ કરેલ હસ્તે માટે છેલ્લો રેકોર્ડ અને અપડેટ્સ:</h4>
+      <p id="latestRecordText" style="margin:0; font-size: 13px; font-weight: bold; color: #16a085;"></p>
+    </div>
+
     <div id="tableContainerBillRec" style="overflow-x:auto;">
       <p style="text-align:center;">લોડ થઈ રહ્યું છે...</p>
     </div>
@@ -615,7 +634,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwx65QbgJPn_6SvDv_a_qkb6qSlqsuT5Vbi-dEEQA-rgrTOynDrqnHWPhNPdgnmeWK3yA/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxCCWL6bs8amMa9dmnyd4tNDuRaaa3za7OZIg2oH5fKBM7yCXg1AJAL8BNLDZ78M3l-/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -898,6 +917,15 @@
         sel.value = cur;
       }
     });
+
+    // ➔ હસ્તે ફિલ્ટર માટે ડ્રોપ-ડાઉન ભરો
+    let filterHastakSelect = document.getElementById("filterHastak");
+    if(filterHastakSelect) {
+      let curFilter = filterHastakSelect.value;
+      filterHastakSelect.innerHTML = '<option value="">-- બધા હસ્તે (All) --</option>';
+      allBhagiyas.forEach(b => filterHastakSelect.add(new Option(b, b)));
+      filterHastakSelect.value = curFilter;
+    }
     
     let providers = [];
     appData.Bhagiya_Master.forEach(r => {
@@ -1933,14 +1961,50 @@
     });
   }
 
-  // 📂 Bill_Record ટેબલ રેન્ડર કરવા માટેનું ફંક્શન (હસ્તે અને બધી વિગતો પરફેક્ટ સાથે)
+  // 📂 Bill_Record ટેબલ રેન્ડર અને 'હસ્તે' ડ્રોપ-ડાઉન ફિલ્ટર સાથે છેલ્લો રેકોર્ડ બતાવવા માટેનું ફંક્શન
   function renderBillRecordTable() {
     let container = document.getElementById("tableContainerBillRec");
+    let summaryBox = document.getElementById("latestRecordSummary");
+    let summaryText = document.getElementById("latestRecordText");
     if(!container) return;
     
     let rows = appData.Bill_Record || [];
     if(rows.length === 0) {
       container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ બિલ રેકોર્ડ ઉપલબ્ધ નથી.</p>";
+      if(summaryBox) summaryBox.style.display = "none";
+      return;
+    }
+
+    let selectedHastak = document.getElementById("filterHastak") ? document.getElementById("filterHastak").value.toLowerCase() : "";
+    let searchQuery = document.getElementById("searchBillRec") ? document.getElementById("searchBillRec").value.toLowerCase() : "";
+
+    let filteredRows = rows.filter(r => {
+      let hVal = String(r["હસ્તે"] || r["Hastak"] || "").toLowerCase();
+      let bNo = String(r["બીલ નં"] || r["બિલ નં"] || "").toLowerCase();
+      let dt = String(r["તારીખ"] || "").toLowerCase();
+
+      let matchHastak = !selectedHastak || hVal === selectedHastak;
+      let matchSearch = !searchQuery || bNo.includes(searchQuery) || dt.includes(searchQuery) || hVal.includes(searchQuery);
+
+      return matchHastak && matchSearch;
+    });
+
+    // ➔ જો કોઈ હસ્તે સિલેક્ટ કર્યું હોય, તો તેનો છેલ્લો રેકોર્ડ (Latest) શોધો
+    if(selectedHastak && filteredRows.length > 0) {
+      let latest = filteredRows[filteredRows.length - 1]; // સૌથી છેલ્લી એન્ટ્રી
+      let lDate = String(latest["તારીખ"] || "").split('T')[0];
+      let lPauch = latest["કુલ પાઉચ"] || 0;
+      let lAmount = parseFloat(latest["કુલ જમા રકમ"] || 0).toFixed(2);
+      let lBill = latest["બીલ નં"] || latest["બિલ નં"] || "-";
+
+      summaryText.innerHTML = `હસ્તે: <b>${latest["હસ્તે"] || selectedHastak}</b> | તારીખ: <b>${lDate}</b> | બિલ નં: <b>${lBill}</b> | કુલ પાઉચ: <span style="color:#2980b9;">${lPauch}</span> | કુલ જમા રકમ: <span style="color:#8e44ad;">₹ ${lAmount}</span>`;
+      if(summaryBox) summaryBox.style.display = "block";
+    } else {
+      if(summaryBox) summaryBox.style.display = "none";
+    }
+
+    if(filteredRows.length === 0) {
+      container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>મેળ ખાતો કોઈ રેકોર્ડ મળ્યો નથી.</p>";
       return;
     }
 
@@ -1958,12 +2022,10 @@
       <th>Photo</th>
     </tr>`;
 
-    rows.forEach(r => {
+    filteredRows.forEach(r => {
       let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
       let photoVal = r["Photo"] || r["બિલનો ફોટો"] || "";
       let photoLink = photoVal ? `<a href="${photoVal.replace('=HYPERLINK("','').split('"')[0]}" target="_blank">બિલ જુઓ</a>` : "-";
-
-      // ➔ હસ્તે નું નામ સરખી રીતે મેળવવા માટે બધી સંભવિત કી ચેક કરો
       let hastakVal = r["હસ્તે"] || r["હસ્તે "] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "-";
 
       html += `<tr>
@@ -1985,12 +2047,7 @@
   }
 
   function filterBillRecordTable() {
-    let query = document.getElementById("searchBillRec").value.toLowerCase();
-    let trs = document.querySelectorAll("#tableContainerBillRec tr");
-    trs.forEach((row, i) => {
-      if(i === 0) return;
-      row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
-    });
+    renderBillRecordTable();
   }
 
   function askMpinAndExecute(callback) {

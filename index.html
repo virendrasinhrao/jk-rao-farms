@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Final Code with Bold & Colored Summary View for Hastak Filter
+  Final Elegant & Structured Column-Style Summary Box
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 29/10/2026 | ⏰ સમય: 01:20 IST
+  📅 તારીખ: 29/10/2026 | ⏰ સમય: 01:25 IST
 </div>
 
 <div class="header-bar">
@@ -580,9 +580,9 @@
       </div>
     </div>
 
-    <!-- ➔ માંગ્યા મુજબ બોલ્ડ અને કલરફુલ છેલ્લો રેકોર્ડ સારાંશ બોક્સ -->
-    <div id="latestRecordSummary" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #16a085; padding: 12px; border-radius: 6px; margin-bottom: 12px; display: none; line-height: 1.6;">
-      <p id="latestRecordText" style="margin:0; font-size: 14px; color: #2c3e50;"></p>
+    <!-- ➔ આકર્ષક, કલરફુલ અને કૉલમ ટાઇપ સેટિંગ વાળું સારાંશ બોક્સ -->
+    <div id="latestRecordSummary" style="background: linear-gradient(135deg, #eafaf1, #d4efdf); border-left: 5px solid #27ae60; padding: 14px; border-radius: 6px; margin-bottom: 12px; display: none; box-shadow: 0 2px 5px rgba(0,0,0,0.08);">
+      <p id="latestRecordText" style="margin:0;"></p>
     </div>
 
     <div id="tableContainerBillRec" style="overflow-x:auto;">
@@ -1978,7 +1978,7 @@
     });
   }
 
-  // 📂 Bill_Record ટેબલ રેન્ડર અને માંગ્યા મુજબનું બોલ્ડ અને કલરફુલ સારાંશ બોક્સ
+  // 📂 Bill_Record ટેબલ રેન્ડર અને માંગ્યા મુજબનું વ્યવસ્થિત, કલરફુલ અને સ્ટ્રક્ચર્ડ સારાંશ બોક્સ
   function renderBillRecordTable() {
     let container = document.getElementById("tableContainerBillRec");
     let summaryBox = document.getElementById("latestRecordSummary");
@@ -1996,7 +1996,6 @@
     let searchQuery = document.getElementById("searchBillRec") ? document.getElementById("searchBillRec").value.toLowerCase().trim() : "";
 
     let filteredRows = rows.filter(r => {
-      // ➔ શીટમાંથી હસ્તે નું નામ મેળવીને સાફ કરો
       let hVal = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || r["હસ્તે "] || "").trim();
       let bNo = String(r["બીલ નં"] || r["બિલ નં"] || "").toLowerCase();
       let dt = String(r["તારીખ"] || "").toLowerCase();
@@ -2010,7 +2009,7 @@
       return matchHastak && matchSearch;
     });
 
-    // ➔ હસ્તે સિલેક્ટ કર્યા પછી તમે માંગેલી સ્ટાઇલ મુજબનું બોલ્ડ અને કલરફુલ આઉટપુટ
+    // ➔ તમે માંગેલી સ્ટાઇલ અને કૉલમ ટાઇપ સેટિંગ મુજબનું આકર્ષક આઉટપુટ
     if(selectedHastak && filteredRows.length > 0) {
       let totalBills = filteredRows.length;
       let totalPauchSum = 0;
@@ -2027,10 +2026,27 @@
       let finalAmount = parseFloat(latest["કુલ જમા રકમ"] || latest["Cumulative_Amount"] || totalAmountSum).toFixed(2);
 
       summaryText.innerHTML = `
-        <span style="font-size: 15px; color: #2c3e50;"><b>${selectedHastak}</b> પાસે</span><br>
-        <span style="font-size: 14px; color: #333;">તારીખ: <b style="color: #d35400;">${lDate}</b> સુધી કુલ બીલ : <b style="font-size: 16px; color: #c0392b;">${totalBills}</b></span><br>
-        <span style="font-size: 14px; color: #333;">કુલ પાઉચ: <b style="font-size: 16px; color: #2980b9;">${finalPauch}</b></span><br>
-        <span style="font-size: 14px; color: #333;">કુલ જમા રકમ: <b style="font-size: 18px; color: #8e44ad;">₹ ${finalAmount}</b> જમા થયેલ છે</span>
+        <div style="font-size: 16px; color: #117a65; font-weight: bold; margin-bottom: 8px; border-bottom: 2px solid #a3e4d7; padding-bottom: 4px;">
+          👤 હસ્તે: ${selectedHastak} પાસે
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; text-align: left;">
+          <div style="background: #ffffff; padding: 6px 10px; border-radius: 4px; border: 1px solid #a3e4d7;">
+            <div style="font-size: 11px; color: #7f8c8d;">📅 તારીખ સુધી</div>
+            <div style="font-size: 13px; font-weight: bold; color: #d35400;">${lDate}</div>
+          </div>
+          <div style="background: #ffffff; padding: 6px 10px; border-radius: 4px; border: 1px solid #a3e4d7;">
+            <div style="font-size: 11px; color: #7f8c8d;">📋 કુલ બીલ</div>
+            <div style="font-size: 15px; font-weight: bold; color: #c0392b;">${totalBills} નંગ</div>
+          </div>
+          <div style="background: #ffffff; padding: 6px 10px; border-radius: 4px; border: 1px solid #a3e4d7;">
+            <div style="font-size: 11px; color: #7f8c8d;">📦 કુલ પાઉચ</div>
+            <div style="font-size: 15px; font-weight: bold; color: #2980b9;">${finalPauch}</div>
+          </div>
+          <div style="background: #ffffff; padding: 6px 10px; border-radius: 4px; border: 1px solid #a3e4d7;">
+            <div style="font-size: 11px; color: #7f8c8d;">💰 કુલ જમા રકમ</div>
+            <div style="font-size: 15px; font-weight: bold; color: #8e44ad;">₹ ${finalAmount}</div>
+          </div>
+        </div>
       `;
       if(summaryBox) summaryBox.style.display = "block";
     } else {

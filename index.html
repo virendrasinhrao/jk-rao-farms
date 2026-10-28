@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Table width expanded & Hastak dropdown filter with latest record view
+  Updated with your new Script URL & Hastak Filter & Wide Tables
 -->
 <!DOCTYPE html>
 <html>
@@ -94,9 +94,8 @@
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
     .modal-content { background: white; margin: 10% auto; padding: 15px; width: 90%; max-width: 350px; border-radius: 6px; }
     
-    /* ➔ ટેબલની Width વધારી અને Text Wrap ઓછો કરવા માટે padding તથા white-space સેટ કર્યું છે */
-    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; min-width: 850px; }
-    th, td { border: 1px solid #ccc; padding: 10px 12px; text-align: center; white-space: nowrap; }
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; min-width: 900px; }
+    th, td { border: 1px solid #ccc; padding: 10px 14px; text-align: center; white-space: nowrap; }
     th { background-color: #34495e; color: white; }
     
     .item-row { background: #fdfefe; padding: 8px; border: 1px solid #dcdde1; border-radius: 4px; margin-bottom: 8px; position: relative; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
@@ -106,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 28/10/2026 | ⏰ સમય: 16:30 IST
+  📅 તારીખ: 28/10/2026 | ⏰ સમય: 16:50 IST
 </div>
 
 <div class="header-bar">
@@ -634,6 +633,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
+  // ➔ તમારો નવો સેટ કરેલો Web App URL અહીં અપડેટ છે
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwx65QbgJPn_6SvDv_a_qkb6qSlqsuT5Vbi-dEEQA-rgrTOynDrqnHWPhNPdgnmeWK3yA/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
@@ -918,12 +918,19 @@
       }
     });
 
-    // ➔ હસ્તે ફિલ્ટર માટે ડ્રોપ-ડાઉન ભરો
+    // ➔ Bill_Record માંથી સીધા જ એક્ટિવ હસ્તે ના નામો ભરો
     let filterHastakSelect = document.getElementById("filterHastak");
     if(filterHastakSelect) {
       let curFilter = filterHastakSelect.value;
+      let uniqueHastakSet = new Set();
+      if(appData.Bill_Record) {
+        appData.Bill_Record.forEach(r => {
+          let h = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "").trim();
+          if(h && h !== "-") uniqueHastakSet.add(h);
+        });
+      }
       filterHastakSelect.innerHTML = '<option value="">-- બધા હસ્તે (All) --</option>';
-      allBhagiyas.forEach(b => filterHastakSelect.add(new Option(b, b)));
+      uniqueHastakSet.forEach(b => filterHastakSelect.add(new Option(b, b)));
       filterHastakSelect.value = curFilter;
     }
     
@@ -1961,7 +1968,7 @@
     });
   }
 
-  // 📂 Bill_Record ટેબલ રેન્ડર અને 'હસ્તે' ડ્રોપ-ડાઉન ફિલ્ટર સાથે છેલ્લો રેકોર્ડ બતાવવા માટેનું ફંક્શન
+  // 📂 Bill_Record ટેબલ રેન્ડર અને 'હસ્તે' ફિલ્ટર સાથે છેલ્લો રેકોર્ડ બતાવવા માટેનું ફંક્શન
   function renderBillRecordTable() {
     let container = document.getElementById("tableContainerBillRec");
     let summaryBox = document.getElementById("latestRecordSummary");
@@ -1975,29 +1982,29 @@
       return;
     }
 
-    let selectedHastak = document.getElementById("filterHastak") ? document.getElementById("filterHastak").value.toLowerCase() : "";
-    let searchQuery = document.getElementById("searchBillRec") ? document.getElementById("searchBillRec").value.toLowerCase() : "";
+    let selectedHastak = document.getElementById("filterHastak") ? document.getElementById("filterHastak").value.trim() : "";
+    let searchQuery = document.getElementById("searchBillRec") ? document.getElementById("searchBillRec").value.toLowerCase().trim() : "";
 
     let filteredRows = rows.filter(r => {
-      let hVal = String(r["હસ્તે"] || r["Hastak"] || "").toLowerCase();
+      let hVal = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "").trim();
       let bNo = String(r["બીલ નં"] || r["બિલ નં"] || "").toLowerCase();
       let dt = String(r["તારીખ"] || "").toLowerCase();
 
       let matchHastak = !selectedHastak || hVal === selectedHastak;
-      let matchSearch = !searchQuery || bNo.includes(searchQuery) || dt.includes(searchQuery) || hVal.includes(searchQuery);
+      let matchSearch = !searchQuery || bNo.includes(searchQuery) || dt.includes(searchQuery) || hVal.toLowerCase().includes(searchQuery);
 
       return matchHastak && matchSearch;
     });
 
-    // ➔ જો કોઈ હસ્તે સિલેક્ટ કર્યું હોય, તો તેનો છેલ્લો રેકોર્ડ (Latest) શોધો
+    // ➔ જો હસ્તે સિલેક્ટ કર્યું હોય, તો તેનો છેલ્લો રેકોર્ડ અને કુલ સરવાળો બતાવો
     if(selectedHastak && filteredRows.length > 0) {
-      let latest = filteredRows[filteredRows.length - 1]; // સૌથી છેલ્લી એન્ટ્રી
+      let latest = filteredRows[filteredRows.length - 1]; // છેલ્લી એન્ટ્રી
       let lDate = String(latest["તારીખ"] || "").split('T')[0];
       let lPauch = latest["કુલ પાઉચ"] || 0;
       let lAmount = parseFloat(latest["કુલ જમા રકમ"] || 0).toFixed(2);
       let lBill = latest["બીલ નં"] || latest["બિલ નં"] || "-";
 
-      summaryText.innerHTML = `હસ્તે: <b>${latest["હસ્તે"] || selectedHastak}</b> | તારીખ: <b>${lDate}</b> | બિલ નં: <b>${lBill}</b> | કુલ પાઉચ: <span style="color:#2980b9;">${lPauch}</span> | કુલ જમા રકમ: <span style="color:#8e44ad;">₹ ${lAmount}</span>`;
+      summaryText.innerHTML = `હસ્તે: <b>${selectedHastak}</b> | છેલ્લી તારીખ: <b>${lDate}</b> | બિલ નં: <b>${lBill}</b> | કુલ પાઉચ: <span style="color:#2980b9;">${lPauch}</span> | કુલ જમા રકમ: <span style="color:#8e44ad;">₹ ${lAmount}</span>`;
       if(summaryBox) summaryBox.style.display = "block";
     } else {
       if(summaryBox) summaryBox.style.display = "none";

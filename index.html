@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Fixed ReferenceError: r is not defined bug in tables
+  Updated: Fixed r is not defined error & Full Feature Integration
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 28/10/2026 | ⏰ સમય: 10:30 IST
+  📅 તારીખ: 28/10/2026 | ⏰ સમય: 10:35 IST
 </div>
 
 <div class="header-bar">
@@ -645,7 +645,7 @@
     let icon = document.getElementById("refreshIcon");
     if(icon) icon.className = "spin";
     fetch(SCRIPT_URL).then(res => res.json()).then(res => {
-      appData = res.data; populateData(); updateDashboard(); renderGallery(); renderBillRecordTable();
+      appData = res.data || {}; populateData(); updateDashboard(); renderGallery(); renderBillRecordTable();
       ['Sales', 'Med', 'Fert', 'Trac', 'Upad'].forEach(t => renderTable(t));
       if(icon) icon.className = "";
     }).catch(err => { if(icon) icon.className = ""; alert("ભૂલ: " + err); });
@@ -1391,7 +1391,7 @@
     else if(tabName === 'Trac') rows = appData['Tractor_Expense'] || [];
     else if(tabName === 'Upad') rows = appData['Upad_Ledger'] || [];
     
-    if(rows.length === 0) { 
+    if(!rows || rows.length === 0) { 
       container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ રેકોર્ડ ઉપલબ્ધ નથી.</p>"; 
       if(actionBar) actionBar.style.display = 'none';
       return; 
@@ -1412,7 +1412,8 @@
     }
     html += `</tr>`;
 
-    rows.forEach((r, index) => {
+    rows.forEach(function(r, index) {
+      if(!r) return;
       let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
       let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || index;
       let bhagiya = r["ભાગીદાર"] || r["ઉપાડ લેનાર"] || "-";
@@ -1794,7 +1795,7 @@
       .then(res => res.json())
       .then(res => {
         if(!res || res.status === "error") {
-          alert("❌ નિષ્ફળ (Failed): ઉપાડ એન્ટ્રી સેવ થઈ નથી!જી (Error: " + (res ? res.message : "Unknown") + ")");
+          alert("❌ નિષ્ફળ (Failed): ઉપાડ એન્ટ્રી સેવ થઈ નથી! (Error: " + (res ? res.message : "Unknown") + ")");
           btn.innerText = "💾 સેવ કરો";
           return;
         }

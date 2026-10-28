@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Fixed Failed to Fetch with New Web App URL
+  Updated: Added Bill Record Table View & Navigation without breaking existing features
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 27/10/2026 | ⏰ સમય: 14:55 IST
+  📅 તારીખ: 28/10/2026 | ⏰ સમય: 09:43 IST
 </div>
 
 <div class="header-bar">
@@ -124,6 +124,7 @@
     <button id="tabTrac" onclick="switchTab('Trac')">🚜 ટ્રેક્ટર</button>
     <button id="tabUpad" onclick="switchTab('Upad')">💸 ઉપાડ</button>
     <button id="tabGallery" onclick="switchTab('Gallery')">🖼️ ગેલેરી</button>
+    <button id="tabBillRec" onclick="switchTab('BillRec')">📂 બિલ રેકોર્ડ</button>
   </div>
 
   <!-- 0. DASHBOARD -->
@@ -560,6 +561,17 @@
       <p style="text-align:center;">લોડ થઈ રહ્યું છે...</p>
     </div>
   </div>
+
+  <!-- 7. BILL RECORD SECTION -->
+  <div id="formBillRec" class="section">
+    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📂 બિલ રેકોર્ડ્સ (Bill Record)</h3>
+    <div class="form-group">
+      <input type="text" id="searchBillRec" placeholder="🔍 બિલ નંબર, તારીખ અથવા હસ્તેથી શોધો..." oninput="filterBillRecordTable()">
+    </div>
+    <div id="tableContainerBillRec" style="overflow-x:auto;">
+      <p style="text-align:center;">લોડ થઈ રહ્યું છે...</p>
+    </div>
+  </div>
 </div>
 
 <!-- Custom Confirmation Modal with Select Dropdown -->
@@ -604,7 +616,7 @@
 
 <script>
   // ➔ Updated with your newly provided Apps Script Web URL
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxvKA__2at4AdrEFJPja0ROeMnR4d1PhFN8cyEIbRjv-biMsv2tKoLu_WkQr2wBwADbAg/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxCCWL6bs8amMa9dmnyd4tNDuRaaa3za7OZIg2oH5fKBM7yCXg1AJAL8BNLDZ78M3l-/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -634,7 +646,7 @@
     let icon = document.getElementById("refreshIcon");
     if(icon) icon.className = "spin";
     fetch(SCRIPT_URL).then(res => res.json()).then(res => {
-      appData = res.data; populateData(); updateDashboard(); renderGallery();
+      appData = res.data; populateData(); updateDashboard(); renderGallery(); renderBillRecordTable();
       ['Sales', 'Med', 'Fert', 'Trac', 'Upad'].forEach(t => renderTable(t));
       if(icon) icon.className = "";
     }).catch(err => { if(icon) icon.className = ""; alert("ભૂલ: " + err); });
@@ -680,8 +692,9 @@
     document.getElementById('tab' + tab).classList.add('active');
     if(tab === 'Dash') updateDashboard();
     if(tab === 'Gallery') renderGallery();
+    if(tab === 'BillRec') renderBillRecordTable();
     
-    if(tab !== 'Dash' && tab !== 'Gallery') {
+    if(tab !== 'Dash' && tab !== 'Gallery' && tab !== 'BillRec') {
       backToChoice(tab);
     }
   }
@@ -1391,10 +1404,12 @@
 
     if(tabName === 'Sales') {
       html += `<th>બીલ નં</th><th>ખેડૂનું નામ</th><th>ખરીદનાર</th><th>પાક</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th><th>સ્ટેટસ</th>`;
-    } else if(tabName === 'Med') {
-      html += `<th>બીલ નં</th><th>દવાનું નામ</th><th>પ્રકાર</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>બિલની કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th>`;
-    } else if(tabName === 'Fert') {
-      html += `<th>બીલ નં</th><th>ખાતરનું નામ</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>બિલની કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th>`;
+    } else if(tabName === 'Med' || tabName === 'Fert') {
+      let billNo = r["બીલ નં"] || r["બિલ નં"] || "-";
+      let itemName = r["દવાનું નામ"] || r["ખાતરનું નામ"] || "-";
+      let amt = r["રકમ"] || 0;
+      let farmerAmt = r["ખેડૂ રકમ"] || 0;
+      html += `<th>બીલ નં</th><th>${tabName === 'Med' ? 'દવાનું નામ' : 'ખાતરનું નામ'}</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>બિલની કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th>`;
     } else if(tabName === 'Trac') {
       html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બીલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th><th>સ્ટેટસ</th>`;
     } else if(tabName === 'Upad') {
@@ -1507,7 +1522,7 @@
           alert("ઉપાડ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       } else {
-        alert("આ સેクション માટે એડિટ સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે.");
+        alert("આ સેક્શન માટે એડિટ સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે.");
       }
     });
   }
@@ -1809,34 +1824,6 @@
     updateTableActionBar(tabName);
   }
 
-  function updateTableActionBar(tabName) {
-    let checkboxes = document.querySelectorAll('.row-select-' + tabName + ':checked');
-    let actionBar = document.getElementById('actionBar' + tabName);
-    if(!actionBar) return;
-
-    let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : tabName === 'Trac' ? 'Tractor_Expense' : 'Upad_Ledger';
-
-    if(checkboxes.length > 0) {
-      actionBar.style.display = 'flex';
-      if(checkboxes.length === 1) {
-        let singleId = checkboxes[0].value;
-        actionBar.innerHTML = `
-          <span style="font-size:12px; font-weight:bold; margin-right:5px;">1 સિલેક્ટ કરેલ:</span>
-          <button class="btn-edit" onclick="editSingleRecord('${sheetKey}', '${singleId}')">✏️ એડિટ</button>
-          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ ડિલીટ</button>
-        `;
-      } else {
-        actionBar.innerHTML = `
-          <span style="font-size:12px; font-weight:bold; margin-right:5px;">${checkboxes.length} સિલેક્ટ કરેલ (Warning):</span>
-          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ પસંદ કરેલ ડિલીટ કરો</button>
-        `;
-      }
-    } else {
-      actionBar.style.display = 'none';
-      actionBar.innerHTML = "";
-    }
-  }
-
   function askMpinForDeleteSelected(sheetKey, tabName) {
     let checkedBoxes = document.querySelectorAll('.row-select-' + tabName + ':checked');
     if(checkedBoxes.length === 0) return alert("કૃપા કરીને ડિલીટ કરવા માટે ઓછામાં ઓછી એક એન્ટ્રી સિલેક્ટ કરો!");
@@ -1943,6 +1930,61 @@
     let query = document.getElementById("searchGallery").value.toLowerCase();
     document.querySelectorAll("#galleryContainer tr").forEach((row, i) => {
       if(i === 0) return; row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
+    });
+  }
+
+  // ➔ Bill_Record ટેબલને રેન્ડર કરવા માટેનું ફંક્શન
+  function renderBillRecordTable() {
+    let container = document.getElementById("tableContainerBillRec");
+    if(!container) return;
+    
+    let rows = appData.Bill_Record || [];
+    if(rows.length === 0) {
+      container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ બિલ રેકોર્ડ ઉપલબ્ધ નથી.</p>";
+      return;
+    }
+
+    let html = `<table><tr>
+      <th>વર્ષ</th>
+      <th>એન્ટ્રી Id</th>
+      <th>તારીખ</th>
+      <th>હસ્તે</th>
+      <th>બિલ નં</th>
+      <th>પાઉચ નં.</th>
+      <th>રકમ</th>
+      <th>જમા / બાકી</th>
+      <th>કુલ જમા રકમ</th>
+      <th>Photo</th>
+    </tr>`;
+
+    rows.forEach(r => {
+      let cleanDate = String(r["તારીખ"] || "").split('T')[0];
+      let photoVal = r["Photo"] || r["બિલનો ફોટો"] || "";
+      let photoLink = photoVal ? `<a href="${photoVal.replace('=HYPERLINK("','').split('"')[0]}" target="_blank">બિલ જુઓ</a>` : "-";
+
+      html += `<tr>
+        <td>${r["વર્ષ"] || '-'}</td>
+        <td><b>${r["એન્ટ્રી Id"] || '-'}</b></td>
+        <td>${cleanDate}</td>
+        <td>${r["હસ્તે"] || '-'}</td>
+        <td><b>${r["બિલ નં"] || '-'}</b></td>
+        <td style="font-weight:bold; color:#2980b9;">${r["પાઉચ નં."] || 0}</td>
+        <td style="font-weight:bold; color:#27ae60;">₹ ${parseFloat(r["રકમ"] || 0).toFixed(2)}</td>
+        <td>${r["જમા / બાકી"] || '-'}</td>
+        <td style="font-weight:bold; color:#8e44ad;">₹ ${parseFloat(r["કુલ જમા રકમ"] || 0).toFixed(2)}</td>
+        <td>${photoLink}</td>
+      </tr>`;
+    });
+
+    container.innerHTML = html + `</table>`;
+  }
+
+  function filterBillRecordTable() {
+    let query = document.getElementById("searchBillRec").value.toLowerCase();
+    let trs = document.querySelectorAll("#tableContainerBillRec tr");
+    trs.forEach((row, i) => {
+      if(i === 0) return;
+      row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
     });
   }
 

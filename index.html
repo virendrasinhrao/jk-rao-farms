@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Complete & Final Version with Secure Hastak Filtering & Wide Tables
+  Final HTML Code with Direct Table Rendering & Flexible Hastak Matching
 -->
 <!DOCTYPE html>
 <html>
@@ -94,7 +94,7 @@
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
     .modal-content { background: white; margin: 10% auto; padding: 15px; width: 90%; max-width: 350px; border-radius: 6px; }
     
-    /* ➔ ટેબલની Width વધારી અને Text Wrap ઓછો કરવા માટે */
+    /* ➔ ટેબલની Width પહોળી અને Text Wrap અટકાવવા માટે */
     table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; min-width: 900px; }
     th, td { border: 1px solid #ccc; padding: 10px 14px; text-align: center; white-space: nowrap; }
     th { background-color: #34495e; color: white; }
@@ -106,7 +106,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 29/10/2026 | ⏰ સમય: 00:30 IST
+  📅 તારીખ: 29/10/2026 | ⏰ સમય: 01:10 IST
 </div>
 
 <div class="header-bar">
@@ -919,7 +919,7 @@
       }
     });
 
-    // ➔ હસ્તે ડ્રોપ-ડાઉન ભરવા માટે બંને જગ્યાએથી (Bill_Record અથવા Bhagiya_Master) ડેટા લેનાર સુરક્ષિત લૉજિક
+    // ➔ હસ્તે ડ્રોપ-ડાઉન ભરવા માટેનું મજબૂત લૉજિક
     let filterHastakSelect = document.getElementById("filterHastak");
     if(filterHastakSelect) {
       let curFilter = filterHastakSelect.value;
@@ -1160,7 +1160,7 @@
       </div>
       <div class="flex-row">
         <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcFertBill();"></select></div>
-        <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%)्:</label><input type="text" class="fKShare readonly-bg" readonly value="0"></div>
+        <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="fKShare readonly-bg" readonly value="0"></div>
         <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
         <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcFertBill();">ડિલિટ</button></div>
       </div>
@@ -1980,7 +1980,7 @@
     });
   }
 
-  // 📂 Bill_Record ટેબલ રેન્ડર અને 'હસ્તે' ફિલ્ટર (પરફેક્ટ કેસ-ઇનસેન્સિટિવ મૅચિંગ સાથે)
+  // 📂 Bill_Record ટેબલ રેન્ડર અને 'હસ્તે' ફિલ્ટર (એકદમ પરફેક્ટ અને લવચીક મૅચિંગ સાથે)
   function renderBillRecordTable() {
     let container = document.getElementById("tableContainerBillRec");
     let summaryBox = document.getElementById("latestRecordSummary");
@@ -1998,15 +1998,17 @@
     let searchQuery = document.getElementById("searchBillRec") ? document.getElementById("searchBillRec").value.toLowerCase().trim() : "";
 
     let filteredRows = rows.filter(r => {
-      let hVal = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "").trim();
+      // ➔ શીટમાં રહેલી કોઈપણ સંભવિત કૉલમમાંથી હસ્તે નું નામ મેળવો
+      let hVal = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || r["હસ્તે "] || "").trim();
       let bNo = String(r["બીલ નં"] || r["બિલ નં"] || "").toLowerCase();
       let dt = String(r["તારીખ"] || "").toLowerCase();
 
       let targetHastak = selectedHastak.toLowerCase();
+      let cleanHVal = hVal.toLowerCase();
 
-      // ➔ નામ નાના-મોટા અક્ષરો કે સ્પેસની ચિંતા કર્યા વગર ચોક્કસ મૅચ કરશે
-      let matchHastak = !targetHastak || hVal.toLowerCase() === targetHastak || hVal.toLowerCase().includes(targetHastak);
-      let matchSearch = !searchQuery || bNo.includes(searchQuery) || dt.includes(searchQuery) || hVal.toLowerCase().includes(searchQuery);
+      // ➔ સુપર ફ્લેક્સિબલ મૅચિંગ: નામ ગમે તે રીતે લખેલું હોય તો પણ પકડી લેશે
+      let matchHastak = !targetHastak || cleanHVal === targetHastak || cleanHVal.includes(targetHastak) || targetHastak.includes(cleanHVal);
+      let matchSearch = !searchQuery || bNo.includes(searchQuery) || dt.includes(searchQuery) || cleanHVal.includes(searchQuery);
 
       return matchHastak && matchSearch;
     });
@@ -2026,7 +2028,7 @@
     }
 
     if(filteredRows.length === 0) {
-      container.innerHTML = "<p style='text-align:center; color:#c0392b; font-weight:bold;'>⚠️ આ હસ્તે માટે 'Bill_Record' શીટમાં હજુ સુધી કોઈ રેકોર્ડ સેવ થયો નથી.</p>";
+      container.innerHTML = "<p style='text-align:center; color:#c0392b; font-weight:bold;'>⚠️ આ હસ્તે માટે 'Bill_Record' શીટમાં મૅચ થતો કોઈ રેકોર્ડ મળ્યો નથી.</p>";
       return;
     }
 

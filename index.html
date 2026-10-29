@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Clean Dropdown Version with Dedicated Master Record Buttons for Partners & Merchants
+  Complete Gujarati Version with Stylish Action Buttons for Partner & Merchant Records
 -->
 <!DOCTYPE html>
 <html>
@@ -36,8 +36,26 @@
     .btn-back { background: linear-gradient(135deg, #7f8c8d, #95a5a6); color: white; border-radius: 6px; border: none; padding: 8px 14px; cursor: pointer; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     .btn-back:hover { background: linear-gradient(135deg, #6c7a89, #7f8c8d); }
 
-    .btn-master-link { background: none; border: none; color: #2980b9; font-size: 12px; font-weight: bold; cursor: pointer; padding: 2px 0; text-align: left; display: inline-block; margin-top: 2px; }
-    .btn-master-link:hover { text-decoration: underline; color: #1f618d; }
+    .btn-action-pill {
+      background: linear-gradient(135deg, #2980b9, #3498db);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: 0.2s;
+    }
+    .btn-action-pill:hover {
+      background: linear-gradient(135deg, #1f618d, #2980b9);
+      transform: translateY(-1px);
+    }
 
     .btn-table-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
     .btn-delete { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
@@ -108,7 +126,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 4px; font-weight: bold;">
-  📅 તારીખ: <span id="currentDateDisplay">30/10/2026</span> | ⏰ સમય: <span id="currentTimeDisplay">13:30 IST</span>
+  📅 તારીખ: <span id="currentDateDisplay">30/10/2026</span> | ⏰ સમય: <span id="currentTimeDisplay">13:40 IST</span>
 </div>
 
 <div class="header-bar">
@@ -186,9 +204,9 @@
         <input type="hidden" id="editEntryId" value="">
         
         <div class="form-group">
-          <label>👤 Bill To / નામ:</label>
+          <label>👤 Bill To / નામ (માલિક):</label>
           <select id="sBillOwner" class="ownerList" required></select>
-          <button type="button" class="btn-master-link" onclick="openMasterModal('Bhagiya_Master')">⚙️ ભાગીદાર રેકોર્ડ (મેનેજ કરો)</button>
+          <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')">👥 ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
         </div>
 
         <div class="flex-row">
@@ -199,12 +217,12 @@
           <div class="form-group">
             <label>👤 ભાગીદાર:</label>
             <select id="sBhagiya" class="bhagiyaList" required onchange="updatePartnerSummary('Sales'); updateCategoryBalance('Sales');"></select>
-            <button type="button" class="btn-master-link" onclick="openMasterModal('Bhagiya_Master')">⚙️ ભાગીદાર રેકોર્ડ</button>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')">👥 ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
           </div>
           <div class="form-group">
             <label>🛒 ખરીદનાર (વેપારી):</label>
             <select id="sVepari" class="vepariList" required></select>
-            <button type="button" class="btn-master-link" onclick="openMasterModal('Merchant_Master')">⚙️ વેપારી રેકોર્ડ</button>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Merchant_Master')">🛒 વેપારી રેકોર્ડ (અપડેટ કરો)</button>
           </div>
         </div>
         <hr style="margin:10px 0;">
@@ -272,11 +290,12 @@
           <div class="form-group">
             <label>👤 ભાગીદાર:</label>
             <select id="mBhagiya" class="bhagiyaList" required onchange="updatePartnerSummary('Med'); updateCategoryBalance('Med');"></select>
-            <button type="button" class="btn-master-link" onclick="openMasterModal('Bhagiya_Master')">⚙️ ભાગીદાર રેકોર્ડ</button>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')">👥 ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
           </div>
           <div class="form-group">
-            <label>🏬 દુકાન / વેપારી:</label><select id="mVepari" required></select>
-            <button type="button" class="btn-master-link" onclick="openMasterModal('Merchant_Master')">⚙️ વેપારી રેકોર્ડ</button>
+            <label>🏬 દુકાન / વેપારી:</label>
+            <select id="mVepari" required></select>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Merchant_Master')">🛒 વેપારી રેકોર્ડ (અપડેટ કરો)</button>
           </div>
         </div>
         <hr style="margin:10px 0;">
@@ -361,11 +380,12 @@
           <div class="form-group">
             <label>👤 ભાગીદાર:</label>
             <select id="fBhagiya" class="bhagiyaList" required onchange="updatePartnerSummary('Fert'); updateCategoryBalance('Fert');"></select>
-            <button type="button" class="btn-master-link" onclick="openMasterModal('Bhagiya_Master')">⚙️ ભાગીદાર રેકોર્ડ</button>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')">👥 ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
           </div>
           <div class="form-group">
-            <label>🏬 વેપારી:</label><select id="fVepari" class="fertVepariList" required></select>
-            <button type="button" class="btn-master-link" onclick="openMasterModal('Merchant_Master')">⚙️ વેપારી રેકોર્ડ</button>
+            <label>🏬 વેપારી:</label>
+            <select id="fVepari" class="fertVepariList" required></select>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Merchant_Master')">🛒 વેપારી રેકોર્ડ (અપડેટ કરો)</button>
           </div>
         </div>
         <hr style="margin:10px 0;">
@@ -446,7 +466,7 @@
           <div class="form-group">
             <label>👤 ભાગીદાર:</label>
             <select id="tBhagiya" class="bhagiyaList" required onchange="updatePartnerSummary('Trac');"></select>
-            <button type="button" class="btn-master-link" onclick="openMasterModal('Bhagiya_Master')">⚙️ ભાગીદાર રેકોર્ડ</button>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')">👥 ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
           </div>
         </div>
         <hr style="margin:10px 0;">
@@ -509,7 +529,7 @@
           <div class="form-group">
             <label>👤 ઉપાડ લેનાર:</label>
             <select id="uBhagiya" class="bhagiyaList" required></select>
-            <button type="button" class="btn-master-link" onclick="openMasterModal('Bhagiya_Master')">⚙️ ભાગીદાર રેકોર્ડ</button>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')">👥 ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
           </div>
           <div class="form-group">
             <label>📌 એન્ટ્રી પ્રકાર:</label>
@@ -635,7 +655,7 @@
   </div>
 </div>
 
-<!-- Master Management Modal (ભાગીદાર / વેપારી રેકોર્ડ ટેબલ વ્યુ) -->
+<!-- Master Management Modal -->
 <div id="modalMasterManager" class="modal">
   <div class="modal-content" style="max-width: 600px; text-align: left;">
     <h3 id="masterModalTitle" style="color:#2c3e50; margin-top:0; text-align:center;">⚙️ રેકોર્ડ મેનેજમેન્ટ</h3>
@@ -646,9 +666,7 @@
       <button type="button" class="btn-submit" style="margin:0; background:#e74c3c;" onclick="deleteSelectedMasterRecord()">🗑️ ડિલીટ કરો</button>
     </div>
 
-    <div id="masterTableContainer" style="max-height: 300px; overflow: auto; border: 1px solid #ccc; border-radius: 4px;">
-      <!-- Table dynamically filled -->
-    </div>
+    <div id="masterTableContainer" style="max-height: 300px; overflow: auto; border: 1px solid #ccc; border-radius: 4px;"></div>
 
     <button type="button" onclick="document.getElementById('modalMasterManager').style.display='none'" style="margin-top: 15px; width: 100%; padding: 8px; background: #7f8c8d; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">બંધ કરો</button>
   </div>
@@ -664,7 +682,7 @@
     <div class="form-group"><label>નામ:</label><input type="text" id="mNameInput"></div>
     <div class="form-group"><label>મોબાઈલ નંબર:</label><input type="number" id="mPhoneInput"></div>
     <div class="form-group"><label>ગામ / સરનામું:</label><input type="text" id="mAddInput"></div>
-    <div class="form-group" id="mRollGroup"><label>રોલ (દા.ત. ખેડૂ / માલિક):</label><input type="text" id="mRollInput" value="ખેડૂ"></div>
+    <div class="form-group" id="mRollGroup"><label>રોલ (દા.ત. ખેડૂ):</label><input type="text" id="mRollInput" value="ખેડૂ"></div>
     <div class="form-group" id="mCategoryGroup" style="display:none;"><label>પ્રકાર:</label><select id="mCategoryInput"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="દવા">દવા</option><option value="ખાતર">ખાતર</option><option value="અન્ય વેપારી">અન્ય વેપારી</option></select></div>
 
     <div style="display: flex; gap: 10px; margin-top: 15px;">
@@ -858,7 +876,7 @@
   }
 
   function getCategoryBalanceVal(sectionType, partnerName) {
-    if(!partnerName || partnerName === "NEW" || partnerName.includes("⚙️")) return 0;
+    if(!partnerName) return 0;
     
     let targetType = '', altType = '';
     if(sectionType === 'Sales') { targetType = 'વેચાણ બીલ'; altType = 'વેચાણ બિલ જમા'; }
@@ -991,50 +1009,44 @@
   function populateData() {
     if(!appData.Bhagiya_Master) return;
     
-    let upadBhagiyas = [];
+    // Farmer list for Partner (Roll = ખેડૂ / farmer)
+    let farmerList = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
       let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
       if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "ખેડૂ" || roll === "farmer")) {
-        upadBhagiyas.push(name.trim());
+        farmerList.push(name.trim());
       }
     });
     
-    let uBhagiyaSelect = document.getElementById("uBhagiya");
-    if(uBhagiyaSelect) {
-      let cur = uBhagiyaSelect.value;
-      uBhagiyaSelect.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      upadBhagiyas.forEach(b => uBhagiyaSelect.add(new Option(b, b)));
-      uBhagiyaSelect.value = cur;
-    }
-
-    let hastakList = [];
-    appData.Bhagiya_Master.forEach(r => {
-      let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
-      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
-      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "ખેડૂ" || roll === "farmer")) {
-        hastakList.push(name.trim());
-      }
-    });
-
-    document.querySelectorAll('.bhagiyaList').forEach(sel => { 
-      if(sel.id !== "uBhagiya") {
-        let cur = sel.value; 
-        sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-        hastakList.forEach(b => sel.add(new Option(b, b))); 
-        sel.value = cur;
-      }
-    });
-
+    // Owner list for Bill To (Roll = માલિક / owner)
     let ownerList = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
       let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
-      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "માલિક" || roll === "owner" || roll === "owners")) {
+      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "માલિક" || roll === "owner")) {
         ownerList.push(name.trim());
       }
     });
 
+    // Populate Partner Selects (.bhagiyaList)
+    document.querySelectorAll('.bhagiyaList').forEach(sel => {
+      let cur = sel.value;
+      sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
+      farmerList.forEach(b => sel.add(new Option(b, b)));
+      sel.value = cur;
+    });
+
+    // Populate Upad Partner Select
+    let uBhagiyaSelect = document.getElementById("uBhagiya");
+    if(uBhagiyaSelect) {
+      let cur = uBhagiyaSelect.value;
+      uBhagiyaSelect.innerHTML = '<option value="">-- પસંદ કરો --</option>';
+      farmerList.forEach(b => uBhagiyaSelect.add(new Option(b, b)));
+      uBhagiyaSelect.value = cur;
+    }
+
+    // Populate Owner Select
     let ownerSelect = document.getElementById("sBillOwner");
     if(ownerSelect) {
       let curOwner = ownerSelect.value;
@@ -1043,75 +1055,48 @@
       ownerSelect.value = curOwner;
     }
 
+    // Populate Filter Hastak Select
     let filterHastakSelect = document.getElementById("filterHastak");
     if(filterHastakSelect) {
       let curFilter = filterHastakSelect.value;
       let uniqueHastakSet = new Set();
-
       if(appData.Bill_Record) {
         appData.Bill_Record.forEach(r => {
           let h = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "").trim();
           if(h && h !== "-") uniqueHastakSet.add(h);
         });
       }
-
-      if(uniqueHastakSet.size === 0 && appData.Bhagiya_Master) {
-        appData.Bhagiya_Master.forEach(r => {
-          let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
-          let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
-          if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "ખેડૂ" || roll === "farmer")) {
-            uniqueHastakSet.add(name.trim());
-          }
-        });
+      if(uniqueHastakSet.size === 0) {
+        farmerList.forEach(b => uniqueHastakSet.add(b));
       }
-
       filterHastakSelect.innerHTML = '<option value="">-- બધા (All) --</option>';
       uniqueHastakSet.forEach(b => filterHastakSelect.add(new Option(b, b)));
       filterHastakSelect.value = curFilter;
     }
-    
-    let providers = [];
-    appData.Bhagiya_Master.forEach(r => {
-      let name = r["નામ"] || r["Name"];
-      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
-      if(name && roll !== "ખેડૂ" && roll !== "farmer") {
-        providers.push(name + " (" + (r["Roll"] || "ભાગીદાર") + ")");
-      }
-    });
+
+    // Populate Merchants (.vepariList, fertVepariList, mVepari)
+    let vegVeparis = [];
+    let medVeparis = [];
+    let fertVeparis = [];
+    let allVeparis = [];
+
     if(appData.Merchant_Master) {
       appData.Merchant_Master.forEach(r => {
-        let mName = r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"];
-        let mType = String(r["પ્રકાર"] || "").trim().toLowerCase();
-        if(mName && !mType.includes("દવા") && !mType.includes("ખાતર") && !mType.includes("medicine") && !mType.includes("fertilizer")) {
-          providers.push(mName + " (" + (r["પ્રકાર"] || "વેપારી") + ")");
+        let name = r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"];
+        let type = String(r["પ્રકાર"] || "").trim().toLowerCase();
+        if(name) {
+          allVeparis.push(name);
+          if(type === "vegitable" || type.includes("શાકભાજી")) vegVeparis.push(name);
+          if(type === "દવા" || type.includes("દવા")) medVeparis.push(name);
+          if(type === "ખાતર" || type.includes("ખાતર")) fertVeparis.push(name);
         }
       });
     }
-    let uProvider = document.getElementById("uProvider");
-    if(uProvider) {
-      let cur = uProvider.value;
-      uProvider.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      providers.forEach(p => uProvider.add(new Option(p, p)));
-      uProvider.value = cur;
-    }
 
-    let veparis = appData.Merchant_Master ? appData.Merchant_Master.filter(r => String(r["પ્રકાર"] || "").trim() === "Vegitable").map(r => r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"]) : [];
     let sVepari = document.getElementById("sVepari");
     if(sVepari) {
       let cur = sVepari.value; sVepari.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      veparis.forEach(v => sVepari.add(new Option(v, v))); sVepari.value = cur;
-    }
-
-    let medVeparis = [], fertVeparis = [];
-    if(appData.Merchant_Master) {
-      appData.Merchant_Master.forEach(r => {
-        let type = String(r["પ્રકાર"] || "").trim().toLowerCase();
-        let name = r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"];
-        if(name) {
-          if(type === "દવા" || type === "medicine" || type.includes("દવા")) medVeparis.push(name);
-          if(type === "ખાતર" || type === "fertilizer" || type.includes("ખાતર")) fertVeparis.push(name);
-        }
-      });
+      vegVeparis.forEach(v => sVepari.add(new Option(v, v))); sVepari.value = cur;
     }
 
     let mVepari = document.getElementById("mVepari");
@@ -1126,21 +1111,43 @@
       fertVeparis.forEach(v => fVepari.add(new Option(v, v))); fVepari.value = cur;
     }
 
+    // Upad Providers
+    let providers = [];
+    appData.Bhagiya_Master.forEach(r => {
+      let name = r["નામ"] || r["Name"];
+      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
+      if(name && roll !== "ખેડૂ" && roll !== "farmer") {
+        providers.push(name + " (" + (r["Roll"] || "ભાગીદાર") + ")");
+      }
+    });
+    allVeparis.forEach(v => providers.push(v + " (વેપારી)"));
+    
+    let uProvider = document.getElementById("uProvider");
+    if(uProvider) {
+      let cur = uProvider.value;
+      uProvider.innerHTML = '<option value="">-- પસંદ કરો --</option>';
+      providers.forEach(p => uProvider.add(new Option(p, p)));
+      uProvider.value = cur;
+    }
+
+    // Crops
     document.querySelectorAll('.pakList').forEach(sel => {
       let currentVal = sel.value; sel.innerHTML = '<option value="">-- પાક --</option><option value="NEW">➕ નવો</option>';
       if(appData.Crop_Master) appData.Crop_Master.forEach(c => { let cName = c["પાકનું નામ"]; if(cName) sel.add(new Option(cName, cName)); });
       sel.value = currentVal;
     });
 
+    // Medicines
     document.querySelectorAll('.davaList').forEach(sel => {
       let currentVal = sel.value; sel.innerHTML = '<option value="">-- દવા --</option>';
       if(appData.Medicine_Master) appData.Medicine_Master.forEach(m => { let mName = m["દવાનું_નામ"] || m["દવાનું નામ"] || m["નામ"] || ""; if(mName) sel.add(new Option(mName, mName)); });
       sel.value = currentVal;
     });
 
+    // Fertilizers
     document.querySelectorAll('.khatarList').forEach(sel => {
       let currentVal = sel.value; 
-      sel.innerHTML = '<option value="">-- ખાતર --</option><option value="NEW">➕ નવું ખાતર ઉમેરો</option>';
+      sel.innerHTML = '<option value="">-- ખાતર --</option>';
       let fertSource = appData.Fertilizer_Master || appData.Medicine_Master || [];
       fertSource.forEach(m => { let fName = m["ખાતરનું_નામ"] || m["ખાતરનું નામ"] || m["દવાનું_નામ"] || m["દવાનું નામ"] || m["નામ"] || ""; if(fName) sel.add(new Option(fName, fName)); });
       sel.value = currentVal;
@@ -2146,66 +2153,19 @@
     updateTableActionBar(tabName);
   }
 
-  function askMpinForDeleteSelected(sheetKey, tabName) {
-    let checkedBoxes = document.querySelectorAll('.row-select-' + tabName + ':checked');
-    if(checkedBoxes.length === 0) return alert("કૃપા કરીને ડિલીટ કરવા માટે ઓછામાં ઓછી એક એન્ટ્રી સિલેક્ટ કરો!");
-
-    let idsToDelete = Array.from(checkedBoxes).map(cb => cb.value);
-
-    askMpinAndExecute(() => {
-      if(!confirm("⚠️ સાવધાન: શું તમે ખરેખર પસંદ કરેલી " + idsToDelete.length + " એન્ટ્રીઓ ડિલીટ કરવા માંગો છો? આ ક્રિયા પાછી નહીં ખેંચી શકાય!")) return;
-      
-      let promises = idsToDelete.map(id => {
-        let deleteAction = "deleteRecord";
-        let payload = { action: deleteAction, entryId: id, sheetName: sheetKey };
-
-        if (sheetKey === 'Fertilizer_Items') {
-          Promise.all([
-            fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "deleteRecord", entryId: id, sheetName: "Fertilizer_Items" }) }),
-            fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "deleteRecord", entryId: id, sheetName: "Fertilizer_Bill" }) })
-          ]);
-        } else if (sheetKey === 'Pesticide_Items') {
-          Promise.all([
-            fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "deleteRecord", entryId: id, sheetName: "Pesticide_Items" }) }),
-            fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "deleteRecord", entryId: id, sheetName: "Pesticide_Bill" }) })
-          ]);
-        }
-
-        return fetch(SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify(payload)
-        });
-      });
-
-      Promise.all(promises).then(() => {
-        alert("પસંદ કરેલ એન્ટ્રીઓ સફળતાપૂર્વક ડિલીટ થઈ ગઈ!");
-        fetchData();
-      }).catch(err => { alert("ભૂલ: " + err); fetchData(); });
-    });
+  function askMpinAndExecute(callback) {
+    pendingActionCallback = callback;
+    document.getElementById("inputMpin").value = "";
+    document.getElementById("modalMpin").style.display = "block";
   }
 
-  function filterTable(tabName) {
-    let query = document.getElementById("search" + tabName).value.toLowerCase();
-    let rows = document.querySelectorAll("#tableContainer" + tabName + " tr");
-    rows.forEach((row, i) => {
-      if(i === 0) return;
-      let text = row.innerText.toLowerCase();
-      row.style.display = text.includes(query) ? "" : "none";
-    });
-  }
-
-  function saveData(action, rowValues) {
-    fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: action, rowValues: rowValues }) })
-    .then(res => res.json()).then(() => { alert("સફળતાપૂર્વક ઉમેરાઈ ગયું!"); fetchData(); }).catch(err => alert("ભૂલ: " + err));
-  }
-
-  function handlePhotoUpload(fileInputId, callback) {
-    let fileInput = document.getElementById(fileInputId);
-    if(fileInput && fileInput.files[0]) {
-      let reader = new FileReader();
-      reader.onload = function(e) { callback(e.target.result); };
-      reader.readAsDataURL(fileInput.files[0]);
-    } else { callback(""); }
+  function verifyMpinAndProceed() {
+    let enteredMpin = document.getElementById("inputMpin").value;
+    if(enteredMpin === CORRECT_MPIN) {
+      document.getElementById("modalMpin").style.display = "none";
+      if(pendingActionCallback) pendingActionCallback();
+      pendingActionCallback = null;
+    } else { alert("ખોટો પ્રોટેક્શન કોડ છે!"); }
   }
 
   function v(id) { return document.getElementById(id).value; }

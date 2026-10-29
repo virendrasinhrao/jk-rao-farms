@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Final Complete Code with Correct Sheet Column Mapping for Edit
+  Final Code with 'Farmer' Roll Filter in Bhagiya Dropdowns & Aligned Summary Box
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 29/10/2026 | ⏰ સમય: 02:40 IST
+  📅 તારીખ: 29/10/2026 | ⏰ સમય: 02:33 IST
 </div>
 
 <div class="header-bar">
@@ -902,17 +902,21 @@
       uBhagiyaSelect.value = cur;
     }
 
-    let allBhagiyas = [];
+    // ➔ માત્ર 'ખેડૂ' (Farmer) રોલ વાળા જ ભાગીદારો ફોર્મમાં આવે તે માટેનું કડક લૉજિક + 'નવો ઉમેરો' (+ ઉમેરો)
+    let farmerBhagiyas = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
-      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ") allBhagiyas.push(name.trim());
+      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
+      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "ખેડૂ" || roll === "farmer")) {
+        farmerBhagiyas.push(name.trim());
+      }
     });
 
     document.querySelectorAll('.bhagiyaList').forEach(sel => { 
       if(sel.id !== "uBhagiya") {
         let cur = sel.value; 
         sel.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
-        allBhagiyas.forEach(b => sel.add(new Option(b, b))); 
+        farmerBhagiyas.forEach(b => sel.add(new Option(b, b))); 
         sel.value = cur;
       }
     });
@@ -933,7 +937,8 @@
       if(uniqueHastakSet.size === 0 && appData.Bhagiya_Master) {
         appData.Bhagiya_Master.forEach(r => {
           let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
-          if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ") {
+          let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
+          if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "ખેડૂ" || roll === "farmer")) {
             uniqueHastakSet.add(name.trim());
           }
         });
@@ -1536,16 +1541,16 @@
           document.getElementById("sVepari").value = found["ખરીદનાર"] || "";
           document.getElementById("sStatus").value = found["બીલની સ્થિતિ (બાકી/જમા)"] || found["બીલની સ્થિતિ"] || "રોકડા / જમા";
           
-          // ➔ સુનિશ્ચિત કરો કે હસ્તે અને પાઉચ બરાબર લોડ થાય
-          document.getElementById("sHastak").value = found["પૈસા કોણે લીધા (હસ્તે)"] || found["હસ્તે"] || "";
+          // ➔ ફિક્સ કરેલ કી લૉજિક જેથી પાઉચ અને હસ્તે પરફેક્ટ લોડ થાય
+          document.getElementById("sHastak").value = found["પૈસા કોણે લીધા (હસ્તે)"] || found["હસ્તે"] || found["Hastak"] || "";
           document.getElementById("sBLidha").value = found["ખેડૂએ પૈસા લીધા? (Yes/No)"] || found["ભાગિયાએ લીધા?"] || "No";
           
           document.getElementById("editEntryId").value = entryId;
           document.getElementById("btnSales").innerText = "અપડેટ કરો";
           document.getElementById("salesItemsContainer").innerHTML = "";
           
-          let pauchVal = found["પાઉચ / નંગ"] || found["પાઉચ નં."] || 0;
-          addSalesItemRow(pauchVal, found["કુલ વજન (કિલો)"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
+          let pauchVal = found["પાઉચ / નંગ"] || found["પાઉચ નં."] || found["Total_Pauch"] || 0;
+          addSalesItemRow(pauchVal, found["કુલ વજન (કિલો)"] || found["કુલ વજન (કિલો"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || found["૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
           
           updatePartnerSummary('Sales');
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");

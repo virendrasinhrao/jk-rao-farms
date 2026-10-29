@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Final Clean & Perfect Version with Correct Column Order & ✅/❌ Symbols
+  Final Corrected Version with Exact Sales Table View & Image Modal Viewer
 -->
 <!DOCTYPE html>
 <html>
@@ -91,8 +91,8 @@
     .flex-row { display: flex; gap: 8px; }
     .flex-row > div { flex: 1; }
     
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
-    .modal-content { background: white; margin: 10% auto; padding: 15px; width: 90%; max-width: 350px; border-radius: 6px; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-content { background: white; margin: auto; padding: 15px; width: 92%; max-width: 400px; border-radius: 8px; text-align: center; }
     
     table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; min-width: 900px; }
     th, td { border: 1px solid #ccc; padding: 10px 14px; text-align: center; white-space: nowrap; }
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 29/10/2026 | ⏰ સમય: 11:00 IST
+  📅 તારીખ: 29/10/2026 | ⏰ સમય: 13:15 IST
 </div>
 
 <div class="header-bar">
@@ -593,6 +593,20 @@
 
     <div id="tableContainerBillRec" style="overflow-x:auto;">
       <p style="text-align:center;">લોડ થઈ રહ્યું છે...</p>
+    </div>
+  </div>
+</div>
+
+<!-- 🖼️ Image Viewer Modal with Back & Download Buttons -->
+<div id="modalImageViewer" class="modal">
+  <div class="modal-content" style="max-width: 400px;">
+    <h3 style="color:#2c3e50; margin-top:0;">📷 બિલ ફોટો વ્યુઅર</h3>
+    <div style="margin: 10px 0; max-height: 350px; overflow: auto;">
+      <img id="viewerImage" src="" style="width: 100%; border-radius: 4px; border: 1px solid #ccc; object-fit: contain;">
+    </div>
+    <div style="display: flex; gap: 10px; margin-top: 15px;">
+      <a id="downloadPhotoBtn" href="" target="_blank" download="Bill_Photo.jpg" style="flex:1; background:#27ae60; color:white; text-decoration:none; padding:8px; border-radius:4px; font-weight:bold; font-size:13px; text-align:center;">📥 ડાઉનલોડ કરો</a>
+      <button type="button" onclick="closeImageModal()" style="flex:1; background:#7f8c8d; color:white; border:none; padding:8px; border-radius:4px; font-weight:bold; font-size:13px; cursor:pointer;">⬅️ પાછળ (Back)</button>
     </div>
   </div>
 </div>
@@ -2012,8 +2026,9 @@
     if(photos.length === 0) { container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ ફોટો ઉપલબ્ધ નથી.</p>"; return; }
     let html = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>પ્રકાર</th><th>ફોટો</th><th>ક્રિયા</th></tr>`;
     photos.forEach(p => {
-      let imgTag = p["Photo_Link"] ? `<a href="${p["Photo_Link"]}" target="_blank"><img src="${p["Photo_Link"]}" style="width:40px; height:40px; object-fit:cover;"></a>` : "ના";
-      html += `<tr><td>${String(p["Date"]||'').split('T')[0]}</td><td>${p["Bill_No"]||''}</td><td>${p["Bhagiya"]||''}</td><td>${p["Category"]||''}</td><td>${imgTag}</td><td><button class="btn-delete" onclick="askMpinForDeleteSelected('Photo_Gallery')">ડિલિટ</button></td></tr>`;
+      let link = p["Photo_Link"] || p["ફોટો"] || "";
+      let imgTag = link ? `<button type="button" onclick="openImageModal('${link}')" style="background:#2980b9; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">🖼️ બિલ જુઓ</button>` : "ના";
+      html += `<tr><td>${String(p["Date"]||p["તારીખ"]||'').split('T')[0]}</td><td>${p["Bill_No"]||p["બિલ નં"]||''}</td><td>${p["Bhagiya"]||p["ભાગીદાર"]||''}</td><td>${p["Category"]||p["પ્રકાર"]||''}</td><td>${imgTag}</td><td><button class="btn-delete" onclick="askMpinForDeleteSelected('Photo_Gallery')">ડિલિટ</button></td></tr>`;
     });
     container.innerHTML = html + `</table>`;
   }
@@ -2118,8 +2133,8 @@
 
     filteredRows.forEach(r => {
       let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
-      let photoVal = r["Photo"] || r["બિલનો ફોટો"] || "";
-      let photoLink = photoVal ? `<a href="${photoVal.replace('=HYPERLINK("','').split('"')[0]}" target="_blank">બિલ જુઓ</a>` : "-";
+      let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
+      let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
       let hastakVal = r["હસ્તે"] || r["હસ્તે "] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "-";
 
       html += `<tr>
@@ -2132,7 +2147,7 @@
         <td>₹ ${parseFloat(r["રકમ"] || r["Amount"] || 0).toFixed(2)}</td>
         <td>${r["જમા / બાકી"] || r["Status"] || '-'}</td>
         <td style="font-weight:bold; color:#2980b9;">${r["કુલ પાઉચ"] || r["Cumulative_Pauch"] || 0}</td>
-        <td style="font-weight:bold; color:#8e44ad;">₹ ${parseFloat(r["કુલ જમા રકમ"] || r["Cumulative_Amount"] || 0).toFixed(2)}</td>
+        <td style="font-weight:bold; color:#8e44ad;">₹ ${parseFloat(r["કુલ જમા રકમ"] || r["Cumulative_Amount"] || totalAmountSum).toFixed(2)}</td>
         <td>${photoLink}</td>
       </tr>`;
     });
@@ -2142,6 +2157,17 @@
 
   function filterBillRecordTable() {
     renderBillRecordTable();
+  }
+
+  // 🖼️ Image Viewer Modal Functions (Back & Download)
+  function openImageModal(url) {
+    document.getElementById("viewerImage").src = url;
+    document.getElementById("downloadPhotoBtn").href = url;
+    document.getElementById("modalImageViewer").style.display = "flex";
+  }
+
+  function closeImageModal() {
+    document.getElementById("modalImageViewer").style.display = "none";
   }
 
   function askMpinAndExecute(callback) {

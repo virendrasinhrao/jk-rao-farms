@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Final Complete Version with Duplicate Prevention on Sales Update
+  Final Complete Version with All Rules (Hastak: Farmer+Owner, Bill To: Owner Only, Bill Record Table Column & Filter)
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 29/10/2026 | ⏰ સમય: 15:40 IST
+  📅 તારીખ: 29/10/2026 | ⏰ સમય: 19:14 IST
 </div>
 
 <div class="header-bar">
@@ -575,9 +575,9 @@
     <!-- ➔ હસ્તે ફિલ્ટર માટેનું ડ્રોપ-ડાઉન અને સર્ચ બાર -->
     <div class="flex-row" style="margin-bottom: 10px;">
       <div class="form-group">
-        <label>👤 હસ્તે ફિલ્ટર કરો:</label>
+        <label>👤 હસ્તે / નામ ફિલ્ટર કરો:</label>
         <select id="filterHastak" onchange="filterBillRecordTable()">
-          <option value="">-- બધા હસ્તે (All) --</option>
+          <option value="">-- બધા (All) --</option>
         </select>
       </div>
       <div class="form-group">
@@ -653,7 +653,7 @@
 
 <script>
   // ➔ તમારો સેટ કરેલો Web App URL
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-W3WvgaSz1XngyPOu9g2veQxxhinnGGcvwZMf2tf3ZGOXSgmlOO8GanDHIzgCVoR3VA/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby1DAfBrah9qJskyNZGqIOlD65WnY9yCnNIASkT5EcjW1hJ_da6i_dmpDZl3UQpYhJtkw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -922,12 +922,13 @@
       uBhagiyaSelect.value = cur;
     }
 
-    let farmerBhagiyas = [];
+    // ➔ હસ્તે (Hastak): Roll = ખેડૂ અથવા માલિક બંને આવશે
+    let hastakList = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
       let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
-      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "ખેડૂ" || roll === "farmer")) {
-        farmerBhagiyas.push(name.trim());
+      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "ખેડૂ" || roll === "farmer" || roll === "માલિક" || roll === "owner")) {
+        hastakList.push(name.trim());
       }
     });
 
@@ -935,11 +936,12 @@
       if(sel.id !== "uBhagiya") {
         let cur = sel.value; 
         sel.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
-        farmerBhagiyas.forEach(b => sel.add(new Option(b, b))); 
+        hastakList.forEach(b => sel.add(new Option(b, b))); 
         sel.value = cur;
       }
     });
 
+    // ➔ Bill To/નામ: માત્ર Roll = માલિક જ આવશે
     let ownerList = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
@@ -957,6 +959,7 @@
       ownerSelect.value = curOwner;
     }
 
+    // ➔ Bill_Record ફિલ્ટર ડ્રોપ-ડાઉન: માલિક અને ખેડૂ બંનેના નામ
     let filterHastakSelect = document.getElementById("filterHastak");
     if(filterHastakSelect) {
       let curFilter = filterHastakSelect.value;
@@ -973,13 +976,13 @@
         appData.Bhagiya_Master.forEach(r => {
           let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
           let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
-          if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "ખેડૂ" || roll === "farmer")) {
+          if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "ખેડૂ" || roll === "farmer" || roll === "માલિક" || roll === "owner")) {
             uniqueHastakSet.add(name.trim());
           }
         });
       }
 
-      filterHastakSelect.innerHTML = '<option value="">-- બધા હસ્તે (All) --</option>';
+      filterHastakSelect.innerHTML = '<option value="">-- બધા (All) --</option>';
       uniqueHastakSet.forEach(b => filterHastakSelect.add(new Option(b, b)));
       filterHastakSelect.value = curFilter;
     }
@@ -1663,18 +1666,7 @@
         ]);
       });
 
-      // ➔ જો એડિટ (Update) હોય તો સેવ કરતા પહેલાં સર્વર પર જૂની એન્ટ્રી ડિલીટ કરવાની રિક્વેસ્ટ મોકલવી
-      let cleanOldRecordPromise = Promise.resolve();
-      if(editId) {
-        cleanOldRecordPromise = fetch(SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "deleteRecord", entryId: editId, sheetName: "Sales_Ledger" })
-        }).then(res => res.json()).catch(err => console.log(err));
-      }
-
-      cleanOldRecordPromise.then(() => {
-        triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm');
-      });
+      triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm');
     });
   }
 
@@ -2125,15 +2117,17 @@
     }
 
     if(filteredRows.length === 0) {
-      container.innerHTML = "<p style='text-align:center; color:#c0392b; font-weight:bold;'>⚠️ આ હસ્તે માટે કોઈ રેકોર્ડ મળ્યો નથી.</p>";
+      container.innerHTML = "<p style='text-align:center; color:#c0392b; font-weight:bold;'>⚠️ આ હસ્તે / નામ માટે કોઈ રેકોર્ડ મળ્યો નથી.</p>";
       return;
     }
 
+    // ➔ 5. Bill Record ટેબલમાં "Bill To / નામ :" કૉલમ ઉમેરી છે
     let html = `<table><tr>
       <th>વર્ષ</th>
       <th>એન્ટ્રી Id</th>
       <th>તારીખ</th>
       <th>હસ્તે</th>
+      <th>Bill To / નામ :</th>
       <th>બિલ નં</th>
       <th>પાઉચ નં.</th>
       <th>રકમ</th>
@@ -2148,12 +2142,14 @@
       let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
       let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
       let hastakVal = r["હસ્તે"] || r["હસ્તે "] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "-";
+      let billOwnerVal = r["Bill To / નામ :"] || r["Bill To/નામ:"] || r["બિલ માલિક"] || r["Bill Owner"] || "-";
 
       html += `<tr>
         <td>${r["વર્ષ"] || r["Year"] || '-'}</td>
         <td><b>${r["એન્ટ્રી Id"] || r["Entry_ID"] || '-'}</b></td>
         <td>${cleanDate}</td>
         <td><b>${hastakVal}</b></td>
+        <td><b>${billOwnerVal}</b></td>
         <td><b>${r["બીલ નં"] || r["બિલ નં"] || '-'}</b></td>
         <td>${r["પાઉચ નં."] || r["Total_Pauch"] || 0}</td>
         <td>₹ ${parseFloat(r["રકમ"] || r["Amount"] || 0).toFixed(2)}</td>

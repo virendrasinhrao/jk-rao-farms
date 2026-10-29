@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Final Complete Version with Correct Bill To/નામ: Table Display & Image Viewer
+  Final Perfect Full Code with Correct Bill To /નામ : Table Reading & All Features
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 29/10/2026 | ⏰ સમય: 14:50 IST
+  📅 તારીખ: 29/10/2026 | ⏰ સમય: 15:00 IST
 </div>
 
 <div class="header-bar">
@@ -1513,7 +1513,8 @@
         <td>${cleanDate}</td>`;
 
       if(tabName === 'Sales') {
-        let billOwner = r["Bill To/નામ:"] || r["બિલ માલિક"] || r["Bill Owner"] || r["Bill To/નામ"] || "-";
+        // ➔ અહીં શીટના તમામ સંભવિત સ્પેલિંગો (Bill To /નામ :, Bill To/નામ:, Bill Owner વગેરે) ચેક કરીને નામ ખેંચી લેશે
+        let billOwner = r["Bill To /નામ :"] || r["Bill To/નામ:"] || r["બિલ માલિક"] || r["Bill Owner"] || r["Bill To/નામ"] || r["ભાગીદાર"] || "-";
         let billNo = r["બીલ નં"] || r["બિલ નં"] || "-";
         let pakName = r["પાકનું નામ"] || "-";
         let pauch = r["પાઉચ / નંગ"] || 0;
@@ -1581,7 +1582,7 @@
         let found = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
         if(found) {
           switchSubTab('Sales', 'New');
-          document.getElementById("sBillOwner").value = found["Bill To/નામ:"] || found["બિલ માલિક"] || found["Bill Owner"] || "";
+          document.getElementById("sBillOwner").value = found["Bill To /નામ :"] || found["Bill To/નામ:"] || found["બિલ માલિક"] || found["Bill Owner"] || "";
           document.getElementById("sDate").value = String(found["તારીખ"] || "").split('T')[0];
           document.getElementById("sBill").value = found["બીલ નં"] || found["બિલ નં"] || "";
           document.getElementById("sBhagiya").value = found["ભાગીદાર"] || "";

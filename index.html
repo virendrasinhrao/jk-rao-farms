@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Final Corrected Version with Accurate Bill To/નામ: Column Mapping
+  Final Complete Version with Duplicate Prevention on Sales Update
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 29/10/2026 | ⏰ સમય: 15:10 IST
+  📅 તારીખ: 29/10/2026 | ⏰ સમય: 15:40 IST
 </div>
 
 <div class="header-bar">
@@ -653,7 +653,7 @@
 
 <script>
   // ➔ તમારો સેટ કરેલો Web App URL
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzA3MDWCJ8Zldh2ZnZhUxUeHpsMn7POzy23bOza5BKrQ1vLcwvSAeLpioJu1vCC006chA/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby1DAfBrah9qJskyNZGqIOlD65WnY9yCnNIASkT5EcjW1hJ_da6i_dmpDZl3UQpYhJtkw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -1513,7 +1513,6 @@
         <td>${cleanDate}</td>`;
 
       if(tabName === 'Sales') {
-        // ➔ ગૂગલ શીટના એક્ઝેક્ટ હેડર મુજબ "Bill To /નામ :" તથા અન્ય તમામ વેરિએશન્સ ચેક કરી નામ ખેંચશે
         let billOwner = r["Bill To /નામ :"] || r["Bill To/નામ:"] || r["બિલ માલિક"] || r["Bill Owner"] || r["Bill To/નામ"] || "-";
         let billNo = r["બીલ નં"] || r["બિલ નં"] || "-";
         let pakName = r["પાકનું નામ"] || "-";
@@ -1634,7 +1633,8 @@
     let billOwner = v("sBillOwner");
     let date = v("sDate");
     let year = getYear(date);
-    let entryId = document.getElementById("editEntryId").value || ("SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
+    let editId = document.getElementById("editEntryId").value;
+    let entryId = editId || ("SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
     let billNo = v("sBill") || "N/A";
     let bhagiya = v("sBhagiya");
     let vepari = v("sVepari");
@@ -1663,7 +1663,18 @@
         ]);
       });
 
-      triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm');
+      // ➔ જો એડિટ (Update) હોય તો સેવ કરતા પહેલાં સર્વર પર જૂની એન્ટ્રી ડિલીટ કરવાની રિક્વેસ્ટ મોકલવી
+      let cleanOldRecordPromise = Promise.resolve();
+      if(editId) {
+        cleanOldRecordPromise = fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "deleteRecord", entryId: editId, sheetName: "Sales_Ledger" })
+        }).then(res => res.json()).catch(err => console.log(err));
+      }
+
+      cleanOldRecordPromise.then(() => {
+        triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm');
+      });
     });
   }
 

@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Final Corrected Version with Exact Sales Table View & Image Modal Viewer
+  Final Complete Version with Correct Bill To/નામ: Table Display & Image Viewer
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 29/10/2026 | ⏰ સમય: 13:15 IST
+  📅 તારીખ: 29/10/2026 | ⏰ સમય: 14:50 IST
 </div>
 
 <div class="header-bar">
@@ -1513,7 +1513,7 @@
         <td>${cleanDate}</td>`;
 
       if(tabName === 'Sales') {
-        let billOwner = r["Bill To/નામ:"] || r["બિલ માલિક"] || "-";
+        let billOwner = r["Bill To/નામ:"] || r["બિલ માલિક"] || r["Bill Owner"] || r["Bill To/નામ"] || "-";
         let billNo = r["બીલ નં"] || r["બિલ નં"] || "-";
         let pakName = r["પાકનું નામ"] || "-";
         let pauch = r["પાઉચ / નંગ"] || 0;

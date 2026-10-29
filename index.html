@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Complete Gujarati Version with Stylish Action Buttons for Partner & Merchant Records
+  Complete Gujarati Version with Green Action Buttons & Red Icons
 -->
 <!DOCTYPE html>
 <html>
@@ -37,7 +37,7 @@
     .btn-back:hover { background: linear-gradient(135deg, #6c7a89, #7f8c8d); }
 
     .btn-action-pill {
-      background: linear-gradient(135deg, #2980b9, #3498db);
+      background: linear-gradient(135deg, #27ae60, #2ecc71);
       color: white;
       border: none;
       padding: 6px 12px;
@@ -47,14 +47,21 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       margin-top: 5px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       transition: 0.2s;
     }
     .btn-action-pill:hover {
-      background: linear-gradient(135deg, #1f618d, #2980b9);
+      background: linear-gradient(135deg, #219653, #27ae60);
       transform: translateY(-1px);
+    }
+    .btn-action-pill .icon-red {
+      color: #e74c3c;
+      background: #fff;
+      border-radius: 50%;
+      padding: 1px 5px;
+      font-weight: bold;
     }
 
     .btn-table-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
@@ -126,7 +133,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 4px; font-weight: bold;">
-  📅 તારીખ: <span id="currentDateDisplay">30/10/2026</span> | ⏰ સમય: <span id="currentTimeDisplay">13:40 IST</span>
+  📅 તારીખ: <span id="currentDateDisplay">30/10/2026</span> | ⏰ સમય: <span id="currentTimeDisplay">13:50 IST</span>
 </div>
 
 <div class="header-bar">
@@ -206,7 +213,7 @@
         <div class="form-group">
           <label>👤 Bill To / નામ (માલિક):</label>
           <select id="sBillOwner" class="ownerList" required></select>
-          <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')">👥 ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
+          <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')"><span class="icon-red">👥</span> ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
         </div>
 
         <div class="flex-row">
@@ -217,12 +224,12 @@
           <div class="form-group">
             <label>👤 ભાગીદાર:</label>
             <select id="sBhagiya" class="bhagiyaList" required onchange="updatePartnerSummary('Sales'); updateCategoryBalance('Sales');"></select>
-            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')">👥 ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')"><span class="icon-red">👥</span> ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
           </div>
           <div class="form-group">
             <label>🛒 ખરીદનાર (વેપારી):</label>
             <select id="sVepari" class="vepariList" required></select>
-            <button type="button" class="btn-action-pill" onclick="openMasterModal('Merchant_Master')">🛒 વેપારી રેકોર્ડ (અપડેટ કરો)</button>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Merchant_Master')"><span class="icon-red">🛒</span> વેપારી રેકોર્ડ (અપડેટ કરો)</button>
           </div>
         </div>
         <hr style="margin:10px 0;">
@@ -290,12 +297,12 @@
           <div class="form-group">
             <label>👤 ભાગીદાર:</label>
             <select id="mBhagiya" class="bhagiyaList" required onchange="updatePartnerSummary('Med'); updateCategoryBalance('Med');"></select>
-            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')">👥 ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')"><span class="icon-red">👥</span> ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
           </div>
           <div class="form-group">
             <label>🏬 દુકાન / વેપારી:</label>
             <select id="mVepari" required></select>
-            <button type="button" class="btn-action-pill" onclick="openMasterModal('Merchant_Master')">🛒 વેપારી રેકોર્ડ (અપડેટ કરો)</button>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Merchant_Master')"><span class="icon-red">🛒</span> વેપારી રેકોર્ડ (અપડેટ કરો)</button>
           </div>
         </div>
         <hr style="margin:10px 0;">
@@ -380,12 +387,12 @@
           <div class="form-group">
             <label>👤 ભાગીદાર:</label>
             <select id="fBhagiya" class="bhagiyaList" required onchange="updatePartnerSummary('Fert'); updateCategoryBalance('Fert');"></select>
-            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')">👥 ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')"><span class="icon-red">👥</span> ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
           </div>
           <div class="form-group">
             <label>🏬 વેપારી:</label>
             <select id="fVepari" class="fertVepariList" required></select>
-            <button type="button" class="btn-action-pill" onclick="openMasterModal('Merchant_Master')">🛒 વેપારી રેકોર્ડ (અપડેટ કરો)</button>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Merchant_Master')"><span class="icon-red">🛒</span> વેપારી રેકોર્ડ (અપડેટ કરો)</button>
           </div>
         </div>
         <hr style="margin:10px 0;">
@@ -466,7 +473,7 @@
           <div class="form-group">
             <label>👤 ભાગીદાર:</label>
             <select id="tBhagiya" class="bhagiyaList" required onchange="updatePartnerSummary('Trac');"></select>
-            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')">👥 ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')"><span class="icon-red">👥</span> ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
           </div>
         </div>
         <hr style="margin:10px 0;">
@@ -529,7 +536,7 @@
           <div class="form-group">
             <label>👤 ઉપાડ લેનાર:</label>
             <select id="uBhagiya" class="bhagiyaList" required></select>
-            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')">👥 ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')"><span class="icon-red">👥</span> ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
           </div>
           <div class="form-group">
             <label>📌 એન્ટ્રી પ્રકાર:</label>
@@ -1009,7 +1016,6 @@
   function populateData() {
     if(!appData.Bhagiya_Master) return;
     
-    // Farmer list for Partner (Roll = ખેડૂ / farmer)
     let farmerList = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
@@ -1019,7 +1025,6 @@
       }
     });
     
-    // Owner list for Bill To (Roll = માલિક / owner)
     let ownerList = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
@@ -1029,7 +1034,6 @@
       }
     });
 
-    // Populate Partner Selects (.bhagiyaList)
     document.querySelectorAll('.bhagiyaList').forEach(sel => {
       let cur = sel.value;
       sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
@@ -1037,7 +1041,6 @@
       sel.value = cur;
     });
 
-    // Populate Upad Partner Select
     let uBhagiyaSelect = document.getElementById("uBhagiya");
     if(uBhagiyaSelect) {
       let cur = uBhagiyaSelect.value;
@@ -1046,7 +1049,6 @@
       uBhagiyaSelect.value = cur;
     }
 
-    // Populate Owner Select
     let ownerSelect = document.getElementById("sBillOwner");
     if(ownerSelect) {
       let curOwner = ownerSelect.value;
@@ -1055,7 +1057,6 @@
       ownerSelect.value = curOwner;
     }
 
-    // Populate Filter Hastak Select
     let filterHastakSelect = document.getElementById("filterHastak");
     if(filterHastakSelect) {
       let curFilter = filterHastakSelect.value;
@@ -1074,7 +1075,6 @@
       filterHastakSelect.value = curFilter;
     }
 
-    // Populate Merchants (.vepariList, fertVepariList, mVepari)
     let vegVeparis = [];
     let medVeparis = [];
     let fertVeparis = [];
@@ -1111,7 +1111,6 @@
       fertVeparis.forEach(v => fVepari.add(new Option(v, v))); fVepari.value = cur;
     }
 
-    // Upad Providers
     let providers = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["Name"];
@@ -1130,21 +1129,18 @@
       uProvider.value = cur;
     }
 
-    // Crops
     document.querySelectorAll('.pakList').forEach(sel => {
       let currentVal = sel.value; sel.innerHTML = '<option value="">-- પાક --</option><option value="NEW">➕ નવો</option>';
       if(appData.Crop_Master) appData.Crop_Master.forEach(c => { let cName = c["પાકનું નામ"]; if(cName) sel.add(new Option(cName, cName)); });
       sel.value = currentVal;
     });
 
-    // Medicines
     document.querySelectorAll('.davaList').forEach(sel => {
       let currentVal = sel.value; sel.innerHTML = '<option value="">-- દવા --</option>';
       if(appData.Medicine_Master) appData.Medicine_Master.forEach(m => { let mName = m["દવાનું_નામ"] || m["દવાનું નામ"] || m["નામ"] || ""; if(mName) sel.add(new Option(mName, mName)); });
       sel.value = currentVal;
     });
 
-    // Fertilizers
     document.querySelectorAll('.khatarList').forEach(sel => {
       let currentVal = sel.value; 
       sel.innerHTML = '<option value="">-- ખાતર --</option>';
@@ -1154,7 +1150,6 @@
     });
   }
 
-  // Master Record Management Modal Functions
   function openMasterModal(sheetKey) {
     activeMasterSheet = sheetKey;
     selectedMasterRowName = '';

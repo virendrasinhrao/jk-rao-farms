@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Final Corrected Version matching Sales_Ledger Column Order Exactly
+  Final Clean & Perfect Version with Correct Column Order & ✅/❌ Symbols
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 29/10/2026 | ⏰ સમય: 10:30 IST
+  📅 તારીખ: 29/10/2026 | ⏰ સમય: 11:00 IST
 </div>
 
 <div class="header-bar">
@@ -182,7 +182,6 @@
       <form id="salesForm" onsubmit="submitSalesForm(event)">
         <input type="hidden" id="editEntryId" value="">
         
-        <!-- ➔ સૌથી ઉપર પહેલું ડ્રોપ-ડાઉન: Bill To/નામ: (Roll = માલિક) -->
         <div class="form-group">
           <label>👤 Bill To/નામ:</label>
           <select id="sBillOwner" class="ownerList" required onchange="checkBhagiyaNew(this)"></select>
@@ -927,7 +926,6 @@
       }
     });
 
-    // ➔ માત્ર 'માલિક' (Owner) રોલ વાળા જ નામો Bill To/નામ: ડ્રોપ-ડાઉનમાં આવે + 'નવો ઉમેરો'
     let ownerList = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
@@ -1479,7 +1477,7 @@
       <th>એન્ટ્રી Id</th><th>તારીખ</th>`;
 
     if(tabName === 'Sales') {
-      html += `<th>બીલ નં</th><th>ભાગીદાર</th><th>ખરીદનાર</th><th>પાકનું નામ</th><th>પાઉચ / નંગ</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th><th>હસ્તે</th><th>Bill To/નામ:</th>`;
+      html += `<th>Bill To/નામ:</th><th>બીલ નં</th><th>ભાગીદાર</th><th>ખરીદનાર</th><th>પાકનું નામ</th><th>પાઉચ / નંગ</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th><th>હસ્તે</th><th>ઉપાડ જમા</th>`;
     } else if(tabName === 'Med' || tabName === 'Fert') {
       html += `<th>બીલ નં</th><th>${tabName === 'Med' ? 'દવાનું નામ' : 'ખાતરનું નામ'}</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>બિલની કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th>`;
     } else if(tabName === 'Trac') {
@@ -1501,6 +1499,7 @@
         <td>${cleanDate}</td>`;
 
       if(tabName === 'Sales') {
+        let billOwner = r["Bill To/નામ:"] || r["બિલ માલિક"] || "-";
         let billNo = r["બીલ નં"] || r["બિલ નં"] || "-";
         let pakName = r["પાકનું નામ"] || "-";
         let pauch = r["પાઉચ / નંગ"] || 0;
@@ -1510,9 +1509,9 @@
         let farmerAmt = parseFloat(r["ખેડૂ રકમ"] || 0).toFixed(2);
         let statusVal = r["બીલની સ્થિતિ (બાકી/જમા)"] || "રોકડા / જમા";
         let hastakVal = r["પૈસા કોણે લીધા (હસ્તે)"] || "-";
-        let billOwner = r["Bill To/નામ:"] || r["બિલ માલિક"] || "-";
+        let upadSymbol = r["ઉપાડ જમા✓/×"] || r["ઉપાડ જમા"] || "❌";
 
-        html += `<td>${billNo}</td><td>${bhagiya}</td><td>${r["ખરીદનાર"]||'-'}</td><td>${pakName}</td><td>${pauch}</td><td>${weight} કિલો</td><td>₹ ${bhav20}</td><td>₹ ${totalAmt}</td><td>₹ ${farmerAmt}</td><td><span class="badge-jama">${statusVal}</span></td><td>${hastakVal}</td><td><b>${billOwner}</b></td>`;
+        html += `<td><b>${billOwner}</b></td><td>${billNo}</td><td>${bhagiya}</td><td>${r["ખરીદનાર"]||'-'}</td><td>${pakName}</td><td>${pauch}</td><td>${weight} કિલો</td><td>₹ ${bhav20}</td><td>₹ ${totalAmt}</td><td>₹ ${farmerAmt}</td><td><span class="badge-jama">${statusVal}</span></td><td>${hastakVal}</td><td><span style="font-size:16px;">${upadSymbol}</span></td>`;
       } else if(tabName === 'Med' || tabName === 'Fert') {
         let billNo = r["બીલ નં"] || r["બિલ નં"] || "-";
         let itemName = r["દવાનું નામ"] || r["ખાતરનું નામ"] || "-";
@@ -1644,10 +1643,8 @@
         
         let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
         
-        // ➔ તમારી ગૂગલ શીટના હેડરનો સાચો અને પરફેક્ટ ક્રમ (Order):
-        // [વર્ષ, એન્ટ્રી Id, તારીખ, બિલ નં, ભાગીદાર, ખરીદનાર, પાકનું નામ, પાઉચ / નંગ, કુલ વજન (કિલો), . ૧ મણનો ભાવ (20 Kg), ભાવ (પ્રતિ કિલો), કુલ રકમ (₹), ખેડૂ હિસ્સો (%), ખેડૂ રકમ, બીલની સ્થિતિ (બાકી/જમા), પૈસા કોણે લીધા (હસ્તે), ખેડૂએ પૈસા લીધા? (Yes/No), બીલનો ફોટો, Time, ઉપાડ જમા✓/×, Bill To/નામ:]
         itemRows.push([
-          year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha, photoBase64, new Date().toLocaleTimeString(), "×", billOwner
+          year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha, photoBase64, new Date().toLocaleTimeString(), "❌", billOwner
         ]);
       });
 
@@ -1771,6 +1768,10 @@
     let { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal } = pendingBillData;
     let choice = document.getElementById("upadChoiceSelect").value;
     let wantUpad = (choice === "yes");
+
+    if (wantUpad && formType === 'Sales') {
+      itemRows.forEach(r => { r[19] = "✅"; });
+    }
 
     let btn = document.getElementById(btnId);
     if(btn) btn.innerText = "સેવ થઈ રહ્યું છે...";

@@ -1,3 +1,8 @@
+<!--  
+  Project: J K Rao Farms - POS Billing
+  File: index.html
+  Final Complete Version with Gallery Checkbox & Action Support
+-->
 <!DOCTYPE html>
 <html>
 <head>
@@ -100,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 Tarakh: 30/10/2026 | ⏰ Samay: 12:06 IST
+  📅 Tārikh: 30/10/2026 | ⏰ Samay: 12:10 IST
 </div>
 
 <div class="header-bar">
@@ -124,10 +129,10 @@
 
   <!-- 0. DASHBOARD -->
   <div id="formDash" class="section active">
-    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📊 Farm Dashboard (Varshvār Sārāṁsh)</h3>
+    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📊 Farm Dashboard</h3>
     <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px;">
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #27ae60; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">💰 Kul Vechān (Total Sales)</h4>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">💰 Kul Vechān</h4>
         <p id="dashTotalSales" style="margin:0; font-size: 18px; font-weight: bold; color: #16a085;">₹ 0.00</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #2980b9; padding: 12px; border-radius: 6px;">
@@ -272,7 +277,7 @@
             <input type="text" id="mTotalBill" class="highlight-total" readonly value="₹ 0.00">
           </div>
           <div class="form-group" style="margin-top: 8px;">
-            <label>Aṁke Rupiā (Shabdodo mā):</label>
+            <label>Aṁke Rupiā:</label>
             <input type="text" id="mTotalWords" class="words-box" readonly value="Aṁke rupiā shūnya pūrā">
           </div>
         </div>
@@ -353,7 +358,7 @@
             <label style="color: #d35400; font-size: 14px;">Bill ni Kul Rakam (₹):</label><input type="text" id="fTotalBill" class="highlight-total" readonly value="₹ 0.00">
           </div>
           <div class="form-group" style="margin-top: 8px;">
-            <label>Aṁke Rupiā (Shabdodo mā):</label>
+            <label>Aṁke Rupiā:</label>
             <input type="text" id="fTotalWords" class="words-box" readonly value="Aṁke rupiā shūnya pūrā">
           </div>
         </div>
@@ -515,7 +520,7 @@
         </div>
         <div class="form-group"><label>📝 Vigat:</label><input type="text" id="uDetails" placeholder="Vadhārāni māhiti..."></div>
         
-        <!-- Vyāj Ganatari Section -->
+        <!-- Vyāj Section -->
         <div style="background: #fdfefe; border: 1px solid #d5dbdb; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
           <h4 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 13px;">📊 Vyāj Ganatari (3% prati mahino)</h4>
           <div class="flex-row">
@@ -554,10 +559,12 @@
 
   <!-- 6. GALLERY SECTION -->
   <div id="formGallery" class="section">
-    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">🖼️ Bill Photo Gallery & Records</h3>
+    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">🖼️ Gallery & Records</h3>
     <div class="form-group">
       <input type="text" id="searchGallery" placeholder="🔍 Bill number athvā tārikh thi shodho..." oninput="filterGallery()">
     </div>
+    <!-- Gallery Action Bar -->
+    <div id="actionBarGallery" class="table-actions-bar"></div>
     <div id="galleryContainer" style="overflow-x:auto;">
       <p style="text-align:center;">Load thai rahyu chhe...</p>
     </div>
@@ -565,9 +572,8 @@
 
   <!-- 7. BILL RECORD SECTION -->
   <div id="formBillRec" class="section">
-    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📂 Bill Records (Bill Record)</h3>
+    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📂 Bill Records</h3>
     
-    <!-- Haste Filter Dropdown ane Search Bar -->
     <div class="flex-row" style="margin-bottom: 10px;">
       <div class="form-group">
         <label>👤 Haste / Nām Filter Karo:</label>
@@ -581,10 +587,8 @@
       </div>
     </div>
 
-    <!-- Bill Record Table Actions Bar (Edit / Delete) -->
     <div id="actionBarBillRec" class="table-actions-bar"></div>
 
-    <!-- Sārānsh Box -->
     <div id="latestRecordSummary" style="background: linear-gradient(135deg, #eafaf1, #d4efdf); border-left: 5px solid #27ae60; padding: 14px; border-radius: 6px; margin-bottom: 12px; display: none; box-shadow: 0 2px 5px rgba(0,0,0,0.08); max-width: 320px;">
       <p id="latestRecordText" style="margin:0;"></p>
     </div>
@@ -893,7 +897,7 @@
 
   function convertToGujaratiWords(amount) {
     let units = ['', 'Ek', 'Be', 'Traṇ', 'Chār', 'Pānch', 'Chha', 'Sāt', 'Āṭh', 'Nav', 'Des', 'Agiyār', 'Bār', 'Ter', 'Chod', 'Pander', 'Soḷ', 'Sattar', 'Adhār', 'Ogaṇīs'];
-    let tens = ['', '', 'Vīs', 'Trīs', 'Chāliy", 'Pachās', 'Sāīṭh', 'Sitter', 'Aṁshī', 'Navu'];
+    let tens = ['', '', 'Vīs', 'Trīs', 'Chāliy', 'Pachās', 'Sāīṭh', 'Sitter', 'Aṁshī', 'Navu'];
     let intPart = Math.floor(amount);
     if (intPart === 0) return "Aṁke rupiā shūnya pūrā";
     let words = "";
@@ -1597,7 +1601,7 @@
     let actionBar = document.getElementById('actionBar' + tabName);
     if(!actionBar) return;
 
-    let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : tabName === 'Trac' ? 'Tractor_Expense' : tabName === 'BillRec' ? 'Bill_Record' : 'Upad_Ledger';
+    let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : tabName === 'Trac' ? 'Tractor_Expense' : tabName === 'BillRec' ? 'Bill_Record' : tabName === 'Gallery' ? 'Photo_Gallery' : 'Upad_Ledger';
 
     if(checkboxes.length > 0) {
       actionBar.style.display = 'flex';
@@ -1605,7 +1609,7 @@
         let singleId = checkboxes[0].value;
         actionBar.innerHTML = `
           <span style="font-size:12px; font-weight:bold; margin-right:5px;">1 select karel:</span>
-          ${tabName !== 'BillRec' ? `<button class="btn-edit" onclick="editSingleRecord('${sheetKey}', '${singleId}')">✏️ Edit</button>` : ''}
+          ${(tabName !== 'BillRec' && tabName !== 'Gallery') ? `<button class="btn-edit" onclick="editSingleRecord('${sheetKey}', '${singleId}')">✏️ Edit</button>` : ''}
           <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ Delete</button>
         `;
       } else {
@@ -2067,37 +2071,44 @@
 
   function renderGallery() {
     let container = document.getElementById("galleryContainer");
+    let actionBar = document.getElementById("actionBarGallery");
     if(!container) return;
     let photos = appData.Photo_Gallery || [];
-    if(photos.length === 0) { container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>Koī photo uplabdh nathi.</p>"; return; }
+    if(photos.length === 0) { 
+      container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>Koī photo uplabdh nathi.</p>"; 
+      if(actionBar) actionBar.style.display = "none";
+      return; 
+    }
     
     let html = `<table><tr>
+      <th style="width: 40px;"><input type="checkbox" id="selectAll_Gallery" onclick="toggleSelectAll(this, 'Gallery')"></th>
       <th>Tārikh</th>
       <th>Bill No</th>
       <th>Vepārī</th>
       <th>Bill To / Nām :</th>
       <th>Photo</th>
-      <th>Action</th>
     </tr>`;
 
-    photos.forEach(p => {
+    photos.forEach((p, index) => {
       let link = p["Photo_Link"] || p["ફોટો"] || "";
       let imgTag = link ? `<button type="button" onclick="openImageModal('${link}')" style="background:#2980b9; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">🖼️ Bill Juo</button>` : "Nā";
       let dateVal = String(p["Date"] || p["તારીખ"] || '').split('T')[0];
       let billNoVal = p["Bill_No"] || p["બિલ નં"] || '';
       let vepariVal = p["વેપારી"] || p["Merchant"] || '-';
       let billOwnerVal = p["Bill To / નામ :"] || p["Bill To/નામ:"] || p["બિલ માલિક"] || '-';
+      let entryId = p["એન્ટ્રી Id"] || p["Entry_ID"] || index;
 
       html += `<tr>
+        <td><input type="checkbox" class="row-select-Gallery" value="${entryId}" onclick="updateTableActionBar('Gallery')"></td>
         <td>${dateVal}</td>
         <td><b>${billNoVal}</b></td>
         <td>${vepariVal}</td>
         <td>${billOwnerVal}</td>
         <td>${imgTag}</td>
-        <td><button class="btn-delete" onclick="askMpinForDeleteSelected('Photo_Gallery')">Delete</button></td>
       </tr>`;
     });
     container.innerHTML = html + `</table>`;
+    updateTableActionBar('Gallery');
   }
 
   function filterGallery() {

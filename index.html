@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Final Complete Version with All Rules (Hastak: Farmer+Owner, Bill To: Owner Only, Bill Record Table Column & Filter)
+  Final Complete Version with All Requested Features & Column Sequences
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 29/10/2026 | ⏰ સમય: 19:14 IST
+  📅 તારીખ: 29/10/2026 | ⏰ સમય: 20:00 IST
 </div>
 
 <div class="header-bar">
@@ -586,6 +586,9 @@
       </div>
     </div>
 
+    <!-- ➔ Bill Record Table Actions Bar (Edit / Delete) -->
+    <div id="actionBarBillRec" class="table-actions-bar"></div>
+
     <!-- ➔ ટેબલ ટાઇપ અલાઇન્ડ આકર્ષક સારાંશ બોક્સ -->
     <div id="latestRecordSummary" style="background: linear-gradient(135deg, #eafaf1, #d4efdf); border-left: 5px solid #27ae60; padding: 14px; border-radius: 6px; margin-bottom: 12px; display: none; box-shadow: 0 2px 5px rgba(0,0,0,0.08); max-width: 320px;">
       <p id="latestRecordText" style="margin:0;"></p>
@@ -653,7 +656,7 @@
 
 <script>
   // ➔ તમારો સેટ કરેલો Web App URL
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby8Z5BrF3U58QPRkKLn16QFw05TMS46SBrKUdN8x1bxeqz5q-fBaFgOr1KL7eO4BgEDVw/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby1DAfBrah9qJskyNZGqIOlD65WnY9yCnNIASkT5EcjW1hJ_da6i_dmpDZl3UQpYhJtkw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -772,7 +775,7 @@
   }
 
   function getCategoryBalanceVal(sectionType, partnerName) {
-    if(!partnerName || partnerName === "NEW") return 0;
+    if(!partnerName || partnerName === "NEW" || partnerName.includes("⚙️")) return 0;
     
     let targetType = '', altType = '';
     if(sectionType === 'Sales') { targetType = 'વેચાણ બીલ'; altType = 'વેચાણ બિલ જમા'; }
@@ -822,7 +825,7 @@
       else if(sectionType === 'Fert') titleEl.innerText = "ખેડૂ ખાતર માટે, ઉપાડ";
     }
 
-    if(!selectedBhagiya || selectedBhagiya === "NEW") {
+    if(!selectedBhagiya || selectedBhagiya === "NEW" || selectedBhagiya.includes("⚙️")) {
       if(rowBox) rowBox.style.display = 'none';
       return;
     }
@@ -922,7 +925,7 @@
       uBhagiyaSelect.value = cur;
     }
 
-    // ➔ હસ્તે (Hastak): Roll = ખેડૂ અથવા માલિક બંને આવશે
+    // ➔ હસ્તે (Hastak): Roll = ખેડૂ અથવા માલિક બંને આવશે + Edit/Delete Options
     let hastakList = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
@@ -935,7 +938,10 @@
     document.querySelectorAll('.bhagiyaList').forEach(sel => { 
       if(sel.id !== "uBhagiya") {
         let cur = sel.value; 
-        sel.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
+        sel.innerHTML = '<option value="">-- પસંદ કરો --</option>' +
+                        '<option value="NEW">➕ નવો ઉમેરો</option>' +
+                        '<option value="EDIT">✏️ પસંદ કરેલ એડિટ કરો</option>' +
+                        '<option value="DELETE">🗑️ પસંદ કરેલ ડિલીટ કરો</option>';
         hastakList.forEach(b => sel.add(new Option(b, b))); 
         sel.value = cur;
       }
@@ -954,7 +960,10 @@
     let ownerSelect = document.getElementById("sBillOwner");
     if(ownerSelect) {
       let curOwner = ownerSelect.value;
-      ownerSelect.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
+      ownerSelect.innerHTML = '<option value="">-- પસંદ કરો --</option>' +
+                              '<option value="NEW">➕ નવો ઉમેરો</option>' +
+                              '<option value="EDIT">✏️ પસંદ કરેલ એડિટ કરો</option>' +
+                              '<option value="DELETE">🗑️ પસંદ કરેલ ડિલીટ કરો</option>';
       ownerList.forEach(o => ownerSelect.add(new Option(o, o)));
       ownerSelect.value = curOwner;
     }
@@ -1064,7 +1073,42 @@
     });
   }
 
-  function checkBhagiyaNew(sel) { if(sel.value === "NEW") { document.getElementById("modalBhagiya").style.display = "block"; sel.value = ""; } }
+  function checkBhagiyaNew(sel) { 
+    if(sel.value === "NEW") { 
+      document.getElementById("modalBhagiya").style.display = "block"; 
+      sel.value = ""; 
+    } else if(sel.value === "EDIT") {
+      let previousVal = sel.getAttribute("data-selected") || "";
+      if(!previousVal) { alert("કૃપા કરીને પહેલાં કોઈ ભાગીદાર સિલેક્ટ કરો!"); sel.value = ""; return; }
+      let found = (appData.Bhagiya_Master || []).find(r => String(r["નામ"] || r["Name"] || "").trim() === previousVal);
+      if(found) {
+        document.getElementById("nbName").value = found["નામ"] || found["Name"] || "";
+        document.getElementById("nbPhone").value = found["મોબાઈલ"] || found["Phone"] || "";
+        document.getElementById("nbAdd").value = found["ગામ"] || found["Address"] || "";
+        document.getElementById("nbRoll").value = found["Roll"] || found["રોલ"] || "";
+        document.getElementById("modalBhagiya").style.display = "block";
+      }
+      sel.value = "";
+    } else if(sel.value === "DELETE") {
+      let previousVal = sel.getAttribute("data-selected") || "";
+      if(!previousVal) { alert("કૃપા કરીને પહેલાં કોઈ ભાગીદાર સિલેક્ટ કરો!"); sel.value = ""; return; }
+      askMpinAndExecute(() => {
+        if(confirm("⚠️ શું તમે ખરેખર '" + previousVal + "' ને ડિલીટ કરવા માંગો છો?")) {
+          fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "deleteMasterRecord", sheetName: "Bhagiya_Master", name: previousVal })
+          }).then(res => res.json()).then(() => {
+            alert("ભાગીદાર સફળતાપૂર્વક ડિલીટ થઈ ગયો!");
+            fetchData();
+          }).catch(err => alert("ભૂલ: " + err));
+        }
+      });
+      sel.value = "";
+    } else {
+      sel.setAttribute("data-selected", sel.value);
+    }
+  }
+
   function checkVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
   function checkMedVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("nvCategory").value = "દવા"; document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
   function checkFertVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("nvCategory").value = "ખાતર"; document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
@@ -1555,7 +1599,7 @@
     let actionBar = document.getElementById('actionBar' + tabName);
     if(!actionBar) return;
 
-    let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : tabName === 'Trac' ? 'Tractor_Expense' : 'Upad_Ledger';
+    let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : tabName === 'Trac' ? 'Tractor_Expense' : tabName === 'BillRec' ? 'Bill_Record' : 'Upad_Ledger';
 
     if(checkboxes.length > 0) {
       actionBar.style.display = 'flex';
@@ -1563,7 +1607,7 @@
         let singleId = checkboxes[0].value;
         actionBar.innerHTML = `
           <span style="font-size:12px; font-weight:bold; margin-right:5px;">1 સિલેક્ટ કરેલ:</span>
-          <button class="btn-edit" onclick="editSingleRecord('${sheetKey}', '${singleId}')">✏️ એડિટ</button>
+          ${tabName !== 'BillRec' ? `<button class="btn-edit" onclick="editSingleRecord('${sheetKey}', '${singleId}')">✏️ એડિટ</button>` : ''}
           <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ ડિલીટ</button>
         `;
       } else {
@@ -2048,12 +2092,14 @@
     let container = document.getElementById("tableContainerBillRec");
     let summaryBox = document.getElementById("latestRecordSummary");
     let summaryText = document.getElementById("latestRecordText");
+    let actionBar = document.getElementById("actionBarBillRec");
     if(!container) return;
     
     let rows = appData.Bill_Record || [];
     if(rows.length === 0) {
       container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ બિલ રેકોર્ડ ઉપલબ્ધ નથી.</p>";
       if(summaryBox) summaryBox.style.display = "none";
+      if(actionBar) actionBar.style.display = "none";
       return;
     }
 
@@ -2118,13 +2164,15 @@
 
     if(filteredRows.length === 0) {
       container.innerHTML = "<p style='text-align:center; color:#c0392b; font-weight:bold;'>⚠️ આ હસ્તે / નામ માટે કોઈ રેકોર્ડ મળ્યો નથી.</p>";
+      if(actionBar) actionBar.style.display = "none";
       return;
     }
 
-    // ➔ 5. Bill Record ટેબલમાં "Bill To / નામ :" કૉલમ ઉમેરી છે
+    // ➔ 3. Bill Record ટેબલ કૉલમ્સનો ક્રમ: વર્ષ | વેપારી (Bill Owner) | તારીખ | હસ્તે | Bill To / નામ | બિલ નં | પાઉચ નં | રકમ | જમા/બાકી | કુલ પાઉચ | કુલ જમા રકમ | Photo
     let html = `<table><tr>
+      <th style="width: 40px;"><input type="checkbox" id="selectAll_BillRec" onclick="toggleSelectAll(this, 'BillRec')"></th>
       <th>વર્ષ</th>
-      <th>એન્ટ્રી Id</th>
+      <th>વેપારી</th>
       <th>તારીખ</th>
       <th>હસ્તે</th>
       <th>Bill To / નામ :</th>
@@ -2137,16 +2185,19 @@
       <th>Photo</th>
     </tr>`;
 
-    filteredRows.forEach(r => {
+    filteredRows.forEach((r, index) => {
       let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
       let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
       let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
       let hastakVal = r["હસ્તે"] || r["હસ્તે "] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "-";
       let billOwnerVal = r["Bill To / નામ :"] || r["Bill To/નામ:"] || r["બિલ માલિક"] || r["Bill Owner"] || "-";
+      let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || index;
+      let vepariVal = r["વેપારી"] || r["Merchant"] || "-";
 
       html += `<tr>
+        <td><input type="checkbox" class="row-select-BillRec" value="${entryId}" onclick="updateTableActionBar('BillRec')"></td>
         <td>${r["વર્ષ"] || r["Year"] || '-'}</td>
-        <td><b>${r["એન્ટ્રી Id"] || r["Entry_ID"] || '-'}</b></td>
+        <td>${vepariVal}</td>
         <td>${cleanDate}</td>
         <td><b>${hastakVal}</b></td>
         <td><b>${billOwnerVal}</b></td>
@@ -2155,12 +2206,13 @@
         <td>₹ ${parseFloat(r["રકમ"] || r["Amount"] || 0).toFixed(2)}</td>
         <td>${r["જમા / બાકી"] || r["Status"] || '-'}</td>
         <td style="font-weight:bold; color:#2980b9;">${r["કુલ પાઉચ"] || r["Cumulative_Pauch"] || 0}</td>
-        <td style="font-weight:bold; color:#8e44ad;">₹ ${parseFloat(r["કુલ જમા રકમ"] || r["Cumulative_Amount"] || totalAmountSum).toFixed(2)}</td>
+        <td style="font-weight:bold; color:#8e44ad;">₹ ${parseFloat(r["કુલ જમા રકમ"] || r["Cumulative_Amount"] || 0).toFixed(2)}</td>
         <td>${photoLink}</td>
       </tr>`;
     });
 
     container.innerHTML = html + `</table>`;
+    updateTableActionBar('BillRec');
   }
 
   function filterBillRecordTable() {

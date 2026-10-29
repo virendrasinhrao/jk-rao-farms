@@ -1,8 +1,3 @@
-<!--  
-  Project: J K Rao Farms - POS Billing
-  File: index.html
-  Final Complete Version with Correct Gallery & Bill Record Columns
--->
 <!DOCTYPE html>
 <html>
 <head>
@@ -105,46 +100,46 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 29/10/2026 | ⏰ સમય: 21:10 IST
+  📅 Tarakh: 30/10/2026 | ⏰ Samay: 12:06 IST
 </div>
 
 <div class="header-bar">
   <h2 style="margin:0; font-size: 16px;">🌾 J K Rao Farms (POS Billing)</h2>
   <button class="refresh-btn" onclick="fetchData()">
-    <span id="refreshIcon">⟳</span> <span>ડેટા રીફ્રેશ</span>
+    <span id="refreshIcon">⟳</span> <span>Data Refresh</span>
   </button>
 </div>
 
 <div class="card">
   <div class="nav">
-    <button id="tabDash" class="active" onclick="switchTab('Dash')">📊 ડેશબોર્ડ</button>
-    <button id="tabSales" onclick="switchTab('Sales')">💰 વેચાણ</button>
-    <button id="tabMed" onclick="switchTab('Med')">🧪 દવા</button>
-    <button id="tabFert" onclick="switchTab('Fert')">🌾 ખાતર</button>
-    <button id="tabTrac" onclick="switchTab('Trac')">🚜 ટ્રેક્ટર</button>
-    <button id="tabUpad" onclick="switchTab('Upad')">💸 ઉપાડ</button>
-    <button id="tabGallery" onclick="switchTab('Gallery')">🖼️ ગેલેરી</button>
-    <button id="tabBillRec" onclick="switchTab('BillRec')">📂 બિલ રેકોર્ડ</button>
+    <button id="tabDash" class="active" onclick="switchTab('Dash')">📊 Dashboard</button>
+    <button id="tabSales" onclick="switchTab('Sales')">💰 Vechān</button>
+    <button id="tabMed" onclick="switchTab('Med')">🧪 Davā</button>
+    <button id="tabFert" onclick="switchTab('Fert')">🌾 Khātar</button>
+    <button id="tabTrac" onclick="switchTab('Trac')">🚜 Tractor</button>
+    <button id="tabUpad" onclick="switchTab('Upad')">💸 Upād</button>
+    <button id="tabGallery" onclick="switchTab('Gallery')">🖼️ Gallery</button>
+    <button id="tabBillRec" onclick="switchTab('BillRec')">📂 Bill Record</button>
   </div>
 
   <!-- 0. DASHBOARD -->
   <div id="formDash" class="section active">
-    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📊 ફાર્મ ડેશબોર્ડ (વર્ષવાર સારાંશ)</h3>
+    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📊 Farm Dashboard (Varshvār Sārāṁsh)</h3>
     <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px;">
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #27ae60; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">💰 કુલ વેચાણ (Total Sales)</h4>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">💰 Kul Vechān (Total Sales)</h4>
         <p id="dashTotalSales" style="margin:0; font-size: 18px; font-weight: bold; color: #16a085;">₹ 0.00</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #2980b9; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 ખેડૂ વેચાણ હિસ્સો</h4>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 Khedū Vechān Hisso</h4>
         <p id="dashFarmerSales" style="margin:0; font-size: 18px; font-weight: bold; color: #2980b9;">₹ 0.00</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #d35400; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">📉 કુલ ખર્ચ</h4>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">📉 Kul Kharch</h4>
         <p id="dashTotalExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #d35400;">₹ 0.00</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #8e44ad; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 ખેડૂ ખર્ચ હિસ્સો</h4>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 Khedū Kharch Hisso</h4>
         <p id="dashFarmerExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #8e44ad;">₹ 0.00</p>
       </div>
     </div>
@@ -152,29 +147,29 @@
 
   <!-- 1. SALES SECTION -->
   <div id="formSales" class="section">
-    <h3 style="text-align:center; color:#27ae60; margin-top:0;">💰 વેચાણ મેનેજમેન્ટ</h3>
+    <h3 style="text-align:center; color:#27ae60; margin-top:0;">💰 Vechān Management</h3>
     <div id="choiceSales" class="choice-container">
       <div class="choice-card-new" onclick="switchSubTab('Sales', 'New')">
-        <h3>➕ નવી એન્ટ્રી</h3>
-        <p>નવું બિલ કે વેચાણ રેકોર્ડ દાખલ કરો</p>
+        <h3>➕ Navi Entry</h3>
+        <p>Navu bill ke vechān record dākhal karo</p>
       </div>
       <div class="choice-card-view" onclick="switchSubTab('Sales', 'View')">
-        <h3>📋 બધી એન્ટ્રી</h3>
-        <p>જૂના રેકોર્ડ્સ જુઓ, શોધો અથવા એડિટ કરો</p>
+        <h3>📋 Badhi Entry</h3>
+        <p>Junā records juo, shodho athvā edit karo</p>
       </div>
     </div>
     
     <div id="subContentSalesNew" class="sub-section">
-      <button type="button" class="btn-back" onclick="backToChoice('Sales')">⬅️ પાછળ જાઓ</button>
-      <h3 id="formTitleSales" style="text-align:center; color:#27ae60; margin-top:0;">💰 વેચાણ એન્ટ્રી</h3>
+      <button type="button" class="btn-back" onclick="backToChoice('Sales')">⬅️ Pāchhal Jāvo</button>
+      <h3 id="formTitleSales" style="text-align:center; color:#27ae60; margin-top:0;">💰 Vechān Entry</h3>
       
       <div id="topBannersRowSales" class="top-banners-row" style="display: flex;">
         <div id="partnerBannerSales" class="partner-sum-banner" style="display: block;">
-          <h4 id="bannerTitleSales">કુલ ફાર્મ વેચાણ</h4>
+          <h4 id="bannerTitleSales">Kul Farm Vechān</h4>
           <div class="sum-amount" id="bannerValSales">₹ 0.00</div>
         </div>
         <div id="balBoxSales" class="category-balance-box" style="display: block;">
-          <h4 id="balTitleSales">ખેડૂ વેચાણ, ઉપાડ</h4>
+          <h4 id="balTitleSales">Khedū Vechān, Upād</h4>
           <div class="bal-val" id="balValSales">₹ 0.00</div>
         </div>
       </div>
@@ -183,36 +178,36 @@
         <input type="hidden" id="editEntryId" value="">
         
         <div class="form-group">
-          <label>👤 Bill To/નામ:</label>
+          <label>👤 Bill To/Nām:</label>
           <select id="sBillOwner" class="ownerList" required onchange="checkBhagiyaNew(this)"></select>
         </div>
 
         <div class="flex-row">
-          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="sDate" required onchange="updatePartnerSummary('Sales'); updateCategoryBalance('Sales');"></div>
-          <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="sBill" onblur="checkDuplicateBill(this, 'Sales_Ledger', 'btnSales')"></div>
+          <div class="form-group"><label>📅 Tārikh:</label><input type="date" id="sDate" required onchange="updatePartnerSummary('Sales'); updateCategoryBalance('Sales');"></div>
+          <div class="form-group"><label>🆔 Bill No:</label><input type="text" id="sBill" onblur="checkDuplicateBill(this, 'Sales_Ledger', 'btnSales')"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="sBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Sales'); updateCategoryBalance('Sales');"></select></div>
-          <div class="form-group"><label>🛒 ખરીદનાર (વેપારી):</label><select id="sVepari" class="vepariList" required onchange="checkVepariNew(this)"></select></div>
+          <div class="form-group"><label>👤 Bhāgidār:</label><select id="sBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Sales'); updateCategoryBalance('Sales');"></select></div>
+          <div class="form-group"><label>🛒 Kharīdnār (Vepārī):</label><select id="sVepari" class="vepariList" required onchange="checkVepariNew(this)"></select></div>
         </div>
         <hr style="margin:10px 0;">
-        <h4>📦 આઇટમ્સ લિસ્ટ:</h4>
-        <button type="button" class="btn-add-item" onclick="addSalesItemRow()">➕ આઇટમ ઉમેરો</button>
+        <h4>📦 Items List:</h4>
+        <button type="button" class="btn-add-item" onclick="addSalesItemRow()">➕ Item Umero</button>
         <div id="salesItemsContainer"></div>
         <div class="flex-row" style="margin-top:10px;">
-          <div class="form-group"><label>📌 બીલની સ્થિતિ:</label><select id="sStatus"><option>રોકડા / જમા</option><option>બાકી</option></select></div>
-          <div class="form-group"><label>🤝 હસ્તે:</label><select id="sHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
-          <div class="form-group"><label>❓ ભાગિયાએ લીધા?:</label><select id="sBLidha"><option>No</option><option>Yes</option></select></div>
+          <div class="form-group"><label>📌 Bill ni Sthiti:</label><select id="sStatus"><option>Rokadā / Jamā</option><option>Bākī</option></select></div>
+          <div class="form-group"><label>🤝 Haste:</label><select id="sHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
+          <div class="form-group"><label>❓ Bhāgiyāe Līdhā?:</label><select id="sBLidha"><option>No</option><option>Yes</option></select></div>
         </div>
-        <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="sPhoto" accept="image/*" capture="environment"></div>
-        <button type="submit" id="btnSales" class="btn-submit">💾 સેવ કરો</button>
+        <div class="form-group"><label>📷 Bill no Photo:</label><input type="file" id="sPhoto" accept="image/*" capture="environment"></div>
+        <button type="submit" id="btnSales" class="btn-submit">💾 Sev Karo</button>
       </form>
     </div>
 
     <div id="subContentSalesView" class="sub-section">
-      <button type="button" class="btn-back" onclick="backToChoice('Sales')">⬅️ પાછળ જાઓ</button>
-      <h3 style="text-align:center; color:#27ae60; margin-top:0;">📋 વેચાણ રેકોર્ડ્સ</h3>
-      <div class="form-group"><input type="text" id="searchSales" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterTable('Sales')"></div>
+      <button type="button" class="btn-back" onclick="backToChoice('Sales')">⬅️ Pāchhal Jāvo</button>
+      <h3 style="text-align:center; color:#27ae60; margin-top:0;">📋 Vechān Records</h3>
+      <div class="form-group"><input type="text" id="searchSales" placeholder="🔍 Bill number athvā tārikh thi shodho..." oninput="filterTable('Sales')"></div>
       <div id="actionBarSales" class="table-actions-bar"></div>
       <div id="tableContainerSales" style="overflow-x:auto;"></div>
     </div>
@@ -220,29 +215,29 @@
 
   <!-- 2. MEDICINE SECTION -->
   <div id="formMed" class="section">
-    <h3 style="text-align:center; color:#2980b9; margin-top:0;">🧪 દવા ખર્ચ મેનેજમેન્ટ</h3>
+    <h3 style="text-align:center; color:#2980b9; margin-top:0;">🧪 Davā Kharch Management</h3>
     <div id="choiceMed" class="choice-container">
       <div class="choice-card-new" onclick="switchSubTab('Med', 'New')">
-        <h3>➕ નવી એન્ટ્રી</h3>
-        <p>નવું દવા બિલ કે ખર્ચ દાખલ કરો</p>
+        <h3>➕ Navi Entry</h3>
+        <p>Navu davā bill ke kharch dākhal karo</p>
       </div>
       <div class="choice-card-view" onclick="switchSubTab('Med', 'View')">
-        <h3>📋 બધી એન્ટ્રી</h3>
-        <p>દવાના જૂના રેકોર્ડ્સ જુઓ અને મેનેજ કરો</p>
+        <h3>📋 Badhi Entry</h3>
+        <p>Davā nā junā records juo ane manage karo</p>
       </div>
     </div>
 
     <div id="subContentMedNew" class="sub-section">
-      <button type="button" class="btn-back" onclick="backToChoice('Med')">⬅️ પાછળ જાઓ</button>
-      <h3 id="formTitleMed" style="text-align:center; color:#2980b9; margin-top:0;">🧪 દવા ખર્ચ એન્ટ્રી</h3>
+      <button type="button" class="btn-back" onclick="backToChoice('Med')">⬅️ Pāchhal Jāvo</button>
+      <h3 id="formTitleMed" style="text-align:center; color:#2980b9; margin-top:0;">🧪 Davā Kharch Entry</h3>
       
       <div id="topBannersRowMed" class="top-banners-row" style="display: flex;">
         <div id="partnerBannerMed" class="partner-sum-banner" style="display: block;">
-          <h4 id="bannerTitleMed">કુલ ફાર્મ દવા ખર્ચ</h4>
+          <h4 id="bannerTitleMed">Kul Farm Davā Kharch</h4>
           <div class="sum-amount" id="bannerValMed">₹ 0.00</div>
         </div>
         <div id="balBoxMed" class="category-balance-box" style="display: block;">
-          <h4 id="balTitleMed">ખેડૂ દવા માટે, ઉપાડ</h4>
+          <h4 id="balTitleMed">Khedū Davā māte, Upād</h4>
           <div class="bal-val" id="balValMed">₹ 0.00</div>
         </div>
       </div>
@@ -250,51 +245,51 @@
       <form id="medForm" onsubmit="submitMedForm(event)">
         <input type="hidden" id="editMedId" value="">
         <div class="flex-row">
-          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="mDate" required onchange="updatePartnerSummary('Med'); updateCategoryBalance('Med');"></div>
-          <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="mBill" onblur="checkDuplicateBill(this, 'Pesticide_Bill', 'btnMed')"></div>
+          <div class="form-group"><label>📅 Tārikh:</label><input type="date" id="mDate" required onchange="updatePartnerSummary('Med'); updateCategoryBalance('Med');"></div>
+          <div class="form-group"><label>🆔 Bill No:</label><input type="text" id="mBill" onblur="checkDuplicateBill(this, 'Pesticide_Bill', 'btnMed')"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="mBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Med'); updateCategoryBalance('Med');"></select></div>
-          <div class="form-group"><label>🏬 દુકાન / વેપારી:</label><select id="mVepari" required onchange="checkMedVepariNew(this)"></select></div>
+          <div class="form-group"><label>👤 Bhāgidār:</label><select id="mBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Med'); updateCategoryBalance('Med');"></select></div>
+          <div class="form-group"><label>🏬 Dukān / Vepārī:</label><select id="mVepari" required onchange="checkMedVepariNew(this)"></select></div>
         </div>
         <hr style="margin:10px 0;">
-        <h4>🧪 દવાઓની યાદી:</h4>
-        <button type="button" class="btn-add-item" onclick="addMedItemRow()">➕ દવા ઉમેરો</button>
+        <h4>🧪 Davāoni Yādi:</h4>
+        <button type="button" class="btn-add-item" onclick="addMedItemRow()">➕ Davā Umero</button>
         <div id="medItemsContainer"></div>
 
         <div class="bill-summary">
-          <h4 style="margin:0 0 8px 0; color:#2980b9;">📋 ટેક્સ અને બિલ સમરી</h4>
+          <h4 style="margin:0 0 8px 0; color:#2980b9;">📋 Tax ane Bill Summary</h4>
           <div class="flex-row">
-            <div class="form-group"><label>કુલ આઇટમ રકમ:</label><input type="text" id="mSubTotal" class="readonly-bg" readonly value="₹ 0.00"></div>
-            <div class="form-group"><label>ટેક્સ %:</label><input type="number" id="mTax" step="0.01" value="0" oninput="calcMedBill()" required></div>
+            <div class="form-group"><label>Kul Item Rakam:</label><input type="text" id="mSubTotal" class="readonly-bg" readonly value="₹ 0.00"></div>
+            <div class="form-group"><label>Tax %:</label><input type="number" id="mTax" step="0.01" value="0" oninput="calcMedBill()" required></div>
           </div>
           <div class="flex-row">
-            <div class="form-group"><label>જી.એસ.ટી. રકમ:</label><input type="text" id="mGst" class="readonly-bg" readonly value="₹ 0.00"></div>
-            <div class="form-group"><label>સી.એસ.ટી. રકમ:</label><input type="text" id="mCst" class="readonly-bg" readonly value="₹ 0.00"></div>
+            <div class="form-group"><label>G.S.T. Rakam:</label><input type="text" id="mGst" class="readonly-bg" readonly value="₹ 0.00"></div>
+            <div class="form-group"><label>C.S.T. Rakam:</label><input type="text" id="mCst" class="readonly-bg" readonly value="₹ 0.00"></div>
           </div>
           <div class="form-group">
-            <label style="color: #27ae60; font-size: 14px;">બિલની કુલ રકમ (₹):</label>
+            <label style="color: #27ae60; font-size: 14px;">Bill ni Kul Rakam (₹):</label>
             <input type="text" id="mTotalBill" class="highlight-total" readonly value="₹ 0.00">
           </div>
           <div class="form-group" style="margin-top: 8px;">
-            <label>અંકે રૂપિયા (શબ્દોમાં):</label>
-            <input type="text" id="mTotalWords" class="words-box" readonly value="અંકે રૂપિયા શૂન્ય પૂરા">
+            <label>Aṁke Rupiā (Shabdodo mā):</label>
+            <input type="text" id="mTotalWords" class="words-box" readonly value="Aṁke rupiā shūnya pūrā">
           </div>
         </div>
 
         <div class="flex-row">
-          <div class="form-group"><label>🤝 હસ્તે:</label><select id="mHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
-          <div class="form-group"><label>📌 સ્થિતિ:</label><select id="mStatus"><option>જમા</option><option>બાકી</option></select></div>
+          <div class="form-group"><label>🤝 Haste:</label><select id="mHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
+          <div class="form-group"><label>📌 Sthiti:</label><select id="mStatus"><option>Jamā</option><option>Bākī</option></select></div>
         </div>
-        <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="mPhoto" accept="image/*" capture="environment"></div>
-        <button type="submit" id="btnMed" class="btn-submit">💾 સેવ કરો</button>
+        <div class="form-group"><label>📷 Bill no Photo:</label><input type="file" id="mPhoto" accept="image/*" capture="environment"></div>
+        <button type="submit" id="btnMed" class="btn-submit">💾 Sev Karo</button>
       </form>
     </div>
 
     <div id="subContentMedView" class="sub-section">
-      <button type="button" class="btn-back" onclick="backToChoice('Med')">⬅️ પાછળ જાઓ</button>
-      <h3 style="text-align:center; color:#2980b9; margin-top:0;">📋 દવા આઇટમ રેકોર્ડ્સ</h3>
-      <div class="form-group"><input type="text" id="searchMed" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterTable('Med')"></div>
+      <button type="button" class="btn-back" onclick="backToChoice('Med')">⬅️ Pāchhal Jāvo</button>
+      <h3 style="text-align:center; color:#2980b9; margin-top:0;">📋 Davā Item Records</h3>
+      <div class="form-group"><input type="text" id="searchMed" placeholder="🔍 Bill number athvā tārikh thi shodho..." oninput="filterTable('Med')"></div>
       <div id="actionBarMed" class="table-actions-bar"></div>
       <div id="tableContainerMed" style="overflow-x:auto;"></div>
     </div>
@@ -302,29 +297,29 @@
 
   <!-- 3. FERTILIZER SECTION -->
   <div id="formFert" class="section">
-    <h3 style="text-align:center; color:#d35400; margin-top:0;">🌾 ખાતર ખર્ચ મેનેજમેન્ટ</h3>
+    <h3 style="text-align:center; color:#d35400; margin-top:0;">🌾 Khātar Kharch Management</h3>
     <div id="choiceFert" class="choice-container">
       <div class="choice-card-new" onclick="switchSubTab('Fert', 'New')">
-        <h3>➕ નવી એન્ટ્રી</h3>
-        <p>નવું ખાતર બિલ કે ખર્ચ દાખલ કરો</p>
+        <h3>➕ Navi Entry</h3>
+        <p>Navu khātar bill ke kharch dākhal karo</p>
       </div>
       <div class="choice-card-view" onclick="switchSubTab('Fert', 'View')">
-        <h3>📋 બધી એન્ટ્રી</h3>
-        <p>ખાતરના જૂના રેકોર્ડ્સ જુઓ અને મેનેજ કરો</p>
+        <h3>📋 Badhi Entry</h3>
+        <p>Khātar nā junā records juo ane manage karo</p>
       </div>
     </div>
 
     <div id="subContentFertNew" class="sub-section">
-      <button type="button" class="btn-back" onclick="backToChoice('Fert')">⬅️ પાછળ જાઓ</button>
-      <h3 id="formTitleFert" style="text-align:center; color:#d35400; margin-top:0;">🌾 ખાતર ખર્ચ એન્ટ્રી</h3>
+      <button type="button" class="btn-back" onclick="backToChoice('Fert')">⬅️ Pāchhal Jāvo</button>
+      <h3 id="formTitleFert" style="text-align:center; color:#d35400; margin-top:0;">🌾 Khātar Kharch Entry</h3>
       
       <div id="topBannersRowFert" class="top-banners-row" style="display: flex;">
         <div id="partnerBannerFert" class="partner-sum-banner" style="display: block;">
-          <h4 id="bannerTitleFert">કુલ ફાર્મ ખાતર ખર્ચ</h4>
+          <h4 id="bannerTitleFert">Kul Farm Khātar Kharch</h4>
           <div class="sum-amount" id="bannerValFert">₹ 0.00</div>
         </div>
         <div id="balBoxFert" class="category-balance-box" style="display: block;">
-          <h4 id="balTitleFert">ખેડૂ ખાતર માટે, ઉપાડ</h4>
+          <h4 id="balTitleFert">Khedū Khātar māte, Upād</h4>
           <div class="bal-val" id="balValFert">₹ 0.00</div>
         </div>
       </div>
@@ -332,51 +327,51 @@
       <form id="fertForm" onsubmit="submitFertForm(event)">
         <input type="hidden" id="editFertId" value="">
         <div class="flex-row">
-          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="fDate" required onchange="updatePartnerSummary('Fert'); updateCategoryBalance('Fert');"></div>
-          <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="fBill" onblur="checkDuplicateBill(this, 'Fertilizer_Bill', 'btnFert')"></div>
+          <div class="form-group"><label>📅 Tārikh:</label><input type="date" id="fDate" required onchange="updatePartnerSummary('Fert'); updateCategoryBalance('Fert');"></div>
+          <div class="form-group"><label>🆔 Bill No:</label><input type="text" id="fBill" onblur="checkDuplicateBill(this, 'Fertilizer_Bill', 'btnFert')"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="fBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Fert'); updateCategoryBalance('Fert');"></select></div>
-          <div class="form-group"><label>🏬 વેપારી:</label><select id="fVepari" class="fertVepariList" required onchange="checkFertVepariNew(this)"></select></div>
+          <div class="form-group"><label>👤 Bhāgidār:</label><select id="fBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Fert'); updateCategoryBalance('Fert');"></select></div>
+          <div class="form-group"><label>🏬 Vepārī:</label><select id="fVepari" class="fertVepariList" required onchange="checkFertVepariNew(this)"></select></div>
         </div>
         <hr style="margin:10px 0;">
-        <h4>🌾 ખાતરની આઇટમ્સ:</h4>
-        <button type="button" class="btn-add-item" onclick="addFertItemRow()">➕ ખાતર ઉમેરો</button>
+        <h4>🌾 Khātar ni Items:</h4>
+        <button type="button" class="btn-add-item" onclick="addFertItemRow()">➕ Khātar Umero</button>
         <div id="fertItemsContainer"></div>
 
         <div class="bill-summary">
-          <h4 style="margin:0 0 8px 0; color:#d35400;">📋 ટેક્સ અને બિલ સમરી</h4>
+          <h4 style="margin:0 0 8px 0; color:#d35400;">📋 Tax ane Bill Summary</h4>
           <div class="flex-row">
-            <div class="form-group"><label>કુલ આઇટમ રકમ:</label><input type="text" id="fSubTotal" class="readonly-bg" readonly value="₹ 0.00"></div>
-            <div class="form-group"><label>ટેક્સ %:</label><input type="number" id="fTax" step="0.01" value="0" oninput="calcFertBill()" required></div>
+            <div class="form-group"><label>Kul Item Rakam:</label><input type="text" id="fSubTotal" class="readonly-bg" readonly value="₹ 0.00"></div>
+            <div class="form-group"><label>Tax %:</label><input type="number" id="fTax" step="0.01" value="0" oninput="calcFertBill()" required></div>
           </div>
           <div class="flex-row">
-            <div class="form-group"><label>જી.એસ.ટી. રકમ:</label><input type="text" id="mGst2" class="readonly-bg" readonly value="₹ 0.00"></div>
-            <div class="form-group"><label>સી.એસ.ટી. રકમ:</label><input type="text" id="mCst2" class="readonly-bg" readonly value="₹ 0.00"></div>
+            <div class="form-group"><label>G.S.T. Rakam:</label><input type="text" id="mGst2" class="readonly-bg" readonly value="₹ 0.00"></div>
+            <div class="form-group"><label>C.S.T. Rakam:</label><input type="text" id="mCst2" class="readonly-bg" readonly value="₹ 0.00"></div>
           </div>
           <div class="form-group">
-            <label style="color: #d35400; font-size: 14px;">બિલની કુલ રકમ (₹):</label><input type="text" id="fTotalBill" class="highlight-total" readonly value="₹ 0.00">
+            <label style="color: #d35400; font-size: 14px;">Bill ni Kul Rakam (₹):</label><input type="text" id="fTotalBill" class="highlight-total" readonly value="₹ 0.00">
           </div>
           <div class="form-group" style="margin-top: 8px;">
-            <label>અંકે રૂપિયા (શબ્દોમાં):</label>
-            <input type="text" id="fTotalWords" class="words-box" readonly value="અંકે રૂપિયા શૂન્ય પૂરા">
+            <label>Aṁke Rupiā (Shabdodo mā):</label>
+            <input type="text" id="fTotalWords" class="words-box" readonly value="Aṁke rupiā shūnya pūrā">
           </div>
         </div>
 
         <div class="flex-row">
-          <div class="form-group"><label>🤝 હસ્તે:</label><select id="fHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
-          <div class="form-group"><label>📌 સ્થિતિ:</label><select id="fStatus"><option>જમા</option><option>બાકી</option></select></div>
+          <div class="form-group"><label>🤝 Haste:</label><select id="fHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
+          <div class="form-group"><label>📌 Sthiti:</label><select id="fStatus"><option>Jamā</option><option>Bākī</option></select></div>
         </div>
-        <div class="form-group"><label>📝 વિગત:</label><input type="text" id="fDetails" placeholder="ઓપ્શનલ"></div>
-        <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="fPhoto" accept="image/*" capture="environment"></div>
-        <button type="submit" id="btnFert" class="btn-submit">💾 સેવ કરો</button>
+        <div class="form-group"><label>📝 Vigat:</label><input type="text" id="fDetails" placeholder="Optional"></div>
+        <div class="form-group"><label>📷 Bill no Photo:</label><input type="file" id="fPhoto" accept="image/*" capture="environment"></div>
+        <button type="submit" id="btnFert" class="btn-submit">💾 Sev Karo</button>
       </form>
     </div>
 
     <div id="subContentFertView" class="sub-section">
-      <button type="button" class="btn-back" onclick="backToChoice('Fert')">⬅️ પાછળ જાઓ</button>
-      <h3 style="text-align:center; color:#d35400; margin-top:0;">📋 ખાતર આઇટમ રેકોર્ડ્સ</h3>
-      <div class="form-group"><input type="text" id="searchFert" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterTable('Fert')"></div>
+      <button type="button" class="btn-back" onclick="backToChoice('Fert')">⬅️ Pāchhal Jāvo</button>
+      <h3 style="text-align:center; color:#d35400; margin-top:0;">📋 Khātar Item Records</h3>
+      <div class="form-group"><input type="text" id="searchFert" placeholder="🔍 Bill number athvā tārikh thi shodho..." oninput="filterTable('Fert')"></div>
       <div id="actionBarFert" class="table-actions-bar"></div>
       <div id="tableContainerFert" style="overflow-x:auto;"></div>
     </div>
@@ -384,25 +379,25 @@
 
   <!-- 4. TRACTOR SECTION -->
   <div id="formTrac" class="section">
-    <h3 style="text-align:center; color:#8e44ad; margin-top:0;">🚜 ટ્રેક્ટર ખર્ચ મેનેજમેન્ટ</h3>
+    <h3 style="text-align:center; color:#8e44ad; margin-top:0;">🚜 Tractor Kharch Management</h3>
     <div id="choiceTrac" class="choice-container">
       <div class="choice-card-new" onclick="switchSubTab('Trac', 'New')">
-        <h3>➕ નવી એન્ટ્રી</h3>
-        <p>નવું ટ્રેક્ટર કામ કે ખર્ચ દાખલ કરો</p>
+        <h3>➕ Navi Entry</h3>
+        <p>Navu tractor kām ke kharch dākhal karo</p>
       </div>
       <div class="choice-card-view" onclick="switchSubTab('Trac', 'View')">
-        <h3>📋 બધી એન્ટ્રી</h3>
-        <p>ટ્રેક્ટરના જૂના રેકોર્ડ્સ જુઓ અને મેનેજ કરો</p>
+        <h3>📋 Badhi Entry</h3>
+        <p>Tractor nā junā records juo ane manage karo</p>
       </div>
     </div>
 
     <div id="subContentTracNew" class="sub-section">
-      <button type="button" class="btn-back" onclick="backToChoice('Trac')">⬅️ પાછળ જાઓ</button>
-      <h3 id="formTitleTrac" style="text-align:center; color:#8e44ad; margin-top:0;">🚜 ટ્રેક્ટર ખર્ચ એન્ટ્રી</h3>
+      <button type="button" class="btn-back" onclick="backToChoice('Trac')">⬅️ Pāchhal Jāvo</button>
+      <h3 id="formTitleTrac" style="text-align:center; color:#8e44ad; margin-top:0;">🚜 Tractor Kharch Entry</h3>
       
       <div id="topBannersRowTrac" class="top-banners-row" style="display:flex;">
         <div id="partnerBannerTrac" class="partner-sum-banner" style="display:block;">
-          <h4 id="bannerTitleTrac">કુલ ફાર્મ ટ્રેક્ટર ખર્ચ</h4>
+          <h4 id="bannerTitleTrac">Kul Farm Tractor Kharch</h4>
           <div class="sum-amount" id="bannerValTrac">₹ 0.00</div>
         </div>
       </div>
@@ -410,41 +405,41 @@
       <form id="tracForm" onsubmit="submitTrac(event)">
         <input type="hidden" id="editTracId" value="">
         <div class="flex-row">
-          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="tDate" required onchange="updatePartnerSummary('Trac')"></div>
-          <div class="form-group"><label>🚜 ટ્રેક્ટર માલિક:</label><input type="text" id="tDriver" required></div>
+          <div class="form-group"><label>📅 Tārikh:</label><input type="date" id="tDate" required onchange="updatePartnerSummary('Trac')"></div>
+          <div class="form-group"><label>🚜 Tractor Mālik:</label><input type="text" id="tDriver" required></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="tBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Trac');"></select></div>
+          <div class="form-group"><label>👤 Bhāgidār:</label><select id="tBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Trac');"></select></div>
         </div>
         <hr style="margin:10px 0;">
-        <h4>🚜 ટ્રેક્ટર કામોની યાદી:</h4>
-        <button type="button" class="btn-add-item" onclick="addTracItemRow()">➕ કામ ઉમેરો</button>
+        <h4>🚜 Tractor Kāmoni Yādi:</h4>
+        <button type="button" class="btn-add-item" onclick="addTracItemRow()">➕ Kām Umero</button>
         <div id="tracItemsContainer"></div>
 
         <div class="bill-summary" style="margin-top: 15px;">
           <div class="form-group">
-            <label style="color: #8e44ad; font-size: 14px;">કુલ બિલ રકમ (₹):</label>
+            <label style="color: #8e44ad; font-size: 14px;">Kul Bill Rakam (₹):</label>
             <input type="text" id="tTotalBill" class="highlight-total" readonly value="₹ 0.00">
           </div>
           <div class="form-group" style="margin-top: 8px;">
-            <label style="color: #2980b9; font-size: 15px;">ભાગિયાનો ખર્ચ (₹):</label>
+            <label style="color: #2980b9; font-size: 15px;">Bhāgiyāno Kharch (₹):</label>
             <input type="text" id="tFarmerTotal" class="farmer-amount-box" readonly value="₹ 0.00">
           </div>
         </div>
 
         <div class="flex-row" style="margin-top:10px;">
-          <div class="form-group"><label>📌 બીલની સ્થિતિ:</label><select id="tStatus"><option>રોકડા</option><option>બાકી</option></select></div>
-          <div class="form-group"><label>🤝 હસ્તે:</label><select id="tHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
+          <div class="form-group"><label>📌 Bill ni Sthiti:</label><select id="tStatus"><option>Rokadā</option><option>Bākī</option></select></div>
+          <div class="form-group"><label>🤝 Haste:</label><select id="tHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
         </div>
-        <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="tPhoto" accept="image/*" capture="environment"></div>
-        <button type="submit" id="btnTrac" class="btn-submit">💾 સેવ કરો</button>
+        <div class="form-group"><label>📷 Bill no Photo:</label><input type="file" id="tPhoto" accept="image/*" capture="environment"></div>
+        <button type="submit" id="btnTrac" class="btn-submit">💾 Sev Karo</button>
       </form>
     </div>
 
     <div id="subContentTracView" class="sub-section">
-      <button type="button" class="btn-back" onclick="backToChoice('Trac')">⬅️ પાછળ જાઓ</button>
-      <h3 style="text-align:center; color:#8e44ad; margin-top:0;">📋 ટ્રેક્ટર ખર્ચ રેકોર્ડ્સ</h3>
-      <div class="form-group"><input type="text" id="searchTrac" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterTable('Trac')"></div>
+      <button type="button" class="btn-back" onclick="backToChoice('Trac')">⬅️ Pāchhal Jāvo</button>
+      <h3 style="text-align:center; color:#8e44ad; margin-top:0;">📋 Tractor Kharch Records</h3>
+      <div class="form-group"><input type="text" id="searchTrac" placeholder="🔍 Bill number athvā tārikh thi shodho..." oninput="filterTable('Trac')"></div>
       <div id="actionBarTrac" class="table-actions-bar"></div>
       <div id="tableContainerTrac" style="overflow-x:auto;"></div>
     </div>
@@ -452,56 +447,56 @@
 
   <!-- 5. UPAD LEDGER SECTION -->
   <div id="formUpad" class="section">
-    <h3 style="text-align:center; color:#e67e22; margin-top:0;">💸 ઉપાડ લેજર મેનેજમેન્ટ</h3>
+    <h3 style="text-align:center; color:#e67e22; margin-top:0;">💸 Upād Ledger Management</h3>
     <div id="choiceUpad" class="choice-container">
       <div class="choice-card-new" onclick="switchSubTab('Upad', 'New')">
-        <h3>➕ નવી એન્ટ્રી</h3>
-        <p>નવો ઉપાડ કે જમા રકમ દાખલ કરો</p>
+        <h3>➕ Navi Entry</h3>
+        <p>Navo upād ke jamā rakam dākhal karo</p>
       </div>
       <div class="choice-card-view" onclick="switchSubTab('Upad', 'View')">
-        <h3>📋 બધી એન્ટ્રી</h3>
-        <p>ઉપાડના જૂના રેકોર્ડ્સ જુઓ અને મેનેજ કરો</p>
+        <h3>📋 Badhi Entry</h3>
+        <p>Upād nā junā records juo ane manage karo</p>
       </div>
     </div>
 
     <div id="subContentUpadNew" class="sub-section">
-      <button type="button" class="btn-back" onclick="backToChoice('Upad')">⬅️ પાછળ જાઓ</button>
-      <h3 style="text-align:center; color:#e67e22; margin-top:0;">💸 નવો ઉપાડ / જમા એન્ટ્રી ફોર્મ</h3>
+      <button type="button" class="btn-back" onclick="backToChoice('Upad')">⬅️ Pāchhal Jāvo</button>
+      <h3 style="text-align:center; color:#e67e22; margin-top:0;">💸 Navo Upād / Jamā Entry Form</h3>
       <form id="upadForm" onsubmit="submitUpad(event)">
         <div class="flex-row">
-          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="uDate" required onchange="setEntryIdDate(this.value)"></div>
-          <div class="form-group"><label>🆔 એન્ટ્રી નં:</label><input type="text" id="uEntryId" readonly class="readonly-bg"></div>
+          <div class="form-group"><label>📅 Tārikh:</label><input type="date" id="uDate" required onchange="setEntryIdDate(this.value)"></div>
+          <div class="form-group"><label>🆔 Entry No:</label><input type="text" id="uEntryId" readonly class="readonly-bg"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>👤 ઉપાડ લેનાર:</label><select id="uBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
+          <div class="form-group"><label>👤 Upād Lenār:</label><select id="uBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
           <div class="form-group">
-            <label>📌 એન્ટ્રી પ્રકાર:</label>
+            <label>📌 Entry Prakār:</label>
             <select id="uType" required onchange="handleUpadTypeChange(this)">
-              <option value="">-- પસંદ કરો --</option>
-              <option value="એડવાન્સ ઉપાડ પેટે">એડવાન્સ ઉપાડ પેટે</option>
-              <option value="ખાતર ખરીદી માટે">ખાતર ખરીદી માટે</option>
-              <option value="દવા ખરીદી માટે">દવા ખરીદી માટે</option>
-              <option value="Tractor ખર્ચ માટે">Tractor ખર્ચ માટે</option>
-              <option value="અન્ય ખર્ચ માટે">અન્ય ખર્ચ માટે</option>
-              <option value="વેચાણ બીલ">વેચાણ બીલ</option>
-              <option value="ખાતર બિલ જમા">ખાતર બિલ જમા</option>
-              <option value="દવા બિલ જમા">દવા બિલ જમા</option>
-              <option value="વેચાણ બિલ જમા">વેચાણ બિલ જમા</option>
+              <option value="">-- Pasand Karo --</option>
+              <option value="Advanced Upād Pete">Advanced Upād Pete</option>
+              <option value="Khātar Kharīd Māte">Khātar Kharīd Māte</option>
+              <option value="Davā Kharīd Māte">Davā Kharīd Māte</option>
+              <option value="Tractor Kharch Māte">Tractor Kharch Māte</option>
+              <option value="Anya Kharch Māte">Anya Kharch Māte</option>
+              <option value="Vechān Bill">Vechān Bill</option>
+              <option value="Khātar Bill Jamā">Khātar Bill Jamā</option>
+              <option value="Davā Bill Jamā">Davā Bill Jamā</option>
+              <option value="Vechān Bill Jamā">Vechān Bill Jamā</option>
             </select>
           </div>
         </div>
         <div class="flex-row">
           <div class="form-group">
-            <label>🤝 આપનાર:</label>
+            <label>🤝 Āpanār:</label>
             <select id="uProvider" required class="providerList">
-              <option value="">-- પસંદ કરો --</option>
+              <option value="">-- Pasand Karo --</option>
             </select>
           </div>
-          <div class="form-group"><label>💵 રકમ (₹):</label><input type="number" id="uAmount" step="0.01" required oninput="calcUpadDebitCredit(this)"></div>
+          <div class="form-group"><label>💵 Rakam (₹):</label><input type="number" id="uAmount" step="0.01" required oninput="calcUpadDebitCredit(this)"></div>
         </div>
         <div class="flex-row">
           <div class="form-group">
-            <label>💳 ટ્રાન્ઝેક્શન પ્રકાર:</label>
+            <label>💳 Transaction Prakār:</label>
             <select id="uTxType" onchange="toggleTxId(this)">
               <option value="CASH">CASH</option>
               <option value="UPI">UPI</option>
@@ -511,47 +506,47 @@
           <div class="form-group" id="groupTxId" style="display:none;"><label>🆔 Transaction ID:</label><input type="text" id="uTxId"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>ઉપાડ (Debit):</label><input type="text" id="uDebit" class="readonly-bg" readonly value="₹ 0.00"></div>
-          <div class="form-group"><label>જમા (Credit):</label><input type="text" id="uCredit" class="readonly-bg" readonly value="₹ 0.00"></div>
+          <div class="form-group"><label>Upād (Debit):</label><input type="text" id="uDebit" class="readonly-bg" readonly value="₹ 0.00"></div>
+          <div class="form-group"><label>Jamā (Credit):</label><input type="text" id="uCredit" class="readonly-bg" readonly value="₹ 0.00"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="uBillNo" placeholder="ઓપ્શનલ"></div>
-          <div class="form-group"><label>📄 બિલ પ્રકાર:</label><input type="text" id="uBillType" placeholder="દવા / ખાતર વગેરે"></div>
+          <div class="form-group"><label>🆔 Bill No:</label><input type="text" id="uBillNo" placeholder="Optional"></div>
+          <div class="form-group"><label>📄 Bill Prakār:</label><input type="text" id="uBillType" placeholder="Davā / Khātar vagare"></div>
         </div>
-        <div class="form-group"><label>📝 વિગત:</label><input type="text" id="uDetails" placeholder="વધારાની માહિતી..."></div>
+        <div class="form-group"><label>📝 Vigat:</label><input type="text" id="uDetails" placeholder="Vadhārāni māhiti..."></div>
         
-        <!-- વ્યાજ ગણતરી સેક્શન -->
+        <!-- Vyāj Ganatari Section -->
         <div style="background: #fdfefe; border: 1px solid #d5dbdb; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
-          <h4 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 13px;">📊 વ્યાજ ગણતરી (3% પ્રતિ મહિનો)</h4>
+          <h4 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 13px;">📊 Vyāj Ganatari (3% prati mahino)</h4>
           <div class="flex-row">
-            <div class="form-group"><label>શરૂઆતની તારીખ:</label><input type="date" id="uStartDate"></div>
-            <div class="form-group"><label>પૂરી થવાની તારીખ:</label><input type="date" id="uEndDate"></div>
+            <div class="form-group"><label>Shāruātni Tārikh:</label><input type="date" id="uStartDate"></div>
+            <div class="form-group"><label>Pūrī Thavāni Tārikh:</label><input type="date" id="uEndDate"></div>
           </div>
           <div class="flex-row" style="align-items: flex-end;">
-            <div class="form-group"><label>📈 વ્યાજપાત્ર રકમ:</label><input type="number" id="uInterestAmt" step="0.01" value="0"></div>
+            <div class="form-group"><label>📈 Vyājpatra Rakam:</label><input type="number" id="uInterestAmt" step="0.01" value="0"></div>
             <div class="form-group">
-              <button type="button" onclick="calculateDateWiseInterest()" style="width: 100%; background: #2980b9; color: white; border: none; padding: 8px; border-radius: 3px; font-weight: bold; cursor: pointer; font-size: 12px;">🔄 તારીખ મુજબ વ્યાજ ગણો</button>
+              <button type="button" onclick="calculateDateWiseInterest()" style="width: 100%; background: #2980b9; color: white; border: none; padding: 8px; border-radius: 3px; font-weight: bold; cursor: pointer; font-size: 12px;">🔄 Tārikh mujab vyāj gano</button>
             </div>
           </div>
           <div class="form-group" style="margin-top: 8px;">
-            <label>ગણતરી કરેલ વ્યાજ રકમ:</label>
+            <label>Ganatari karel vyāj rakam:</label>
             <input type="text" id="uInterestCalc" class="readonly-bg" readonly value="₹ 0.00">
           </div>
         </div>
 
         <div class="flex-row">
-          <div class="form-group"><label>📌 Status:</label><select id="uStatus"><option value="ઉધાર">ઉધાર</option><option value="જમા">જમા</option></select></div>
+          <div class="form-group"><label>📌 Status:</label><select id="uStatus"><option value="Udhār">Udhār</option><option value="Jamā">Jamā</option></select></div>
           <div class="form-group"><label>🔄 Close Year (Y/N):</label><select id="uCloseYear"><option value="N">N</option><option value="Y">Y</option></select></div>
         </div>
-        <div class="form-group"><label>📷 ટ્રાન્ઝેક્શન ફોટો:</label><input type="file" id="uPhoto" accept="image/*" capture="environment"></div>
-        <button type="submit" id="btnUpad" class="btn-submit">💾 સેવ કરો</button>
+        <div class="form-group"><label>📷 Transaction Photo:</label><input type="file" id="uPhoto" accept="image/*" capture="environment"></div>
+        <button type="submit" id="btnUpad" class="btn-submit">💾 Sev Karo</button>
       </form>
     </div>
 
     <div id="subContentUpadView" class="sub-section">
-      <button type="button" class="btn-back" onclick="backToChoice('Upad')">⬅️ પાછળ જાઓ</button>
-      <h3 style="text-align:center; color:#e67e22; margin-top:0;">📋 ઉપાડ લેજર રેકોર્ડ્સ</h3>
-      <div class="form-group"><input type="text" id="searchUpad" placeholder="🔍 નામ અથવા તારીખથી શોધો..." oninput="filterTable('Upad')"></div>
+      <button type="button" class="btn-back" onclick="backToChoice('Upad')">⬅️ Pāchhal Jāvo</button>
+      <h3 style="text-align:center; color:#e67e22; margin-top:0;">📋 Upād Ledger Records</h3>
+      <div class="form-group"><input type="text" id="searchUpad" placeholder="🔍 Nām athvā tārikh thi shodho..." oninput="filterTable('Upad')"></div>
       <div id="actionBarUpad" class="table-actions-bar"></div>
       <div id="tableContainerUpad" style="overflow-x:auto;"></div>
     </div>
@@ -559,100 +554,100 @@
 
   <!-- 6. GALLERY SECTION -->
   <div id="formGallery" class="section">
-    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">🖼️ બિલ ફોટો ગેલેરી & રેકોર્ડ્સ</h3>
+    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">🖼️ Bill Photo Gallery & Records</h3>
     <div class="form-group">
-      <input type="text" id="searchGallery" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterGallery()">
+      <input type="text" id="searchGallery" placeholder="🔍 Bill number athvā tārikh thi shodho..." oninput="filterGallery()">
     </div>
     <div id="galleryContainer" style="overflow-x:auto;">
-      <p style="text-align:center;">લોડ થઈ રહ્યું છે...</p>
+      <p style="text-align:center;">Load thai rahyu chhe...</p>
     </div>
   </div>
 
   <!-- 7. BILL RECORD SECTION -->
   <div id="formBillRec" class="section">
-    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📂 બિલ રેકોર્ડ્સ (Bill Record)</h3>
+    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📂 Bill Records (Bill Record)</h3>
     
-    <!-- ➔ હસ્તે ફિલ્ટર માટેનું ડ્રોપ-ડાઉન અને સર્ચ બાર -->
+    <!-- Haste Filter Dropdown ane Search Bar -->
     <div class="flex-row" style="margin-bottom: 10px;">
       <div class="form-group">
-        <label>👤 હસ્તે / નામ ફિલ્ટર કરો:</label>
+        <label>👤 Haste / Nām Filter Karo:</label>
         <select id="filterHastak" onchange="filterBillRecordTable()">
-          <option value="">-- બધા (All) --</option>
+          <option value="">-- Badhā (All) --</option>
         </select>
       </div>
       <div class="form-group">
-        <label>🔍 શોધખોળ:</label>
-        <input type="text" id="searchBillRec" placeholder="બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterBillRecordTable()">
+        <label>🔍 Shodh-khol:</label>
+        <input type="text" id="searchBillRec" placeholder="Bill number athvā tārikh thi shodho..." oninput="filterBillRecordTable()">
       </div>
     </div>
 
-    <!-- ➔ Bill Record Table Actions Bar (Edit / Delete) -->
+    <!-- Bill Record Table Actions Bar (Edit / Delete) -->
     <div id="actionBarBillRec" class="table-actions-bar"></div>
 
-    <!-- ➔ ટેબલ ટાઇપ અલાઇન્ડ આકર્ષક સારાંશ બોક્સ -->
+    <!-- Sārānsh Box -->
     <div id="latestRecordSummary" style="background: linear-gradient(135deg, #eafaf1, #d4efdf); border-left: 5px solid #27ae60; padding: 14px; border-radius: 6px; margin-bottom: 12px; display: none; box-shadow: 0 2px 5px rgba(0,0,0,0.08); max-width: 320px;">
       <p id="latestRecordText" style="margin:0;"></p>
     </div>
 
     <div id="tableContainerBillRec" style="overflow-x:auto;">
-      <p style="text-align:center;">લોડ થઈ રહ્યું છે...</p>
+      <p style="text-align:center;">Load thai rahyu chhe...</p>
     </div>
   </div>
 </div>
 
-<!-- 🖼️ Image Viewer Modal with Back & Download Buttons -->
+<!-- Modal Image Viewer -->
 <div id="modalImageViewer" class="modal">
   <div class="modal-content" style="max-width: 400px;">
-    <h3 style="color:#2c3e50; margin-top:0;">📷 બિલ ફોટો વ્યુઅર</h3>
+    <h3 style="color:#2c3e50; margin-top:0;">📷 Bill Photo Viewer</h3>
     <div style="margin: 10px 0; max-height: 350px; overflow: auto;">
       <img id="viewerImage" src="" style="width: 100%; border-radius: 4px; border: 1px solid #ccc; object-fit: contain;">
     </div>
     <div style="display: flex; gap: 10px; margin-top: 15px;">
-      <a id="downloadPhotoBtn" href="" target="_blank" download="Bill_Photo.jpg" style="flex:1; background:#27ae60; color:white; text-decoration:none; padding:8px; border-radius:4px; font-weight:bold; font-size:13px; text-align:center;">📥 ડાઉનલોડ કરો</a>
-      <button type="button" onclick="closeImageModal()" style="flex:1; background:#7f8c8d; color:white; border:none; padding:8px; border-radius:4px; font-weight:bold; font-size:13px; cursor:pointer;">⬅️ પાછળ (Back)</button>
+      <a id="downloadPhotoBtn" href="" target="_blank" download="Bill_Photo.jpg" style="flex:1; background:#27ae60; color:white; text-decoration:none; padding:8px; border-radius:4px; font-weight:bold; font-size:13px; text-align:center;">📥 Download Karo</a>
+      <button type="button" onclick="closeImageModal()" style="flex:1; background:#7f8c8d; color:white; border:none; padding:8px; border-radius:4px; font-weight:bold; font-size:13px; cursor:pointer;">⬅️ Pāchhal (Back)</button>
     </div>
   </div>
 </div>
 
-<!-- Custom Confirmation Modal with Select Dropdown -->
+<!-- Custom Confirmation Modal -->
 <div id="modalUpadConfirm" class="modal">
   <div class="modal-content" style="text-align:center;">
-    <h3 style="color:#e67e22; margin-top:0;">💸 ઉપાડ લેજર જમા એન્ટ્રી</h3>
+    <h3 style="color:#e67e22; margin-top:0;">💸 Upād Ledger Jamā Entry</h3>
     <p id="upadConfirmMsg" style="font-size:15px; font-weight:bold; color:#c0392b; margin-bottom:12px; line-height:1.5;"></p>
     
     <div class="form-group" style="text-align:left;">
-      <label><b>ઉપાડમાં જમા કરવું છે?:</b></label>
+      <label><b>Upādmā jamā karvu chhe?:</b></label>
       <select id="upadChoiceSelect" style="font-weight:bold; font-size:14px; background:#f4ecf7; color:#8e44ad; border: 2px solid #8e44ad;">
-        <option value="no">ના (માત્ર બિલ સેવ કરો)</option>
-        <option value="yes">હા (જમા લો)</option>
+        <option value="no">Nā (mātra bill sev karo)</option>
+        <option value="yes">Hā (jamā lo)</option>
       </select>
     </div>
 
     <div style="display: flex; gap: 10px; margin-top: 15px;">
-      <button type="button" class="btn-submit" style="background:#27ae60;" onclick="confirmUpadActionModal()">કન્ફર્મ કરો</button>
-      <button type="button" class="btn-submit" style="background:#e74c3c;" onclick="document.getElementById('modalUpadConfirm').style.display='none'">કેન્સલ</button>
+      <button type="button" class="btn-submit" style="background:#27ae60;" onclick="confirmUpadActionModal()">Confirm Karo</button>
+      <button type="button" class="btn-submit" style="background:#e74c3c;" onclick="document.getElementById('modalUpadConfirm').style.display='none'">Cancel</button>
     </div>
   </div>
 </div>
 
-<!-- Modal Pop-ups -->
+<!-- Modal MPIN -->
 <div id="modalMpin" class="modal">
   <div class="modal-content" style="text-align:center;">
-    <h3 style="color:#c0392b; margin-top:0;">🔒 સિક્યુરિટી MPIN</h3>
-    <p style="font-size:13px; color:#555;">આ ક્રિયા કરવા માટે 4 આંકડાનો MPIN નાખો:</p>
+    <h3 style="color:#c0392b; margin-top:0;">🔒 Security MPIN</h3>
+    <p style="font-size:13px; color:#555;">Ā kriyā karvā māte 4 ānkādo MPIN nākho:</p>
     <input type="password" id="inputMpin" maxlength="4" style="text-align:center; font-size:20px; letter-spacing:8px; margin-bottom:12px;" placeholder="••••">
-    <button type="button" class="btn-submit" onclick="verifyMpinAndProceed()">કન્ફર્મ કરો</button>
-    <button type="button" onclick="document.getElementById('modalMpin').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">કેન્સલ</button>
+    <button type="button" class="btn-submit" onclick="verifyMpinAndProceed()">Confirm Karo</button>
+    <button type="button" onclick="document.getElementById('modalMpin').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">Cancel</button>
   </div>
 </div>
 
-<div id="modalBhagiya" class="modal"><div class="modal-content"><h3>➕ ભાગીદાર મેનેજમેન્ટ</h3><input type="text" id="nbName" placeholder="નામ" class="form-group"><input type="number" id="nbPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nbAdd" placeholder="ગામ" class="form-group"><input type="text" id="nbRoll" placeholder="Roll (દા.ત. માલિક / ખેડૂ)" class="form-group"><button type="button" class="btn-submit" onclick="saveB()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Bhagiya_Master')">પસંદ કરેલ ભાગીદાર ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalBhagiya').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
+<div id="modalBhagiya" class="modal"><div class="modal-content"><h3>➕ Bhāgidār Management</h3><input type="text" id="nbName" placeholder="Nām" class="form-group"><input type="number" id="nbPhone" placeholder="Mobile" class="form-group"><input type="text" id="nbAdd" placeholder="Gām" class="form-group"><input type="text" id="nbRoll" placeholder="Roll (dā.t. Mālik / Khedū)" class="form-group"><button type="button" class="btn-submit" onclick="saveB()">Sev Karo</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Bhagiya_Master')">Pasand karel bhāgidār delete karo</button><button type="button" onclick="document.getElementById('modalBhagiya').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">Bandh Karo</button></div></div>
 
-<div id="modalVepari" class="modal"><div class="modal-content"><h3>➕ વેપારી મેનેજમેન્ટ</h3><input type="text" id="nvName" placeholder="નામ" class="form-group"><input type="number" id="nvPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nvCity" placeholder="ગામ" class="form-group"><select id="nvCategory" class="form-group"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="અન્ય વેપારી">અન્ય વેપારી</option></select><button type="button" class="btn-submit" onclick="saveV()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Merchant_Master')">પસંદ કરેલ વેપારી ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalVepari').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
+<div id="modalVepari" class="modal"><div class="modal-content"><h3>➕ Vepārī Management</h3><input type="text" id="nvName" placeholder="Nām" class="form-group"><input type="number" id="nvPhone" placeholder="Mobile" class="form-group"><input type="text" id="nvCity" placeholder="Gām" class="form-group"><select id="nvCategory" class="form-group"><option value="Vegitable">Shākbhājī (Vechān)</option><option value="Anya Vepārī">Anya Vepārī</option></select><button type="button" class="btn-submit" onclick="saveV()">Sev Karo</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Merchant_Master')">Pasand karel vepārī delete karo</button><button type="button" onclick="document.getElementById('modalVepari').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">Bandh Karo</button></div></div>
 
-<div id="modalFertilizer" class="modal"><div class="modal-content"><h3>➕ ખાતર મેનેજમેન્ટ</h3><input type="text" id="nfName" placeholder="ખાતરનું નામ (દા.ત. યુરિયા)" class="form-group"><button type="button" class="btn-submit" onclick="saveFertilizerMaster()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="deleteFertilizerMaster()">પસંદ કરેલ ખાતર ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalFertilizer').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
+<div id="modalFertilizer" class="modal"><div class="modal-content"><h3>➕ Khātar Management</h3><input type="text" id="nfName" placeholder="Khātar nu nām (dā.t. Uriyā)" class="form-group"><button type="button" class="btn-submit" onclick="saveFertilizerMaster()">Sev Karo</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="deleteFertilizerMaster()">Pasand karel khātar delete karo</button><button type="button" onclick="document.getElementById('modalFertilizer').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">Bandh Karo</button></div></div>
 
-<div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
+<div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ Navo Pāk</h3><input type="text" id="ncName" placeholder="Pāk nu nām" class="form-group"><input type="number" id="ncShare" placeholder="Khedū Hisso (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">Sev</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">Cancel</button></div></div>
 
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyF3RUHxI5H2WtH1N6dyTlJl-M2W4L9KCiFKhiSWXUe0oC1i-8SdUyvUxMbthcMEGSNMQ/exec";
@@ -684,15 +679,22 @@
   function fetchData() {
     let icon = document.getElementById("refreshIcon");
     if(icon) icon.className = "spin";
-    fetch(SCRIPT_URL).then(res => res.json()).then(res => {
-      appData = res.data || {}; 
-      populateData(); 
-      updateDashboard(); 
-      renderGallery(); 
-      renderBillRecordTable();
-      ['Sales', 'Med', 'Fert', 'Trac', 'Upad'].forEach(t => renderTable(t));
-      if(icon) icon.className = "";
-    }).catch(err => { if(icon) icon.className = ""; alert("ભૂલ: " + err); });
+    fetch(SCRIPT_URL)
+      .then(res => res.json())
+      .then(res => {
+        appData = (res && res.data) ? res.data : {}; 
+        populateData(); 
+        updateDashboard(); 
+        renderGallery(); 
+        renderBillRecordTable();
+        ['Sales', 'Med', 'Fert', 'Trac', 'Upad'].forEach(t => renderTable(t));
+        if(icon) icon.className = "";
+      })
+      .catch(err => { 
+        if(icon) icon.className = ""; 
+        console.error("Fetch Error:", err);
+        alert("Data load karvāmā bhūl: " + err); 
+      });
   }
 
   function checkDuplicateBill(inputEl, sheetName, btnId) {
@@ -721,7 +723,7 @@
     if(isDuplicate) {
       inputEl.style.backgroundColor = "#ffcccc"; inputEl.style.color = "#c0392b"; inputEl.style.borderColor = "#c0392b";
       if(submitBtn) submitBtn.style.display = "none";
-      alert("⚠️ સાવધાન: આ બિલ નંબર (" + billNo + ") પહેલેથી જ સેવ થયેલ છે!");
+      alert("⚠️ Sāvadhān: Ā bill number (" + billNo + ") pahelethī j sev thayel chhe!");
     } else {
       inputEl.style.backgroundColor = "#fff"; inputEl.style.color = "#333"; inputEl.style.borderColor = "#bdc3c7";
       if(submitBtn) submitBtn.style.display = "block";
@@ -819,9 +821,9 @@
     let titleEl = document.getElementById(titleId);
 
     if(titleEl) {
-      if(sectionType === 'Sales') titleEl.innerText = "ખેડૂ વેચાણ, ઉપાડ";
-      else if(sectionType === 'Med') titleEl.innerText = "ખેડૂ દવા માટે, ઉપાડ";
-      else if(sectionType === 'Fert') titleEl.innerText = "ખેડૂ ખાતર માટે, ઉપાડ";
+      if(sectionType === 'Sales') titleEl.innerText = "Khedū Vechān, Upād";
+      else if(sectionType === 'Med') titleEl.innerText = "Khedū Davā māte, Upād";
+      else if(sectionType === 'Fert') titleEl.innerText = "Khedū Khātar māte, Upād";
     }
 
     if(!selectedBhagiya || selectedBhagiya === "NEW" || selectedBhagiya.includes("⚙️")) {
@@ -852,7 +854,7 @@
   function calcUpadDebitCredit(el) {
     let amt = parseFloat(el.value) || 0;
     let type = document.getElementById("uType").value;
-    let isCredit = type.includes("જમા") || type.includes("બિલ જમા");
+    let isCredit = type.includes("Jamā") || type.includes("Bill Jamā");
     
     if(isCredit) {
       document.getElementById("uDebit").value = "₹ 0.00";
@@ -869,7 +871,7 @@
     let endStr = document.getElementById("uEndDate").value;
 
     if(!startStr || !endStr) {
-      alert("કૃપા કરીને શરૂઆતની અને પૂરી થવાની બંને તારીખ પસંદ કરો!");
+      alert("Krupā karīne shāruātni ane pūrī thavāni banne tārikh pasand karo!");
       return;
     }
 
@@ -879,29 +881,29 @@
     let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if(diffDays <= 0) {
-      alert("પૂરી થવાની તારીખ શરૂઆતની તારીખ પછીની હોવી જોઈએ!");
+      alert("Pūrī thavāni tārikh shāruātni tārikh pachhīni hovī joie!");
       return;
     }
 
     let dailyRate = 0.03 / 30;
     let interest = principal * dailyRate * diffDays;
-    document.getElementById("uInterestCalc").value = "₹ " + interest.toFixed(2) + " (" + diffDays + " દિવસો)";
-    alert("વ્યાજ સફળતાપૂર્વક ગણાઈ ગયું છે: ₹ " + interest.toFixed(2));
+    document.getElementById("uInterestCalc").value = "₹ " + interest.toFixed(2) + " (" + diffDays + " divso)";
+    alert("Vyāj safaltāpūrvak ganāi gayu chhe: ₹ " + interest.toFixed(2));
   }
 
   function convertToGujaratiWords(amount) {
-    let units = ['', 'એક', 'બે', 'ત્રણ', 'ચાર', 'પાંચ', 'છ', 'સાત', 'આઠ', 'નવ', 'દસ', 'અગિયાર', 'બાર', 'તેર', 'ચોદ', 'પંદર', 'સોળ', 'સત્તર', 'અઢાર', 'ઓગણીસ'];
-    let tens = ['', '', 'વીસ', 'ત્રીસ', 'ચાલીસ', 'પચાસ', 'સાઈઠ', 'સિત્તેર', 'અંશી', 'નવું'];
+    let units = ['', 'Ek', 'Be', 'Traṇ', 'Chār', 'Pānch', 'Chha', 'Sāt', 'Āṭh', 'Nav', 'Des', 'Agiyār', 'Bār', 'Ter', 'Chod', 'Pander', 'Soḷ', 'Sattar', 'Adhār', 'Ogaṇīs'];
+    let tens = ['', '', 'Vīs', 'Trīs', 'Chāliy", 'Pachās', 'Sāīṭh', 'Sitter', 'Aṁshī', 'Navu'];
     let intPart = Math.floor(amount);
-    if (intPart === 0) return "અંકે રૂપિયા શૂન્ય પૂરા";
+    if (intPart === 0) return "Aṁke rupiā shūnya pūrā";
     let words = "";
-    if (intPart >= 1000) { let th = Math.floor(intPart / 1000); words += units[th] + " હજાર "; intPart %= 1000; }
-    if (intPart >= 100) { let hu = Math.floor(intPart / 100); words += units[hu] + "સો "; intPart %= 100; }
+    if (intPart >= 1000) { let th = Math.floor(intPart / 1000); words += units[th] + " hajār "; intPart %= 1000; }
+    if (intPart >= 100) { let hu = Math.floor(intPart / 100); words += units[hu] + "so "; intPart %= 100; }
     if (intPart > 0) {
       if (intPart < 20) { words += units[intPart] + " "; }
       else { let t = Math.floor(intPart / 10); let u = intPart % 10; words += (units[u] ? units[u] + " " : "") + (tens[t] || '') + " "; }
     }
-    return "અંકે રૂપિયા " + words.trim() + " પૂરા";
+    return "Aṁke rupiā " + words.trim() + " pūrā";
   }
 
   function populateData() {
@@ -919,7 +921,7 @@
     let uBhagiyaSelect = document.getElementById("uBhagiya");
     if(uBhagiyaSelect) {
       let cur = uBhagiyaSelect.value;
-      uBhagiyaSelect.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
+      uBhagiyaSelect.innerHTML = '<option value="">-- Pasand Karo --</option><option value="NEW">➕ Navo Umero</option>';
       upadBhagiyas.forEach(b => uBhagiyaSelect.add(new Option(b, b)));
       uBhagiyaSelect.value = cur;
     }
@@ -936,10 +938,10 @@
     document.querySelectorAll('.bhagiyaList').forEach(sel => { 
       if(sel.id !== "uBhagiya") {
         let cur = sel.value; 
-        sel.innerHTML = '<option value="">-- પસંદ કરો --</option>' +
-                        '<option value="NEW">➕ નવો ઉમેરો</option>' +
-                        '<option value="EDIT">✏️ પસંદ કરેલ એડિટ કરો</option>' +
-                        '<option value="DELETE">🗑️ પસંદ કરેલ ડિલીટ કરો</option>';
+        sel.innerHTML = '<option value="">-- Pasand Karo --</option>' +
+                        '<option value="NEW">➕ Navo Umero</option>' +
+                        '<option value="EDIT">✏️ Pasand karel edit karo</option>' +
+                        '<option value="DELETE">🗑️ Pasand karel delete karo</option>';
         hastakList.forEach(b => sel.add(new Option(b, b))); 
         sel.value = cur;
       }
@@ -957,10 +959,10 @@
     let ownerSelect = document.getElementById("sBillOwner");
     if(ownerSelect) {
       let curOwner = ownerSelect.value;
-      ownerSelect.innerHTML = '<option value="">-- પસંદ કરો --</option>' +
-                              '<option value="NEW">➕ નવો ઉમેરો</option>' +
-                              '<option value="EDIT">✏️ પસંદ કરેલ એડિટ કરો</option>' +
-                              '<option value="DELETE">🗑️ પસંદ કરેલ ડિલીટ કરો</option>';
+      ownerSelect.innerHTML = '<option value="">-- Pasand Karo --</option>' +
+                              '<option value="NEW">➕ Navo Umero</option>' +
+                              '<option value="EDIT">✏️ Pasand karel edit karo</option>' +
+                              '<option value="DELETE">🗑️ Pasand karel delete karo</option>';
       ownerList.forEach(o => ownerSelect.add(new Option(o, o)));
       ownerSelect.value = curOwner;
     }
@@ -987,7 +989,7 @@
         });
       }
 
-      filterHastakSelect.innerHTML = '<option value="">-- બધા (All) --</option>';
+      filterHastakSelect.innerHTML = '<option value="">-- Badhā (All) --</option>';
       uniqueHastakSet.forEach(b => filterHastakSelect.add(new Option(b, b)));
       filterHastakSelect.value = curFilter;
     }
@@ -997,7 +999,7 @@
       let name = r["નામ"] || r["Name"];
       let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
       if(name && roll !== "ખેડૂ" && roll !== "farmer") {
-        providers.push(name + " (" + (r["Roll"] || "ભાગીદાર") + ")");
+        providers.push(name + " (" + (r["Roll"] || "Bhāgidār") + ")");
       }
     });
     if(appData.Merchant_Master) {
@@ -1005,14 +1007,14 @@
         let mName = r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"];
         let mType = String(r["પ્રકાર"] || "").trim().toLowerCase();
         if(mName && !mType.includes("દવા") && !mType.includes("ખાતર") && !mType.includes("medicine") && !mType.includes("fertilizer")) {
-          providers.push(mName + " (" + (r["પ્રકાર"] || "વેપારી") + ")");
+          providers.push(mName + " (" + (r["પ્રકાર"] || "Vepārī") + ")");
         }
       });
     }
     let uProvider = document.getElementById("uProvider");
     if(uProvider) {
       let cur = uProvider.value;
-      uProvider.innerHTML = '<option value="">-- પસંદ કરો --</option>';
+      uProvider.innerHTML = '<option value="">-- Pasand Karo --</option>';
       providers.forEach(p => uProvider.add(new Option(p, p)));
       uProvider.value = cur;
     }
@@ -1020,7 +1022,7 @@
     let veparis = appData.Merchant_Master ? appData.Merchant_Master.filter(r => String(r["પ્રકાર"] || "").trim() === "Vegitable").map(r => r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"]) : [];
     let sVepari = document.getElementById("sVepari");
     if(sVepari) {
-      let cur = sVepari.value; sVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
+      let cur = sVepari.value; sVepari.innerHTML = '<option value="">-- Pasand Karo --</option><option value="NEW">➕ Navo Umero</option>';
       veparis.forEach(v => sVepari.add(new Option(v, v))); sVepari.value = cur;
     }
 
@@ -1038,31 +1040,31 @@
 
     let mVepari = document.getElementById("mVepari");
     if(mVepari) {
-      let cur = mVepari.value; mVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
+      let cur = mVepari.value; mVepari.innerHTML = '<option value="">-- Pasand Karo --</option><option value="NEW">➕ Navo Umero</option>';
       medVeparis.forEach(v => mVepari.add(new Option(v, v))); mVepari.value = cur;
     }
 
     let fVepari = document.querySelector(".fertVepariList");
     if(fVepari) {
-      let cur = fVepari.value; fVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
+      let cur = fVepari.value; fVepari.innerHTML = '<option value="">-- Pasand Karo --</option><option value="NEW">➕ Navo Umero</option>';
       fertVeparis.forEach(v => fVepari.add(new Option(v, v))); fVepari.value = cur;
     }
 
     document.querySelectorAll('.pakList').forEach(sel => {
-      let currentVal = sel.value; sel.innerHTML = '<option value="">-- પાક --</option><option value="NEW">➕ નવો</option>';
+      let currentVal = sel.value; sel.innerHTML = '<option value="">-- Pāk --</option><option value="NEW">➕ Navo</option>';
       if(appData.Crop_Master) appData.Crop_Master.forEach(c => { let cName = c["પાકનું નામ"]; if(cName) sel.add(new Option(cName, cName)); });
       sel.value = currentVal;
     });
 
     document.querySelectorAll('.davaList').forEach(sel => {
-      let currentVal = sel.value; sel.innerHTML = '<option value="">-- દવા --</option>';
+      let currentVal = sel.value; sel.innerHTML = '<option value="">-- Davā --</option>';
       if(appData.Medicine_Master) appData.Medicine_Master.forEach(m => { let mName = m["દવાનું_નામ"] || m["દવાનું નામ"] || m["નામ"] || ""; if(mName) sel.add(new Option(mName, mName)); });
       sel.value = currentVal;
     });
 
     document.querySelectorAll('.khatarList').forEach(sel => {
       let currentVal = sel.value; 
-      sel.innerHTML = '<option value="">-- ખાતર --</option><option value="NEW">➕ નવું ખાતર ઉમેરો</option>';
+      sel.innerHTML = '<option value="">-- Khātar --</option><option value="NEW">➕ Navu khātar umero</option>';
       let fertSource = appData.Fertilizer_Master || appData.Medicine_Master || [];
       fertSource.forEach(m => { let fName = m["ખાતરનું_નામ"] || m["ખાતરનું નામ"] || m["દવાનું_નામ"] || m["દવાનું નામ"] || m["નામ"] || ""; if(fName) sel.add(new Option(fName, fName)); });
       sel.value = currentVal;
@@ -1075,7 +1077,7 @@
       sel.value = ""; 
     } else if(sel.value === "EDIT") {
       let previousVal = sel.getAttribute("data-selected") || "";
-      if(!previousVal) { alert("કૃપા કરીને પહેલાં કોઈ ભાગીદાર સિલેક્ટ કરો!"); sel.value = ""; return; }
+      if(!previousVal) { alert("Krupā karīne pahelaṁ koī bhāgidār select karo!"); sel.value = ""; return; }
       let found = (appData.Bhagiya_Master || []).find(r => String(r["નામ"] || r["Name"] || "").trim() === previousVal);
       if(found) {
         document.getElementById("nbName").value = found["નામ"] || found["Name"] || "";
@@ -1087,16 +1089,16 @@
       sel.value = "";
     } else if(sel.value === "DELETE") {
       let previousVal = sel.getAttribute("data-selected") || "";
-      if(!previousVal) { alert("કૃપા કરીને પહેલાં કોઈ ભાગીદાર સિલેક્ટ કરો!"); sel.value = ""; return; }
+      if(!previousVal) { alert("Krupā karīne pahelaṁ koī bhāgidār select karo!"); sel.value = ""; return; }
       askMpinAndExecute(() => {
-        if(confirm("⚠️ શું તમે ખરેખર '" + previousVal + "' ને ડિલીટ કરવા માંગો છો?")) {
+        if(confirm("⚠️ Shu tame kharekhar '" + previousVal + "' ne delete karvā māgo chho?")) {
           fetch(SCRIPT_URL, {
             method: "POST",
             body: JSON.stringify({ action: "deleteMasterRecord", sheetName: "Bhagiya_Master", name: previousVal })
           }).then(res => res.json()).then(() => {
-            alert("ભાગીદાર સફળતાપૂર્વક ડિલીટ થઈ ગયો!");
+            alert("Bhāgidār safaltāpūrvak delete thai gayo!");
             fetchData();
-          }).catch(err => alert("ભૂલ: " + err));
+          }).catch(err => alert("Bhūl: " + err));
         }
       });
       sel.value = "";
@@ -1133,7 +1135,7 @@
           totalSum += parseFloat(r["કુલ રકમ (₹)"] || r["કુલ_રકમ"] || r["કુલ રકમ"] || 0);
         }
       });
-      document.getElementById('bannerTitleSales').innerText = "વર્ષ (" + targetYear + ") - કુલ ફાર્મ વેચાણ";
+      document.getElementById('bannerTitleSales').innerText = "Varsha (" + targetYear + ") - Kul Farm Vechān";
     } else if(sectionType === 'Med' && appData.Pesticide_Bill) {
       appData.Pesticide_Bill.forEach(r => {
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
@@ -1141,7 +1143,7 @@
           totalSum += parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || r["કુલ રકમ"] || r["Total_Bill"] || 0);
         }
       });
-      document.getElementById('bannerTitleMed').innerText = "વર્ષ (" + targetYear + ") - કુલ ફાર્મ દવા ખર્ચ";
+      document.getElementById('bannerTitleMed').innerText = "Varsha (" + targetYear + ") - Kul Farm Davā Kharch";
     } else if(sectionType === 'Fert' && appData.Fertilizer_Bill) {
       appData.Fertilizer_Bill.forEach(r => {
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
@@ -1149,7 +1151,7 @@
           totalSum += parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || r["કુલ રકમ"] || r["Total_Bill"] || 0);
         }
       });
-      document.getElementById('bannerTitleFert').innerText = "વર્ષ (" + targetYear + ") - કુલ ફાર્મ ખાતર ખર્ચ";
+      document.getElementById('bannerTitleFert').innerText = "Varsha (" + targetYear + ") - Kul Farm Khātar Kharch";
     } else if(sectionType === 'Trac' && appData.Tractor_Expense) {
       appData.Tractor_Expense.forEach(r => {
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
@@ -1157,7 +1159,7 @@
           totalSum += parseFloat(r["કુલ બિલ રકમ"] || r["કુલ ભાડું"] || 0);
         }
       });
-      document.getElementById('bannerTitleTrac').innerText = "વર્ષ (" + targetYear + ") - કુલ ફાર્મ ટ્રેક્ટર ખર્ચ";
+      document.getElementById('bannerTitleTrac').innerText = "Varsha (" + targetYear + ") - Kul Farm Tractor Kharch";
     }
 
     document.getElementById('bannerVal' + sectionType).innerText = "₹ " + totalSum.toFixed(2);
@@ -1170,24 +1172,24 @@
     let div = document.createElement("div"); div.className = "item-row";
     div.innerHTML = `
       <div class="flex-row">
-        <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcSalesRow(this);"></select></div>
-        <div class="form-group"><label>પાઉચ / નંગ:</label><input type="number" class="sPauch" value="${pauch}"></div>
-        <div class="form-group"><label>કુલ વજન (કિલો):</label><input type="number" class="sWeight" step="0.01" value="${weight}" oninput="calcSalesRow(this)" required></div>
+        <div class="form-group"><label>Pāk:</label><select class="pakList" required onchange="checkCropNew(this); calcSalesRow(this);"></select></div>
+        <div class="form-group"><label>Pauch / Naṁg:</label><input type="number" class="sPauch" value="${pauch}"></div>
+        <div class="form-group"><label>Kul Vajan (Kilo):</label><input type="number" class="sWeight" step="0.01" value="${weight}" oninput="calcSalesRow(this)" required></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>૧ મણનો ભાવ (20 Kg):</label><input type="number" class="sBhav20" step="0.01" value="${bhav20}" oninput="calcSalesRow(this)" required></div>
-        <div class="form-group"><label>ભાવ (પ્રતિ કિલો):</label><input type="text" class="sBhav1 readonly-bg" readonly value="₹ 0.00"></div>
+        <div class="form-group"><label>1 Maṇno Bhāv (20 Kg):</label><input type="number" class="sBhav20" step="0.01" value="${bhav20}" oninput="calcSalesRow(this)" required></div>
+        <div class="form-group"><label>Bhāv (Prati Kilo):</label><input type="text" class="sBhav1 readonly-bg" readonly value="₹ 0.00"></div>
       </div>
       <div class="flex-row">
         <div class="form-group" style="flex: 2;">
-          <label style="color: #27ae60; font-size: 14px;">કુલ રકમ (₹):</label>
+          <label style="color: #27ae60; font-size: 14px;">Kul Rakam (₹):</label>
           <input type="text" class="sTotal readonly-bg highlight-total" readonly value="₹ 0.00">
         </div>
       </div>
       <div class="flex-row" style="margin-top: 8px;">
-        <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKShare readonly-bg" readonly value="0"></div>
-        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
-        <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove()">ડિલિટ</button></div>
+        <div class="form-group hidden-field"><label>Khedū Hisso (%):</label><input type="text" class="sKShare readonly-bg" readonly value="0"></div>
+        <div class="form-group" style="flex: 2;"><label>Khedū Rakam (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove()">Delete</button></div>
       </div>
     `;
     container.appendChild(div); populateData(); 
@@ -1200,23 +1202,23 @@
     let div = document.createElement("div"); div.className = "item-row";
     div.innerHTML = `
       <div class="flex-row">
-        <div class="form-group"><label>દવાનું નામ:</label><select class="davaList" required onchange="onMedSelectRow(this)"></select></div>
-        <div class="form-group"><label>પ્રકાર:</label><input type="text" class="mType readonly-bg" readonly required></div>
+        <div class="form-group"><label>Davā nu nām:</label><select class="davaList" required onchange="onMedSelectRow(this)"></select></div>
+        <div class="form-group"><label>Prakār:</label><input type="text" class="mType readonly-bg" readonly required></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>વજન:</label><input type="number" class="mWeight" step="0.01" value="${weight}" oninput="onWeightInputRow(this); calcMedRow(this);" required></div>
-        <div class="form-group"><label>પેકિંગ:</label><input type="text" class="mPack readonly-bg" value="${pack}" readonly required></div>
-        <div class="form-group"><label>નંગ:</label><input type="number" class="mQty" value="${qty}" min="1" oninput="calcMedRow(this)" required></div>
+        <div class="form-group"><label>Vajan:</label><input type="number" class="mWeight" step="0.01" value="${weight}" oninput="onWeightInputRow(this); calcMedRow(this);" required></div>
+        <div class="form-group"><label>Packing:</label><input type="text" class="mPack readonly-bg" value="${pack}" readonly required></div>
+        <div class="form-group"><label>Naṁg:</label><input type="number" class="mQty" value="${qty}" min="1" oninput="calcMedRow(this)" required></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>ભાવ:</label><input type="number" class="mBhav" step="0.01" value="${bhav}" oninput="calcMedRow(this)" required></div>
-        <div class="form-group"><label>રકમ (₹):</label><input type="text" class="mTotal readonly-bg" readonly value="₹ 0.00"></div>
+        <div class="form-group"><label>Bhāv:</label><input type="number" class="mBhav" step="0.01" value="${bhav}" oninput="calcMedRow(this)" required></div>
+        <div class="form-group"><label>Rakam (₹):</label><input type="text" class="mTotal readonly-bg" readonly value="₹ 0.00"></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>પાક:</label><select class="pakList" onchange="checkCropNew(this); calcMedBill();"></select></div>
-        <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="mKShare readonly-bg" readonly value="0"></div>
-        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
-        <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcMedBill();">ડિલિટ</button></div>
+        <div class="form-group"><label>Pāk:</label><select class="pakList" onchange="checkCropNew(this); calcMedBill();"></select></div>
+        <div class="form-group hidden-field"><label>Khedū Hisso (%):</label><input type="text" class="mKShare readonly-bg" readonly value="0"></div>
+        <div class="form-group" style="flex: 2;"><label>Khedū Rakam (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcMedBill();">Delete</button></div>
       </div>
     `;
     container.appendChild(div); populateData(); 
@@ -1230,20 +1232,20 @@
     let div = document.createElement("div"); div.className = "item-row";
     div.innerHTML = `
       <div class="flex-row">
-        <div class="form-group"><label>ખાતરનું નામ:</label><select class="khatarList" required onchange="checkFertilizerNew(this)"></select></div>
-        <div class="form-group"><label>વજન (ઓપ્શનલ):</label><input type="number" class="fWeight" step="0.01" value="${weight}" placeholder="વજન" oninput="onFertWeightInput(this)"></div>
-        <div class="form-group"><label>પેકિંગ:</label><input type="text" class="fPack readonly-bg" value="${pack}" readonly placeholder="પેકિંગ"></div>
+        <div class="form-group"><label>Khātar nu nām:</label><select class="khatarList" required onchange="checkFertilizerNew(this)"></select></div>
+        <div class="form-group"><label>Vajan (Optional):</label><input type="number" class="fWeight" step="0.01" value="${weight}" placeholder="Vajan" oninput="onFertWeightInput(this)"></div>
+        <div class="form-group"><label>Packing:</label><input type="text" class="fPack readonly-bg" value="${pack}" readonly placeholder="Packing"></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>નંગ/થેલી:</label><input type="number" class="fQty" value="${qty}" min="1" oninput="calcFertBill()" required></div>
-        <div class="form-group"><label>ભાવ:</label><input type="number" class="fBhav" step="0.01" value="${bhav}" oninput="calcFertBill()" required></div>
-        <div class="form-group"><label>રકમ (₹):</label><input type="text" class="fAmt readonly-bg" readonly required value="₹ 0.00"></div>
+        <div class="form-group"><label>Naṁg/Thelī:</label><input type="number" class="fQty" value="${qty}" min="1" oninput="calcFertBill()" required></div>
+        <div class="form-group"><label>Bhāv:</label><input type="number" class="fBhav" step="0.01" value="${bhav}" oninput="calcFertBill()" required></div>
+        <div class="form-group"><label>Rakam (₹):</label><input type="text" class="fAmt readonly-bg" readonly required value="₹ 0.00"></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcFertBill();"></select></div>
-        <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="fKShare readonly-bg" readonly value="0"></div>
-        <div class="form-group" style="flex: 2;"><label>ખેડૂ રકમ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
-        <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcFertBill();">ડિલિટ</button></div>
+        <div class="form-group"><label>Pāk:</label><select class="pakList" required onchange="checkCropNew(this); calcFertBill();"></select></div>
+        <div class="form-group hidden-field"><label>Khedū Hisso (%):</label><input type="text" class="fKShare readonly-bg" readonly value="0"></div>
+        <div class="form-group" style="flex: 2;"><label>Khedū Rakam (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcFertBill();">Delete</button></div>
       </div>
     `;
     container.appendChild(div); populateData(); 
@@ -1258,37 +1260,37 @@
     let val = parseFloat(input.value);
     let packInput = row.querySelector('.fPack');
     if(isNaN(val) || input.value === "") { packInput.value = ""; return; }
-    if(val > 0 && val <= 9) packInput.value = val + " કિલો";
-    else if(val >= 10) packInput.value = val + " કિલો";
+    if(val > 0 && val <= 9) packInput.value = val + " kilo";
+    else if(val >= 10) packInput.value = val + " kilo";
     else packInput.value = "";
   }
 
-  function addTracItemRow(pak="", work="હળામણ", hrs="", min=0, rRate="", mRate="") {
+  function addTracItemRow(pak="", work="Haḷāmaṇ", hrs="", min=0, rRate="", mRate="") {
     let container = document.getElementById("tracItemsContainer");
     let div = document.createElement("div"); div.className = "item-row";
     div.innerHTML = `
       <div class="flex-row">
-        <div class="form-group"><label>પાક:</label><select class="pakList" required onchange="checkCropNew(this); calcTracRow(this);"></select></div>
+        <div class="form-group"><label>Pāk:</label><select class="pakList" required onchange="checkCropNew(this); calcTracRow(this);"></select></div>
         <div class="form-group">
-          <label>કામની વિગત:</label>
+          <label>Kām ni Vigat:</label>
           <select class="tWork" required onchange="calcTracRow(this)">
-            <option value="હળામણ">હળામણ</option><option value="દાંતી">દાંતી</option><option value="રોટાવેટર">રોટાવેટર</option><option value="પાળા">પાળા</option><option value="નિકો">નિકો</option><option value="દવા છાંટવી">દવા છાંટવી</option><option value="અન્ય">અન્ય</option>
+            <option value="Haḷāmaṇ">Haḷāmaṇ</option><option value="Dāntī">Dāntī</option><option value="Rotāvetar">Rotāvetar</option><option value="Pāḷā">Pāḷā</option><option value="Niko">Niko</option><option value="Davā chhāṇtavī">Davā chhāṇtavī</option><option value="Anya">Anya</option>
           </select>
         </div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>કલાક:</label><input type="number" class="tHrs" value="${hrs}" min="0" oninput="calcTracRow(this)" required></div>
-        <div class="form-group"><label>મિનિટ:</label><input type="number" class="tMin" value="${min}" min="0" max="59" oninput="calcTracRow(this)"></div>
+        <div class="form-group"><label>Kalāk:</label><input type="number" class="tHrs" value="${hrs}" min="0" oninput="calcTracRow(this)" required></div>
+        <div class="form-group"><label>Minit:</label><input type="number" class="tMin" value="${min}" min="0" max="59" oninput="calcTracRow(this)"></div>
       </div>
       <div class="flex-row">
-        <div class="form-group"><label>કલાકનો ભાવ:</label><input type="number" class="tRate" value="${rRate}" oninput="calcTracRow(this); autoCalcMinRate(this);" required></div>
-        <div class="form-group"><label>મિનિટનો ભાવ:</label><input type="number" class="tMinRate" value="${mRate}" oninput="calcTracRow(this)"></div>
-        <div class="form-group"><label>કુલ રકમ (₹):</label><input type="text" class="tTotal readonly-bg" readonly value="₹ 0.00"></div>
+        <div class="form-group"><label>Kalākno Bhāv:</label><input type="number" class="tRate" value="${rRate}" oninput="calcTracRow(this); autoCalcMinRate(this);" required></div>
+        <div class="form-group"><label>Minitno Bhāv:</label><input type="number" class="tMinRate" value="${mRate}" oninput="calcTracRow(this)"></div>
+        <div class="form-group"><label>Kul Rakam (₹):</label><input type="text" class="tTotal readonly-bg" readonly value="₹ 0.00"></div>
       </div>
       <div class="flex-row" style="margin-top: 8px;">
-        <div class="form-group hidden-field"><label>ખેડૂ હિસ્સો (%):</label><input type="text" class="sKShare readonly-bg" readonly value="0"></div>
-        <div class="form-group" style="flex: 2;"><label>ભાગિયાનો ખર્ચ (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
-        <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcTracTotal();">ડિલિટ</button></div>
+        <div class="form-group hidden-field"><label>Khedū Hisso (%):</label><input type="text" class="sKShare readonly-bg" readonly value="0"></div>
+        <div class="form-group" style="flex: 2;"><label>Bhāgiyāno Kharch (₹):</label><input type="text" class="sKRakam farmer-amount-box" readonly value="₹ 0.00"></div>
+        <div style="display:flex; align-items:flex-end;"><button type="button" class="btn-delete" onclick="this.closest('.item-row').remove(); calcTracTotal();">Delete</button></div>
       </div>
     `;
     container.appendChild(div); populateData(); 
@@ -1339,8 +1341,8 @@
     let val = parseFloat(input.value);
     let packInput = row.querySelector('.mPack');
     if(isNaN(val)) { packInput.value = ""; return; }
-    if(val > 0 && val <= 9) packInput.value = val + " લિટર/કિલો";
-    else if(val >= 10) packInput.value = val + " ગ્રામ/મિલી";
+    if(val > 0 && val <= 9) packInput.value = val + " litar/kilo";
+    else if(val >= 10) packInput.value = val + " gram/mili";
     else packInput.value = "";
   }
 
@@ -1524,23 +1526,23 @@
     else if(tabName === 'Upad') rows = appData['Upad_Ledger'] || [];
     
     if(!rows || rows.length === 0) { 
-      container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ રેકોર્ડ ઉપલબ્ધ નથી.</p>"; 
+      container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>Koī record uplabdh nathi.</p>"; 
       if(actionBar) actionBar.style.display = 'none';
       return; 
     }
 
     let html = `<table><tr>
       <th style="width: 40px;"><input type="checkbox" id="selectAll_${tabName}" onclick="toggleSelectAll(this, '${tabName}')"></th>
-      <th>એન્ટ્રી Id</th><th>તારીખ</th>`;
+      <th>Entry Id</th><th>Tārikh</th>`;
 
     if(tabName === 'Sales') {
-      html += `<th>Bill To /નામ :</th><th>બીલ નં</th><th>ભાગીદાર</th><th>ખરીદનાર</th><th>પાકનું નામ</th><th>પાઉચ / નંગ</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th><th>હસ્તે</th><th>ઉપાડ જમા</th>`;
+      html += `<th>Bill To /Nām :</th><th>Bill No</th><th>Bhāgidār</th><th>Kharīdnār</th><th>Pāk nu nām</th><th>Pauch / Naṁg</th><th>Kul Vajan</th><th>Bhāv (20Kg)</th><th>Kul Rakam</th><th>Khedū Rakam</th><th>Sthiti</th><th>Haste</th><th>Upād Jamā</th>`;
     } else if(tabName === 'Med' || tabName === 'Fert') {
-      html += `<th>બીલ નં</th><th>${tabName === 'Med' ? 'દવાનું નામ' : 'ખાતરનું નામ'}</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>બિલની કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th>`;
+      html += `<th>Bill No</th><th>${tabName === 'Med' ? 'Davā nu nām' : 'Khātar nu nām'}</th><th>Vajan/Pack</th><th>Naṁg</th><th>Bhāv</th><th>Rakam</th><th>Pāk</th><th>Bill ni Kul Rakam</th><th>Khedū Rakam</th><th>Sthiti</th>`;
     } else if(tabName === 'Trac') {
-      html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બીલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th><th>સ્ટેટસ</th>`;
+      html += `<th>Tractor Mālik</th><th>Pāk nu nām</th><th>Kām ni Vigat</th><th>Kalāk</th><th>Minit</th><th>Kalākno Bhāv</th><th>Minitno Bhāv</th><th>Kul Bill Rakam</th><th>Bill ni Sthiti</th><th>Haste</th><th>Bhāgiyāno Kharch</th><th>Sthiti</th>`;
     } else if(tabName === 'Upad') {
-      html += `<th>ઉપાડ લેનાર</th><th>પ્રકાર</th><th>આપનાર</th><th>ઉપાડ (Debit)</th><th>જમા (Credit)</th><th>બિલ નં</th><th>કુલ બાકી (Outstanding)</th><th>Status</th>`;
+      html += `<th>Upād Lenār</th><th>Prakār</th><th>Āpanār</th><th>Upād (Debit)</th><th>Jamā (Credit)</th><th>Bill No</th><th>Kul Bākī (Outstanding)</th><th>Status</th>`;
     }
     html += `</tr>`;
 
@@ -1568,20 +1570,20 @@
         let hastakVal = r["પૈસા કોણે લીધા (હસ્તે)"] || "-";
         let upadSymbol = r["ઉપાડ જમા✓/×"] || r["ઉપાડ જમા"] || "❌";
 
-        html += `<td><b>${billOwner}</b></td><td>${billNo}</td><td>${bhagiya}</td><td>${r["ખરીદનાર"]||'-'}</td><td>${pakName}</td><td>${pauch}</td><td>${weight} કિલો</td><td>₹ ${bhav20}</td><td>₹ ${totalAmt}</td><td>₹ ${farmerAmt}</td><td><span class="badge-jama">${statusVal}</span></td><td>${hastakVal}</td><td><span style="font-size:16px;">${upadSymbol}</span></td>`;
+        html += `<td><b>${billOwner}</b></td><td>${billNo}</td><td>${bhagiya}</td><td>${r["ખરીદનાર"]||'-'}</td><td>${pakName}</td><td>${pauch}</td><td>${weight} kilo</td><td>₹ ${bhav20}</td><td>₹ ${totalAmt}</td><td>₹ ${farmerAmt}</td><td><span class="badge-jama">${statusVal}</span></td><td>${hastakVal}</td><td><span style="font-size:16px;">${upadSymbol}</span></td>`;
       } else if(tabName === 'Med' || tabName === 'Fert') {
         let billNo = r["બીલ નં"] || r["બિલ નં"] || "-";
         let itemName = r["દવાનું નામ"] || r["ખાતરનું નામ"] || "-";
         let amt = r["રકમ"] || 0;
         let farmerAmt = r["ખેડૂ રકમ"] || 0;
-        html += `<td>${billNo}</td><td><b>${itemName}</b></td><td>-</td><td>-</td><td>-</td><td>-</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>-</td><td>-</td><td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td>`;
+        html += `<td>${billNo}</td><td><b>${itemName}</b></td><td>-</td><td>-</td><td>-</td><td>-</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>-</td><td>-</td><td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td><td><span class="badge-jama">Jamā</span></td>`;
       } else if(tabName === 'Trac') {
         let owner = r["ટ્રેક્ટર માલિક"] || "-";
         let totalAmt = r["કુલ બિલ રકમ"] || 0;
         let farmerCost = r["ભાગિયાનો ખર્ચ"] || 0;
-        html += `<td>${owner}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કામની વિગત"]||'-'}</td><td>${r["કલાક"]||0}</td><td>${r["મિનિટ"]||0}</td><td>₹ ${r["કલાકનો ભાવ"]||0}</td><td>₹ ${r["મિનિટનો ભાવ"]||0}</td><td>₹ ${parseFloat(totalAmt).toFixed(2)}</td><td>${r["બીલની સ્થિતિ"]||'-'}</td><td>${r["હસ્તે"]||'-'}</td><td>₹ ${parseFloat(farmerCost).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td>`;
+        html += `<td>${owner}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કામની વિગત"]||'-'}</td><td>${r["કલાક"]||0}</td><td>${r["મિનિટ"]||0}</td><td>₹ ${r["કલાકનો ભાવ"]||0}</td><td>₹ ${r["મિનિટનો ભાવ"]||0}</td><td>₹ ${parseFloat(totalAmt).toFixed(2)}</td><td>${r["બીલની સ્થિતિ"]||'-'}</td><td>${r["હસ્તે"]||'-'}</td><td>₹ ${parseFloat(farmerCost).toFixed(2)}</td><td><span class="badge-jama">Jamā</span></td>`;
       } else if(tabName === 'Upad') {
-        html += `<td><b>${bhagiya}</b></td><td>${r["એન્ટ્રી પ્રકાર"]||'-'}</td><td>${r["આપનાર"]||'-'}</td><td style="color:#c0392b; font-weight:bold;">₹ ${parseFloat(r["ઉપાડ (Debit)"]||0).toFixed(2)}</td><td style="color:#27ae60; font-weight:bold;">₹ ${parseFloat(r["જમા (Credit)"]||0).toFixed(2)}</td><td>${r["બિલ નં"]||'-'}</td><td style="color:#2980b9; font-weight:bold;">₹ ${parseFloat(r["Total Outstanding"]||0).toFixed(2)}</td><td><span class="badge-jama">${r["Status"]||'ઉધાર'}</span></td>`;
+        html += `<td><b>${bhagiya}</b></td><td>${r["એન્ટ્રી પ્રકાર"]||'-'}</td><td>${r["આપનાર"]||'-'}</td><td style="color:#c0392b; font-weight:bold;">₹ ${parseFloat(r["ઉપાડ (Debit)"]||0).toFixed(2)}</td><td style="color:#27ae60; font-weight:bold;">₹ ${parseFloat(r["જમા (Credit)"]||0).toFixed(2)}</td><td>${r["બિલ નં"]||'-'}</td><td style="color:#2980b9; font-weight:bold;">₹ ${parseFloat(r["Total Outstanding"]||0).toFixed(2)}</td><td><span class="badge-jama">${r["Status"]||'Udhār'}</span></td>`;
       }
 
       html += `</tr>`;
@@ -1602,14 +1604,14 @@
       if(checkboxes.length === 1) {
         let singleId = checkboxes[0].value;
         actionBar.innerHTML = `
-          <span style="font-size:12px; font-weight:bold; margin-right:5px;">1 સિલેક્ટ કરેલ:</span>
-          ${tabName !== 'BillRec' ? `<button class="btn-edit" onclick="editSingleRecord('${sheetKey}', '${singleId}')">✏️ એડિટ</button>` : ''}
-          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ ડિલીટ</button>
+          <span style="font-size:12px; font-weight:bold; margin-right:5px;">1 select karel:</span>
+          ${tabName !== 'BillRec' ? `<button class="btn-edit" onclick="editSingleRecord('${sheetKey}', '${singleId}')">✏️ Edit</button>` : ''}
+          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ Delete</button>
         `;
       } else {
         actionBar.innerHTML = `
-          <span style="font-size:12px; font-weight:bold; margin-right:5px;">${checkboxes.length} સિલેક્ટ કરેલ (Warning):</span>
-          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ પસંદ કરેલ ડિલીટ કરો</button>
+          <span style="font-size:12px; font-weight:bold; margin-right:5px;">${checkboxes.length} select karel (Warning):</span>
+          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ Pasand karel delete karo</button>
         `;
       }
     } else {
@@ -1634,15 +1636,15 @@
           document.getElementById("sBLidha").value = found["ખેડૂએ પૈસા લીધા? (Yes/No)"] || found["ભાગિયાએ લીધા?"] || "No";
           
           document.getElementById("editEntryId").value = entryId;
-          document.getElementById("btnSales").innerText = "અપડેટ કરો";
+          document.getElementById("btnSales").innerText = "Update Karo";
           document.getElementById("salesItemsContainer").innerHTML = "";
           
           let pauchVal = found["પાઉચ / નંગ"] || found["પાઉચ નં."] || found["Total_Pauch"] || 0;
           addSalesItemRow(pauchVal, found["કુલ વજન (કિલો)"] || found["કુલ વજન (કિલો"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || found["૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
           
           updatePartnerSummary('Sales');
-          alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
-        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+          alert("Vechān entry formmā load thai gai chhe!");
+        } else { alert("Record malyo nathi!"); }
       } else if(sheetKey === 'Upad_Ledger') {
         let found = (appData.Upad_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
         if(found) {
@@ -1662,11 +1664,11 @@
           document.getElementById("uDetails").value = found["વિગત"] || "";
           document.getElementById("uStatus").value = found["Status"] || "ઉધાર";
           document.getElementById("uCloseYear").value = found["Close Year"] || "N";
-          document.getElementById("btnUpad").innerText = "અપડેટ કરો";
-          alert("ઉપાડ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
-        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+          document.getElementById("btnUpad").innerText = "Update Karo";
+          alert("Upād entry formmā load thai gai chhe!");
+        } else { alert("Record malyo nathi!"); }
       } else {
-        alert("આ સેક્શન માટે એડિટ સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે.");
+        alert("Ā section māte edit suvidhā tūrk samaymā uplabdh thashe.");
       }
     });
   }
@@ -1808,7 +1810,7 @@
 
     if (currentBal > 0) {
       pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal };
-      let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (ખેડૂ ઉપાડ : ₹ " + currentBal.toFixed(2) + ") શું આ બિલ ઉપાડમાં જમા કરવું છે?";
+      let msg = "📋 Ā bill ni kul rakam ₹ " + billTotal.toFixed(2) + " chhe. (Khedū upād : ₹ " + currentBal.toFixed(2) + ") Shu ā bill upādmā jamā karvu chhe?";
       document.getElementById("upadConfirmMsg").innerText = msg;
       document.getElementById("upadChoiceSelect").value = "no";
       document.getElementById("modalUpadConfirm").style.display = "block";
@@ -1832,7 +1834,7 @@
     }
 
     let btn = document.getElementById(btnId);
-    if(btn) btn.innerText = "સેવ થઈ રહ્યું છે...";
+    if(btn) btn.innerText = "Sev thai rahyu chhe...";
 
     let actionName = formType === 'Sales' ? 'saveSales' : formType === 'Med' ? 'savePesticideBill' : 'saveFertilizerBill';
     let payload = formType === 'Sales' ? { action: actionName, itemRows: itemRows, editEntryId: document.getElementById('editEntryId').value, wantUpad: wantUpad } :
@@ -1845,9 +1847,9 @@
     .then(res => res.json())
     .then(res => {
       if(!res || res.status === "error") {
-        let errText = res && res.message ? res.message : "અજ્ઞાત ભૂલ";
-        alert("❌ નિષ્ફળ (Failed): ડેટા ગૂગલ શીટમાં સેવ થયો નથી! (Error: " + errText + ")");
-        if(btn) btn.innerText = "💾 સેવ કરો";
+        let errText = res && res.message ? res.message : "Agnāt bhūl";
+        alert("❌ Nishfaḷ (Failed): Data Google sheetmā sev thayo nathi! (Error: " + errText + ")");
+        if(btn) btn.innerText = "💾 Sev Karo";
         return Promise.reject(errText);
       }
 
@@ -1879,14 +1881,14 @@
         .then(resUpad => resUpad.json())
         .then(resU => {
           if(!resU || resU.status === "error") {
-            alert("⚠️ ચેતવણી: બિલ સેવ થઈ ગયું પણ ઉપાડ જમા કરવામાં ભૂલ આવી: " + (resU ? resU.message : ""));
+            alert("⚠️ Chetavanī: Bill sev thai gayu paṇ upād jamā karvāmā bhūl āvī: " + (resU ? resU.message : ""));
           }
         });
       }
     })
     .then(() => {
-      alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
-      if(btn) btn.innerText = "💾 સેવ કરો";
+      alert("✅ Entry safaltāpūrvak sev thai gai!");
+      if(btn) btn.innerText = "💾 Sev Karo";
       document.getElementById(formElementId).reset();
       
       let submitBtn = document.getElementById(btnId);
@@ -1909,7 +1911,7 @@
   function submitUpad(e) {
     e.preventDefault();
     let btn = document.getElementById("btnUpad");
-    btn.innerText = "સેવ થઈ રહ્યું છે...";
+    btn.innerText = "Sev thai rahyu chhe...";
     
     let date = v("uDate");
     let year = getYear(date);
@@ -1921,7 +1923,7 @@
     let txType = v("uTxType");
     let txId = v("uTxId") || "-";
     
-    let isCredit = type.includes("જમા") || type.includes("બિલ જમા");
+    let isCredit = type.includes("Jamā") || type.includes("Bill Jamā");
     let debit = isCredit ? 0 : amount;
     let credit = isCredit ? amount : 0;
     
@@ -1949,12 +1951,12 @@
       .then(res => res.json())
       .then(res => {
         if(!res || res.status === "error") {
-          alert("❌ નિષ્ફળ (Failed): ઉપાડ એન્ટ્રી સેવ થઈ નથી! (Error: " + (res ? res.message : "Unknown") + ")");
-          btn.innerText = "💾 સેવ કરો";
+          alert("❌ Nishfaḷ (Failed): Upād entry sev thai nathi! (Error: " + (res ? res.message : "Unknown") + ")");
+          btn.innerText = "💾 Sev Karo";
           return;
         }
-        alert("✅ ઉપાડ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
-        btn.innerText = "💾 સેવ કરો";
+        alert("✅ Upād entry safaltāpūrvak sev thai gai!");
+        btn.innerText = "💾 Sev Karo";
         document.getElementById("upadForm").reset();
         document.getElementById("uDate").value = new Date().toISOString().split('T')[0];
         setEntryIdDate(document.getElementById("uDate").value);
@@ -1962,8 +1964,8 @@
         switchTab('Dash');
       })
       .catch(err => {
-        alert("❌ નિષ્ફળ (Failed): સર્વર સાથે કનેક્શન થઈ શક્યું નથી! ભૂલ: " + err);
-        btn.innerText = "💾 સેવ કરો";
+        alert("❌ Nishfaḷ (Failed): Server sāthe connection thai shakyu nathi! Bhūl: " + err);
+        btn.innerText = "💾 Sev Karo";
       });
     });
   }
@@ -1976,12 +1978,12 @@
 
   function askMpinForDeleteSelected(sheetKey, tabName) {
     let checkedBoxes = document.querySelectorAll('.row-select-' + tabName + ':checked');
-    if(checkedBoxes.length === 0) return alert("કૃપા કરીને ડિલીટ કરવા માટે ઓછામાં ઓછી એક એન્ટ્રી સિલેક્ટ કરો!");
+    if(checkedBoxes.length === 0) return alert("Krupā karīne delete karvā māte ochhāmo ochhī ek entry select karo!");
 
     let idsToDelete = Array.from(checkedBoxes).map(cb => cb.value);
 
     askMpinAndExecute(() => {
-      if(!confirm("⚠️ સાવધાન: શું તમે ખરેખર પસંદ કરેલી " + idsToDelete.length + " એન્ટ્રીઓ ડિલીટ કરવા માંગો છો? આ ક્રિયા પાછી નહીં ખેંચી શકાય!")) return;
+      if(!confirm("⚠️ Sāvadhān: Shu tame kharekhar pasand karel " + idsToDelete.length + " entrio delete karvā māgo chho? Ā kriyā pāchhī nahī kheñchī shakāy!")) return;
       
       let promises = idsToDelete.map(id => {
         let deleteAction = "deleteRecord";
@@ -2006,9 +2008,9 @@
       });
 
       Promise.all(promises).then(() => {
-        alert("પસંદ કરેલ એન્ટ્રીઓ સફળતાપૂર્વક ડિલીટ થઈ ગઈ!");
+        alert("Pasand karel entrio safaltāpūrvak delete thai gai!");
         fetchData();
-      }).catch(err => { alert("ભૂલ: " + err); fetchData(); });
+      }).catch(err => { alert("Bhūl: " + err); fetchData(); });
     });
   }
 
@@ -2024,27 +2026,27 @@
 
   function saveB() {
     let name = v("nbName").trim(); 
-    let roll = v("nbRoll").trim() || "ભાગીદાર";
-    if(name == "") return alert("નામ જરૂરી છે!");
+    let roll = v("nbRoll").trim() || "Bhāgidār";
+    if(name == "") return alert("Nām jarūrī chhe!");
     saveData("saveBhagiya", [ getYear(v("uDate") || new Date().toISOString().split('T')[0]), name, v("nbPhone"), v("nbAdd"), roll ]);
     document.getElementById("modalBhagiya").style.display = "none";
   }
 
   function saveV() {
-    let name = v("nvName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
+    let name = v("nvName").trim(); if(name == "") return alert("Nām jarūrī chhe!");
     saveData("saveVepari", [ name, v("nvPhone"), v("nvCity"), v("nvCategory") ]);
     document.getElementById("modalVepari").style.display = "none";
   }
 
   function saveC() {
-    let name = v("ncName").trim(), share = v("ncShare"); if(name == "") return alert("નામ જરૂરી છે!");
+    let name = v("ncName").trim(), share = v("ncShare"); if(name == "") return alert("Nām jarūrī chhe!");
     saveData("saveCrop", [ name, share + "%" ]);
     document.getElementById("modalCrop").style.display = "none";
   }
 
   function saveData(action, rowValues) {
     fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: action, rowValues: rowValues }) })
-    .then(res => res.json()).then(() => { alert("સફળતાપૂર્વક ઉમેરાઈ ગયું!"); fetchData(); }).catch(err => alert("ભૂલ: " + err));
+    .then(res => res.json()).then(() => { alert("Safaltāpūrvak umerāi gayu chhe!"); fetchData(); }).catch(err => alert("Bhūl: " + err));
   }
 
   function handlePhotoUpload(fileInputId, callback) {
@@ -2063,25 +2065,24 @@
     return (m >= 5) ? (y + "-" + (y + 1).toString().slice(-2)) : ((y - 1) + "-" + y.toString().slice(-2));
   }
 
-  // ➔ 2. Gallery Column Sequence: તારીખ | બિલ નં | વેપારી | Bill To/નામ : | ફોટો | Action
   function renderGallery() {
     let container = document.getElementById("galleryContainer");
     if(!container) return;
     let photos = appData.Photo_Gallery || [];
-    if(photos.length === 0) { container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ ફોટો ઉપલબ્ધ નથી.</p>"; return; }
+    if(photos.length === 0) { container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>Koī photo uplabdh nathi.</p>"; return; }
     
     let html = `<table><tr>
-      <th>તારીખ</th>
-      <th>બિલ નં</th>
-      <th>વેપારી</th>
-      <th>Bill To / નામ :</th>
-      <th>ફોટો</th>
+      <th>Tārikh</th>
+      <th>Bill No</th>
+      <th>Vepārī</th>
+      <th>Bill To / Nām :</th>
+      <th>Photo</th>
       <th>Action</th>
     </tr>`;
 
     photos.forEach(p => {
       let link = p["Photo_Link"] || p["ફોટો"] || "";
-      let imgTag = link ? `<button type="button" onclick="openImageModal('${link}')" style="background:#2980b9; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">🖼️ બિલ જુઓ</button>` : "ના";
+      let imgTag = link ? `<button type="button" onclick="openImageModal('${link}')" style="background:#2980b9; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">🖼️ Bill Juo</button>` : "Nā";
       let dateVal = String(p["Date"] || p["તારીખ"] || '').split('T')[0];
       let billNoVal = p["Bill_No"] || p["બિલ નં"] || '';
       let vepariVal = p["વેપારી"] || p["Merchant"] || '-';
@@ -2093,7 +2094,7 @@
         <td>${vepariVal}</td>
         <td>${billOwnerVal}</td>
         <td>${imgTag}</td>
-        <td><button class="btn-delete" onclick="askMpinForDeleteSelected('Photo_Gallery')">ડિલિટ</button></td>
+        <td><button class="btn-delete" onclick="askMpinForDeleteSelected('Photo_Gallery')">Delete</button></td>
       </tr>`;
     });
     container.innerHTML = html + `</table>`;
@@ -2115,7 +2116,7 @@
     
     let rows = appData.Bill_Record || [];
     if(rows.length === 0) {
-      container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ બિલ રેકોર્ડ ઉપલબ્ધ નથી.</p>";
+      container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>Koī bill record uplabdh nathi.</p>";
       if(summaryBox) summaryBox.style.display = "none";
       if(actionBar) actionBar.style.display = "none";
       return;
@@ -2158,19 +2159,19 @@
           ${selectedHastak}
         </div>
         <div style="font-size: 13px; color: #d35400; font-weight: bold; margin-bottom: 8px;">
-          તારીખ સુધીની બીલની વિગત (${lDate})
+          Tārikh sudhīni bill ni vigat (${lDate})
         </div>
         <div style="display: flex; flex-direction: column; gap: 4px; font-size: 14px; background: #ffffff; padding: 8px 12px; border-radius: 4px; border: 1px solid #a3e4d7; max-width: 320px;">
           <div style="display: flex; justify-content: space-between;">
-            <span style="color: #2c3e50; font-weight: bold;">કુલ બીલ :</span>
+            <span style="color: #2c3e50; font-weight: bold;">Kul Bill :</span>
             <span style="font-weight: bold; color: #c0392b; text-align: right; min-width: 60px;">${totalBills}</span>
           </div>
           <div style="display: flex; justify-content: space-between;">
-            <span style="color: #2c3e50; font-weight: bold;">કુલ પાઉચ :</span>
+            <span style="color: #2c3e50; font-weight: bold;">Kul Pauch :</span>
             <span style="font-weight: bold; color: #2980b9; text-align: right; min-width: 60px;">${finalPauch}</span>
           </div>
           <div style="display: flex; justify-content: space-between; border-top: 1px dashed #bdc3c7; padding-top: 4px; margin-top: 2px;">
-            <span style="color: #2c3e50; font-weight: bold;">કુલ રકમ :</span>
+            <span style="color: #2c3e50; font-weight: bold;">Kul Rakam :</span>
             <span style="font-weight: bold; color: #8e44ad; text-align: right; min-width: 60px;">₹ ${finalAmount}</span>
           </div>
         </div>
@@ -2181,32 +2182,31 @@
     }
 
     if(filteredRows.length === 0) {
-      container.innerHTML = "<p style='text-align:center; color:#c0392b; font-weight:bold;'>⚠️ આ હસ્તે / નામ માટે કોઈ રેકોર્ડ મળ્યો નથી.</p>";
+      container.innerHTML = "<p style='text-align:center; color:#c0392b; font-weight:bold;'>⚠️ Ā haste / nām māte koī record malyo nathi.</p>";
       if(actionBar) actionBar.style.display = "none";
       return;
     }
 
-    // ➔ Bill Record Table Columns: વર્ષ | વેપારી | તારીખ | હસ્તે | Bill To / નામ | બિલ નં | પાઉચ નં | રકમ | જમા/બાકી | કુલ પાઉચ | કુલ જમા રકમ | Photo
     let html = `<table><tr>
       <th style="width: 40px;"><input type="checkbox" id="selectAll_BillRec" onclick="toggleSelectAll(this, 'BillRec')"></th>
-      <th>વર્ષ</th>
-      <th>વેપારી</th>
-      <th>તારીખ</th>
-      <th>હસ્તે</th>
-      <th>Bill To / નામ :</th>
-      <th>બિલ નં</th>
-      <th>પાઉચ નં.</th>
-      <th>રકમ</th>
-      <th>જમા / બાકી</th>
-      <th>કુલ પાઉચ</th>
-      <th>કુલ જમા રકમ</th>
+      <th>Varsha</th>
+      <th>Vepārī</th>
+      <th>Tārikh</th>
+      <th>Haste</th>
+      <th>Bill To / Nām :</th>
+      <th>Bill No</th>
+      <th>Pauch No.</th>
+      <th>Rakam</th>
+      <th>Jamā / Bākī</th>
+      <th>Kul Pauch</th>
+      <th>Kul Jamā Rakam</th>
       <th>Photo</th>
     </tr>`;
 
     filteredRows.forEach((r, index) => {
       let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
       let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
-      let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
+      let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">Bill Juo</button>` : "-";
       let hastakVal = r["હસ્તે"] || r["હસ્તે "] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "-";
       let billOwnerVal = r["Bill To / નામ :"] || r["Bill To/નામ:"] || r["બિલ માલિક"] || r["Bill Owner"] || "-";
       let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || index;
@@ -2259,7 +2259,7 @@
       document.getElementById("modalMpin").style.display = "none";
       if(pendingActionCallback) pendingActionCallback();
       pendingActionCallback = null;
-    } else { alert("ખોટો પ્રોટેક્શન કોડ છે!"); }
+    } else { alert("Khoto protection code chhe!"); }
   }
 </script>
 

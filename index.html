@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Final Complete Version with All Requested Features & Column Sequences
+  Final Complete Version with Correct Gallery & Bill Record Columns
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 29/10/2026 | ⏰ સમય: 20:00 IST
+  📅 તારીખ: 29/10/2026 | ⏰ સમય: 21:10 IST
 </div>
 
 <div class="header-bar">
@@ -655,7 +655,6 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  // ➔ તમારો સેટ કરેલો Web App URL
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby1DAfBrah9qJskyNZGqIOlD65WnY9yCnNIASkT5EcjW1hJ_da6i_dmpDZl3UQpYhJtkw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
@@ -925,7 +924,6 @@
       uBhagiyaSelect.value = cur;
     }
 
-    // ➔ હસ્તે (Hastak): Roll = ખેડૂ અથવા માલિક બંને આવશે + Edit/Delete Options
     let hastakList = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
@@ -947,7 +945,6 @@
       }
     });
 
-    // ➔ Bill To/નામ: માત્ર Roll = માલિક જ આવશે
     let ownerList = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
@@ -968,7 +965,6 @@
       ownerSelect.value = curOwner;
     }
 
-    // ➔ Bill_Record ફિલ્ટર ડ્રોપ-ડાઉન: માલિક અને ખેડૂ બંનેના નામ
     let filterHastakSelect = document.getElementById("filterHastak");
     if(filterHastakSelect) {
       let curFilter = filterHastakSelect.value;
@@ -2067,16 +2063,38 @@
     return (m >= 5) ? (y + "-" + (y + 1).toString().slice(-2)) : ((y - 1) + "-" + y.toString().slice(-2));
   }
 
+  // ➔ 2. Gallery Column Sequence: તારીખ | બિલ નં | વેપારી | Bill To/નામ : | ફોટો | Action
   function renderGallery() {
     let container = document.getElementById("galleryContainer");
     if(!container) return;
     let photos = appData.Photo_Gallery || [];
     if(photos.length === 0) { container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ ફોટો ઉપલબ્ધ નથી.</p>"; return; }
-    let html = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>પ્રકાર</th><th>ફોટો</th><th>ક્રિયા</th></tr>`;
+    
+    let html = `<table><tr>
+      <th>તારીખ</th>
+      <th>બિલ નં</th>
+      <th>વેપારી</th>
+      <th>Bill To / નામ :</th>
+      <th>ફોટો</th>
+      <th>Action</th>
+    </tr>`;
+
     photos.forEach(p => {
       let link = p["Photo_Link"] || p["ફોટો"] || "";
       let imgTag = link ? `<button type="button" onclick="openImageModal('${link}')" style="background:#2980b9; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">🖼️ બિલ જુઓ</button>` : "ના";
-      html += `<tr><td>${String(p["Date"]||p["તારીખ"]||'').split('T')[0]}</td><td>${p["Bill_No"]||p["બિલ નં"]||''}</td><td>${p["Bhagiya"]||p["ભાગીદાર"]||''}</td><td>${p["Category"]||p["પ્રકાર"]||''}</td><td>${imgTag}</td><td><button class="btn-delete" onclick="askMpinForDeleteSelected('Photo_Gallery')">ડિલિટ</button></td></tr>`;
+      let dateVal = String(p["Date"] || p["તારીખ"] || '').split('T')[0];
+      let billNoVal = p["Bill_No"] || p["બિલ નં"] || '';
+      let vepariVal = p["વેપારી"] || p["Merchant"] || '-';
+      let billOwnerVal = p["Bill To / નામ :"] || p["Bill To/નામ:"] || p["બિલ માલિક"] || '-';
+
+      html += `<tr>
+        <td>${dateVal}</td>
+        <td><b>${billNoVal}</b></td>
+        <td>${vepariVal}</td>
+        <td>${billOwnerVal}</td>
+        <td>${imgTag}</td>
+        <td><button class="btn-delete" onclick="askMpinForDeleteSelected('Photo_Gallery')">ડિલિટ</button></td>
+      </tr>`;
     });
     container.innerHTML = html + `</table>`;
   }
@@ -2168,7 +2186,7 @@
       return;
     }
 
-    // ➔ 3. Bill Record ટેબલ કૉલમ્સનો ક્રમ: વર્ષ | વેપારી (Bill Owner) | તારીખ | હસ્તે | Bill To / નામ | બિલ નં | પાઉચ નં | રકમ | જમા/બાકી | કુલ પાઉચ | કુલ જમા રકમ | Photo
+    // ➔ Bill Record Table Columns: વર્ષ | વેપારી | તારીખ | હસ્તે | Bill To / નામ | બિલ નં | પાઉચ નં | રકમ | જમા/બાકી | કુલ પાઉચ | કુલ જમા રકમ | Photo
     let html = `<table><tr>
       <th style="width: 40px;"><input type="checkbox" id="selectAll_BillRec" onclick="toggleSelectAll(this, 'BillRec')"></th>
       <th>વર્ષ</th>
@@ -2219,7 +2237,6 @@
     renderBillRecordTable();
   }
 
-  // 🖼️ Image Viewer Modal Functions (Back & Download)
   function openImageModal(url) {
     document.getElementById("viewerImage").src = url;
     document.getElementById("downloadPhotoBtn").href = url;

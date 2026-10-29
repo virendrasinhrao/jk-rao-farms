@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Complete Gujarati Version with Live Time & Gallery Delete Support
+  Complete Gujarati Version with Table Photo View Buttons & Speed Optimized
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 4px; font-weight: bold;">
-  📅 તારીખ: <span id="currentDateDisplay">30/10/2026</span> | ⏰ સમય: <span id="currentTimeDisplay">12:30 IST</span>
+  📅 તારીખ: <span id="currentDateDisplay">30/10/2026</span> | ⏰ સમય: <span id="currentTimeDisplay">12:44 IST</span>
 </div>
 
 <div class="header-bar">
@@ -668,7 +668,6 @@
       if(el) el.value = today;
     });
     
-    // Live Date & Time Display
     let dateStr = now.toLocaleDateString('en-GB');
     let timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
     let dateEl = document.getElementById("currentDateDisplay");
@@ -1549,13 +1548,13 @@
       <th>એન્ટ્રી Id</th><th>તારીખ</th>`;
 
     if(tabName === 'Sales') {
-      html += `<th>Bill To / નામ :</th><th>બિલ નં</th><th>ભાગીદાર</th><th>ખરીદનાર</th><th>પાકનું નામ</th><th>પાઉચ / નંગ</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th><th>હસ્તે</th><th>ઉપાડ જમા</th>`;
+      html += `<th>Bill To / નામ :</th><th>બિલ નં</th><th>ભાગીદાર</th><th>ખરીદનાર</th><th>પાકનું નામ</th><th>પાઉચ / નંગ</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th><th>હસ્તે</th><th>ઉપાડ જમા</th><th>ફોટો</th>`;
     } else if(tabName === 'Med' || tabName === 'Fert') {
-      html += `<th>બિલ નં</th><th>${tabName === 'Med' ? 'દવાનું નામ' : 'ખાતરનું નામ'}</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>બિલની કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th>`;
+      html += `<th>બિલ નં</th><th>${tabName === 'Med' ? 'દવાનું નામ' : 'ખાતરનું નામ'}</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>બિલની કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th><th>ફોટો</th>`;
     } else if(tabName === 'Trac') {
-      html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બિલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th><th>સ્ટેટસ</th>`;
+      html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બિલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th><th>સ્ટેટસ</th><th>ફોટો</th>`;
     } else if(tabName === 'Upad') {
-      html += `<th>ઉપાડ લેનાર</th><th>પ્રકાર</th><th>આપનાર</th><th>ઉપાડ (Debit)</th><th>જમા (Credit)</th><th>બિલ નં</th><th>કુલ બાકી (Outstanding)</th><th>Status</th>`;
+      html += `<th>ઉપાડ લેનાર</th><th>પ્રકાર</th><th>આપનાર</th><th>ઉપાડ (Debit)</th><th>જમા (Credit)</th><th>બિલ નં</th><th>કુલ બાકી (Outstanding)</th><th>Status</th><th>ફોટો</th>`;
     }
     html += `</tr>`;
 
@@ -1564,6 +1563,8 @@
       let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
       let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || index;
       let bhagiya = r["ભાગીદાર"] || r["ઉપાડ લેનાર"] || "-";
+      let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
+      let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
 
       html += `<tr>
         <td><input type="checkbox" class="row-select-${tabName}" value="${entryId}" onclick="updateTableActionBar('${tabName}')"></td>
@@ -1583,20 +1584,20 @@
         let hastakVal = r["પૈસા કોણે લીધા (હસ્તે)"] || "-";
         let upadSymbol = r["ઉપાડ જમા✓/×"] || r["ઉપાડ જમા"] || "❌";
 
-        html += `<td><b>${billOwner}</b></td><td>${billNo}</td><td>${bhagiya}</td><td>${r["ખરીદનાર"]||'-'}</td><td>${pakName}</td><td>${pauch}</td><td>${weight} કિલો</td><td>₹ ${bhav20}</td><td>₹ ${totalAmt}</td><td>₹ ${farmerAmt}</td><td><span class="badge-jama">${statusVal}</span></td><td>${hastakVal}</td><td><span style="font-size:16px;">${upadSymbol}</span></td>`;
+        html += `<td><b>${billOwner}</b></td><td>${billNo}</td><td>${bhagiya}</td><td>${r["ખરીદનાર"]||'-'}</td><td>${pakName}</td><td>${pauch}</td><td>${weight} કિલો</td><td>₹ ${bhav20}</td><td>₹ ${totalAmt}</td><td>₹ ${farmerAmt}</td><td><span class="badge-jama">${statusVal}</span></td><td>${hastakVal}</td><td><span style="font-size:16px;">${upadSymbol}</span></td><td>${photoLink}</td>`;
       } else if(tabName === 'Med' || tabName === 'Fert') {
         let billNo = r["બીલ નં"] || r["બિલ નં"] || "-";
         let itemName = r["દવાનું નામ"] || r["ખાતરનું નામ"] || "-";
         let amt = r["રકમ"] || 0;
         let farmerAmt = r["ખેડૂ રકમ"] || 0;
-        html += `<td>${billNo}</td><td><b>${itemName}</b></td><td>-</td><td>-</td><td>-</td><td>-</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>-</td><td>-</td><td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td>`;
+        html += `<td>${billNo}</td><td><b>${itemName}</b></td><td>-</td><td>-</td><td>-</td><td>-</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>-</td><td>-</td><td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td><td>${photoLink}</td>`;
       } else if(tabName === 'Trac') {
         let owner = r["ટ્રેક્ટર માલિક"] || "-";
         let totalAmt = r["કુલ બિલ રકમ"] || 0;
         let farmerCost = r["ભાગિયાનો ખર્ચ"] || 0;
-        html += `<td>${owner}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કામની વિગત"]||'-'}</td><td>${r["કલાક"]||0}</td><td>${r["મિનિટ"]||0}</td><td>₹ ${r["કલાકનો ભાવ"]||0}</td><td>₹ ${r["મિનિટનો ભાવ"]||0}</td><td>₹ ${parseFloat(totalAmt).toFixed(2)}</td><td>${r["બીલની સ્થિતિ"]||'-'}</td><td>${r["હસ્તે"]||'-'}</td><td>₹ ${parseFloat(farmerCost).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td>`;
+        html += `<td>${owner}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કામની વિગત"]||'-'}</td><td>${r["કલાક"]||0}</td><td>${r["મિનિટ"]||0}</td><td>₹ ${r["કલાકનો ભાવ"]||0}</td><td>₹ ${r["મિનિટનો ભાવ"]||0}</td><td>₹ ${parseFloat(totalAmt).toFixed(2)}</td><td>${r["બીલની સ્થિતિ"]||'-'}</td><td>${r["હસ્તે"]||'-'}</td><td>₹ ${parseFloat(farmerCost).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td><td>${photoLink}</td>`;
       } else if(tabName === 'Upad') {
-        html += `<td><b>${bhagiya}</b></td><td>${r["એન્ટ્રી પ્રકાર"]||'-'}</td><td>${r["આપનાર"]||'-'}</td><td style="color:#c0392b; font-weight:bold;">₹ ${parseFloat(r["ઉપાડ (Debit)"]||0).toFixed(2)}</td><td style="color:#27ae60; font-weight:bold;">₹ ${parseFloat(r["જમા (Credit)"]||0).toFixed(2)}</td><td>${r["બિલ નં"]||'-'}</td><td style="color:#2980b9; font-weight:bold;">₹ ${parseFloat(r["Total Outstanding"]||0).toFixed(2)}</td><td><span class="badge-jama">${r["Status"]||'ઉધાર'}</span></td>`;
+        html += `<td><b>${bhagiya}</b></td><td>${r["એન્ટ્રી પ્રકાર"]||'-'}</td><td>${r["આપનાર"]||'-'}</td><td style="color:#c0392b; font-weight:bold;">₹ ${parseFloat(r["ઉપાડ (Debit)"]||0).toFixed(2)}</td><td style="color:#27ae60; font-weight:bold;">₹ ${parseFloat(r["જમા (Credit)"]||0).toFixed(2)}</td><td>${r["બિલ નં"]||'-'}</td><td style="color:#2980b9; font-weight:bold;">₹ ${parseFloat(r["Total Outstanding"]||0).toFixed(2)}</td><td><span class="badge-jama">${r["Status"]||'ઉધાર'}</span></td><td>${photoLink}</td>`;
       }
 
       html += `</tr>`;

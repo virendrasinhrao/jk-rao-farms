@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Final Code with 'Bill To / નામ (Roll = માલિક)' Dropdown at the Top of Sales Form
+  Final Complete & Perfect Code with 'Bill To/નામ:' at Top of Sales Form
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 29/10/2026 | ⏰ સમય: 02:45 IST
+  📅 તારીખ: 29/10/2026 | ⏰ સમય: 03:00 IST
 </div>
 
 <div class="header-bar">
@@ -182,9 +182,9 @@
       <form id="salesForm" onsubmit="submitSalesForm(event)">
         <input type="hidden" id="editEntryId" value="">
         
-        <!-- ➔ સૌથી ઉપર પહેલું ડ્રોપ-ડાઉન: Bill To / નામ (Roll = માલિક) -->
+        <!-- ➔ સૌથી ઉપર પહેલું ડ્રોપ-ડાઉન: Bill To/નામ: (Roll = માલિક) -->
         <div class="form-group">
-          <label>👤 Bill To / નામ (માલિક):</label>
+          <label>👤 Bill To/નામ:</label>
           <select id="sBillOwner" class="ownerList" required onchange="checkBhagiyaNew(this)"></select>
         </div>
 
@@ -542,7 +542,7 @@
 
         <div class="flex-row">
           <div class="form-group"><label>📌 Status:</label><select id="uStatus"><option value="ઉધાર">ઉધાર</option><option value="જમા">જમા</option></select></div>
-          <div class="flex-row"><label>🔄 Close Year (Y/N):</label><select id="uCloseYear"><option value="N">N</option><option value="Y">Y</option></select></div>
+          <div class="form-group"><label>🔄 Close Year (Y/N):</label><select id="uCloseYear"><option value="N">N</option><option value="Y">Y</option></select></div>
         </div>
         <div class="form-group"><label>📷 ટ્રાન્ઝેક્શન ફોટો:</label><input type="file" id="uPhoto" accept="image/*" capture="environment"></div>
         <button type="submit" id="btnUpad" class="btn-submit">💾 સેવ કરો</button>
@@ -909,7 +909,6 @@
       uBhagiyaSelect.value = cur;
     }
 
-    // ➔ માત્ર 'ખેડૂ' (Farmer) રોલ વાળા જ ભાગીદારો ભાગીદાર ડ્રોપ-ડાઉનમાં આવે
     let farmerBhagiyas = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
@@ -928,7 +927,7 @@
       }
     });
 
-    // ➔ માત્ર 'માલિક' (Owner) રોલ વાળા જ નામો Bill To ડ્રોપ-ડાઉનમાં આવે + 'નવો ઉમેરો' (+ ઉમેરો)
+    // ➔ માત્ર 'માલિક' (Owner) રોલ વાળા જ નામો Bill To/નામ: ડ્રોપ-ડાઉનમાં આવે + 'નવો ઉમેરો'
     let ownerList = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
@@ -946,7 +945,6 @@
       ownerSelect.value = curOwner;
     }
 
-    // ➔ હસ્તે ડ્રોપ-ડાઉન મજબૂત રીતે ભરો
     let filterHastakSelect = document.getElementById("filterHastak");
     if(filterHastakSelect) {
       let curFilter = filterHastakSelect.value;
@@ -1481,7 +1479,7 @@
       <th>એન્ટ્રી Id</th><th>તારીખ</th>`;
 
     if(tabName === 'Sales') {
-      html += `<th>બીલ માલિક</th><th>બીલ નં</th><th>ખેડૂનું નામ</th><th>ખરીદનાર</th><th>પાક</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th><th>સ્ટેટસ</th>`;
+      html += `<th>Bill To/નામ:</th><th>બીલ નં</th><th>ખેડૂનું નામ</th><th>ખરીદનાર</th><th>પાક</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th><th>સ્ટેટસ</th>`;
     } else if(tabName === 'Med' || tabName === 'Fert') {
       html += `<th>બીલ નં</th><th>${tabName === 'Med' ? 'દવાનું નામ' : 'ખાતરનું નામ'}</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>બિલની કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th>`;
     } else if(tabName === 'Trac') {
@@ -1503,7 +1501,7 @@
         <td>${cleanDate}</td>`;
 
       if(tabName === 'Sales') {
-        let billOwner = r["બિલ માલિક"] || r["Bill Owner"] || "-";
+        let billOwner = r["Bill To/નામ:"] || r["બિલ માલિક"] || r["Bill Owner"] || "-";
         let billNo = r["બીલ નં"] || r["બિલ નં"] || "-";
         html += `<td><b>${billOwner}</b></td><td>${billNo}</td><td>${bhagiya}</td><td>${r["ખરીદનાર"]||'-'}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કુલ વજન (કિલો"]||r["કુલ વજન (કિલો)"]||'-'} કિલો</td><td>₹ ${r[". ૧ મણનો ભાવ (20 Kg)"]||0}</td><td>₹ ${parseFloat(r["કુલ રકમ (₹)"]||0).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td>`;
       } else if(tabName === 'Med' || tabName === 'Fert') {
@@ -1561,7 +1559,7 @@
         let found = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
         if(found) {
           switchSubTab('Sales', 'New');
-          document.getElementById("sBillOwner").value = found["બિલ માલિક"] || found["Bill Owner"] || "";
+          document.getElementById("sBillOwner").value = found["Bill To/નામ:"] || found["બિલ માલિક"] || found["Bill Owner"] || "";
           document.getElementById("sDate").value = String(found["તારીખ"] || "").split('T')[0];
           document.getElementById("sBill").value = found["બીલ નં"] || found["બિલ નં"] || "";
           document.getElementById("sBhagiya").value = found["ભાગીદાર"] || "";
@@ -1637,7 +1635,7 @@
         
         let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
         
-        // ➔ શીટમાં સેવ થતી એરેમાં 'બિલ માલિક' નો સમાવેશ કર્યો
+        // ➔ ગૂગલ શીટમાં 'Bill To/નામ:' સાચા સ્થાને (તારીખ પછી અને બિલ નં પહેલાં અથવા છેલ્લે) મોકલવા માટે
         itemRows.push([
           year, rId, date, billOwner, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha, photoBase64
         ]);
@@ -2016,7 +2014,6 @@
     });
   }
 
-  // 📂 Bill_Record ટેબલ રેન્ડર અને સરદારની સૂચના મુજબનું અલાઇન્ડ સારાંશ બૉક્સ
   function renderBillRecordTable() {
     let container = document.getElementById("tableContainerBillRec");
     let summaryBox = document.getElementById("latestRecordSummary");
@@ -2051,7 +2048,7 @@
       let totalBills = filteredRows.length;
       let totalPauchSum = 0;
       let totalAmountSum = 0;
-      let latest = filteredRows[filteredRows.length - 1]; // છેલ્લી એન્ટ્રી
+      let latest = filteredRows[filteredRows.length - 1];
       let lDate = String(latest["તારીખ"] || "").split('T')[0];
 
       filteredRows.forEach(r => {

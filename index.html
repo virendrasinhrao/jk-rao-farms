@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Final Complete & Perfect Code with 'Bill To/નામ:' at Top of Sales Form
+  Final Corrected Version matching Sales_Ledger Column Order Exactly
 -->
 <!DOCTYPE html>
 <html>
@@ -105,7 +105,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 3px; font-weight: bold;">
-  📅 તારીખ: 29/10/2026 | ⏰ સમય: 03:00 IST
+  📅 તારીખ: 29/10/2026 | ⏰ સમય: 10:30 IST
 </div>
 
 <div class="header-bar">
@@ -640,7 +640,7 @@
 
 <script>
   // ➔ તમારો સેટ કરેલો Web App URL
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzMjdR_wINgGqcfNAomND2CeEeH4IdPWYjVJ0QJ0jNabs7X-Xv2TqD696ZPZAVjZY1LTg/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxDOlB_t8cmeC-DGE5DhuKJFa3gPv76_gnFwKTqrxGMVlxxlHtDSIu4s2ZeDyWUdv0Kww/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -1479,7 +1479,7 @@
       <th>એન્ટ્રી Id</th><th>તારીખ</th>`;
 
     if(tabName === 'Sales') {
-      html += `<th>Bill To/નામ:</th><th>બીલ નં</th><th>ખેડૂનું નામ</th><th>ખરીદનાર</th><th>પાક</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th><th>સ્ટેટસ</th>`;
+      html += `<th>બીલ નં</th><th>ભાગીદાર</th><th>ખરીદનાર</th><th>પાકનું નામ</th><th>પાઉચ / નંગ</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th><th>હસ્તે</th><th>Bill To/નામ:</th>`;
     } else if(tabName === 'Med' || tabName === 'Fert') {
       html += `<th>બીલ નં</th><th>${tabName === 'Med' ? 'દવાનું નામ' : 'ખાતરનું નામ'}</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>બિલની કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th>`;
     } else if(tabName === 'Trac') {
@@ -1501,9 +1501,18 @@
         <td>${cleanDate}</td>`;
 
       if(tabName === 'Sales') {
-        let billOwner = r["Bill To/નામ:"] || r["બિલ માલિક"] || r["Bill Owner"] || "-";
         let billNo = r["બીલ નં"] || r["બિલ નં"] || "-";
-        html += `<td><b>${billOwner}</b></td><td>${billNo}</td><td>${bhagiya}</td><td>${r["ખરીદનાર"]||'-'}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કુલ વજન (કિલો"]||r["કુલ વજન (કિલો)"]||'-'} કિલો</td><td>₹ ${r[". ૧ મણનો ભાવ (20 Kg)"]||0}</td><td>₹ ${parseFloat(r["કુલ રકમ (₹)"]||0).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td>`;
+        let pakName = r["પાકનું નામ"] || "-";
+        let pauch = r["પાઉચ / નંગ"] || 0;
+        let weight = r["કુલ વજન (કિલો)"] || 0;
+        let bhav20 = r[". ૧ મણનો ભાવ (20 Kg)"] || 0;
+        let totalAmt = parseFloat(r["કુલ રકમ (₹)"] || 0).toFixed(2);
+        let farmerAmt = parseFloat(r["ખેડૂ રકમ"] || 0).toFixed(2);
+        let statusVal = r["બીલની સ્થિતિ (બાકી/જમા)"] || "રોકડા / જમા";
+        let hastakVal = r["પૈસા કોણે લીધા (હસ્તે)"] || "-";
+        let billOwner = r["Bill To/નામ:"] || r["બિલ માલિક"] || "-";
+
+        html += `<td>${billNo}</td><td>${bhagiya}</td><td>${r["ખરીદનાર"]||'-'}</td><td>${pakName}</td><td>${pauch}</td><td>${weight} કિલો</td><td>₹ ${bhav20}</td><td>₹ ${totalAmt}</td><td>₹ ${farmerAmt}</td><td><span class="badge-jama">${statusVal}</span></td><td>${hastakVal}</td><td><b>${billOwner}</b></td>`;
       } else if(tabName === 'Med' || tabName === 'Fert') {
         let billNo = r["બીલ નં"] || r["બિલ નં"] || "-";
         let itemName = r["દવાનું નામ"] || r["ખાતરનું નામ"] || "-";
@@ -1635,9 +1644,10 @@
         
         let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
         
-        // ➔ ગૂગલ શીટમાં 'Bill To/નામ:' સાચા સ્થાને (તારીખ પછી અને બિલ નં પહેલાં અથવા છેલ્લે) મોકલવા માટે
+        // ➔ તમારી ગૂગલ શીટના હેડરનો સાચો અને પરફેક્ટ ક્રમ (Order):
+        // [વર્ષ, એન્ટ્રી Id, તારીખ, બિલ નં, ભાગીદાર, ખરીદનાર, પાકનું નામ, પાઉચ / નંગ, કુલ વજન (કિલો), . ૧ મણનો ભાવ (20 Kg), ભાવ (પ્રતિ કિલો), કુલ રકમ (₹), ખેડૂ હિસ્સો (%), ખેડૂ રકમ, બીલની સ્થિતિ (બાકી/જમા), પૈસા કોણે લીધા (હસ્તે), ખેડૂએ પૈસા લીધા? (Yes/No), બીલનો ફોટો, Time, ઉપાડ જમા✓/×, Bill To/નામ:]
         itemRows.push([
-          year, rId, date, billOwner, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha, photoBase64
+          year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha, photoBase64, new Date().toLocaleTimeString(), "×", billOwner
         ]);
       });
 

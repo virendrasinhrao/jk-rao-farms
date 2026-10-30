@@ -1,8 +1,8 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Last Updated Code Date & Time: 30/10/2026 - 18:40 IST
-  Stable Version with Gujarati Entry Type Dropdown for Upad Ledger
+  Last Updated Code Date & Time: 30/10/2026 - 19:15 IST
+  Stable Version with Fixed Upad Edit Record Matcher, Glossy Green Buttons & Animation
 -->
 <!DOCTYPE html>
 <html>
@@ -137,7 +137,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 4px; font-weight: bold;">
-  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">30/10/2026 - 18:40 IST</span>
+  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">30/10/2026 - 19:15 IST</span>
 </div>
 
 <div class="header-bar">
@@ -1792,7 +1792,7 @@
   function editSingleRecord(sheetKey, entryId) {
     askMpinAndExecute(() => {
       if(sheetKey === 'Sales_Ledger') {
-        let found = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
+        let found = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
         if(found) {
           switchSubTab('Sales', 'New');
           document.getElementById("sBillOwner").value = found["Bill To /નામ :"] || found["Bill To/નામ:"] || found["બિલ માલિક"] || found["Bill Owner"] || "";
@@ -1815,7 +1815,7 @@
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       } else if(sheetKey === 'Upad_Ledger') {
-        let found = (appData.Upad_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
+        let found = (appData.Upad_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
         if(found) {
           switchSubTab('Upad', 'New');
           document.getElementById("uDate").value = String(found["તારીખ"] || "").split('T')[0];
@@ -1845,6 +1845,7 @@
   function submitSalesForm(e) {
     e.preventDefault();
     let btn = document.getElementById("btnSales");
+    let originalText = btn.innerHTML;
     btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
     btn.disabled = true;
 
@@ -1881,13 +1882,14 @@
         ]);
       });
 
-      triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm');
+      triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm', originalText);
     });
   }
 
   function submitMedForm(e) {
     e.preventDefault();
     let btn = document.getElementById("btnMed");
+    let originalText = btn.innerHTML;
     btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
     btn.disabled = true;
 
@@ -1927,13 +1929,14 @@
       });
 
       let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, photoBase64];
-      triggerUpadConfirmationModal('Med', billRow, itemRows, 'btnMed', 'medForm');
+      triggerUpadConfirmationModal('Med', billRow, itemRows, 'btnMed', 'medForm', originalText);
     });
   }
 
   function submitFertForm(e) {
     e.preventDefault();
     let btn = document.getElementById("btnFert");
+    let originalText = btn.innerHTML;
     btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
     btn.disabled = true;
 
@@ -1973,11 +1976,11 @@
       });
 
       let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, details, photoBase64];
-      triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm');
+      triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm', originalText);
     });
   }
 
-  function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId) {
+  function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId, originalBtnText) {
     let partnerName = (formType === 'Sales') ? document.getElementById("sBhagiya").value : billRow[4];
     let billTotal = 0;
     if(formType === 'Sales') {
@@ -1990,13 +1993,13 @@
     let categoryText = formType === 'Sales' ? 'વેચાણ બીલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
 
     if (currentBal > 0) {
-      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal };
+      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
       let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (ખેડૂ ઉપાડ : ₹ " + currentBal.toFixed(2) + ") શું આ બિલ ઉપાડમાં જમા કરવું છે?";
       document.getElementById("upadConfirmMsg").innerText = msg;
       document.getElementById("upadChoiceSelect").value = "no";
       document.getElementById("modalUpadConfirm").style.display = "block";
     } else {
-      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal };
+      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
       document.getElementById("upadChoiceSelect").value = "no";
       confirmUpadActionModal();
     }
@@ -2006,7 +2009,7 @@
     document.getElementById("modalUpadConfirm").style.display = "none";
     if(!pendingBillData) return;
 
-    let { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal } = pendingBillData;
+    let { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText } = pendingBillData;
     let choice = document.getElementById("upadChoiceSelect").value;
     let wantUpad = (choice === "yes");
 
@@ -2033,7 +2036,7 @@
       if(!res || res.status === "error") {
         let errText = res && res.message ? res.message : "અજ્ઞાત ભૂલ";
         alert("❌ નિષ્ફળ (Failed): ડેટા ગૂગલ શીટમાં સેવ થયો નથી! (Error: " + errText + ")");
-        if(btn) { btn.innerHTML = "💾 સેવ કરો"; btn.disabled = false; }
+        if(btn) { btn.innerHTML = originalBtnText || "💾 સેવ કરો"; btn.disabled = false; }
         return Promise.reject(errText);
       }
 
@@ -2072,11 +2075,11 @@
     })
     .then(() => {
       alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
-      if(btn) { btn.innerHTML = "💾 સેવ કરો"; btn.disabled = false; }
+      if(btn) { btn.innerHTML = originalBtnText || "💾 સેવ કરો"; btn.disabled = false; }
       document.getElementById(formElementId).reset();
       
       let submitBtn = document.getElementById(btnId);
-      if(submitBtn) { submitBtn.style.display = "block"; submitBtn.disabled = false; submitBtn.innerHTML = "💾 સેવ કરો"; }
+      if(submitBtn) { submitBtn.style.display = "block"; submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText || "💾 સેવ કરો"; }
 
       pendingBillData = null;
       fetchData();
@@ -2087,7 +2090,7 @@
         console.error("Save Error:", err);
       }
       let submitBtn = document.getElementById(btnId);
-      if(submitBtn) { submitBtn.style.display = "block"; submitBtn.disabled = false; submitBtn.innerHTML = "💾 સેવ કરો"; }
+      if(submitBtn) { submitBtn.style.display = "block"; submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText || "💾 સેવ કરો"; }
       pendingBillData = null;
     });
   }
@@ -2095,6 +2098,7 @@
   function submitUpad(e) {
     e.preventDefault();
     let btn = document.getElementById("btnUpad");
+    let originalText = btn.innerHTML;
     btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
     btn.disabled = true;
     
@@ -2137,12 +2141,12 @@
       .then(res => {
         if(!res || res.status === "error") {
           alert("❌ નિષ્ફળ (Failed): ઉપાડ એન્ટ્રી સેવ થઈ નથી! (Error: " + (res ? res.message : "Unknown") + ")");
-          btn.innerHTML = "💾 સેવ કરો";
+          btn.innerHTML = originalText;
           btn.disabled = false;
           return;
         }
         alert("✅ ઉપાડ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
-        btn.innerHTML = "💾 સેવ કરો";
+        btn.innerHTML = originalText;
         btn.disabled = false;
         document.getElementById("upadForm").reset();
         document.getElementById("uDate").value = new Date().toISOString().split('T')[0];
@@ -2152,7 +2156,7 @@
       })
       .catch(err => {
         alert("❌ નિષ્ફળ (Failed): સર્વર સાથે કનેક્શન થઈ શક્યું નથી! ભૂલ: " + err);
-        btn.innerHTML = "💾 સેવ કરો";
+        btn.innerHTML = originalText;
         btn.disabled = false;
       });
     });

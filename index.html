@@ -1,8 +1,8 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Last Updated Code Date & Time: 30/10/2026 - 21:15 IST
-  Final Complete & Stable Gujarati Version with Anti-Duplicate Logic
+  Last Updated Code Date & Time: 30/10/2026 - 21:00 IST
+  Final Stable Version with All Settings Integrated
 -->
 <!DOCTYPE html>
 <html>
@@ -137,7 +137,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 4px; font-weight: bold;">
-  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">30/10/2026 - 21:15 IST</span>
+  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">30/10/2026 - 21:00 IST</span>
 </div>
 
 <div class="header-bar">
@@ -2113,7 +2113,7 @@
     let provider = v("uProvider");
     let amount = parseFloat(v("uAmount")) || 0;
     let txType = v("uTxType");
-    let txId = v("uTxId"] || "-";
+    let txId = v("uTxId") || "-";
     
     let isCredit = type.includes("Jamā") || type.includes("Bill Jamā") || type.includes("જમા");
     let debit = isCredit ? 0 : amount;

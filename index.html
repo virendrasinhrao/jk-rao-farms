@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Complete Gujarati Version with Glossy Blue Action Buttons & Red Icons
+  Complete Gujarati Version with Glossy Green Action Buttons & Red Icons
 -->
 <!DOCTYPE html>
 <html>
@@ -36,11 +36,11 @@
     .btn-back { background: linear-gradient(135deg, #7f8c8d, #95a5a6); color: white; border-radius: 6px; border: none; padding: 8px 14px; cursor: pointer; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     .btn-back:hover { background: linear-gradient(135deg, #6c7a89, #7f8c8d); }
 
-    /* Glossy Blue Button Style */
+    /* Glossy Green Button Style */
     .btn-action-pill {
-      background: linear-gradient(135deg, #1b6ca8, #004d99, #002b5c);
+      background: linear-gradient(135deg, #1b5e20, #2e7d32, #4caf50, #81c784);
       color: white;
-      border: 2px solid #66b3ff;
+      border: 2px solid #a5d6a7;
       padding: 8px 14px;
       border-radius: 25px;
       font-size: 13px;
@@ -50,13 +50,13 @@
       align-items: center;
       gap: 8px;
       margin-top: 6px;
-      box-shadow: 0 4px 10px rgba(0, 77, 153, 0.4), inset 0 2px 3px rgba(255, 255, 255, 0.4);
+      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.4), inset 0 2px 3px rgba(255, 255, 255, 0.5);
       transition: 0.2s;
     }
     .btn-action-pill:hover {
-      background: linear-gradient(135deg, #247ba0, #0056b3, #003366);
+      background: linear-gradient(135deg, #2e7d32, #388e3c, #66bb6a);
       transform: translateY(-2px);
-      box-shadow: 0 6px 14px rgba(0, 77, 153, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+      box-shadow: 0 6px 14px rgba(46, 125, 50, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.6);
     }
     .btn-action-pill .icon-red {
       color: #ff4d4d;
@@ -136,7 +136,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 4px; font-weight: bold;">
-  📅 તારીખ: <span id="currentDateDisplay">30/10/2026</span> | ⏰ સમય: <span id="currentTimeDisplay">14:00 IST</span>
+  📅 તારીખ: <span id="currentDateDisplay">30/10/2026</span> | ⏰ સમય: <span id="currentTimeDisplay">14:05 IST</span>
 </div>
 
 <div class="header-bar">
@@ -1122,7 +1122,7 @@
         providers.push(name + " (" + (r["Roll"] || "ભાગીદાર") + ")");
       }
     });
-    allVeparis.forEach(v => providers.push(v + " (વેપારી)"));
+    allVeparis.forEach(v => providers.push(v + " (વેપારીপন্থী)"));
     
     let uProvider = document.getElementById("uProvider");
     if(uProvider) {

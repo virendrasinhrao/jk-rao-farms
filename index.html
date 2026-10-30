@@ -1456,7 +1456,7 @@
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       } else if(sheetKey === 'Upad_Ledger') {
-        let found = (appData.Upad_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
+        let found = (appData.Upad_Ledger || []).find(r => String(r["એન્ટ્રી નં"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
         if(found) {
           switchSubTab('Upad', 'New');
           document.getElementById("uDate").value = String(found["તારીખ"] || "").split('T')[0];

@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Modal Message Text Updated, Violet Dropdown Default & Dynamic Section Orange Box Titles Fixed
+  Updated: Sales Bill Upad Modal Restored & Category Balance Auto-Deduct Fixed
 -->
 <!DOCTYPE html>
 <html>
@@ -169,7 +169,7 @@
           <div class="sum-amount" id="bannerValSales">₹ 0.00</div>
         </div>
         <div id="balBoxSales" class="category-balance-box" style="display: block;">
-          <h4 id="balTitleSales">ખેડૂ વેચાણ, ઉપાડ</h4>
+          <h4>વેચાણ બીલ બેલેન્સ</h4>
           <div class="bal-val" id="balValSales">₹ 0.00</div>
         </div>
       </div>
@@ -177,7 +177,7 @@
       <form id="salesForm" onsubmit="submitSalesForm(event)">
         <input type="hidden" id="editEntryId" value="">
         <div class="flex-row">
-          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="sDate" required onchange="updatePartnerSummary('Sales'); updateCategoryBalance('Sales');"></div>
+          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="sDate" required onchange="updatePartnerSummary('Sales')"></div>
           <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="sBill" onblur="checkDuplicateBill(this, 'Sales_Ledger', 'btnSales')"></div>
         </div>
         <div class="flex-row">
@@ -231,7 +231,7 @@
           <div class="sum-amount" id="bannerValMed">₹ 0.00</div>
         </div>
         <div id="balBoxMed" class="category-balance-box" style="display: block;">
-          <h4 id="balTitleMed">ખેડૂ દવા માટે, ઉપાડ</h4>
+          <h4>દવા ખરીદી બેલેન્સ</h4>
           <div class="bal-val" id="balValMed">₹ 0.00</div>
         </div>
       </div>
@@ -239,7 +239,7 @@
       <form id="medForm" onsubmit="submitMedForm(event)">
         <input type="hidden" id="editMedId" value="">
         <div class="flex-row">
-          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="mDate" required onchange="updatePartnerSummary('Med'); updateCategoryBalance('Med');"></div>
+          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="mDate" required onchange="updatePartnerSummary('Med')"></div>
           <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="mBill" onblur="checkDuplicateBill(this, 'Pesticide_Bill', 'btnMed')"></div>
         </div>
         <div class="flex-row">
@@ -313,7 +313,7 @@
           <div class="sum-amount" id="bannerValFert">₹ 0.00</div>
         </div>
         <div id="balBoxFert" class="category-balance-box" style="display: block;">
-          <h4 id="balTitleFert">ખેડૂ ખાતર માટે, ઉપાડ</h4>
+          <h4>ખાતર ખરીદી બેલેન્સ</h4>
           <div class="bal-val" id="balValFert">₹ 0.00</div>
         </div>
       </div>
@@ -321,7 +321,7 @@
       <form id="fertForm" onsubmit="submitFertForm(event)">
         <input type="hidden" id="editFertId" value="">
         <div class="flex-row">
-          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="fDate" required onchange="updatePartnerSummary('Fert'); updateCategoryBalance('Fert');"></div>
+          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="fDate" required onchange="updatePartnerSummary('Fert')"></div>
           <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="fBill" onblur="checkDuplicateBill(this, 'Fertilizer_Bill', 'btnFert')"></div>
         </div>
         <div class="flex-row">
@@ -558,18 +558,17 @@
   </div>
 </div>
 
-<!-- Custom Confirmation Modal with Select Dropdown -->
+<!-- Custom Confirmation Modal with Select Dropdown (હા / ના / કેન્સલ) -->
 <div id="modalUpadConfirm" class="modal">
   <div class="modal-content" style="text-align:center;">
     <h3 style="color:#e67e22; margin-top:0;">💸 ઉપાડ લેજર જમા એન્ટ્રી</h3>
-    <p id="upadConfirmMsg" style="font-size:15px; font-weight:bold; color:#c0392b; margin-bottom:12px; line-height:1.5;"></p>
+    <p id="upadConfirmMsg" style="font-size:13px; color:#555; margin-bottom:10px;"></p>
     
     <div class="form-group" style="text-align:left;">
       <label><b>ઉપાડમાં જમા કરવું છે?:</b></label>
-      <!-- ➔ Initial value "ના (માત્ર બિલ સેવ કરો)" with Violet Color -->
-      <select id="upadChoiceSelect" style="font-weight:bold; font-size:14px; background:#f4ecf7; color:#8e44ad; border: 2px solid #8e44ad;">
-        <option value="no">ના (માત્ર બિલ સેવ કરો)</option>
+      <select id="upadChoiceSelect" style="font-weight:bold; font-size:14px; background:#e8f8f5; color:#27ae60;">
         <option value="yes">હા (જમા લો)</option>
+        <option value="no">ના (માત્ર બિલ સેવ કરો)</option>
       </select>
     </div>
 
@@ -600,7 +599,7 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxs3ac6me3VTNPfNaftLqVIRuZMSzBS1vtH5rtBwrOyGpN6ssdXtQHxMsPGmue6LdB0Yw/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRSjsIWe38VkzGAeJdqy3zsylRoz4VQcrV8Kf3CpElXCjmjtrqq0cCkccY3p49gEjh/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -715,54 +714,31 @@
 
   function getCategoryBalanceVal(sectionType, partnerName) {
     if(!partnerName || partnerName === "NEW") return 0;
-    
     let targetType = sectionType === 'Sales' ? 'વેચાણ બીલ' : sectionType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
-    let altType = sectionType === 'Sales' ? 'વેચાણ બિલ જમા' : sectionType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
-    
-    let dateId = sectionType === 'Sales' ? 'sDate' : sectionType === 'Med' ? 'mDate' : 'fDate';
-    let dateVal = document.getElementById(dateId) ? document.getElementById(dateId).value : new Date().toISOString().split('T')[0];
-    let targetYear = getYear(dateVal);
-
-    let totalDebit = 0;
-    let totalCredit = 0;
+    let totalBal = 0;
 
     if(appData.Upad_Ledger) {
       appData.Upad_Ledger.forEach(r => {
         let name = String(r["ભાગીદાર"] || r["ઉપાડ લેનાર"] || "").trim();
         let type = String(r["એન્ટ્રી પ્રકાર"] || "").trim();
-        let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
-
-        if(name === partnerName && rYear === targetYear) {
-          if(type === targetType || type === altType || type.includes("વેચાણ") || type.includes("બિલ") || type.includes("ખરીદી")) {
-            let deb = parseFloat(r["ઉપાડ (Debit)"] || r["ઉપાડ"] || r["Debit"] || 0);
-            let cred = parseFloat(r["જમા (Credit)"] || r["જમા"] || r["Credit"] || 0);
-            totalDebit += deb;
-            totalCredit += cred;
-          }
+        if(name === partnerName && type === targetType) {
+          let deb = parseFloat(r["ઉપાડ (Debit)"] || 0);
+          let cred = parseFloat(r["જમા (Credit)"] || 0);
+          totalBal += (deb - cred);
         }
       });
     }
-
-    return totalDebit - totalCredit;
+    return totalBal;
   }
 
   function updateCategoryBalance(sectionType) {
     let bhagiyaId = sectionType === 'Sales' ? 'sBhagiya' : sectionType === 'Med' ? 'mBhagiya' : 'fBhagiya';
     let valId = sectionType === 'Sales' ? 'balValSales' : sectionType === 'Med' ? 'balValMed' : 'balValFert';
     let rowId = sectionType === 'Sales' ? 'topBannersRowSales' : sectionType === 'Med' ? 'topBannersRowMed' : 'topBannersRowFert';
-    let titleId = sectionType === 'Sales' ? 'balTitleSales' : sectionType === 'Med' ? 'balTitleMed' : 'balTitleFert';
     
     let selectedBhagiya = document.getElementById(bhagiyaId).value;
     let rowBox = document.getElementById(rowId);
     let valEl = document.getElementById(valId);
-    let titleEl = document.getElementById(titleId);
-
-    // ➔ Dynamic Titles for Orange Boxes
-    if(titleEl) {
-      if(sectionType === 'Sales') titleEl.innerText = "ખેડૂ વેચાણ, ઉપાડ";
-      else if(sectionType === 'Med') titleEl.innerText = "ખેડૂ દવા માટે, ઉપાડ";
-      else if(sectionType === 'Fert') titleEl.innerText = "ખેડૂ ખાતર માટે, ઉપાડ";
-    }
 
     if(!selectedBhagiya || selectedBhagiya === "NEW") {
       if(rowBox) rowBox.style.display = 'none';
@@ -1507,7 +1483,7 @@
     });
   }
 
-  // --- SUBMIT SALES FORM ---
+  // --- SUBMIT SALES FORM (Modal & Balance Deduction Fixed) ---
   function submitSalesForm(e) {
     e.preventDefault();
     let date = v("sDate");
@@ -1540,6 +1516,7 @@
       ]);
     });
 
+    // મોડલ ટ్రిગર કરો જેથી 'હા / ના' પૂછી શકાય
     triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm');
   }
 
@@ -1633,18 +1610,12 @@
     let currentBal = getCategoryBalanceVal(formType, partnerName);
     let categoryText = formType === 'Sales' ? 'વેચાણ બીલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
 
-    if (currentBal > 0) {
-      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName };
-      // ➔ Updated Warning Message Format: "📋 આ બિલની કુલ રકમ ₹ 250.00 છે. (ખેડૂ ઉપાડ : ₹ 200.00) શું આ બિલ ઉપાડમાં જમા કરવું છે?"
-      let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (ખેડૂ ઉપાડ : ₹ " + currentBal.toFixed(2) + ")";
-      document.getElementById("upadConfirmMsg").innerText = msg + " શું આ બિલ ઉપાડમાં જમા કરવું છે?";
-      document.getElementById("upadChoiceSelect").value = "no"; // Default to 'no'
-      document.getElementById("modalUpadConfirm").style.display = "block";
-    } else {
-      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName };
-      document.getElementById("upadChoiceSelect").value = "no";
-      confirmUpadActionModal();
-    }
+    let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (હાલનું બેલેન્સ: ₹ " + currentBal.toFixed(2) + ")";
+
+    pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName };
+    document.getElementById("upadConfirmMsg").innerText = msg + " શું આ બિલ ઉપાડમાં જમા કરવું છે?";
+    document.getElementById("upadChoiceSelect").value = "yes";
+    document.getElementById("modalUpadConfirm").style.display = "block";
   }
 
   function confirmUpadActionModal() {
@@ -1685,6 +1656,7 @@
         
         let upadEntryType = formType === 'Sales' ? 'વેચાણ બિલ જમા' : formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
         
+        // ➔ અહીં જમા (Credit) તરીકે એન્ટ્રી થશે, જેથી બેલેન્સમાંથી રકમ કપાઈ જશે (Debit - Credit)
         let debit = 0;
         let credit = billTotal; 
         let status = "જમા";
@@ -1701,7 +1673,7 @@
           method: "POST",
           body: JSON.stringify({ action: "saveUpadLedger", rowValues: upadRowValues })
         })
-        .then(resUpad => res.json())
+        .then(resUpad => resUpad.json())
         .then(resU => {
           if(!resU || resU.status === "error") {
             alert("⚠️ ચેતવણી: બિલ સેવ થઈ ગયું પણ ઉપાડ જમા કરવામાં ભૂલ આવી: " + (resU ? resU.message : ""));
@@ -1934,4 +1906,3 @@
 
 </body>
 </html>
-

@@ -1,7 +1,8 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Complete Gujarati Version with Save Button Animation & Glossy Green Action Buttons
+  Last Updated Code Date & Time: 30/10/2026 - 17:45 IST
+  Stable Version with Restored Save Functions, Animation & Live Code Timestamp
 -->
 <!DOCTYPE html>
 <html>
@@ -19,7 +20,7 @@
     .refresh-btn:hover { background: #1abc9c; }
     
     @keyframes smoothSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .spin { animation: smoothSpin 0.8s linear infinite !important; }
+    .spin { animation: smoothSpin 0.8s linear infinite !important; display: inline-block; }
 
     .nav { display: flex; gap: 3px; margin-bottom: 10px; max-width: 950px; margin-left: auto; margin-right: auto; flex-wrap: wrap; }
     .nav button { flex: 1; padding: 8px; cursor: pointer; border: 1px solid #b2bec3; background: #dfe6e9; border-radius: 3px; font-weight: bold; font-size: 11px; color: #2d3436; min-width: 70px; }
@@ -136,7 +137,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 4px; font-weight: bold;">
-  📅 તારીખ: <span id="currentDateDisplay">30/10/2026</span> | ⏰ સમય: <span id="currentTimeDisplay">14:20 IST</span>
+  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">30/10/2026 - 17:45 IST</span>
 </div>
 
 <div class="header-bar">
@@ -765,13 +766,6 @@
       let el = document.getElementById(id);
       if(el) el.value = today;
     });
-    
-    let dateStr = now.toLocaleDateString('en-GB');
-    let timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-    let dateEl = document.getElementById("currentDateDisplay");
-    let timeEl = document.getElementById("currentTimeDisplay");
-    if(dateEl) dateEl.innerText = dateStr;
-    if(timeEl) timeEl.innerText = timeStr + " IST";
 
     setEntryIdDate(today);
     fetchData();

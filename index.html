@@ -1,8 +1,8 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Last Updated Code Date & Time: 30/10/2026 - 19:15 IST
-  Stable Version with Fixed Upad Edit Record Matcher, Glossy Green Buttons & Animation
+  Last Updated Code Date & Time: 30/10/2026 - 19:40 IST
+  Stable Version with Fixed Upad Edit & Duplicate Entry ID Prevention
 -->
 <!DOCTYPE html>
 <html>
@@ -2104,7 +2104,7 @@
     
     let date = v("uDate");
     let year = getYear(date);
-    let entryId = v("uEntryId");
+    let entryId = v("uEntryId"); // Keep existing ID if editing
     let bhagiya = v("uBhagiya");
     let type = v("uType");
     let provider = v("uProvider");
@@ -2151,6 +2151,7 @@
         document.getElementById("upadForm").reset();
         document.getElementById("uDate").value = new Date().toISOString().split('T')[0];
         setEntryIdDate(document.getElementById("uDate").value);
+        document.getElementById("btnUpad").innerText = "💾 સેવ કરો";
         fetchData();
         switchTab('Dash');
       })

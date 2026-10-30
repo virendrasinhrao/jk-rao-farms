@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Complete Gujarati Version with Glossy Green Action Buttons & Red Icons
+  Complete Gujarati Version with Custom Toggle & Glossy Green Action Buttons
 -->
 <!DOCTYPE html>
 <html>
@@ -136,7 +136,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 4px; font-weight: bold;">
-  📅 તારીખ: <span id="currentDateDisplay">30/10/2026</span> | ⏰ સમય: <span id="currentTimeDisplay">14:05 IST</span>
+  📅 તારીખ: <span id="currentDateDisplay">30/10/2026</span> | ⏰ સમય: <span id="currentTimeDisplay">14:10 IST</span>
 </div>
 
 <div class="header-bar">
@@ -1122,7 +1122,7 @@
         providers.push(name + " (" + (r["Roll"] || "ભાગીદાર") + ")");
       }
     });
-    allVeparis.forEach(v => providers.push(v + " (વેપારીপন্থী)"));
+    allVeparis.forEach(v => providers.push(v + " (વેપારી)"));
     
     let uProvider = document.getElementById("uProvider");
     if(uProvider) {

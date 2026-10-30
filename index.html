@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Complete Gujarati Version with Custom Toggle & Glossy Green Action Buttons
+  Complete Gujarati Version with Save Button Animation & Glossy Green Action Buttons
 -->
 <!DOCTYPE html>
 <html>
@@ -136,7 +136,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 4px; font-weight: bold;">
-  📅 તારીખ: <span id="currentDateDisplay">30/10/2026</span> | ⏰ સમય: <span id="currentTimeDisplay">14:10 IST</span>
+  📅 તારીખ: <span id="currentDateDisplay">30/10/2026</span> | ⏰ સમય: <span id="currentTimeDisplay">14:20 IST</span>
 </div>
 
 <div class="header-bar">
@@ -1850,6 +1850,10 @@
 
   function submitSalesForm(e) {
     e.preventDefault();
+    let btn = document.getElementById("btnSales");
+    btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
+    btn.disabled = true;
+
     let billOwner = v("sBillOwner");
     let date = v("sDate");
     let year = getYear(date);
@@ -1889,6 +1893,10 @@
 
   function submitMedForm(e) {
     e.preventDefault();
+    let btn = document.getElementById("btnMed");
+    btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
+    btn.disabled = true;
+
     let date = v("mDate");
     let year = getYear(date);
     let entryId = document.getElementById("editMedId").value || ("MED-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
@@ -1931,6 +1939,10 @@
 
   function submitFertForm(e) {
     e.preventDefault();
+    let btn = document.getElementById("btnFert");
+    btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
+    btn.disabled = true;
+
     let date = v("fDate");
     let year = getYear(date);
     let entryId = document.getElementById("editFertId").value || ("FERT-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
@@ -2009,7 +2021,10 @@
     }
 
     let btn = document.getElementById(btnId);
-    if(btn) btn.innerText = "સેવ થઈ રહ્યું છે...";
+    if(btn) {
+      btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
+      btn.disabled = true;
+    }
 
     let actionName = formType === 'Sales' ? 'saveSales' : formType === 'Med' ? 'savePesticideBill' : 'saveFertilizerBill';
     let payload = formType === 'Sales' ? { action: actionName, itemRows: itemRows, editEntryId: document.getElementById('editEntryId').value, wantUpad: wantUpad } :
@@ -2024,7 +2039,7 @@
       if(!res || res.status === "error") {
         let errText = res && res.message ? res.message : "અજ્ઞાત ભૂલ";
         alert("❌ નિષ્ફળ (Failed): ડેટા ગૂગલ શીટમાં સેવ થયો નથી! (Error: " + errText + ")");
-        if(btn) btn.innerText = "💾 સેવ કરો";
+        if(btn) { btn.innerHTML = "💾 સેવ કરો"; btn.disabled = false; }
         return Promise.reject(errText);
       }
 
@@ -2063,11 +2078,11 @@
     })
     .then(() => {
       alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
-      if(btn) btn.innerText = "💾 સેવ કરો";
+      if(btn) { btn.innerHTML = "💾 સેવ કરો"; btn.disabled = false; }
       document.getElementById(formElementId).reset();
       
       let submitBtn = document.getElementById(btnId);
-      if(submitBtn) submitBtn.style.display = "block";
+      if(submitBtn) { submitBtn.style.display = "block"; submitBtn.disabled = false; submitBtn.innerHTML = "💾 સેવ કરો"; }
 
       pendingBillData = null;
       fetchData();
@@ -2078,7 +2093,7 @@
         console.error("Save Error:", err);
       }
       let submitBtn = document.getElementById(btnId);
-      if(submitBtn) submitBtn.style.display = "block";
+      if(submitBtn) { submitBtn.style.display = "block"; submitBtn.disabled = false; submitBtn.innerHTML = "💾 સેવ કરો"; }
       pendingBillData = null;
     });
   }
@@ -2086,7 +2101,8 @@
   function submitUpad(e) {
     e.preventDefault();
     let btn = document.getElementById("btnUpad");
-    btn.innerText = "સેવ થઈ રહ્યું છે...";
+    btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
+    btn.disabled = true;
     
     let date = v("uDate");
     let year = getYear(date);
@@ -2127,11 +2143,13 @@
       .then(res => {
         if(!res || res.status === "error") {
           alert("❌ નિષ્ફળ (Failed): ઉપાડ એન્ટ્રી સેવ થઈ નથી! (Error: " + (res ? res.message : "Unknown") + ")");
-          btn.innerText = "💾 સેવ કરો";
+          btn.innerHTML = "💾 સેવ કરો";
+          btn.disabled = false;
           return;
         }
         alert("✅ ઉપાડ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
-        btn.innerText = "💾 સેવ કરો";
+        btn.innerHTML = "💾 સેવ કરો";
+        btn.disabled = false;
         document.getElementById("upadForm").reset();
         document.getElementById("uDate").value = new Date().toISOString().split('T')[0];
         setEntryIdDate(document.getElementById("uDate").value);
@@ -2140,7 +2158,8 @@
       })
       .catch(err => {
         alert("❌ નિષ્ફળ (Failed): સર્વર સાથે કનેક્શન થઈ શક્યું નથી! ભૂલ: " + err);
-        btn.innerText = "💾 સેવ કરો";
+        btn.innerHTML = "💾 સેવ કરો";
+        btn.disabled = false;
       });
     });
   }

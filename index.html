@@ -2060,20 +2060,25 @@
         });
       }
     })
-    .then(() => {
-      alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
+        .then(() => {
+      alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ/અપડેટ થઈ ગઈ!");
       if(btn) { btn.innerHTML = originalBtnText || "💾 સેવ કરો"; btn.disabled = false; }
       document.getElementById(formElementId).reset();
       
+      // 🌟 આ લાઇન ઉમેરી દેવી જેથી એડિટ મોડ બંધ થઈ જાય અને નવું ફોર્મ સાફ થઈ જાય
+      let editInput = document.getElementById('editEntryId');
+      if(editInput) editInput.value = "";
+
       let submitBtn = document.getElementById(btnId);
       if(submitBtn) { submitBtn.style.display = "block"; submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText || "💾 સેવ કરો"; }
 
       pendingBillData = null;
       fetchData();
       
-      // અહી ફોર્મ બંધ થઈને સીધું ટેબલ વ્યુ (View) માં જતું રહેશે
+      // ઑટોમેટિક ટેબલ વ્યુ માં જતું રહેશે
       switchSubTab(formType === 'Sales' ? 'Sales' : formType === 'Med' ? 'Med' : 'Fert', 'View');
     })
+
     .catch(err => {
       if(err && err !== "undefined") { console.error("Save Error:", err); }
       let submitBtn = document.getElementById(btnId);

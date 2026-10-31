@@ -1,8 +1,8 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Last Updated Code Date & Time: 31/10/2026 - 10:25 IST
-  Updated with Correct "બિલ" Spelling
+  Last Updated Code Date & Time: 31/10/2026 - 22:15 IST
+  Final Complete Version with Correct Upad Linking & Spelling
 -->
 <!DOCTYPE html>
 <html>
@@ -37,85 +37,35 @@
     .btn-back { background: linear-gradient(135deg, #7f8c8d, #95a5a6); color: white; border-radius: 6px; border: none; padding: 8px 14px; cursor: pointer; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     .btn-back:hover { background: linear-gradient(135deg, #6c7a89, #7f8c8d); }
 
-    /* Glossy Green Button Style */
     .btn-action-pill {
       background: linear-gradient(135deg, #1b5e20, #2e7d32, #4caf50, #81c784);
-      color: white;
-      border: 2px solid #a5d6a7;
-      padding: 8px 14px;
-      border-radius: 25px;
-      font-size: 13px;
-      font-weight: bold;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 6px;
-      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.4), inset 0 2px 3px rgba(255, 255, 255, 0.5);
-      transition: 0.2s;
+      color: white; border: 2px solid #a5d6a7; padding: 8px 14px; border-radius: 25px; font-size: 13px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-top: 6px; box-shadow: 0 4px 10px rgba(46, 125, 50, 0.4);
     }
-    .btn-action-pill:hover {
-      background: linear-gradient(135deg, #2e7d32, #388e3c, #66bb6a);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 14px rgba(46, 125, 50, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.6);
-    }
-    .btn-action-pill .icon-red {
-      color: #ff4d4d;
-      background: #fff;
-      border-radius: 50%;
-      padding: 2px 6px;
-      font-weight: bold;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
+    .btn-action-pill:hover { background: linear-gradient(135deg, #2e7d32, #388e3c, #66bb6a); transform: translateY(-2px); }
+    .btn-action-pill .icon-red { color: #ff4d4d; background: #fff; border-radius: 50%; padding: 2px 6px; font-weight: bold; }
 
     .btn-table-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
     .btn-delete { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
-    .btn-delete:hover { background: #c0392b; }
     .btn-edit { background: #f39c12; color: white; border-radius: 4px; border: none; padding: 5px 10px; cursor: pointer; font-size: 12px; font-weight: bold; }
 
     .table-actions-bar { display: none; gap: 8px; margin-bottom: 10px; padding: 6px 10px; background: #f8f9f9; border: 1px solid #d5dbdb; border-radius: 4px; align-items: center; }
-
     .btn-add-item { background: #2980b9; color: white; border: none; padding: 6px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; margin-bottom: 8px; }
-    
     .badge-jama { background-color: #27ae60; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; display: inline-block; }
 
     .choice-container { display: flex; gap: 15px; margin: 25px 0; justify-content: center; }
-    .choice-card-new { flex: 1; background: linear-gradient(135deg, #27ae60, #2ecc71); color: white; border-radius: 10px; padding: 25px 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
-    .choice-card-new:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(39, 174, 96, 0.4); }
-    .choice-card-new h3 { margin: 0 0 5px 0; font-size: 18px; }
-    .choice-card-new p { margin: 0; font-size: 12px; opacity: 0.9; }
-
-    .choice-card-view { flex: 1; background: linear-gradient(135deg, #2980b9, #3498db); color: white; border-radius: 10px; padding: 25px 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3); }
-    .choice-card-view:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(41, 128, 185, 0.4); }
-    .choice-card-view h3 { margin: 0 0 5px 0; font-size: 18px; }
-    .choice-card-view p { margin: 0; font-size: 12px; opacity: 0.9; }
+    .choice-card-new, .choice-card-view { flex: 1; border-radius: 10px; padding: 25px 15px; text-align: center; cursor: pointer; color: white; transition: 0.3s; }
+    .choice-card-new { background: linear-gradient(135deg, #27ae60, #2ecc71); box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
+    .choice-card-view { background: linear-gradient(135deg, #2980b9, #3498db); box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3); }
 
     .top-banners-row { display: flex; gap: 8px; margin-bottom: 12px; display: none; }
-    .partner-sum-banner {
-      flex: 1; background: linear-gradient(135deg, #16a085, #1abc9c);
-      color: white; padding: 8px 10px; border-radius: 6px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .partner-sum-banner h4 { margin: 0 0 2px 0; font-size: 11px; opacity: 0.9; }
-    .partner-sum-banner .sum-amount { font-size: 18px; font-weight: bold; }
-
-    .category-balance-box {
-      flex: 1; background: linear-gradient(135deg, #f39c12, #e67e22);
-      color: white; padding: 8px 10px; border-radius: 6px; text-align: center; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .category-balance-box h4 { margin: 0 0 2px 0; font-size: 11px; opacity: 0.95; }
-    .category-balance-box .bal-val { font-size: 18px; }
+    .partner-sum-banner, .category-balance-box { flex: 1; color: white; padding: 8px 10px; border-radius: 6px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .partner-sum-banner { background: linear-gradient(135deg, #16a085, #1abc9c); }
+    .category-balance-box { background: linear-gradient(135deg, #f39c12, #e67e22); font-weight: bold; }
 
     .readonly-bg { background-color: #f1f2f6; }
     .hidden-field { display: none !important; }
-    
-    .highlight-total { 
-      background-color: #27ae60 !important; color: #ffffff !important; font-size: 20px !important; font-weight: bold !important; text-align: right; border: 2px solid #1e8449 !important; border-radius: 3px; padding: 6px 10px;
-    }
-
-    .farmer-amount-box { 
-      background: linear-gradient(135deg, #2980b9, #3498db) !important; color: #ffffff !important; font-size: 18px !important; font-weight: bold !important; text-align: right; border: 2px solid #1f618d !important; border-radius: 4px; padding: 8px 12px; box-shadow: 0 2px 5px rgba(41, 128, 185, 0.3);
-    }
-
+    .highlight-total { background-color: #27ae60 !important; color: #ffffff !important; font-size: 20px !important; font-weight: bold !important; text-align: right; border: 2px solid #1e8449 !important; border-radius: 3px; padding: 6px 10px; }
+    .farmer-amount-box { background: linear-gradient(135deg, #2980b9, #3498db) !important; color: #ffffff !important; font-size: 18px !important; font-weight: bold !important; text-align: right; border: 2px solid #1f618d !important; border-radius: 4px; padding: 8px 12px; }
     .words-box { background-color: #2c3e50 !important; color: #ffffff !important; font-size: 14px !important; font-weight: bold !important; text-align: left; border: 2px solid #1a252f !important; border-radius: 3px; padding: 6px 10px; }
 
     .section { display: none; }
@@ -129,15 +79,14 @@
     table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; min-width: 900px; }
     th, td { border: 1px solid #ccc; padding: 10px 14px; text-align: center; white-space: nowrap; }
     th { background-color: #34495e; color: white; }
-    
-    .item-row { background: #fdfefe; padding: 8px; border: 1px solid #dcdde1; border-radius: 4px; margin-bottom: 8px; position: relative; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
+    .item-row { background: #fdfefe; padding: 8px; border: 1px solid #dcdde1; border-radius: 4px; margin-bottom: 8px; position: relative; }
     .sub-section { display: none; }
   </style>
 </head>
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 4px; font-weight: bold;">
-  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">31/10/2026 - 10:25 IST</span>
+  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">31/10/2026 - 22:15 IST</span>
 </div>
 
 <div class="header-bar">
@@ -678,7 +627,6 @@
     </div>
 
     <div id="masterTableContainer" style="max-height: 300px; overflow: auto; border: 1px solid #ccc; border-radius: 4px;"></div>
-
     <button type="button" onclick="document.getElementById('modalMasterManager').style.display='none'" style="margin-top: 15px; width: 100%; padding: 8px; background: #7f8c8d; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">બંધ કરો</button>
   </div>
 </div>
@@ -750,7 +698,7 @@
 </div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJZuGfgJqE6dqjAsxJGhtPnryPb6KITm7fWOnNbtr9rSxBuIdaM5qeI1uV3c_T-2pZoQ/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyF3RUHxI5H2WtH1N6dyTlJl-M2W4L9KCiFKhiSWXUe0oC1i-8SdUyvUxMbthcMEGSNMQ/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -820,7 +768,7 @@
     else if(sheetName === 'Fertilizer_Bill') rows = appData.Fertilizer_Bill || [];
 
     let isDuplicate = rows.some(r => {
-      let existingBill = String(r["બિલ નં"] || r["બિલ_નં"] || "").trim();
+      let existingBill = String(r["બિલ નં"] || "").trim();
       return existingBill === billNo;
     });
 
@@ -1798,7 +1746,6 @@
 
     askMpinAndExecute(() => {
       let idsToDelete = Array.from(checkboxes).map(cb => cb.value);
-      
       let promises = idsToDelete.map(id => {
         return fetch(SCRIPT_URL, {
           method: "POST",
@@ -2072,21 +2019,26 @@
       if(wantUpad && formType === 'Sales') {
         let date = document.getElementById("sDate").value;
         let year = getYear(date);
-        let rand = Math.floor(1000 + Math.random() * 9000);
-        let entryId = "UP-" + date.replace(/-/g, '') + "-" + rand;
-        let provider = document.getElementById("sVepari").value;
-        let billNo = document.getElementById("sBill").value || "N/A";
         
+        // 1. એન્ટ્રી નં = વેચાણ એન્ટ્રી ID
+        let salesEntryId = itemRows.length > 0 ? itemRows[0][1] : ("SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
+        
+        // 2. બિલ નં = સાચો બિલ નંબર
+        let billNoVal = document.getElementById("sBill").value || "N/A";
+        
+        let provider = document.getElementById("sVepari").value;
         let upadEntryType = 'વેચાણ બિલ જમા';
         let debit = 0;
+        
+        // 3. ઉપાડ (Credit) = રકમ (ખેડૂ ઉપાડ બેલેન્સ)
         let credit = currentBal; 
         let status = "જમા";
         let closeYear = "N";
         let totalOutstanding = 0;
 
         let upadRowValues = [
-          year, entryId, date, partnerName, upadEntryType, provider, credit, "CASH", "-",
-          debit, credit, billNo, credit, categoryText, "બિલ જમા એન્ટ્રી", 0, 0,
+          year, salesEntryId, date, partnerName, upadEntryType, provider, credit, "CASH", "-",
+          debit, credit, billNoVal, credit, categoryText, "બિલ જમા એન્ટ્રી", 0, 0,
           status, "", closeYear, totalOutstanding
         ];
 
@@ -2094,7 +2046,7 @@
           method: "POST",
           body: JSON.stringify({ action: "saveUpadLedger", rowValues: upadRowValues })
         })
-        .then(resUpad => resUpad.json())
+        .then(resUpad => res.json())
         .then(resU => {
           if(!resU || resU.status === "error") {
             alert("⚠️ ચેતવણી: બિલ સેવ થઈ ગયું પણ ઉપાડ જમા કરવામાં ભૂલ આવી: " + (resU ? resU.message : ""));
@@ -2115,9 +2067,7 @@
       switchTab('Dash');
     })
     .catch(err => {
-      if(err && err !== "undefined") {
-        console.error("Save Error:", err);
-      }
+      if(err && err !== "undefined") { console.error("Save Error:", err); }
       let submitBtn = document.getElementById(btnId);
       if(submitBtn) { submitBtn.style.display = "block"; submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText || "💾 સેવ કરો"; }
       pendingBillData = null;
@@ -2223,7 +2173,6 @@
   }
 
   function v(id) { return document.getElementById(id).value; }
-  
   function getYear(dateString) {
     let d = new Date(dateString), m = d.getMonth() + 1, y = d.getFullYear();
     return (m >= 5) ? (y + "-" + (y + 1).toString().slice(-2)) : ((y - 1) + "-" + y.toString().slice(-2));
@@ -2242,11 +2191,7 @@
     
     let html = `<table><tr>
       <th style="width: 40px;"><input type="checkbox" id="selectAll_Gallery" onclick="toggleSelectAll(this, 'Gallery')"></th>
-      <th>તારીખ</th>
-      <th>બિલ નં</th>
-      <th>વેપારી</th>
-      <th>Bill To / નામ :</th>
-      <th>ફોટો</th>
+      <th>તારીખ</th><th>બિલ નં</th><th>વેપારી</th><th>Bill To / નામ :</th><th>ફોટો</th>
     </tr>`;
 
     photos.forEach((p, index) => {
@@ -2260,11 +2205,7 @@
 
       html += `<tr>
         <td><input type="checkbox" class="row-select-Gallery" value="${entryId}" onclick="updateTableActionBar('Gallery')"></td>
-        <td>${dateVal}</td>
-        <td><b>${billNoVal}</b></td>
-        <td>${vepariVal}</td>
-        <td>${billOwnerVal}</td>
-        <td>${imgTag}</td>
+        <td>${dateVal}</td><td><b>${billNoVal}</b></td><td>${vepariVal}</td><td>${billOwnerVal}</td><td>${imgTag}</td>
       </tr>`;
     });
     container.innerHTML = html + `</table>`;
@@ -2297,7 +2238,7 @@
     let searchQuery = document.getElementById("searchBillRec") ? document.getElementById("searchBillRec").value.toLowerCase().trim() : "";
 
     let filteredRows = rows.filter(r => {
-      let hVal = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || r["હસ્તે "] || "").trim();
+      let hVal = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "").trim();
       let bNo = String(r["બિલ નં"] || "").toLowerCase();
       let dt = String(r["તારીખ"] || "").toLowerCase();
 
@@ -2326,25 +2267,12 @@
       let finalAmount = parseFloat(latest["કુલ જમા રકમ"] || latest["Cumulative_Amount"] || totalAmountSum).toFixed(2);
 
       summaryText.innerHTML = `
-        <div style="font-size: 16px; color: #117a65; font-weight: bold; margin-bottom: 6px; border-bottom: 2px solid #a3e4d7; padding-bottom: 4px;">
-          ${selectedHastak}
-        </div>
-        <div style="font-size: 13px; color: #d35400; font-weight: bold; margin-bottom: 8px;">
-          તારીખ સુધીની બિલની વિગત (${lDate})
-        </div>
+        <div style="font-size: 16px; color: #117a65; font-weight: bold; margin-bottom: 6px; border-bottom: 2px solid #a3e4d7; padding-bottom: 4px;">${selectedHastak}</div>
+        <div style="font-size: 13px; color: #d35400; font-weight: bold; margin-bottom: 8px;">તારીખ સુધીની બિલની વિગત (${lDate})</div>
         <div style="display: flex; flex-direction: column; gap: 4px; font-size: 14px; background: #ffffff; padding: 8px 12px; border-radius: 4px; border: 1px solid #a3e4d7; max-width: 320px;">
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: #2c3e50; font-weight: bold;">કુલ બિલ :</span>
-            <span style="font-weight: bold; color: #c0392b; text-align: right; min-width: 60px;">${totalBills}</span>
-          </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: #2c3e50; font-weight: bold;">કુલ પાઉચ :</span>
-            <span style="font-weight: bold; color: #2980b9; text-align: right; min-width: 60px;">${finalPauch}</span>
-          </div>
-          <div style="display: flex; justify-content: space-between; border-top: 1px dashed #bdc3c7; padding-top: 4px; margin-top: 2px;">
-            <span style="color: #2c3e50; font-weight: bold;">કુલ રકમ :</span>
-            <span style="font-weight: bold; color: #8e44ad; text-align: right; min-width: 60px;">₹ ${finalAmount}</span>
-          </div>
+          <div style="display: flex; justify-content: space-between;"><span style="color: #2c3e50; font-weight: bold;">કુલ બિલ :</span><span style="font-weight: bold; color: #c0392b; text-align: right; min-width: 60px;">${totalBills}</span></div>
+          <div style="display: flex; justify-content: space-between;"><span style="color: #2c3e50; font-weight: bold;">કુલ પાઉચ :</span><span style="font-weight: bold; color: #2980b9; text-align: right; min-width: 60px;">${finalPauch}</span></div>
+          <div style="display: flex; justify-content: space-between; border-top: 1px dashed #bdc3c7; padding-top: 4px; margin-top: 2px;"><span style="color: #2c3e50; font-weight: bold;">કુલ રકમ :</span><span style="font-weight: bold; color: #8e44ad; text-align: right; min-width: 60px;">₹ ${finalAmount}</span></div>
         </div>
       `;
       if(summaryBox) summaryBox.style.display = "block";
@@ -2360,18 +2288,7 @@
 
     let html = `<table><tr>
       <th style="width: 40px;"><input type="checkbox" id="selectAll_BillRec" onclick="toggleSelectAll(this, 'BillRec')"></th>
-      <th>વર્ષ</th>
-      <th>વેપારી</th>
-      <th>તારીખ</th>
-      <th>હસ્તે</th>
-      <th>Bill To / નામ :</th>
-      <th>બિલ નં</th>
-      <th>પાઉચ નં.</th>
-      <th>રકમ</th>
-      <th>જમા / બાકી</th>
-      <th>કુલ પાઉચ</th>
-      <th>કુલ જમા રકમ</th>
-      <th>Photo</th>
+      <th>વર્ષ</th><th>વેપારી</th><th>તારીખ</th><th>હસ્તે</th><th>Bill To / નામ :</th><th>બિલ નં</th><th>પાઉચ નં.</th><th>રકમ</th><th>જમા / બાકી</th><th>કુલ પાઉચ</th><th>કુલ જમા રકમ</th><th>Photo</th>
     </tr>`;
 
     filteredRows.forEach((r, index) => {
@@ -2385,18 +2302,7 @@
 
       html += `<tr>
         <td><input type="checkbox" class="row-select-BillRec" value="${entryId}" onclick="updateTableActionBar('BillRec')"></td>
-        <td>${r["વર્ષ"] || r["Year"] || '-'}</td>
-        <td>${vepariVal}</td>
-        <td>${cleanDate}</td>
-        <td><b>${hastakVal}</b></td>
-        <td><b>${billOwnerVal}</b></td>
-        <td><b>${r["બિલ નં"] || '-'}</b></td>
-        <td>${r["પાઉચ નં."] || r["Total_Pauch"] || 0}</td>
-        <td>₹ ${parseFloat(r["રકમ"] || r["Amount"] || 0).toFixed(2)}</td>
-        <td>${r["જમા / બાકી"] || r["Status"] || '-'}</td>
-        <td style="font-weight:bold; color:#2980b9;">${r["કુલ પાઉચ"] || r["Cumulative_Pauch"] || 0}</td>
-        <td style="font-weight:bold; color:#8e44ad;">₹ ${parseFloat(r["કુલ જમા રકમ"] || r["Cumulative_Amount"] || totalAmountSum).toFixed(2)}</td>
-        <td>${photoLink}</td>
+        <td>${r["વર્ષ"] || r["Year"] || '-'}</td><td>${vepariVal}</td><td>${cleanDate}</td><td><b>${hastakVal}</b></td><td><b>${billOwnerVal}</b></td><td><b>${r["બિલ નં"] || '-'}</b></td><td>${r["પાઉચ નં."] || r["Total_Pauch"] || 0}</td><td>₹ ${parseFloat(r["રકમ"] || r["Amount"] || 0).toFixed(2)}</td><td>${r["જમા / બાકી"] || r["Status"] || '-'}</td><td style="font-weight:bold; color:#2980b9;">${r["કુલ પાઉચ"] || r["Cumulative_Pauch"] || 0}</td><td style="font-weight:bold; color:#8e44ad;">₹ ${parseFloat(r["કુલ જમા રકમ"] || r["Cumulative_Amount"] || totalAmountSum).toFixed(2)}</td><td>${photoLink}</td>
       </tr>`;
     });
 
@@ -2404,34 +2310,13 @@
     updateTableActionBar('BillRec');
   }
 
-  function filterBillRecordTable() {
-    renderBillRecordTable();
-  }
-
+  function filterBillRecordTable() { renderBillRecordTable(); }
   function openImageModal(url) {
     document.getElementById("viewerImage").src = url;
     document.getElementById("downloadPhotoBtn").href = url;
     document.getElementById("modalImageViewer").style.display = "flex";
   }
-
-  function closeImageModal() {
-    document.getElementById("modalImageViewer").style.display = "none";
-  }
-
-  function askMpinAndExecute(callback) {
-    pendingActionCallback = callback;
-    document.getElementById("inputMpin").value = "";
-    document.getElementById("modalMpin").style.display = "block";
-  }
-
-  function verifyMpinAndProceed() {
-    let enteredMpin = document.getElementById("inputMpin").value;
-    if(enteredMpin === CORRECT_MPIN) {
-      document.getElementById("modalMpin").style.display = "none";
-      if(pendingActionCallback) pendingActionCallback();
-      pendingActionCallback = null;
-    } else { alert("ખોટો પ્રોટેક્શન કોડ છે!"); }
-  }
+  function closeImageModal() { document.getElementById("modalImageViewer").style.display = "none"; }
 </script>
 
 </body>

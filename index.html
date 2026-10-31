@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Last Updated Code Date & Time: 31/10/2026 - 22:15 IST
+  Last Updated Code Date & Time: 01/11/2026 - 01:26 IST
   Final Complete Version with Correct Upad Linking & Spelling
 -->
 <!DOCTYPE html>
@@ -982,14 +982,13 @@
       }
     });
 
-    document.querySelectorAll('.bhagiyaList').forEach(sel => {
-      let cur = sel.value;
-      sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      farmerList.forEach(b => sel.add(new Option(b, b)));
-      sel.value = cur;
-    });
-
-    let uBhagiyaSelect = document.getElementById("uBhagiya");
+     document.querySelectorAll('.bhagiyaList').forEach(sel => {
+    let cur = sel.value;
+    sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
+    farmerList.forEach(b => sel.add(new Option(b, b)));
+    sel.value = cur;
+  });
+     let uBhagiyaSelect = document.getElementById("uBhagiya");
     if(uBhagiyaSelect) {
       let cur = uBhagiyaSelect.value;
       uBhagiyaSelect.innerHTML = '<option value="">-- પસંદ કરો --</option>';
@@ -1818,7 +1817,7 @@
     });
   }
 
-  function submitSalesForm(e) {
+   function submitSalesForm(e) {
     e.preventDefault();
     let btn = document.getElementById("btnSales");
     let originalText = btn.innerHTML;
@@ -1839,6 +1838,7 @@
 
     let rows = document.querySelectorAll("#salesItemsContainer .item-row");
     let itemRows = [];
+    let totalBillAmount = 0; // આખી આઇટમ્સની કુલ રકમ ગણવા માટે
 
     handlePhotoUpload("sPhoto", function(photoBase64) {
       rows.forEach((r, index) => {
@@ -1851,6 +1851,7 @@
         let kShare = r.querySelector('.sKShare').value || 0;
         let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
         
+        totalBillAmount += total; // કુલ રકમ ઉમેરતા જાઓ
         let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
         
         itemRows.push([
@@ -1858,9 +1859,20 @@
         ]);
       });
 
-      triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm', originalText);
+      // અહીં કુલ રકમ (totalBillAmount), સાચો entryId અને billNo પાસ કરીએ છીએ જેથી ઉપાડમાં પૂરી કુલ રકમ જ જાય
+      if (typeof triggerUpadConfirmationModal === 'function') {
+        // જો તમારી સિસ્ટમમાં triggerUpadConfirmationModal ફંક્શન હોય તો તેને કુલ રકમ સાથે કૉલ કરો
+        pendingBillData = { formType: 'Sales', itemRows, btnId: 'btnSales', formElementId: 'salesForm', originalBtnText: originalText, billTotal: totalBillAmount, partnerName: bhagiya, entryId, billNo };
+        let msg = "📋 આ બિલની કુલ રકમ ₹ " + totalBillAmount.toFixed(2) + " છે. શું આ બિલ ઉપાડમાં જમા કરવું છે?";
+        if(document.getElementById("upadConfirmMsg")) document.getElementById("upadConfirmMsg").innerText = msg;
+        if(document.getElementById("upadChoiceSelect")) document.getElementById("upadChoiceSelect").value = "no";
+        if(document.getElementById("modalUpadConfirm")) document.getElementById("modalUpadConfirm").style.display = "block";
+      } else {
+        triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm', originalText);
+      }
     });
   }
+
 
   function submitMedForm(e) {
     e.preventDefault();

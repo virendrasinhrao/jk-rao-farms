@@ -1,8 +1,8 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Last Updated Code Date & Time: 31/10/2026 - 10:10 IST
-  Final Complete Version with Working Delete & Anti-Duplicate Logic
+  Last Updated Code Date & Time: 31/10/2026 - 10:25 IST
+  Updated with Correct "બિલ" Spelling
 -->
 <!DOCTYPE html>
 <html>
@@ -137,7 +137,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 4px; font-weight: bold;">
-  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">31/10/2026 - 10:10 IST</span>
+  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">31/10/2026 - 10:25 IST</span>
 </div>
 
 <div class="header-bar">
@@ -206,7 +206,7 @@
           <div class="sum-amount" id="bannerValSales">₹ 0.00</div>
         </div>
         <div id="balBoxSales" class="category-balance-box" style="display: block;">
-          <h4 id="balTitleSales">ખેડૂ વેચાણ, ઉપાડ</h4>
+          <h4 id="balTitleSales">વેચાણ બિલ બેલેન્સ</h4>
           <div class="bal-val" id="balValSales">₹ 0.00</div>
         </div>
       </div>
@@ -286,7 +286,7 @@
           <div class="sum-amount" id="bannerValMed">₹ 0.00</div>
         </div>
         <div id="balBoxMed" class="category-balance-box" style="display: block;">
-          <h4 id="balTitleMed">ખેડૂ દવા માટે, ઉપાડ</h4>
+          <h4 id="balTitleMed">દવા બિલ બેલેન્સ</h4>
           <div class="bal-val" id="balValMed">₹ 0.00</div>
         </div>
       </div>
@@ -376,7 +376,7 @@
           <div class="sum-amount" id="bannerValFert">₹ 0.00</div>
         </div>
         <div id="balBoxFert" class="category-balance-box" style="display: block;">
-          <h4 id="balTitleFert">ખેડૂ ખાતર માટે, ઉપાડ</h4>
+          <h4 id="balTitleFert">ખાતર બિલ બેલેન્સ</h4>
           <div class="bal-val" id="balValFert">₹ 0.00</div>
         </div>
       </div>
@@ -750,7 +750,7 @@
 </div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyUQK6amVYZMY5pPFYYrFaipcSOzfOIJm7O3KYdhRhHwMh8P2_Dw_FndRYvVxdLqAptrA/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyF3RUHxI5H2WtH1N6dyTlJl-M2W4L9KCiFKhiSWXUe0oC1i-8SdUyvUxMbthcMEGSNMQ/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -820,7 +820,7 @@
     else if(sheetName === 'Fertilizer_Bill') rows = appData.Fertilizer_Bill || [];
 
     let isDuplicate = rows.some(r => {
-      let existingBill = String(r["બીલ નં"] || r["બિલ નં"] || r["બિલ_નં"] || "").trim();
+      let existingBill = String(r["બિલ નં"] || r["બિલ_નં"] || "").trim();
       return existingBill === billNo;
     });
 
@@ -886,7 +886,7 @@
     if(!partnerName) return 0;
     
     let targetType = '', altType = '';
-    if(sectionType === 'Sales') { targetType = 'વેચાણ બીલ'; altType = 'વેચાણ બિલ જમા'; }
+    if(sectionType === 'Sales') { targetType = 'વેચાણ બિલ'; altType = 'વેચાણ બિલ જમા'; }
     else if(sectionType === 'Med') { targetType = 'દવા ખરીદી માટે'; altType = 'દવા બિલ જમા'; }
     else if(sectionType === 'Fert') { targetType = 'ખાતર ખરીદી માટે'; altType = 'ખાતર બિલ જમા'; }
     
@@ -928,9 +928,9 @@
     let titleEl = document.getElementById(titleId);
 
     if(titleEl) {
-      if(sectionType === 'Sales') titleEl.innerText = "ખેડૂ વેચાણ, ઉપાડ";
-      else if(sectionType === 'Med') titleEl.innerText = "ખેડૂ દવા માટે, ઉપાડ";
-      else if(sectionType === 'Fert') titleEl.innerText = "ખેડૂ ખાતર માટે, ઉપાડ";
+      if(sectionType === 'Sales') titleEl.innerText = "વેચાણ બિલ બેલેન્સ";
+      else if(sectionType === 'Med') titleEl.innerText = "દવા બિલ બેલેન્સ";
+      else if(sectionType === 'Fert') titleEl.innerText = "ખાતર બિલ બેલેન્સ";
     }
 
     if(!selectedBhagiya) {
@@ -1310,7 +1310,7 @@
       appData.Pesticide_Bill.forEach(r => {
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
         if(rYear === targetYear) {
-          totalSum += parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || r["કુલ રકમ"] || r["Total_Bill"] || 0);
+          totalSum += parseFloat(r["બિલની કુલ રકમ"] || r["બિલની_કુલ_રકમ"] || r["કુલ રકમ"] || r["Total_Bill"] || 0);
         }
       });
       document.getElementById('bannerTitleMed').innerText = "વર્ષ (" + targetYear + ") - કુલ ફાર્મ દવા ખર્ચ";
@@ -1318,7 +1318,7 @@
       appData.Fertilizer_Bill.forEach(r => {
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
         if(rYear === targetYear) {
-          totalSum += parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || r["કુલ રકમ"] || r["Total_Bill"] || 0);
+          totalSum += parseFloat(r["બિલની કુલ રકમ"] || r["બિલની_કુલ_રકમ"] || r["કુલ રકમ"] || r["Total_Bill"] || 0);
         }
       });
       document.getElementById('bannerTitleFert').innerText = "વર્ષ (" + targetYear + ") - કુલ ફાર્મ ખાતર ખર્ચ";
@@ -1650,7 +1650,7 @@
     }
     if(appData.Pesticide_Bill) {
       appData.Pesticide_Bill.forEach(r => {
-        let billAmt = parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || 0);
+        let billAmt = parseFloat(r["બિલની કુલ રકમ"] || r["બિલની_કુલ_રકમ"] || 0);
         if(!isNaN(billAmt)) totalExp += billAmt;
       });
     }
@@ -1663,7 +1663,7 @@
     }
     if(appData.Fertilizer_Bill) {
       appData.Fertilizer_Bill.forEach(r => {
-        let billAmt = parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || 0);
+        let billAmt = parseFloat(r["બિલની કુલ રકમ"] || r["બિલની_કુલ_રકમ"] || 0);
         if(!isNaN(billAmt)) totalExp += billAmt;
       });
     }
@@ -1731,20 +1731,20 @@
 
       if(tabName === 'Sales') {
         let billOwner = r["Bill To /નામ :"] || r["Bill To/નામ:"] || r["બિલ માલિક"] || r["Bill Owner"] || r["Bill To/નામ"] || "-";
-        let billNo = r["બીલ નં"] || r["બિલ નં"] || "-";
+        let billNo = r["બિલ નં"] || "-";
         let pakName = r["પાકનું નામ"] || "-";
         let pauch = r["પાઉચ / નંગ"] || 0;
         let weight = r["કુલ વજન (કિલો)"] || 0;
         let bhav20 = r[". ૧ મણનો ભાવ (20 Kg)"] || 0;
         let totalAmt = parseFloat(r["કુલ રકમ (₹)"] || 0).toFixed(2);
         let farmerAmt = parseFloat(r["ખેડૂ રકમ"] || 0).toFixed(2);
-        let statusVal = r["બીલની સ્થિતિ (બાકી/જમા)"] || "રોકડા / જમા";
+        let statusVal = r["બિલની સ્થિતિ (બાકી/જમા)"] || "રોકડા / જમા";
         let hastakVal = r["પૈસા કોણે લીધા (હસ્તે)"] || "-";
         let upadSymbol = r["ઉપાડ જમા✓/×"] || r["ઉપાડ જમા"] || "❌";
 
         html += `<td><b>${billOwner}</b></td><td>${billNo}</td><td>${bhagiya}</td><td>${r["ખરીદનાર"]||'-'}</td><td>${pakName}</td><td>${pauch}</td><td>${weight} કિલો</td><td>₹ ${bhav20}</td><td>₹ ${totalAmt}</td><td>₹ ${farmerAmt}</td><td><span class="badge-jama">${statusVal}</span></td><td>${hastakVal}</td><td><span style="font-size:16px;">${upadSymbol}</span></td><td>${photoLink}</td>`;
       } else if(tabName === 'Med' || tabName === 'Fert') {
-        let billNo = r["બીલ નં"] || r["બિલ નં"] || "-";
+        let billNo = r["બિલ નં"] || "-";
         let itemName = r["દવાનું નામ"] || r["ખાતરનું નામ"] || "-";
         let amt = r["રકમ"] || 0;
         let farmerAmt = r["ખેડૂ રકમ"] || 0;
@@ -1753,7 +1753,7 @@
         let owner = r["ટ્રેક્ટર માલિક"] || "-";
         let totalAmt = r["કુલ બિલ રકમ"] || 0;
         let farmerCost = r["ભાગિયાનો ખર્ચ"] || 0;
-        html += `<td>${owner}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કામની વિગત"]||'-'}</td><td>${r["કલાક"]||0}</td><td>${r["મિનિટ"]||0}</td><td>₹ ${r["કલાકનો ભાવ"]||0}</td><td>₹ ${r["મિનિટનો ભાવ"]||0}</td><td>₹ ${parseFloat(totalAmt).toFixed(2)}</td><td>${r["બીલની સ્થિતિ"]||'-'}</td><td>${r["હસ્તે"]||'-'}</td><td>₹ ${parseFloat(farmerCost).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td><td>${photoLink}</td>`;
+        html += `<td>${owner}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કામની વિગત"]||'-'}</td><td>${r["કલાક"]||0}</td><td>${r["મિનિટ"]||0}</td><td>₹ ${r["કલાકનો ભાવ"]||0}</td><td>₹ ${r["મિનિટનો ભાવ"]||0}</td><td>₹ ${parseFloat(totalAmt).toFixed(2)}</td><td>${r["બિલની સ્થિતિ"]||'-'}</td><td>${r["હસ્તે"]||'-'}</td><td>₹ ${parseFloat(farmerCost).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td><td>${photoLink}</td>`;
       } else if(tabName === 'Upad') {
         html += `<td><b>${bhagiya}</b></td><td>${r["એન્ટ્રી પ્રકાર"]||'-'}</td><td>${r["આપનાર"]||'-'}</td><td style="color:#c0392b; font-weight:bold;">₹ ${parseFloat(r["ઉપાડ (Debit)"]||0).toFixed(2)}</td><td style="color:#27ae60; font-weight:bold;">₹ ${parseFloat(r["જમા (Credit)"]||0).toFixed(2)}</td><td>${r["બિલ નં"]||'-'}</td><td style="color:#2980b9; font-weight:bold;">₹ ${parseFloat(r["Total Outstanding"]||0).toFixed(2)}</td><td><span class="badge-jama">${r["Status"]||'ઉધાર'}</span></td><td>${photoLink}</td>`;
       }
@@ -1826,10 +1826,10 @@
           switchSubTab('Sales', 'New');
           document.getElementById("sBillOwner").value = found["Bill To /નામ :"] || found["Bill To/નામ:"] || found["બિલ માલિક"] || found["Bill Owner"] || "";
           document.getElementById("sDate").value = String(found["તારીખ"] || "").split('T')[0];
-          document.getElementById("sBill").value = found["બીલ નં"] || found["બિલ નં"] || "";
+          document.getElementById("sBill").value = found["બિલ નં"] || "";
           document.getElementById("sBhagiya").value = found["ભાગીદાર"] || "";
           document.getElementById("sVepari").value = found["ખરીદનાર"] || "";
-          document.getElementById("sStatus").value = found["બીલની સ્થિતિ (બાકી/જમા)"] || found["બીલની સ્થિતિ"] || "રોકડા / જમા";
+          document.getElementById("sStatus").value = found["બિલની સ્થિતિ (બાકી/જમા)"] || found["બિલની સ્થિતિ"] || "રોકડા / જમા";
           document.getElementById("sHastak").value = found["પૈસા કોણે લીધા (હસ્તે)"] || found["હસ્તે"] || found["Hastak"] || "";
           document.getElementById("sBLidha").value = found["ખેડૂએ પૈસા લીધા? (Yes/No)"] || found["ભાગિયાએ લીધા?"] || "No";
           
@@ -2019,7 +2019,7 @@
     }
 
     let currentBal = getCategoryBalanceVal(formType, partnerName);
-    let categoryText = formType === 'Sales' ? 'વેચાણ બીલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
+    let categoryText = formType === 'Sales' ? 'વેચાણ બિલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
 
     if (currentBal > 0) {
       pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
@@ -2298,7 +2298,7 @@
 
     let filteredRows = rows.filter(r => {
       let hVal = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || r["હસ્તે "] || "").trim();
-      let bNo = String(r["બીલ નં"] || r["બિલ નં"] || "").toLowerCase();
+      let bNo = String(r["બિલ નં"] || "").toLowerCase();
       let dt = String(r["તારીખ"] || "").toLowerCase();
 
       let targetHastak = selectedHastak.toLowerCase();
@@ -2390,7 +2390,7 @@
         <td>${cleanDate}</td>
         <td><b>${hastakVal}</b></td>
         <td><b>${billOwnerVal}</b></td>
-        <td><b>${r["બીલ નં"] || r["બિલ નં"] || '-'}</b></td>
+        <td><b>${r["બિલ નં"] || '-'}</b></td>
         <td>${r["પાઉચ નં."] || r["Total_Pauch"] || 0}</td>
         <td>₹ ${parseFloat(r["રકમ"] || r["Amount"] || 0).toFixed(2)}</td>
         <td>${r["જમા / બાકી"] || r["Status"] || '-'}</td>

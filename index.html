@@ -1993,7 +1993,7 @@
     }
   }
 
-  function confirmUpadActionModal() {
+    function confirmUpadActionModal() {
     document.getElementById("modalUpadConfirm").style.display = "none";
     if(!pendingBillData) return;
 
@@ -2042,15 +2042,15 @@
         let upadEntryType = 'વેચાણ બિલ જમા';
         let debit = 0;
         
-        // 3. ઉપાડ (Credit) = રકમ (ખેડૂ ઉપાડ બેલેન્સ)
-        let credit = currentBal; 
+        // 3. ઉપાડ (Credit) = પૂરેપૂરી બિલની કુલ રકમ (billTotal)
+        let credit = billTotal; 
         let status = "જમા";
         let closeYear = "N";
         let totalOutstanding = 0;
 
         let upadRowValues = [
           year, salesEntryId, date, partnerName, upadEntryType, provider, credit, "CASH", "-",
-          debit, credit, billNoVal, credit, categoryText, "બિલ જમા એન્ટ્રી", 0, 0,
+          debit, credit, billNoVal, credit, categoryText || 'વેચાણ બિલ', "બિલ જમા એન્ટ્રી", 0, 0,
           status, "", closeYear, totalOutstanding
         ];
 
@@ -2085,6 +2085,7 @@
       pendingBillData = null;
     });
   }
+
 
   function submitUpad(e) {
     e.preventDefault();

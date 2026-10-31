@@ -1,7 +1,8 @@
-<!--  
+<!-- 
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated: Sales Bill Upad Modal Restored & Category Balance Auto-Deduct Fixed
+  Updated Date & Time: 24 October 2026, 01:38 AM
+  Feature: Upad Table Action Bar with Both Edit and Delete Buttons for Single Selection
 -->
 <!DOCTYPE html>
 <html>
@@ -599,7 +600,8 @@
 <div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRSjsIWe38VkzGAeJdqy3zsylRoz4VQcrV8Kf3CpElXCjmjtrqq0cCkccY3p49gEjh/exec";
+  // Updated Date & Time: 24 October 2026, 01:38 AM
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyx_Lo_lwKf4MKgs9q-BxXUesgxQstAcUK6YIRG51SJwB986P9BeO6JunYIPAxwBJjyUw/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -1425,8 +1427,8 @@
         `;
       } else {
         actionBar.innerHTML = `
-          <span style="font-size:12px; font-weight:bold; margin-right:5px;">${checkboxes.length} સિલેક્ટ કરેલ (Warning):</span>
-          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ પસંદ કરેલ ડિલીટ કરો</button>
+          <span style="font-size:12px; font-weight:bold; margin-right:5px;">${checkboxes.length} સિલેક્ટ કરેલ:</span>
+          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ પસંદ કરેલ ડિલીટ કરો (Warning)</button>
         `;
       }
     } else {
@@ -1456,7 +1458,7 @@
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       } else if(sheetKey === 'Upad_Ledger') {
-        let found = (appData.Upad_Ledger || []).find(r => String(r["એન્ટ્રી નં"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
+        let found = (appData.Upad_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
         if(found) {
           switchSubTab('Upad', 'New');
           document.getElementById("uDate").value = String(found["તારીખ"] || "").split('T')[0];
@@ -1483,7 +1485,7 @@
     });
   }
 
-  // --- SUBMIT SALES FORM (Modal & Balance Deduction Fixed) ---
+  // --- SUBMIT BILL FORMS ---
   function submitSalesForm(e) {
     e.preventDefault();
     let date = v("sDate");
@@ -1498,6 +1500,7 @@
 
     let rows = document.querySelectorAll("#salesItemsContainer .item-row");
     let itemRows = [];
+    let totalBillAmt = 0;
 
     rows.forEach((r, index) => {
       let pak = r.querySelector('.pakList').value;
@@ -1509,15 +1512,13 @@
       let kShare = r.querySelector('.sKShare').value || 0;
       let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
       
+      totalBillAmt += total;
       let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-      
-      itemRows.push([
-        year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha, ""
-      ]);
+      itemRows.push([year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha]);
     });
 
-    // મોડલ ટ్రిગર કરો જેથી 'હા / ના' પૂછી શકાય
-    triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm');
+    let mainBillRow = [year, entryId, date, billNo, bhagiya, vepari, totalBillAmt, status, hastak, bLidha, ""];
+    triggerUpadConfirmationModal('Sales', mainBillRow, itemRows, 'btnSales', 'salesForm');
   }
 
   function submitMedForm(e) {
@@ -1599,20 +1600,20 @@
   }
 
   function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId) {
-    let partnerName = (formType === 'Sales') ? document.getElementById("sBhagiya").value : billRow[4];
-    let billTotal = 0;
-    if(formType === 'Sales') {
-      itemRows.forEach(r => { billTotal += parseFloat(r[11]) || 0; });
-    } else {
-      billTotal = parseFloat(billRow[10]) || 0;
-    }
+    let partnerName = billRow[4];
+    let billTotal = (formType === 'Sales') ? itemRows.reduce((sum, r) => sum + (parseFloat(r[11]) || 0), 0) : parseFloat(billRow[10]) || 0;
 
     let currentBal = getCategoryBalanceVal(formType, partnerName);
     let categoryText = formType === 'Sales' ? 'વેચાણ બીલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
 
-    let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (હાલનું બેલેન્સ: ₹ " + currentBal.toFixed(2) + ")";
+    let msg = "";
+    if(currentBal < billTotal) {
+      msg = "⚠️ " + categoryText + " માટે ઉપાડ બેલેન્સ ઓછું છે (₹ " + currentBal.toFixed(2) + ").";
+    } else {
+      msg = "📋 આ બિલની રકમ ₹ " + billTotal.toFixed(2) + " છે.";
+    }
 
-    pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName };
+    pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText };
     document.getElementById("upadConfirmMsg").innerText = msg + " શું આ બિલ ઉપાડમાં જમા કરવું છે?";
     document.getElementById("upadChoiceSelect").value = "yes";
     document.getElementById("modalUpadConfirm").style.display = "block";
@@ -1622,7 +1623,9 @@
     document.getElementById("modalUpadConfirm").style.display = "none";
     if(!pendingBillData) return;
 
-    let { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName } = pendingBillData;
+    let { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText } = pendingBillData;
+    let partnerName = billRow[4];
+    let upadEntryType = formType === 'Sales' ? 'વેચાણ બિલ જમા' : formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
     let choice = document.getElementById("upadChoiceSelect").value;
     let wantUpad = (choice === "yes");
 
@@ -1630,8 +1633,8 @@
     if(btn) btn.innerText = "સેવ થઈ રહ્યું છે...";
 
     let actionName = formType === 'Sales' ? 'saveSales' : formType === 'Med' ? 'savePesticideBill' : 'saveFertilizerBill';
-    let payload = formType === 'Sales' ? { action: actionName, itemRows: itemRows, editEntryId: document.getElementById('editEntryId').value } :
-                        { action: actionName, billRow: billRow, itemRows: itemRows, editEntryId: document.getElementById(formType === 'Med' ? 'editMedId' : 'editFertId').value };
+    let payload = formType === 'Sales' ? { action: actionName, rowValues: billRow, editEntryId: document.getElementById('editEntryId').value } :
+                  { action: actionName, billRow: billRow, itemRows: itemRows, editEntryId: document.getElementById(formType === 'Med' ? 'editMedId' : 'editFertId').value };
 
     fetch(SCRIPT_URL, {
       method: "POST",
@@ -1639,26 +1642,21 @@
     })
     .then(res => res.json())
     .then(res => {
-      if(!res || res.status === "error") {
-        let errText = res && res.message ? res.message : "અજ્ઞાત ભૂલ";
-        alert("❌ નિષ્ફળ (Failed): ડેટા ગૂગલ શીટમાં સેવ થયો નથી! (Error: " + errText + ")");
+      if(res.status === "error") {
+        alert("ભૂલ: " + res.message);
         if(btn) btn.innerText = "💾 સેવ કરો";
-        return Promise.reject(errText);
+        return Promise.reject(res.message);
       }
 
       if(wantUpad) {
-        let date = formType === 'Sales' ? document.getElementById("sDate").value : billRow[2];
+        let date = billRow[2];
         let year = getYear(date);
         let rand = Math.floor(1000 + Math.random() * 9000);
         let entryId = "UP-" + date.replace(/-/g, '') + "-" + rand;
-        let provider = formType === 'Sales' ? document.getElementById("sVepari").value : (billRow[5] || "વેપારી");
-        let billNo = formType === 'Sales' ? (document.getElementById("sBill").value || "N/A") : (billRow[3] || "-");
-        
-        let upadEntryType = formType === 'Sales' ? 'વેચાણ બિલ જમા' : formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
-        
-        // ➔ અહીં જમા (Credit) તરીકે એન્ટ્રી થશે, જેથી બેલેન્સમાંથી રકમ કપાઈ જશે (Debit - Credit)
+        let provider = billRow[5] || "વેપારી";
         let debit = 0;
-        let credit = billTotal; 
+        let credit = billTotal;
+        let billNo = billRow[3] || "-";
         let status = "જમા";
         let closeYear = "N";
         let totalOutstanding = 0;
@@ -1672,17 +1670,11 @@
         return fetch(SCRIPT_URL, {
           method: "POST",
           body: JSON.stringify({ action: "saveUpadLedger", rowValues: upadRowValues })
-        })
-        .then(resUpad => resUpad.json())
-        .then(resU => {
-          if(!resU || resU.status === "error") {
-            alert("⚠️ ચેતવણી: બિલ સેવ થઈ ગયું પણ ઉપાડ જમા કરવામાં ભૂલ આવી: " + (resU ? resU.message : ""));
-          }
         });
       }
     })
     .then(() => {
-      alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
+      alert("એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
       if(btn) btn.innerText = "💾 સેવ કરો";
       document.getElementById(formElementId).reset();
       pendingBillData = null;
@@ -1690,9 +1682,7 @@
       switchTab('Dash');
     })
     .catch(err => {
-      if(err && err !== "undefined") {
-        console.error("Save Error:", err);
-      }
+      if(err) alert("ભૂલ: " + err);
       if(btn) btn.innerText = "💾 સેવ કરો";
       pendingBillData = null;
     });
@@ -1740,12 +1730,12 @@
       })
       .then(res => res.json())
       .then(res => {
-        if(!res || res.status === "error") {
-          alert("❌ નિષ્ફળ (Failed): ઉપાડ એન્ટ્રી સેવ થઈ નથી! (Error: " + (res ? res.message : "Unknown") + ")");
+        if(res.status === "error") {
+          alert("ભૂલ: " + res.message);
           btn.innerText = "💾 સેવ કરો";
           return;
         }
-        alert("✅ ઉપાડ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
+        alert("ઉપાડ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
         btn.innerText = "💾 સેવ કરો";
         document.getElementById("upadForm").reset();
         document.getElementById("uDate").value = new Date().toISOString().split('T')[0];
@@ -1754,7 +1744,7 @@
         switchTab('Dash');
       })
       .catch(err => {
-        alert("❌ નિષ્ફળ (Failed): સર્વર સાથે કનેક્શન થઈ શક્યું નથી! ભૂલ: " + err);
+        alert("ભૂલ: " + err);
         btn.innerText = "💾 સેવ કરો";
       });
     });
@@ -1903,6 +1893,6 @@
     } else { alert("ખોટો પ્રોટેક્શન કોડ છે!"); }
   }
 </script>
-
 </body>
 </html>
+

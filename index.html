@@ -1993,7 +1993,7 @@
     }
   }
 
-    function confirmUpadActionModal() {
+      function confirmUpadActionModal() {
     document.getElementById("modalUpadConfirm").style.display = "none";
     if(!pendingBillData) return;
 
@@ -2032,17 +2032,11 @@
         let date = document.getElementById("sDate").value;
         let year = getYear(date);
         
-        // 1. એન્ટ્રી નં = વેચાણ એન્ટ્રી ID
         let salesEntryId = itemRows.length > 0 ? itemRows[0][1] : ("SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
-        
-        // 2. બિલ નં = સાચો બિલ નંબર
         let billNoVal = document.getElementById("sBill").value || "N/A";
-        
         let provider = document.getElementById("sVepari").value;
         let upadEntryType = 'વેચાણ બિલ જમા';
         let debit = 0;
-        
-        // 3. ઉપાડ (Credit) = પૂરેપૂરી બિલની કુલ રકમ (billTotal)
         let credit = billTotal; 
         let status = "જમા";
         let closeYear = "N";
@@ -2076,7 +2070,9 @@
 
       pendingBillData = null;
       fetchData();
-      switchTab('Dash');
+      
+      // અહી ફોર્મ બંધ થઈને સીધું ટેબલ વ્યુ (View) માં જતું રહેશે
+      switchSubTab(formType === 'Sales' ? 'Sales' : formType === 'Med' ? 'Med' : 'Fert', 'View');
     })
     .catch(err => {
       if(err && err !== "undefined") { console.error("Save Error:", err); }
@@ -2085,6 +2081,7 @@
       pendingBillData = null;
     });
   }
+
 
 
   function submitUpad(e) {

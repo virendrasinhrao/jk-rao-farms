@@ -1,8 +1,8 @@
-<!-- 
+<!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Updated Date & Time: 24 October 2026, 01:38 AM
-  Feature: Upad Table Action Bar with Both Edit and Delete Buttons for Single Selection
+  Last Updated Code Date & Time: 31/10/2026 - 10:10 IST
+  Final Complete Version with Working Delete & Anti-Duplicate Logic
 -->
 <!DOCTYPE html>
 <html>
@@ -20,7 +20,7 @@
     .refresh-btn:hover { background: #1abc9c; }
     
     @keyframes smoothSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .spin { animation: smoothSpin 0.8s linear infinite !important; }
+    .spin { animation: smoothSpin 0.8s linear infinite !important; display: inline-block; }
 
     .nav { display: flex; gap: 3px; margin-bottom: 10px; max-width: 950px; margin-left: auto; margin-right: auto; flex-wrap: wrap; }
     .nav button { flex: 1; padding: 8px; cursor: pointer; border: 1px solid #b2bec3; background: #dfe6e9; border-radius: 3px; font-weight: bold; font-size: 11px; color: #2d3436; min-width: 70px; }
@@ -34,8 +34,39 @@
     .btn-submit { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; font-size: 15px; cursor: pointer; margin-top: 10px; font-weight: bold; border-radius: 3px; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .btn-submit:hover { background: #219653; }
     
-    .btn-back { background: linear-gradient(135deg, #7f8c8d, #95a5a6); color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .btn-back { background: linear-gradient(135deg, #7f8c8d, #95a5a6); color: white; border-radius: 6px; border: none; padding: 8px 14px; cursor: pointer; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     .btn-back:hover { background: linear-gradient(135deg, #6c7a89, #7f8c8d); }
+
+    /* Glossy Green Button Style */
+    .btn-action-pill {
+      background: linear-gradient(135deg, #1b5e20, #2e7d32, #4caf50, #81c784);
+      color: white;
+      border: 2px solid #a5d6a7;
+      padding: 8px 14px;
+      border-radius: 25px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.4), inset 0 2px 3px rgba(255, 255, 255, 0.5);
+      transition: 0.2s;
+    }
+    .btn-action-pill:hover {
+      background: linear-gradient(135deg, #2e7d32, #388e3c, #66bb6a);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(46, 125, 50, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+    }
+    .btn-action-pill .icon-red {
+      color: #ff4d4d;
+      background: #fff;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
 
     .btn-table-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
     .btn-delete { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
@@ -92,11 +123,11 @@
     .flex-row { display: flex; gap: 8px; }
     .flex-row > div { flex: 1; }
     
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
-    .modal-content { background: white; margin: 10% auto; padding: 15px; width: 90%; max-width: 350px; border-radius: 6px; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-content { background: white; margin: auto; padding: 15px; width: 92%; max-width: 400px; border-radius: 8px; text-align: center; }
     
-    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 11px; }
-    th, td { border: 1px solid #ccc; padding: 6px; text-align: center; }
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; min-width: 900px; }
+    th, td { border: 1px solid #ccc; padding: 10px 14px; text-align: center; white-space: nowrap; }
     th { background-color: #34495e; color: white; }
     
     .item-row { background: #fdfefe; padding: 8px; border: 1px solid #dcdde1; border-radius: 4px; margin-bottom: 8px; position: relative; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
@@ -104,6 +135,10 @@
   </style>
 </head>
 <body>
+
+<div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 4px; font-weight: bold;">
+  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">31/10/2026 - 10:10 IST</span>
+</div>
 
 <div class="header-bar">
   <h2 style="margin:0; font-size: 16px;">🌾 J K Rao Farms (POS Billing)</h2>
@@ -121,6 +156,7 @@
     <button id="tabTrac" onclick="switchTab('Trac')">🚜 ટ્રેક્ટર</button>
     <button id="tabUpad" onclick="switchTab('Upad')">💸 ઉપાડ</button>
     <button id="tabGallery" onclick="switchTab('Gallery')">🖼️ ગેલેરી</button>
+    <button id="tabBillRec" onclick="switchTab('BillRec')">📂 બિલ રેકોર્ડ</button>
   </div>
 
   <!-- 0. DASHBOARD -->
@@ -128,7 +164,7 @@
     <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📊 ફાર્મ ડેશબોર્ડ (વર્ષવાર સારાંશ)</h3>
     <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px;">
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #27ae60; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">💰 કુલ વેચાણ (Total Sales)</h4>
+        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">💰 કુલ વેચાણ</h4>
         <p id="dashTotalSales" style="margin:0; font-size: 18px; font-weight: bold; color: #16a085;">₹ 0.00</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #2980b9; padding: 12px; border-radius: 6px;">
@@ -170,28 +206,46 @@
           <div class="sum-amount" id="bannerValSales">₹ 0.00</div>
         </div>
         <div id="balBoxSales" class="category-balance-box" style="display: block;">
-          <h4>વેચાણ બીલ બેલેન્સ</h4>
+          <h4 id="balTitleSales">ખેડૂ વેચાણ, ઉપાડ</h4>
           <div class="bal-val" id="balValSales">₹ 0.00</div>
         </div>
       </div>
 
       <form id="salesForm" onsubmit="submitSalesForm(event)">
         <input type="hidden" id="editEntryId" value="">
+        
+        <div class="form-group">
+          <label>👤 Bill To / નામ (માલિક):</label>
+          <select id="sBillOwner" class="ownerList" required></select>
+          <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')"><span class="icon-red">👥</span> ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
+        </div>
+
         <div class="flex-row">
-          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="sDate" required onchange="updatePartnerSummary('Sales')"></div>
-          <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="sBill" onblur="checkDuplicateBill(this, 'Sales_Ledger', 'btnSales')"></div>
+          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="sDate" required onchange="updatePartnerSummary('Sales'); updateCategoryBalance('Sales');"></div>
+          <div class="form-group"><label>🆔 બિલ નંબર:</label><input type="text" id="sBill" onblur="checkDuplicateBill(this, 'Sales_Ledger', 'btnSales')"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="sBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Sales'); updateCategoryBalance('Sales');"></select></div>
-          <div class="form-group"><label>🛒 ખરીદનાર (વેપારી):</label><select id="sVepari" class="vepariList" required onchange="checkVepariNew(this)"></select></div>
+          <div class="form-group">
+            <label>👤 ભાગીદાર:</label>
+            <select id="sBhagiya" class="bhagiyaList" required onchange="updatePartnerSummary('Sales'); updateCategoryBalance('Sales');"></select>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')"><span class="icon-red">👥</span> ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
+          </div>
+          <div class="form-group">
+            <label>🛒 ખરીદનાર (વેપારી):</label>
+            <select id="sVepari" class="vepariList" required></select>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Merchant_Master')"><span class="icon-red">🛒</span> વેપારી રેકોર્ડ (અપડેટ કરો)</button>
+          </div>
         </div>
         <hr style="margin:10px 0;">
         <h4>📦 આઇટમ્સ લિસ્ટ:</h4>
         <button type="button" class="btn-add-item" onclick="addSalesItemRow()">➕ આઇટમ ઉમેરો</button>
         <div id="salesItemsContainer"></div>
         <div class="flex-row" style="margin-top:10px;">
-          <div class="form-group"><label>📌 બીલની સ્થિતિ:</label><select id="sStatus"><option>રોકડા / જમા</option><option>બાકી</option></select></div>
-          <div class="form-group"><label>🤝 હસ્તે:</label><select id="sHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
+          <div class="form-group"><label>📌 બિલની સ્થિતિ:</label><select id="sStatus"><option>રોકડા / જમા</option><option>બાકી</option></select></div>
+          <div class="form-group">
+            <label>🤝 હસ્તે:</label>
+            <select id="sHastak" class="bhagiyaList" required></select>
+          </div>
           <div class="form-group"><label>❓ ભાગિયાએ લીધા?:</label><select id="sBLidha"><option>No</option><option>Yes</option></select></div>
         </div>
         <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="sPhoto" accept="image/*" capture="environment"></div>
@@ -232,7 +286,7 @@
           <div class="sum-amount" id="bannerValMed">₹ 0.00</div>
         </div>
         <div id="balBoxMed" class="category-balance-box" style="display: block;">
-          <h4>દવા ખરીદી બેલેન્સ</h4>
+          <h4 id="balTitleMed">ખેડૂ દવા માટે, ઉપાડ</h4>
           <div class="bal-val" id="balValMed">₹ 0.00</div>
         </div>
       </div>
@@ -240,12 +294,20 @@
       <form id="medForm" onsubmit="submitMedForm(event)">
         <input type="hidden" id="editMedId" value="">
         <div class="flex-row">
-          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="mDate" required onchange="updatePartnerSummary('Med')"></div>
-          <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="mBill" onblur="checkDuplicateBill(this, 'Pesticide_Bill', 'btnMed')"></div>
+          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="mDate" required onchange="updatePartnerSummary('Med'); updateCategoryBalance('Med');"></div>
+          <div class="form-group"><label>🆔 બિલ નંબર:</label><input type="text" id="mBill" onblur="checkDuplicateBill(this, 'Pesticide_Bill', 'btnMed')"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="mBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Med'); updateCategoryBalance('Med');"></select></div>
-          <div class="form-group"><label>🏬 દુકાન / વેપારી:</label><select id="mVepari" required onchange="checkMedVepariNew(this)"></select></div>
+          <div class="form-group">
+            <label>👤 ભાગીદાર:</label>
+            <select id="mBhagiya" class="bhagiyaList" required onchange="updatePartnerSummary('Med'); updateCategoryBalance('Med');"></select>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')"><span class="icon-red">👥</span> ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
+          </div>
+          <div class="form-group">
+            <label>🏬 દુકાન / વેપારી:</label>
+            <select id="mVepari" required></select>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Merchant_Master')"><span class="icon-red">🛒</span> વેપારી રેકોર્ડ (અપડેટ કરો)</button>
+          </div>
         </div>
         <hr style="margin:10px 0;">
         <h4>🧪 દવાઓની યાદી:</h4>
@@ -267,13 +329,13 @@
             <input type="text" id="mTotalBill" class="highlight-total" readonly value="₹ 0.00">
           </div>
           <div class="form-group" style="margin-top: 8px;">
-            <label>અંકે રૂપિયા (શબ્દોમાં):</label>
+            <label>અંકે રૂપિયા:</label>
             <input type="text" id="mTotalWords" class="words-box" readonly value="અંકે રૂપિયા શૂન્ય પૂરા">
           </div>
         </div>
 
         <div class="flex-row">
-          <div class="form-group"><label>🤝 હસ્તે:</label><select id="mHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
+          <div class="form-group"><label>🤝 હસ્તે:</label><select id="mHastak" class="bhagiyaList" required></select></div>
           <div class="form-group"><label>📌 સ્થિતિ:</label><select id="mStatus"><option>જમા</option><option>બાકી</option></select></div>
         </div>
         <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="mPhoto" accept="image/*" capture="environment"></div>
@@ -314,7 +376,7 @@
           <div class="sum-amount" id="bannerValFert">₹ 0.00</div>
         </div>
         <div id="balBoxFert" class="category-balance-box" style="display: block;">
-          <h4>ખાતર ખરીદી બેલેન્સ</h4>
+          <h4 id="balTitleFert">ખેડૂ ખાતર માટે, ઉપાડ</h4>
           <div class="bal-val" id="balValFert">₹ 0.00</div>
         </div>
       </div>
@@ -322,12 +384,20 @@
       <form id="fertForm" onsubmit="submitFertForm(event)">
         <input type="hidden" id="editFertId" value="">
         <div class="flex-row">
-          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="fDate" required onchange="updatePartnerSummary('Fert')"></div>
-          <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="fBill" onblur="checkDuplicateBill(this, 'Fertilizer_Bill', 'btnFert')"></div>
+          <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="fDate" required onchange="updatePartnerSummary('Fert'); updateCategoryBalance('Fert');"></div>
+          <div class="form-group"><label>🆔 બિલ નંબર:</label><input type="text" id="fBill" onblur="checkDuplicateBill(this, 'Fertilizer_Bill', 'btnFert')"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="fBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Fert'); updateCategoryBalance('Fert');"></select></div>
-          <div class="form-group"><label>🏬 વેપારી:</label><select id="fVepari" class="fertVepariList" required onchange="checkFertVepariNew(this)"></select></div>
+          <div class="form-group">
+            <label>👤 ભાગીદાર:</label>
+            <select id="fBhagiya" class="bhagiyaList" required onchange="updatePartnerSummary('Fert'); updateCategoryBalance('Fert');"></select>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')"><span class="icon-red">👥</span> ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
+          </div>
+          <div class="form-group">
+            <label>🏬 વેપારી:</label>
+            <select id="fVepari" class="fertVepariList" required></select>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Merchant_Master')"><span class="icon-red">🛒</span> વેપારી રેકોર્ડ (અપડેટ કરો)</button>
+          </div>
         </div>
         <hr style="margin:10px 0;">
         <h4>🌾 ખાતરની આઇટમ્સ:</h4>
@@ -348,13 +418,13 @@
             <label style="color: #d35400; font-size: 14px;">બિલની કુલ રકમ (₹):</label><input type="text" id="fTotalBill" class="highlight-total" readonly value="₹ 0.00">
           </div>
           <div class="form-group" style="margin-top: 8px;">
-            <label>અંકે રૂપિયા (શબ્દોમાં):</label>
+            <label>અંકે રૂપિયા:</label>
             <input type="text" id="fTotalWords" class="words-box" readonly value="અંકે રૂપિયા શૂન્ય પૂરા">
           </div>
         </div>
 
         <div class="flex-row">
-          <div class="form-group"><label>🤝 હસ્તે:</label><select id="fHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
+          <div class="form-group"><label>🤝 હસ્તે:</label><select id="fHastak" class="bhagiyaList" required></select></div>
           <div class="form-group"><label>📌 સ્થિતિ:</label><select id="fStatus"><option>જમા</option><option>બાકી</option></select></div>
         </div>
         <div class="form-group"><label>📝 વિગત:</label><input type="text" id="fDetails" placeholder="ઓપ્શનલ"></div>
@@ -404,7 +474,11 @@
           <div class="form-group"><label>🚜 ટ્રેક્ટર માલિક:</label><input type="text" id="tDriver" required></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>👤 ભાગીદાર:</label><select id="tBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this); updatePartnerSummary('Trac');"></select></div>
+          <div class="form-group">
+            <label>👤 ભાગીદાર:</label>
+            <select id="tBhagiya" class="bhagiyaList" required onchange="updatePartnerSummary('Trac');"></select>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')"><span class="icon-red">👥</span> ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
+          </div>
         </div>
         <hr style="margin:10px 0;">
         <h4>🚜 ટ્રેક્ટર કામોની યાદી:</h4>
@@ -423,8 +497,8 @@
         </div>
 
         <div class="flex-row" style="margin-top:10px;">
-          <div class="form-group"><label>📌 બીલની સ્થિતિ:</label><select id="tStatus"><option>રોકડા</option><option>બાકી</option></select></div>
-          <div class="form-group"><label>🤝 હસ્તે:</label><select id="tHastak" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
+          <div class="form-group"><label>📌 બિલની સ્થિતિ:</label><select id="tStatus"><option>રોકડા</option><option>બાકી</option></select></div>
+          <div class="form-group"><label>🤝 હસ્તે:</label><select id="tHastak" class="bhagiyaList" required></select></div>
         </div>
         <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="tPhoto" accept="image/*" capture="environment"></div>
         <button type="submit" id="btnTrac" class="btn-submit">💾 સેવ કરો</button>
@@ -460,10 +534,14 @@
       <form id="upadForm" onsubmit="submitUpad(event)">
         <div class="flex-row">
           <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="uDate" required onchange="setEntryIdDate(this.value)"></div>
-          <div class="form-group"><label>🆔 એન્ટ્રી નં:</label><input type="text" id="uEntryId" readonly class="readonly-bg"></div>
+          <div class="form-group"><label>🆔 એન્ટ્રી નંબર:</label><input type="text" id="uEntryId" readonly class="readonly-bg"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>👤 ઉપાડ લેનાર:</label><select id="uBhagiya" class="bhagiyaList" required onchange="checkBhagiyaNew(this)"></select></div>
+          <div class="form-group">
+            <label>👤 ઉપાડ લેનાર:</label>
+            <select id="uBhagiya" class="bhagiyaList" required></select>
+            <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')"><span class="icon-red">👥</span> ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
+          </div>
           <div class="form-group">
             <label>📌 એન્ટ્રી પ્રકાર:</label>
             <select id="uType" required onchange="handleUpadTypeChange(this)">
@@ -471,9 +549,9 @@
               <option value="એડવાન્સ ઉપાડ પેટે">એડવાન્સ ઉપાડ પેટે</option>
               <option value="ખાતર ખરીદી માટે">ખાતર ખરીદી માટે</option>
               <option value="દવા ખરીદી માટે">દવા ખરીદી માટે</option>
-              <option value="Tractor ખર્ચ માટે">Tractor ખર્ચ માટે</option>
+              <option value="ટ્રેક્ટર ખર્ચ માટે">ટ્રેક્ટર ખર્ચ માટે</option>
               <option value="અન્ય ખર્ચ માટે">અન્ય ખર્ચ માટે</option>
-              <option value="વેચાણ બીલ">વેચાણ બીલ</option>
+              <option value="વેચાણ બિલ">વેચાણ બિલ</option>
               <option value="ખાતર બિલ જમા">ખાતર બિલ જમા</option>
               <option value="દવા બિલ જમા">દવા બિલ જમા</option>
               <option value="વેચાણ બિલ જમા">વેચાણ બિલ જમા</option>
@@ -505,14 +583,14 @@
           <div class="form-group"><label>જમા (Credit):</label><input type="text" id="uCredit" class="readonly-bg" readonly value="₹ 0.00"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>🆔 બિલ નં:</label><input type="text" id="uBillNo" placeholder="ઓપ્શનલ"></div>
+          <div class="form-group"><label>🆔 બિલ નંબર:</label><input type="text" id="uBillNo" placeholder="ઓપ્શનલ"></div>
           <div class="form-group"><label>📄 બિલ પ્રકાર:</label><input type="text" id="uBillType" placeholder="દવા / ખાતર વગેરે"></div>
         </div>
         <div class="form-group"><label>📝 વિગત:</label><input type="text" id="uDetails" placeholder="વધારાની માહિતી..."></div>
         
-        <!-- વ્યાજ ગણતરી સેક્શન -->
+        <!-- વ્યાજ સેક્શન -->
         <div style="background: #fdfefe; border: 1px solid #d5dbdb; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
-          <h4 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 13px;">📊 વ્યાજ ગણતરી (3% પ્રતિ મહિનો)</h4>
+          <h4 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 13px;">📊 વ્યાજ ગણતરી (૩% પ્રતિ મહિનો)</h4>
           <div class="flex-row">
             <div class="form-group"><label>શરૂઆતની તારીખ:</label><input type="date" id="uStartDate"></div>
             <div class="form-group"><label>પૂરી થવાની તારીખ:</label><input type="date" id="uEndDate"></div>
@@ -530,7 +608,7 @@
         </div>
 
         <div class="flex-row">
-          <div class="form-group"><label>📌 Status:</label><select id="uStatus"><option value="ઉધાર">ઉધાર</option><option value="જમા">જમા</option></select></div>
+          <div class="form-group"><label>📌 Status:</label><select id="uStatus"><option value="Udhār">ઉધાર</option><option value="Jamā">જમા</option></select></div>
           <div class="form-group"><label>🔄 Close Year (Y/N):</label><select id="uCloseYear"><option value="N">N</option><option value="Y">Y</option></select></div>
         </div>
         <div class="form-group"><label>📷 ટ્રાન્ઝેક્શન ફોટો:</label><input type="file" id="uPhoto" accept="image/*" capture="environment"></div>
@@ -549,27 +627,107 @@
 
   <!-- 6. GALLERY SECTION -->
   <div id="formGallery" class="section">
-    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">🖼️ બિલ ફોટો ગેલેરી & રેકોર્ડ્સ</h3>
+    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">🖼️ ગેલેરી & રેકોર્ડ્સ</h3>
     <div class="form-group">
       <input type="text" id="searchGallery" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterGallery()">
     </div>
+    <div id="actionBarGallery" class="table-actions-bar"></div>
     <div id="galleryContainer" style="overflow-x:auto;">
+      <p style="text-align:center;">લોડ થઈ રહ્યું છે...</p>
+    </div>
+  </div>
+
+  <!-- 7. BILL RECORD SECTION -->
+  <div id="formBillRec" class="section">
+    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📂 બિલ રેકોર્ડ્સ</h3>
+    
+    <div class="flex-row" style="margin-bottom: 10px;">
+      <div class="form-group">
+        <label>👤 હસ્તે / નામ ફિલ્ટર કરો:</label>
+        <select id="filterHastak" onchange="filterBillRecordTable()">
+          <option value="">-- બધા (All) --</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>🔍 શોધખોળ:</label>
+        <input type="text" id="searchBillRec" placeholder="બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterBillRecordTable()">
+      </div>
+    </div>
+
+    <div id="actionBarBillRec" class="table-actions-bar"></div>
+
+    <div id="latestRecordSummary" style="background: linear-gradient(135deg, #eafaf1, #d4efdf); border-left: 5px solid #27ae60; padding: 14px; border-radius: 6px; margin-bottom: 12px; display: none; box-shadow: 0 2px 5px rgba(0,0,0,0.08); max-width: 320px;">
+      <p id="latestRecordText" style="margin:0;"></p>
+    </div>
+
+    <div id="tableContainerBillRec" style="overflow-x:auto;">
       <p style="text-align:center;">લોડ થઈ રહ્યું છે...</p>
     </div>
   </div>
 </div>
 
-<!-- Custom Confirmation Modal with Select Dropdown (હા / ના / કેન્સલ) -->
+<!-- Master Management Modal -->
+<div id="modalMasterManager" class="modal">
+  <div class="modal-content" style="max-width: 600px; text-align: left;">
+    <h3 id="masterModalTitle" style="color:#2c3e50; margin-top:0; text-align:center;">⚙️ રેકોર્ડ મેનેજમેન્ટ</h3>
+    
+    <div style="margin-bottom: 12px; display: flex; gap: 8px;">
+      <button type="button" class="btn-submit" style="margin:0; background:#27ae60;" onclick="openAddMasterForm()">➕ નવો ઉમેરો</button>
+      <button type="button" class="btn-submit" style="margin:0; background:#f39c12;" onclick="openEditMasterForm()">✏️ એડિટ કરો</button>
+      <button type="button" class="btn-submit" style="margin:0; background:#e74c3c;" onclick="deleteSelectedMasterRecord()">🗑️ ડિલીટ કરો</button>
+    </div>
+
+    <div id="masterTableContainer" style="max-height: 300px; overflow: auto; border: 1px solid #ccc; border-radius: 4px;"></div>
+
+    <button type="button" onclick="document.getElementById('modalMasterManager').style.display='none'" style="margin-top: 15px; width: 100%; padding: 8px; background: #7f8c8d; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">બંધ કરો</button>
+  </div>
+</div>
+
+<!-- Add/Edit Master Modal Form -->
+<div id="modalAddEditMaster" class="modal">
+  <div class="modal-content" style="max-width: 400px; text-align: left;">
+    <h3 id="addEditMasterTitle" style="color:#2c3e50; margin-top:0; text-align:center;">➕ નવો રેકોર્ડ ઉમેરો</h3>
+    <input type="hidden" id="masterSheetKey" value="">
+    <input type="hidden" id="masterOriginalName" value="">
+    
+    <div class="form-group"><label>નામ:</label><input type="text" id="mNameInput"></div>
+    <div class="form-group"><label>મોબાઈલ નંબર:</label><input type="number" id="mPhoneInput"></div>
+    <div class="form-group"><label>ગામ / સરનામું:</label><input type="text" id="mAddInput"></div>
+    <div class="form-group" id="mRollGroup"><label>રોલ (દા.ત. ખેડૂ):</label><input type="text" id="mRollInput" value="ખેડૂ"></div>
+    <div class="form-group" id="mCategoryGroup" style="display:none;"><label>પ્રકાર:</label><select id="mCategoryInput"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="દવા">દવા</option><option value="ખાતર">ખાતર</option><option value="અન્ય વેપારી">અન્ય વેપારી</option></select></div>
+
+    <div style="display: flex; gap: 10px; margin-top: 15px;">
+      <button type="button" class="btn-submit" style="background:#27ae60; margin:0;" onclick="saveMasterRecordData()">સેવ કરો</button>
+      <button type="button" class="btn-submit" style="background:#7f8c8d; margin:0;" onclick="document.getElementById('modalAddEditMaster').style.display='none'">કેન્સલ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Image Viewer -->
+<div id="modalImageViewer" class="modal">
+  <div class="modal-content" style="max-width: 400px;">
+    <h3 style="color:#2c3e50; margin-top:0;">📷 બિલ ફોટો વ્યુઅર</h3>
+    <div style="margin: 10px 0; max-height: 350px; overflow: auto;">
+      <img id="viewerImage" src="" style="width: 100%; border-radius: 4px; border: 1px solid #ccc; object-fit: contain;">
+    </div>
+    <div style="display: flex; gap: 10px; margin-top: 15px;">
+      <a id="downloadPhotoBtn" href="" target="_blank" download="Bill_Photo.jpg" style="flex:1; background:#27ae60; color:white; text-decoration:none; padding:8px; border-radius:4px; font-weight:bold; font-size:13px; text-align:center;">📥 ડાઉનલોડ કરો</a>
+      <button type="button" onclick="closeImageModal()" style="flex:1; background:#7f8c8d; color:white; border:none; padding:8px; border-radius:4px; font-weight:bold; font-size:13px; cursor:pointer;">⬅️ પાછળ (Back)</button>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Confirmation Modal -->
 <div id="modalUpadConfirm" class="modal">
   <div class="modal-content" style="text-align:center;">
     <h3 style="color:#e67e22; margin-top:0;">💸 ઉપાડ લેજર જમા એન્ટ્રી</h3>
-    <p id="upadConfirmMsg" style="font-size:13px; color:#555; margin-bottom:10px;"></p>
+    <p id="upadConfirmMsg" style="font-size:15px; font-weight:bold; color:#c0392b; margin-bottom:12px; line-height:1.5;"></p>
     
     <div class="form-group" style="text-align:left;">
       <label><b>ઉપાડમાં જમા કરવું છે?:</b></label>
-      <select id="upadChoiceSelect" style="font-weight:bold; font-size:14px; background:#e8f8f5; color:#27ae60;">
-        <option value="yes">હા (જમા લો)</option>
+      <select id="upadChoiceSelect" style="font-weight:bold; font-size:14px; background:#f4ecf7; color:#8e44ad; border: 2px solid #8e44ad;">
         <option value="no">ના (માત્ર બિલ સેવ કરો)</option>
+        <option value="yes">હા (જમા લો)</option>
       </select>
     </div>
 
@@ -580,40 +738,35 @@
   </div>
 </div>
 
-<!-- Modal Pop-ups -->
+<!-- Modal MPIN -->
 <div id="modalMpin" class="modal">
   <div class="modal-content" style="text-align:center;">
     <h3 style="color:#c0392b; margin-top:0;">🔒 સિક્યુરિટી MPIN</h3>
-    <p style="font-size:13px; color:#555;">આ ક્રિયા કરવા માટે 4 આંકડાનો MPIN નાખો:</p>
+    <p style="font-size:13px; color:#555;">આ ક્રિયા કરવા માટે ૪ આંકડાનો MPIN નાખો:</p>
     <input type="password" id="inputMpin" maxlength="4" style="text-align:center; font-size:20px; letter-spacing:8px; margin-bottom:12px;" placeholder="••••">
     <button type="button" class="btn-submit" onclick="verifyMpinAndProceed()">કન્ફર્મ કરો</button>
     <button type="button" onclick="document.getElementById('modalMpin').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">કેન્સલ</button>
   </div>
 </div>
 
-<div id="modalBhagiya" class="modal"><div class="modal-content"><h3>➕ ભાગીદાર મેનેજમેન્ટ</h3><input type="text" id="nbName" placeholder="નામ" class="form-group"><input type="number" id="nbPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nbAdd" placeholder="ગામ" class="form-group"><input type="text" id="nbRoll" placeholder="Roll (દા.ત. ખેડૂ / Owner)" class="form-group"><button type="button" class="btn-submit" onclick="saveB()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Bhagiya_Master')">પસંદ કરેલ ભાગીદાર ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalBhagiya').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
-
-<div id="modalVepari" class="modal"><div class="modal-content"><h3>➕ વેપારી મેનેજમેન્ટ</h3><input type="text" id="nvName" placeholder="નામ" class="form-group"><input type="number" id="nvPhone" placeholder="મોબાઈલ" class="form-group"><input type="text" id="nvCity" placeholder="ગામ" class="form-group"><select id="nvCategory" class="form-group"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="અન્ય વેપારી">અન્ય વેપારી</option></select><button type="button" class="btn-submit" onclick="saveV()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="askMpinForDeleteMaster('Merchant_Master')">પસંદ કરેલ વેપારી ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalVepari').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
-
-<div id="modalFertilizer" class="modal"><div class="modal-content"><h3>➕ ખાતર મેનેજમેન્ટ</h3><input type="text" id="nfName" placeholder="ખાતરનું નામ (દા.ત. યુરિયા)" class="form-group"><button type="button" class="btn-submit" onclick="saveFertilizerMaster()">સેવ કરો</button><hr style="margin:10px 0;"><button type="button" class="btn-delete" style="width:100%; padding:8px;" onclick="deleteFertilizerMaster()">પસંદ કરેલ ખાતર ડિલિટ કરો</button><button type="button" onclick="document.getElementById('modalFertilizer').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">બંધ કરો</button></div></div>
-
-<div id="modalCrop" class="modal"><div class="modal-content"><h3>➕ નવો પાક</h3><input type="text" id="ncName" placeholder="પાકનું નામ" class="form-group"><input type="number" id="ncShare" placeholder="ખેડૂ હિસ્સો (%)" class="form-group"><button type="button" class="btn-submit" onclick="saveC()">સેવ</button><button type="button" onclick="document.getElementById('modalCrop').style.display='none'" style="margin-top:10px; width:100%; padding:8px;">કેન્સલ</button></div></div>
-
 <script>
-  // Updated Date & Time: 24 October 2026, 01:38 AM
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyx_Lo_lwKf4MKgs9q-BxXUesgxQstAcUK6YIRG51SJwB986P9BeO6JunYIPAxwBJjyUw/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyUQK6amVYZMY5pPFYYrFaipcSOzfOIJm7O3KYdhRhHwMh8P2_Dw_FndRYvVxdLqAptrA/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
   let currentActiveTab = 'Sales';
   let pendingBillData = null;
+  let activeMasterSheet = '';
+  let selectedMasterRowName = '';
 
   window.onload = function() {
-    let today = new Date().toISOString().split('T')[0];
+    let now = new Date();
+    let today = now.toISOString().split('T')[0];
     ['sDate', 'mDate', 'fDate', 'tDate', 'uDate', 'uStartDate', 'uEndDate'].forEach(id => {
       let el = document.getElementById(id);
       if(el) el.value = today;
     });
+
     setEntryIdDate(today);
     fetchData();
     addSalesItemRow(); addMedItemRow(); addFertItemRow(); addTracItemRow();
@@ -630,11 +783,22 @@
   function fetchData() {
     let icon = document.getElementById("refreshIcon");
     if(icon) icon.className = "spin";
-    fetch(SCRIPT_URL).then(res => res.json()).then(res => {
-      appData = res.data; populateData(); updateDashboard(); renderGallery();
-      ['Sales', 'Med', 'Fert', 'Trac', 'Upad'].forEach(t => renderTable(t));
-      if(icon) icon.className = "";
-    }).catch(err => { if(icon) icon.className = ""; alert("ભૂલ: " + err); });
+    fetch(SCRIPT_URL)
+      .then(res => res.json())
+      .then(res => {
+        appData = (res && res.data) ? res.data : {}; 
+        populateData(); 
+        updateDashboard(); 
+        renderGallery(); 
+        renderBillRecordTable();
+        ['Sales', 'Med', 'Fert', 'Trac', 'Upad'].forEach(t => renderTable(t));
+        if(icon) icon.className = "";
+      })
+      .catch(err => { 
+        if(icon) icon.className = ""; 
+        console.error("Fetch Error:", err);
+        alert("ડેટા લોડ કરવામાં ભૂલ: " + err); 
+      });
   }
 
   function checkDuplicateBill(inputEl, sheetName, btnId) {
@@ -677,8 +841,9 @@
     document.getElementById('tab' + tab).classList.add('active');
     if(tab === 'Dash') updateDashboard();
     if(tab === 'Gallery') renderGallery();
+    if(tab === 'BillRec') renderBillRecordTable();
     
-    if(tab !== 'Dash' && tab !== 'Gallery') {
+    if(tab !== 'Dash' && tab !== 'Gallery' && tab !== 'BillRec') {
       backToChoice(tab);
     }
   }
@@ -704,7 +869,10 @@
     if(subType === 'New') {
       if(contentNew) contentNew.style.display = 'block';
       if(contentView) contentView.style.display = 'none';
-      if(tabName === 'Upad') setEntryIdDate(document.getElementById('uDate').value);
+      if(tabName === 'Upad') {
+        document.getElementById('uDate').value = new Date().toISOString().split('T')[0];
+        setEntryIdDate(document.getElementById('uDate').value);
+      }
       updatePartnerSummary(tabName);
       if(tabName === 'Med' || tabName === 'Fert' || tabName === 'Sales') updateCategoryBalance(tabName);
     } else {
@@ -715,34 +883,57 @@
   }
 
   function getCategoryBalanceVal(sectionType, partnerName) {
-    if(!partnerName || partnerName === "NEW") return 0;
-    let targetType = sectionType === 'Sales' ? 'વેચાણ બીલ' : sectionType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
-    let totalBal = 0;
+    if(!partnerName) return 0;
+    
+    let targetType = '', altType = '';
+    if(sectionType === 'Sales') { targetType = 'વેચાણ બીલ'; altType = 'વેચાણ બિલ જમા'; }
+    else if(sectionType === 'Med') { targetType = 'દવા ખરીદી માટે'; altType = 'દવા બિલ જમા'; }
+    else if(sectionType === 'Fert') { targetType = 'ખાતર ખરીદી માટે'; altType = 'ખાતર બિલ જમા'; }
+    
+    let dateId = sectionType === 'Sales' ? 'sDate' : sectionType === 'Med' ? 'mDate' : 'fDate';
+    let dateVal = document.getElementById(dateId) ? document.getElementById(dateId).value : new Date().toISOString().split('T')[0];
+    let targetYear = getYear(dateVal);
+
+    let totalDebit = 0, totalCredit = 0;
 
     if(appData.Upad_Ledger) {
       appData.Upad_Ledger.forEach(r => {
         let name = String(r["ભાગીદાર"] || r["ઉપાડ લેનાર"] || "").trim();
         let type = String(r["એન્ટ્રી પ્રકાર"] || "").trim();
-        if(name === partnerName && type === targetType) {
-          let deb = parseFloat(r["ઉપાડ (Debit)"] || 0);
-          let cred = parseFloat(r["જમા (Credit)"] || 0);
-          totalBal += (deb - cred);
+        let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
+
+        if(name === partnerName && rYear === targetYear) {
+          if(type === targetType || type === altType) {
+            let deb = parseFloat(r["ઉપાડ (Debit)"] || r["ઉપાડ"] || r["Debit"] || 0);
+            let cred = parseFloat(r["જમા (Credit)"] || r["જમા"] || r["Credit"] || 0);
+            totalDebit += deb;
+            totalCredit += cred;
+          }
         }
       });
     }
-    return totalBal;
+
+    return totalDebit - totalCredit;
   }
 
   function updateCategoryBalance(sectionType) {
     let bhagiyaId = sectionType === 'Sales' ? 'sBhagiya' : sectionType === 'Med' ? 'mBhagiya' : 'fBhagiya';
     let valId = sectionType === 'Sales' ? 'balValSales' : sectionType === 'Med' ? 'balValMed' : 'balValFert';
     let rowId = sectionType === 'Sales' ? 'topBannersRowSales' : sectionType === 'Med' ? 'topBannersRowMed' : 'topBannersRowFert';
+    let titleId = sectionType === 'Sales' ? 'balTitleSales' : sectionType === 'Med' ? 'balTitleMed' : 'balTitleFert';
     
     let selectedBhagiya = document.getElementById(bhagiyaId).value;
     let rowBox = document.getElementById(rowId);
     let valEl = document.getElementById(valId);
+    let titleEl = document.getElementById(titleId);
 
-    if(!selectedBhagiya || selectedBhagiya === "NEW") {
+    if(titleEl) {
+      if(sectionType === 'Sales') titleEl.innerText = "ખેડૂ વેચાણ, ઉપાડ";
+      else if(sectionType === 'Med') titleEl.innerText = "ખેડૂ દવા માટે, ઉપાડ";
+      else if(sectionType === 'Fert') titleEl.innerText = "ખેડૂ ખાતર માટે, ઉપાડ";
+    }
+
+    if(!selectedBhagiya) {
       if(rowBox) rowBox.style.display = 'none';
       return;
     }
@@ -770,7 +961,7 @@
   function calcUpadDebitCredit(el) {
     let amt = parseFloat(el.value) || 0;
     let type = document.getElementById("uType").value;
-    let isCredit = type.includes("જમા") || type.includes("બિલ જમા");
+    let isCredit = type.includes("Jamā") || type.includes("Bill Jamā") || type.includes("જમા");
     
     if(isCredit) {
       document.getElementById("uDebit").value = "₹ 0.00";
@@ -808,7 +999,7 @@
   }
 
   function convertToGujaratiWords(amount) {
-    let units = ['', 'એક', 'બે', 'ત્રણ', 'ચાર', 'પાંચ', 'છ', 'સાત', 'આઠ', 'નવ', 'દસ', 'અગિયાર', 'બાર', 'તેર', 'ચોદ', 'પંદર', 'સોળ', 'સત્તર', 'અઢાર', 'ઓગણીસ'];
+    let units = ['', 'એક', 'બે', 'ત્રણ', 'ચાર', 'પાંચ', 'છ', 'સાત', 'આઠ', 'નવ', 'દસ', 'અગિયાર', 'બાર', 'તેર', 'ચૌદ', 'પંદર', 'સોળ', 'સત્તર', 'અઢાર', 'ઓગણીસ'];
     let tens = ['', '', 'વીસ', 'ત્રીસ', 'ચાલીસ', 'પચાસ', 'સાઈઠ', 'સિત્તેર', 'અંશી', 'નવું'];
     let intPart = Math.floor(amount);
     if (intPart === 0) return "અંકે રૂપિયા શૂન્ય પૂરા";
@@ -825,38 +1016,101 @@
   function populateData() {
     if(!appData.Bhagiya_Master) return;
     
-    let upadBhagiyas = [];
+    let farmerList = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
       let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
       if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "ખેડૂ" || roll === "farmer")) {
-        upadBhagiyas.push(name.trim());
+        farmerList.push(name.trim());
       }
     });
     
+    let ownerList = [];
+    appData.Bhagiya_Master.forEach(r => {
+      let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
+      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
+      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "માલિક" || roll === "owner")) {
+        ownerList.push(name.trim());
+      }
+    });
+
+    document.querySelectorAll('.bhagiyaList').forEach(sel => {
+      let cur = sel.value;
+      sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
+      farmerList.forEach(b => sel.add(new Option(b, b)));
+      sel.value = cur;
+    });
+
     let uBhagiyaSelect = document.getElementById("uBhagiya");
     if(uBhagiyaSelect) {
       let cur = uBhagiyaSelect.value;
-      uBhagiyaSelect.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
-      upadBhagiyas.forEach(b => uBhagiyaSelect.add(new Option(b, b)));
+      uBhagiyaSelect.innerHTML = '<option value="">-- પસંદ કરો --</option>';
+      farmerList.forEach(b => uBhagiyaSelect.add(new Option(b, b)));
       uBhagiyaSelect.value = cur;
     }
 
-    let allBhagiyas = [];
-    appData.Bhagiya_Master.forEach(r => {
-      let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
-      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ") allBhagiyas.push(name.trim());
-    });
+    let ownerSelect = document.getElementById("sBillOwner");
+    if(ownerSelect) {
+      let curOwner = ownerSelect.value;
+      ownerSelect.innerHTML = '<option value="">-- પસંદ કરો --</option>';
+      ownerList.forEach(o => ownerSelect.add(new Option(o, o)));
+      ownerSelect.value = curOwner;
+    }
 
-    document.querySelectorAll('.bhagiyaList').forEach(sel => { 
-      if(sel.id !== "uBhagiya") {
-        let cur = sel.value; 
-        sel.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
-        allBhagiyas.forEach(b => sel.add(new Option(b, b))); 
-        sel.value = cur;
+    let filterHastakSelect = document.getElementById("filterHastak");
+    if(filterHastakSelect) {
+      let curFilter = filterHastakSelect.value;
+      let uniqueHastakSet = new Set();
+      if(appData.Bill_Record) {
+        appData.Bill_Record.forEach(r => {
+          let h = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "").trim();
+          if(h && h !== "-") uniqueHastakSet.add(h);
+        });
       }
-    });
-    
+      if(uniqueHastakSet.size === 0) {
+        farmerList.forEach(b => uniqueHastakSet.add(b));
+      }
+      filterHastakSelect.innerHTML = '<option value="">-- બધા (All) --</option>';
+      uniqueHastakSet.forEach(b => filterHastakSelect.add(new Option(b, b)));
+      filterHastakSelect.value = curFilter;
+    }
+
+    let vegVeparis = [];
+    let medVeparis = [];
+    let fertVeparis = [];
+    let allVeparis = [];
+
+    if(appData.Merchant_Master) {
+      appData.Merchant_Master.forEach(r => {
+        let name = r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"];
+        let type = String(r["પ્રકાર"] || "").trim().toLowerCase();
+        if(name) {
+          allVeparis.push(name);
+          if(type === "vegitable" || type.includes("શાકભાજી")) vegVeparis.push(name);
+          if(type === "દવા" || type.includes("દવા")) medVeparis.push(name);
+          if(type === "ખાતર" || type.includes("ખાતર")) fertVeparis.push(name);
+        }
+      });
+    }
+
+    let sVepari = document.getElementById("sVepari");
+    if(sVepari) {
+      let cur = sVepari.value; sVepari.innerHTML = '<option value="">-- પસંદ કરો --</option>';
+      vegVeparis.forEach(v => sVepari.add(new Option(v, v))); sVepari.value = cur;
+    }
+
+    let mVepari = document.getElementById("mVepari");
+    if(mVepari) {
+      let cur = mVepari.value; mVepari.innerHTML = '<option value="">-- પસંદ કરો --</option>';
+      medVeparis.forEach(v => mVepari.add(new Option(v, v))); mVepari.value = cur;
+    }
+
+    let fVepari = document.querySelector(".fertVepariList");
+    if(fVepari) {
+      let cur = fVepari.value; fVepari.innerHTML = '<option value="">-- પસંદ કરો --</option>';
+      fertVeparis.forEach(v => fVepari.add(new Option(v, v))); fVepari.value = cur;
+    }
+
     let providers = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["Name"];
@@ -865,52 +1119,14 @@
         providers.push(name + " (" + (r["Roll"] || "ભાગીદાર") + ")");
       }
     });
-    if(appData.Merchant_Master) {
-      appData.Merchant_Master.forEach(r => {
-        let mName = r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"];
-        let mType = String(r["પ્રકાર"] || "").trim().toLowerCase();
-        if(mName && !mType.includes("દવા") && !mType.includes("ખાતર") && !mType.includes("medicine") && !mType.includes("fertilizer")) {
-          providers.push(mName + " (" + (r["પ્રકાર"] || "વેપારી") + ")");
-        }
-      });
-    }
+    allVeparis.forEach(v => providers.push(v + " (વેપારી)"));
+    
     let uProvider = document.getElementById("uProvider");
     if(uProvider) {
       let cur = uProvider.value;
       uProvider.innerHTML = '<option value="">-- પસંદ કરો --</option>';
       providers.forEach(p => uProvider.add(new Option(p, p)));
       uProvider.value = cur;
-    }
-
-    let veparis = appData.Merchant_Master ? appData.Merchant_Master.filter(r => String(r["પ્રકાર"] || "").trim() === "Vegitable").map(r => r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"]) : [];
-    let sVepari = document.getElementById("sVepari");
-    if(sVepari) {
-      let cur = sVepari.value; sVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
-      veparis.forEach(v => sVepari.add(new Option(v, v))); sVepari.value = cur;
-    }
-
-    let medVeparis = [], fertVeparis = [];
-    if(appData.Merchant_Master) {
-      appData.Merchant_Master.forEach(r => {
-        let type = String(r["પ્રકાર"] || "").trim().toLowerCase();
-        let name = r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"];
-        if(name) {
-          if(type === "દવા" || type === "medicine" || type.includes("દવા")) medVeparis.push(name);
-          if(type === "ખાતર" || type === "fertilizer" || type.includes("ખાતર")) fertVeparis.push(name);
-        }
-      });
-    }
-
-    let mVepari = document.getElementById("mVepari");
-    if(mVepari) {
-      let cur = mVepari.value; mVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
-      medVeparis.forEach(v => mVepari.add(new Option(v, v))); mVepari.value = cur;
-    }
-
-    let fVepari = document.querySelector(".fertVepariList");
-    if(fVepari) {
-      let cur = fVepari.value; fVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
-      fertVeparis.forEach(v => fVepari.add(new Option(v, v))); fVepari.value = cur;
     }
 
     document.querySelectorAll('.pakList').forEach(sel => {
@@ -927,23 +1143,149 @@
 
     document.querySelectorAll('.khatarList').forEach(sel => {
       let currentVal = sel.value; 
-      sel.innerHTML = '<option value="">-- ખાતર --</option><option value="NEW">➕ નવું ખાતર ઉમેરો</option>';
+      sel.innerHTML = '<option value="">-- ખાતર --</option>';
       let fertSource = appData.Fertilizer_Master || appData.Medicine_Master || [];
       fertSource.forEach(m => { let fName = m["ખાતરનું_નામ"] || m["ખાતરનું નામ"] || m["દવાનું_નામ"] || m["દવાનું નામ"] || m["નામ"] || ""; if(fName) sel.add(new Option(fName, fName)); });
       sel.value = currentVal;
     });
   }
 
-  function checkBhagiyaNew(sel) { if(sel.value === "NEW") { document.getElementById("modalBhagiya").style.display = "block"; sel.value = ""; } }
-  function checkVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
-  function checkMedVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("nvCategory").value = "દવા"; document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
-  function checkFertVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("nvCategory").value = "ખાતર"; document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
-  function checkCropNew(sel) { if(sel.value === "NEW") { document.getElementById("modalCrop").style.display = "block"; sel.value = ""; } }
-  function checkFertilizerNew(sel) { if(sel.value === "NEW") { document.getElementById("modalFertilizer").style.display = "block"; sel.value = ""; } }
+  function openMasterModal(sheetKey) {
+    activeMasterSheet = sheetKey;
+    selectedMasterRowName = '';
+    let titleEl = document.getElementById("masterModalTitle");
+    if(sheetKey === 'Bhagiya_Master') titleEl.innerText = "👥 ભાગીદાર રેકોર્ડ મેનેજમેન્ટ";
+    else if(sheetKey === 'Merchant_Master') titleEl.innerText = "🛒 વેપારી રેકોર્ડ મેનેજમેન્ટ";
+    
+    renderMasterTableModal();
+    document.getElementById("modalMasterManager").style.display = "flex";
+  }
+
+  function renderMasterTableModal() {
+    let container = document.getElementById("masterTableContainer");
+    let rows = appData[activeMasterSheet] || [];
+    if(rows.length === 0) {
+      container.innerHTML = "<p style='text-align:center; padding:15px;'>કોઈ રેકોર્ડ ઉપલબ્ધ નથી.</p>";
+      return;
+    }
+
+    let html = `<table><tr><th>પસંદ</th><th>નામ</th><th>મોબાઈલ</th><th>ગામ</th><th>Roll/પ્રકાર</th></tr>`;
+    rows.forEach((r, idx) => {
+      let name = r["નામ"] || r["Name"] || r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || Object.values(r)[1] || Object.values(r)[0];
+      let phone = r["મોબાઈલ"] || r["Phone"] || '-';
+      let add = r["ગામ"] || r["Address"] || r["ગામ / સરનામું"] || '-';
+      let roll = r["Roll"] || r["રોલ"] || r["પ્રકાર"] || '-';
+
+      html += `<tr onclick="selectMasterRow(this, '${name}')" style="cursor:pointer;">
+        <td><input type="radio" name="masterSelectRadio" value="${name}"></td>
+        <td><b>${name}</b></td>
+        <td>${phone}</td>
+        <td>${add}</td>
+        <td>${roll}</td>
+      </tr>`;
+    });
+    container.innerHTML = html + `</table>`;
+  }
+
+  function selectMasterRow(tr, name) {
+    selectedMasterRowName = name;
+    let radio = tr.querySelector('input[type="radio"]');
+    if(radio) radio.checked = true;
+  }
+
+  function openAddMasterForm() {
+    document.getElementById("masterSheetKey").value = activeMasterSheet;
+    document.getElementById("masterOriginalName").value = "";
+    document.getElementById("addEditMasterTitle").innerText = activeMasterSheet === 'Bhagiya_Master' ? "➕ નવો ભાગીદાર ઉમેરો" : "➕ નવો વેપારી ઉમેરો";
+    document.getElementById("mNameInput").value = "";
+    document.getElementById("mPhoneInput").value = "";
+    document.getElementById("mAddInput").value = "";
+
+    if(activeMasterSheet === 'Bhagiya_Master') {
+      document.getElementById("mRollGroup").style.display = "block";
+      document.getElementById("mCategoryGroup").style.display = "none";
+      document.getElementById("mRollInput").value = "ખેડૂ";
+    } else {
+      document.getElementById("mRollGroup").style.display = "none";
+      document.getElementById("mCategoryGroup").style.display = "block";
+    }
+    document.getElementById("modalAddEditMaster").style.display = "flex";
+  }
+
+  function openEditMasterForm() {
+    if(!selectedMasterRowName) return alert("કૃપા કરીને ટેબલમાંથી કોઈ એક રેકોર્ડ સિલેક્ટ કરો!");
+    let found = (appData[activeMasterSheet] || []).find(r => String(r["નામ"] || r["Name"] || r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || "").trim() === String(selectedMasterRowName).trim());
+    if(!found) return alert("રેકોર્ડ મળ્યો નથી!");
+
+    document.getElementById("masterSheetKey").value = activeMasterSheet;
+    document.getElementById("masterOriginalName").value = selectedMasterRowName;
+    document.getElementById("addEditMasterTitle").innerText = activeMasterSheet === 'Bhagiya_Master' ? "✏️ ભાગીદાર એડિટ કરો" : "✏️ વેપારી એડિટ કરો";
+    
+    document.getElementById("mNameInput").value = found["નામ"] || found["Name"] || found["વેપારીનું_નામ"] || found["વેપારીનું નામ"] || "";
+    document.getElementById("mPhoneInput").value = found["મોબાઈલ"] || found["Phone"] || "";
+    document.getElementById("mAddInput").value = found["ગામ"] || found["Address"] || found["ગામ / સરનામું"] || "";
+
+    if(activeMasterSheet === 'Bhagiya_Master') {
+      document.getElementById("mRollGroup").style.display = "block";
+      document.getElementById("mCategoryGroup").style.display = "none";
+      document.getElementById("mRollInput").value = found["Roll"] || found["રોલ"] || "ખેડૂ";
+    } else {
+      document.getElementById("mRollGroup").style.display = "none";
+      document.getElementById("mCategoryGroup").style.display = "block";
+      document.getElementById("mCategoryInput").value = found["પ્રકાર"] || "Vegitable";
+    }
+    document.getElementById("modalAddEditMaster").style.display = "flex";
+  }
+
+  function saveMasterRecordData() {
+    let sheetKey = document.getElementById("masterSheetKey").value;
+    let origName = document.getElementById("masterOriginalName").value;
+    let name = document.getElementById("mNameInput").value.trim();
+    let phone = document.getElementById("mPhoneInput").value;
+    let add = document.getElementById("mAddInput").value;
+
+    if(!name) return alert("નામ લખવું જરૂરી છે!");
+
+    askMpinAndExecute(() => {
+      let actionName = (sheetKey === 'Bhagiya_Master') ? 'saveBhagiya' : 'saveVepari';
+      let rowValues = (sheetKey === 'Bhagiya_Master') ? [getYear(new Date()), name, phone, add, document.getElementById("mRollInput").value] : [name, phone, add, document.getElementById("mCategoryInput").value];
+
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: actionName, rowValues: rowValues, originalName: origName })
+      })
+      .then(res => res.json())
+      .then(() => {
+        alert("રેકોર્ડ સફળતાપૂર્વક સેવ થઈ ગયો!");
+        document.getElementById("modalAddEditMaster").style.display = "none";
+        fetchData();
+        openMasterModal(sheetKey);
+      })
+      .catch(err => alert("ભૂલ: " + err));
+    });
+  }
+
+  function deleteSelectedMasterRecord() {
+    if(!selectedMasterRowName) return alert("કૃપા કરીને ડિલીટ કરવા માટે કોઈ રેકોર્ડ સિલેક્ટ કરો!");
+    askMpinAndExecute(() => {
+      if(!confirm("⚠️ શું તમે ખરેખર '" + selectedMasterRowName + "' ને ડિલીટ કરવા માંગો છો?")) return;
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "deleteMasterRecord", sheetName: activeMasterSheet, name: selectedMasterRowName })
+      })
+      .then(res => res.json())
+      .then(() => {
+        alert("સફળતાપૂર્વક ડિલીટ થઈ ગયું!");
+        fetchData();
+        openMasterModal(activeMasterSheet);
+      })
+      .catch(err => alert("ભૂલ: " + err));
+    });
+  }
 
   function updatePartnerSummary(sectionType) {
     if(sectionType === 'Upad') return;
-    let dateId = sectionType === 'Sales' ? 'sDate' : sectionType === 'Med' ? 'mDate' : sectionType === 'Fert' ? 'fDate' : 'tDate';
+    let dateId = sectionType === 'Sales' ? 'sDate' : sectionType === 'Med' ? 'mDate' : 'fDate';
     let dateVal = document.getElementById(dateId).value;
     let bannerRow = document.getElementById('topBannersRow' + sectionType);
     let banner = document.getElementById('partnerBanner' + sectionType);
@@ -1151,7 +1493,8 @@
     row.querySelector('.sTotal').value = "₹ " + total.toFixed(2);
     let s = getCropShare(row.querySelector('.pakList').value);
     row.querySelector('.sKShare').value = s;
-    row.querySelector('.sKRakam').value = "₹ " + (total * s).toFixed(2);
+    let kRakamVal = total * s;
+    row.querySelector('.sKRakam').value = "₹ " + kRakamVal.toFixed(2);
   }
 
   function onMedSelectRow(sel) {
@@ -1352,33 +1695,34 @@
     else if(tabName === 'Trac') rows = appData['Tractor_Expense'] || [];
     else if(tabName === 'Upad') rows = appData['Upad_Ledger'] || [];
     
-    if(rows.length === 0) { 
+    if(!rows || rows.length === 0) { 
       container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ રેકોર્ડ ઉપલબ્ધ નથી.</p>"; 
       if(actionBar) actionBar.style.display = 'none';
       return; 
     }
 
     let html = `<table><tr>
-      <th><input type="checkbox" id="selectAll_${tabName}" onclick="toggleSelectAll(this, '${tabName}')"> બધા સિલેક્ટ કરો</th>
+      <th style="width: 40px;"><input type="checkbox" id="selectAll_${tabName}" onclick="toggleSelectAll(this, '${tabName}')"></th>
       <th>એન્ટ્રી Id</th><th>તારીખ</th>`;
 
     if(tabName === 'Sales') {
-      html += `<th>બીલ નં</th><th>ખેડૂનું નામ</th><th>ખરીદનાર</th><th>પાક</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th><th>સ્ટેટસ</th>`;
-    } else if(tabName === 'Med') {
-      html += `<th>બીલ નં</th><th>દવાનું નામ</th><th>પ્રકાર</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>બિલની કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th>`;
-    } else if(tabName === 'Fert') {
-      html += `<th>બીલ નં</th><th>ખાતરનું નામ</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>બિલની કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th>`;
+      html += `<th>Bill To / નામ :</th><th>બિલ નં</th><th>ભાગીદાર</th><th>ખરીદનાર</th><th>પાકનું નામ</th><th>પાઉચ / નંગ</th><th>કુલ વજન</th><th>ભાવ (20Kg)</th><th>કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th><th>હસ્તે</th><th>ઉપાડ જમા</th><th>ફોટો</th>`;
+    } else if(tabName === 'Med' || tabName === 'Fert') {
+      html += `<th>બિલ નં</th><th>${tabName === 'Med' ? 'દવાનું નામ' : 'ખાતરનું નામ'}</th><th>વજન/પેક</th><th>નંગ</th><th>ભાવ</th><th>રકમ</th><th>પાક</th><th>બિલની કુલ રકમ</th><th>ખેડૂ રકમ</th><th>સ્ટેટસ</th><th>ફોટો</th>`;
     } else if(tabName === 'Trac') {
-      html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બીલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th><th>સ્ટેટસ</th>`;
+      html += `<th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બિલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th><th>સ્ટેટસ</th><th>ફોટો</th>`;
     } else if(tabName === 'Upad') {
-      html += `<th>ઉપાડ લેનાર</th><th>પ્રકાર</th><th>આપનાર</th><th>ઉપાડ (Debit)</th><th>જમા (Credit)</th><th>બિલ નં</th><th>કુલ બાકી (Outstanding)</th><th>Status</th>`;
+      html += `<th>ઉપાડ લેનાર</th><th>પ્રકાર</th><th>આપનાર</th><th>ઉપાડ (Debit)</th><th>જમા (Credit)</th><th>બિલ નં</th><th>કુલ બાકી (Outstanding)</th><th>Status</th><th>ફોટો</th>`;
     }
     html += `</tr>`;
 
-    rows.forEach((r, index) => {
+    rows.forEach(function(r, index) {
+      if(!r) return;
       let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
       let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || index;
       let bhagiya = r["ભાગીદાર"] || r["ઉપાડ લેનાર"] || "-";
+      let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
+      let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
 
       html += `<tr>
         <td><input type="checkbox" class="row-select-${tabName}" value="${entryId}" onclick="updateTableActionBar('${tabName}')"></td>
@@ -1386,21 +1730,32 @@
         <td>${cleanDate}</td>`;
 
       if(tabName === 'Sales') {
+        let billOwner = r["Bill To /નામ :"] || r["Bill To/નામ:"] || r["બિલ માલિક"] || r["Bill Owner"] || r["Bill To/નામ"] || "-";
         let billNo = r["બીલ નં"] || r["બિલ નં"] || "-";
-        html += `<td>${billNo}</td><td>${bhagiya}</td><td>${r["ખરીદનાર"]||'-'}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કુલ વજન (કિલો"]||r["કુલ વજન (કિલો)"]||'-'} કિલો</td><td>₹ ${r[". ૧ મણનો ભાવ (20 Kg)"]||0}</td><td>₹ ${parseFloat(r["કુલ રકમ (₹)"]||0).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td>`;
+        let pakName = r["પાકનું નામ"] || "-";
+        let pauch = r["પાઉચ / નંગ"] || 0;
+        let weight = r["કુલ વજન (કિલો)"] || 0;
+        let bhav20 = r[". ૧ મણનો ભાવ (20 Kg)"] || 0;
+        let totalAmt = parseFloat(r["કુલ રકમ (₹)"] || 0).toFixed(2);
+        let farmerAmt = parseFloat(r["ખેડૂ રકમ"] || 0).toFixed(2);
+        let statusVal = r["બીલની સ્થિતિ (બાકી/જમા)"] || "રોકડા / જમા";
+        let hastakVal = r["પૈસા કોણે લીધા (હસ્તે)"] || "-";
+        let upadSymbol = r["ઉપાડ જમા✓/×"] || r["ઉપાડ જમા"] || "❌";
+
+        html += `<td><b>${billOwner}</b></td><td>${billNo}</td><td>${bhagiya}</td><td>${r["ખરીદનાર"]||'-'}</td><td>${pakName}</td><td>${pauch}</td><td>${weight} કિલો</td><td>₹ ${bhav20}</td><td>₹ ${totalAmt}</td><td>₹ ${farmerAmt}</td><td><span class="badge-jama">${statusVal}</span></td><td>${hastakVal}</td><td><span style="font-size:16px;">${upadSymbol}</span></td><td>${photoLink}</td>`;
       } else if(tabName === 'Med' || tabName === 'Fert') {
         let billNo = r["બીલ નં"] || r["બિલ નં"] || "-";
         let itemName = r["દવાનું નામ"] || r["ખાતરનું નામ"] || "-";
         let amt = r["રકમ"] || 0;
         let farmerAmt = r["ખેડૂ રકમ"] || 0;
-        html += `<td>${billNo}</td><td><b>${itemName}</b></td><td>-</td><td>-</td><td>-</td><td>-</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>-</td><td>-</td><td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td>`;
+        html += `<td>${billNo}</td><td><b>${itemName}</b></td><td>-</td><td>-</td><td>-</td><td>-</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>-</td><td>-</td><td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td><td>${photoLink}</td>`;
       } else if(tabName === 'Trac') {
         let owner = r["ટ્રેક્ટર માલિક"] || "-";
         let totalAmt = r["કુલ બિલ રકમ"] || 0;
         let farmerCost = r["ભાગિયાનો ખર્ચ"] || 0;
-        html += `<td>${owner}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કામની વિગત"]||'-'}</td><td>${r["કલાક"]||0}</td><td>${r["મિનિટ"]||0}</td><td>₹ ${r["કલાકનો ભાવ"]||0}</td><td>₹ ${r["મિનિટનો ભાવ"]||0}</td><td>₹ ${parseFloat(totalAmt).toFixed(2)}</td><td>${r["બીલની સ્થિતિ"]||'-'}</td><td>${r["હસ્તે"]||'-'}</td><td>₹ ${parseFloat(farmerCost).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td>`;
+        html += `<td>${owner}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કામની વિગત"]||'-'}</td><td>${r["કલાક"]||0}</td><td>${r["મિનિટ"]||0}</td><td>₹ ${r["કલાકનો ભાવ"]||0}</td><td>₹ ${r["મિનિટનો ભાવ"]||0}</td><td>₹ ${parseFloat(totalAmt).toFixed(2)}</td><td>${r["બીલની સ્થિતિ"]||'-'}</td><td>${r["હસ્તે"]||'-'}</td><td>₹ ${parseFloat(farmerCost).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td><td>${photoLink}</td>`;
       } else if(tabName === 'Upad') {
-        html += `<td><b>${bhagiya}</b></td><td>${r["એન્ટ્રી પ્રકાર"]||'-'}</td><td>${r["આપનાર"]||'-'}</td><td style="color:#c0392b; font-weight:bold;">₹ ${parseFloat(r["ઉપાડ (Debit)"]||0).toFixed(2)}</td><td style="color:#27ae60; font-weight:bold;">₹ ${parseFloat(r["જમા (Credit)"]||0).toFixed(2)}</td><td>${r["બિલ નં"]||'-'}</td><td style="color:#2980b9; font-weight:bold;">₹ ${parseFloat(r["Total Outstanding"]||0).toFixed(2)}</td><td><span class="badge-jama">${r["Status"]||'ઉધાર'}</span></td>`;
+        html += `<td><b>${bhagiya}</b></td><td>${r["એન્ટ્રી પ્રકાર"]||'-'}</td><td>${r["આપનાર"]||'-'}</td><td style="color:#c0392b; font-weight:bold;">₹ ${parseFloat(r["ઉપાડ (Debit)"]||0).toFixed(2)}</td><td style="color:#27ae60; font-weight:bold;">₹ ${parseFloat(r["જમા (Credit)"]||0).toFixed(2)}</td><td>${r["બિલ નં"]||'-'}</td><td style="color:#2980b9; font-weight:bold;">₹ ${parseFloat(r["Total Outstanding"]||0).toFixed(2)}</td><td><span class="badge-jama">${r["Status"]||'ઉધાર'}</span></td><td>${photoLink}</td>`;
       }
 
       html += `</tr>`;
@@ -1414,21 +1769,21 @@
     let actionBar = document.getElementById('actionBar' + tabName);
     if(!actionBar) return;
 
-    let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : tabName === 'Trac' ? 'Tractor_Expense' : 'Upad_Ledger';
+    let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : tabName === 'Trac' ? 'Tractor_Expense' : tabName === 'BillRec' ? 'Bill_Record' : tabName === 'Gallery' ? 'Photo_Gallery' : 'Upad_Ledger';
 
     if(checkboxes.length > 0) {
       actionBar.style.display = 'flex';
       if(checkboxes.length === 1) {
         let singleId = checkboxes[0].value;
         actionBar.innerHTML = `
-          <span style="font-size:12px; font-weight:bold; margin-right:5px;">1 સિલેક્ટ કરેલ:</span>
-          <button class="btn-edit" onclick="editSingleRecord('${sheetKey}', '${singleId}')">✏️ એડિટ</button>
-          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ ડિલીટ</button>
+          <span style="font-size:12px; font-weight:bold; margin-right:5px;">૧ પસંદ કરેલ:</span>
+          ${(tabName !== 'BillRec' && tabName !== 'Gallery') ? `<button class="btn-edit" onclick="editSingleRecord('${sheetKey}', '${singleId}')">✏️ એડિટ કરો</button>` : ''}
+          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ ડિલીટ કરો</button>
         `;
       } else {
         actionBar.innerHTML = `
-          <span style="font-size:12px; font-weight:bold; margin-right:5px;">${checkboxes.length} સિલેક્ટ કરેલ:</span>
-          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ પસંદ કરેલ ડિલીટ કરો (Warning)</button>
+          <span style="font-size:12px; font-weight:bold; margin-right:5px;">${checkboxes.length} પસંદ કરેલ:</span>
+          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ પસંદ કરેલ ડિલીટ કરો</button>
         `;
       }
     } else {
@@ -1437,28 +1792,59 @@
     }
   }
 
+  function askMpinForDeleteSelected(sheetName, tabName) {
+    let checkboxes = document.querySelectorAll('.row-select-' + tabName + ':checked');
+    if(checkboxes.length === 0) return alert("કૃપા કરીને ડિલીટ કરવા માટે કોઈ એન્ટ્રી સિલેક્ટ કરો!");
+
+    askMpinAndExecute(() => {
+      let idsToDelete = Array.from(checkboxes).map(cb => cb.value);
+      
+      let promises = idsToDelete.map(id => {
+        return fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "deleteRecord", sheetName: sheetName, entryId: id })
+        }).then(res => res.json());
+      });
+
+      Promise.all(promises)
+        .then(() => {
+          alert("✅ પસંદ કરેલ રેકોર્ડ સફળતાપૂર્વક ડિલીટ થઈ ગયા!");
+          fetchData();
+        })
+        .catch(err => {
+          alert("❌ ડિલીટ કરવામાં ભૂલ આવી.");
+          console.error(err);
+        });
+    });
+  }
+
   function editSingleRecord(sheetKey, entryId) {
     askMpinAndExecute(() => {
       if(sheetKey === 'Sales_Ledger') {
-        let found = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
+        let found = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
         if(found) {
           switchSubTab('Sales', 'New');
+          document.getElementById("sBillOwner").value = found["Bill To /નામ :"] || found["Bill To/નામ:"] || found["બિલ માલિક"] || found["Bill Owner"] || "";
           document.getElementById("sDate").value = String(found["તારીખ"] || "").split('T')[0];
           document.getElementById("sBill").value = found["બીલ નં"] || found["બિલ નં"] || "";
           document.getElementById("sBhagiya").value = found["ભાગીદાર"] || "";
           document.getElementById("sVepari").value = found["ખરીદનાર"] || "";
-          document.getElementById("sStatus").value = found["બીલની સ્થિતિ"] || "રોકડા / જમા";
-          document.getElementById("sHastak").value = found["હસ્તે"] || "";
-          document.getElementById("sBLidha").value = found["ભાગિયાએ લીધા?"] || "No";
+          document.getElementById("sStatus").value = found["બીલની સ્થિતિ (બાકી/જમા)"] || found["બીલની સ્થિતિ"] || "રોકડા / જમા";
+          document.getElementById("sHastak").value = found["પૈસા કોણે લીધા (હસ્તે)"] || found["હસ્તે"] || found["Hastak"] || "";
+          document.getElementById("sBLidha").value = found["ખેડૂએ પૈસા લીધા? (Yes/No)"] || found["ભાગિયાએ લીધા?"] || "No";
+          
           document.getElementById("editEntryId").value = entryId;
           document.getElementById("btnSales").innerText = "અપડેટ કરો";
           document.getElementById("salesItemsContainer").innerHTML = "";
-          addSalesItemRow(found["પાઉચ / નંગ"] || 0, found["કુલ વજન (કિલો)"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
+          
+          let pauchVal = found["પાઉચ / નંગ"] || found["પાઉચ નં."] || found["Total_Pauch"] || 0;
+          addSalesItemRow(pauchVal, found["કુલ વજન (કિલો)"] || found["કુલ વજન (કિલો"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || found["૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
+          
           updatePartnerSummary('Sales');
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       } else if(sheetKey === 'Upad_Ledger') {
-        let found = (appData.Upad_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
+        let found = (appData.Upad_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
         if(found) {
           switchSubTab('Upad', 'New');
           document.getElementById("uDate").value = String(found["તારીખ"] || "").split('T')[0];
@@ -1480,17 +1866,23 @@
           alert("ઉપાડ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       } else {
-        alert("આ સેクション માટે એડિટ સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે.");
+        alert("આ સેક્શન માટે એડિટ સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે.");
       }
     });
   }
 
-  // --- SUBMIT BILL FORMS ---
   function submitSalesForm(e) {
     e.preventDefault();
+    let btn = document.getElementById("btnSales");
+    let originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
+    btn.disabled = true;
+
+    let billOwner = v("sBillOwner");
     let date = v("sDate");
     let year = getYear(date);
-    let entryId = document.getElementById("editEntryId").value || ("SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
+    let editId = document.getElementById("editEntryId").value;
+    let entryId = editId || ("SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
     let billNo = v("sBill") || "N/A";
     let bhagiya = v("sBhagiya");
     let vepari = v("sVepari");
@@ -1500,29 +1892,36 @@
 
     let rows = document.querySelectorAll("#salesItemsContainer .item-row");
     let itemRows = [];
-    let totalBillAmt = 0;
 
-    rows.forEach((r, index) => {
-      let pak = r.querySelector('.pakList').value;
-      let pauch = r.querySelector('.sPauch').value || 0;
-      let weight = r.querySelector('.sWeight').value || 0;
-      let bhav20 = r.querySelector('.sBhav20').value || 0;
-      let bhav1 = r.querySelector('.sBhav1').value.replace("₹", "").trim();
-      let total = parseFloat(r.querySelector('.sTotal').value.replace("₹", "").trim()) || 0;
-      let kShare = r.querySelector('.sKShare').value || 0;
-      let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
-      
-      totalBillAmt += total;
-      let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-      itemRows.push([year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha]);
+    handlePhotoUpload("sPhoto", function(photoBase64) {
+      rows.forEach((r, index) => {
+        let pak = r.querySelector('.pakList').value;
+        let pauch = r.querySelector('.sPauch').value || 0;
+        let weight = r.querySelector('.sWeight').value || 0;
+        let bhav20 = r.querySelector('.sBhav20').value || 0;
+        let bhav1 = r.querySelector('.sBhav1').value.replace("₹", "").trim();
+        let total = parseFloat(r.querySelector('.sTotal').value.replace("₹", "").trim()) || 0;
+        let kShare = r.querySelector('.sKShare').value || 0;
+        let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
+        
+        let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
+        
+        itemRows.push([
+          year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha, photoBase64, new Date().toLocaleTimeString(), "❌", billOwner
+        ]);
+      });
+
+      triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm', originalText);
     });
-
-    let mainBillRow = [year, entryId, date, billNo, bhagiya, vepari, totalBillAmt, status, hastak, bLidha, ""];
-    triggerUpadConfirmationModal('Sales', mainBillRow, itemRows, 'btnSales', 'salesForm');
   }
 
   function submitMedForm(e) {
     e.preventDefault();
+    let btn = document.getElementById("btnMed");
+    let originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
+    btn.disabled = true;
+
     let date = v("mDate");
     let year = getYear(date);
     let entryId = document.getElementById("editMedId").value || ("MED-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
@@ -1540,28 +1939,36 @@
 
     let rows = document.querySelectorAll("#medItemsContainer .item-row");
     let itemRows = [];
-    rows.forEach((r, index) => {
-      let dava = r.querySelector('.davaList').value;
-      let mType = r.querySelector('.mType').value;
-      let weight = r.querySelector('.mWeight').value || 0;
-      let pack = r.querySelector('.mPack').value || "";
-      let qty = r.querySelector('.mQty').value || 1;
-      let bhav = r.querySelector('.mBhav').value || 0;
-      let amt = parseFloat(r.querySelector('.mTotal').value.replace("₹", "").trim()) || 0;
-      let pak = r.querySelector('.pakList').value;
-      let kShare = r.querySelector('.mKShare').value || 0;
-      let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
 
-      let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-      itemRows.push([year, rId, date, billNo, bhagiya, vepari, dava, mType, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
+    handlePhotoUpload("mPhoto", function(photoBase64) {
+      rows.forEach((r, index) => {
+        let dava = r.querySelector('.davaList').value;
+        let mType = r.querySelector('.mType').value;
+        let weight = r.querySelector('.mWeight').value || 0;
+        let pack = r.querySelector('.mPack').value || "";
+        let qty = r.querySelector('.mQty').value || 1;
+        let bhav = r.querySelector('.mBhav').value || 0;
+        let amt = parseFloat(r.querySelector('.mTotal').value.replace("₹", "").trim()) || 0;
+        let pak = r.querySelector('.pakList').value;
+        let kShare = r.querySelector('.mKShare').value || 0;
+        let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
+
+        let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
+        itemRows.push([year, rId, date, billNo, bhagiya, vepari, dava, mType, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
+      });
+
+      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, photoBase64];
+      triggerUpadConfirmationModal('Med', billRow, itemRows, 'btnMed', 'medForm', originalText);
     });
-
-    let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status];
-    triggerUpadConfirmationModal('Med', billRow, itemRows, 'btnMed', 'medForm');
   }
 
   function submitFertForm(e) {
     e.preventDefault();
+    let btn = document.getElementById("btnFert");
+    let originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
+    btn.disabled = true;
+
     let date = v("fDate");
     let year = getYear(date);
     let entryId = document.getElementById("editFertId").value || ("FERT-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
@@ -1580,61 +1987,74 @@
 
     let rows = document.querySelectorAll("#fertItemsContainer .item-row");
     let itemRows = [];
-    rows.forEach((r, index) => {
-      let khatar = r.querySelector('.khatarList').value;
-      let weight = r.querySelector('.fWeight').value || 0;
-      let pack = r.querySelector('.fPack').value || "";
-      let qty = r.querySelector('.fQty').value || 1;
-      let bhav = parseFloat(r.querySelector('.fBhav').value) || 0;
-      let amt = parseFloat(r.querySelector('.fAmt').value.replace("₹", "").trim()) || 0;
-      let pak = r.querySelector('.pakList').value;
-      let kShare = r.querySelector('.fKShare').value || 0;
-      let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
 
-      let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-      itemRows.push([year, rId, date, billNo, bhagiya, vepari, khatar, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
+    handlePhotoUpload("fPhoto", function(photoBase64) {
+      rows.forEach((r, index) => {
+        let khatar = r.querySelector('.khatarList').value;
+        let weight = r.querySelector('.fWeight').value || 0;
+        let pack = r.querySelector('.fPack').value || "";
+        let qty = r.querySelector('.fQty').value || 1;
+        let bhav = parseFloat(r.querySelector('.fBhav').value) || 0;
+        let amt = parseFloat(r.querySelector('.fAmt').value.replace("₹", "").trim()) || 0;
+        let pak = r.querySelector('.pakList').value;
+        let kShare = r.querySelector('.fKShare').value || 0;
+        let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
+
+        let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
+        itemRows.push([year, rId, date, billNo, bhagiya, vepari, khatar, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
+      });
+
+      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, details, photoBase64];
+      triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm', originalText);
     });
-
-    let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, details];
-    triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm');
   }
 
-  function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId) {
-    let partnerName = billRow[4];
-    let billTotal = (formType === 'Sales') ? itemRows.reduce((sum, r) => sum + (parseFloat(r[11]) || 0), 0) : parseFloat(billRow[10]) || 0;
+  function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId, originalBtnText) {
+    let partnerName = (formType === 'Sales') ? document.getElementById("sBhagiya").value : billRow[4];
+    let billTotal = 0;
+    if(formType === 'Sales') {
+      itemRows.forEach(r => { billTotal += parseFloat(r[11]) || 0; });
+    } else {
+      billTotal = parseFloat(billRow[10]) || 0;
+    }
 
     let currentBal = getCategoryBalanceVal(formType, partnerName);
     let categoryText = formType === 'Sales' ? 'વેચાણ બીલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
 
-    let msg = "";
-    if(currentBal < billTotal) {
-      msg = "⚠️ " + categoryText + " માટે ઉપાડ બેલેન્સ ઓછું છે (₹ " + currentBal.toFixed(2) + ").";
+    if (currentBal > 0) {
+      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
+      let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (ખેડૂ ઉપાડ : ₹ " + currentBal.toFixed(2) + ") શું આ બિલ ઉપાડમાં જમા કરવું છે?";
+      document.getElementById("upadConfirmMsg").innerText = msg;
+      document.getElementById("upadChoiceSelect").value = "no";
+      document.getElementById("modalUpadConfirm").style.display = "block";
     } else {
-      msg = "📋 આ બિલની રકમ ₹ " + billTotal.toFixed(2) + " છે.";
+      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
+      document.getElementById("upadChoiceSelect").value = "no";
+      confirmUpadActionModal();
     }
-
-    pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText };
-    document.getElementById("upadConfirmMsg").innerText = msg + " શું આ બિલ ઉપાડમાં જમા કરવું છે?";
-    document.getElementById("upadChoiceSelect").value = "yes";
-    document.getElementById("modalUpadConfirm").style.display = "block";
   }
 
   function confirmUpadActionModal() {
     document.getElementById("modalUpadConfirm").style.display = "none";
     if(!pendingBillData) return;
 
-    let { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText } = pendingBillData;
-    let partnerName = billRow[4];
-    let upadEntryType = formType === 'Sales' ? 'વેચાણ બિલ જમા' : formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા';
+    let { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText } = pendingBillData;
     let choice = document.getElementById("upadChoiceSelect").value;
     let wantUpad = (choice === "yes");
 
+    if (wantUpad && formType === 'Sales') {
+      itemRows.forEach(r => { r[19] = "✅"; });
+    }
+
     let btn = document.getElementById(btnId);
-    if(btn) btn.innerText = "સેવ થઈ રહ્યું છે...";
+    if(btn) {
+      btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
+      btn.disabled = true;
+    }
 
     let actionName = formType === 'Sales' ? 'saveSales' : formType === 'Med' ? 'savePesticideBill' : 'saveFertilizerBill';
-    let payload = formType === 'Sales' ? { action: actionName, rowValues: billRow, editEntryId: document.getElementById('editEntryId').value } :
-                  { action: actionName, billRow: billRow, itemRows: itemRows, editEntryId: document.getElementById(formType === 'Med' ? 'editMedId' : 'editFertId').value };
+    let payload = formType === 'Sales' ? { action: actionName, itemRows: itemRows, editEntryId: document.getElementById('editEntryId').value, wantUpad: wantUpad } :
+                        { action: actionName, billRow: billRow, itemRows: itemRows, editEntryId: document.getElementById(formType === 'Med' ? 'editMedId' : 'editFertId').value, wantUpad: wantUpad };
 
     fetch(SCRIPT_URL, {
       method: "POST",
@@ -1642,21 +2062,24 @@
     })
     .then(res => res.json())
     .then(res => {
-      if(res.status === "error") {
-        alert("ભૂલ: " + res.message);
-        if(btn) btn.innerText = "💾 સેવ કરો";
-        return Promise.reject(res.message);
+      if(!res || res.status === "error") {
+        let errText = res && res.message ? res.message : "અજ્ઞાત ભૂલ";
+        alert("❌ નિષ્ફળ (Failed): ડેટા ગૂગલ શીટમાં સેવ થયો નથી! (Error: " + errText + ")");
+        if(btn) { btn.innerHTML = originalBtnText || "💾 સેવ કરો"; btn.disabled = false; }
+        return Promise.reject(errText);
       }
 
-      if(wantUpad) {
-        let date = billRow[2];
+      if(wantUpad && formType === 'Sales') {
+        let date = document.getElementById("sDate").value;
         let year = getYear(date);
         let rand = Math.floor(1000 + Math.random() * 9000);
         let entryId = "UP-" + date.replace(/-/g, '') + "-" + rand;
-        let provider = billRow[5] || "વેપારી";
+        let provider = document.getElementById("sVepari").value;
+        let billNo = document.getElementById("sBill").value || "N/A";
+        
+        let upadEntryType = 'વેચાણ બિલ જમા';
         let debit = 0;
-        let credit = billTotal;
-        let billNo = billRow[3] || "-";
+        let credit = currentBal; 
         let status = "જમા";
         let closeYear = "N";
         let totalOutstanding = 0;
@@ -1670,20 +2093,33 @@
         return fetch(SCRIPT_URL, {
           method: "POST",
           body: JSON.stringify({ action: "saveUpadLedger", rowValues: upadRowValues })
+        })
+        .then(resUpad => resUpad.json())
+        .then(resU => {
+          if(!resU || resU.status === "error") {
+            alert("⚠️ ચેતવણી: બિલ સેવ થઈ ગયું પણ ઉપાડ જમા કરવામાં ભૂલ આવી: " + (resU ? resU.message : ""));
+          }
         });
       }
     })
     .then(() => {
-      alert("એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
-      if(btn) btn.innerText = "💾 સેવ કરો";
+      alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
+      if(btn) { btn.innerHTML = originalBtnText || "💾 સેવ કરો"; btn.disabled = false; }
       document.getElementById(formElementId).reset();
+      
+      let submitBtn = document.getElementById(btnId);
+      if(submitBtn) { submitBtn.style.display = "block"; submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText || "💾 સેવ કરો"; }
+
       pendingBillData = null;
       fetchData();
       switchTab('Dash');
     })
     .catch(err => {
-      if(err) alert("ભૂલ: " + err);
-      if(btn) btn.innerText = "💾 સેવ કરો";
+      if(err && err !== "undefined") {
+        console.error("Save Error:", err);
+      }
+      let submitBtn = document.getElementById(btnId);
+      if(submitBtn) { submitBtn.style.display = "block"; submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText || "💾 સેવ કરો"; }
       pendingBillData = null;
     });
   }
@@ -1691,11 +2127,13 @@
   function submitUpad(e) {
     e.preventDefault();
     let btn = document.getElementById("btnUpad");
-    btn.innerText = "સેવ થઈ રહ્યું છે...";
+    let originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
+    btn.disabled = true;
     
     let date = v("uDate");
     let year = getYear(date);
-    let entryId = v("uEntryId");
+    let entryId = v("uEntryId"); 
     let bhagiya = v("uBhagiya");
     let type = v("uType");
     let provider = v("uProvider");
@@ -1703,7 +2141,7 @@
     let txType = v("uTxType");
     let txId = v("uTxId") || "-";
     
-    let isCredit = type.includes("જમા") || type.includes("બિલ જમા");
+    let isCredit = type.includes("Jamā") || type.includes("Bill Jamā") || type.includes("જમા");
     let debit = isCredit ? 0 : amount;
     let credit = isCredit ? amount : 0;
     
@@ -1730,116 +2168,28 @@
       })
       .then(res => res.json())
       .then(res => {
-        if(res.status === "error") {
-          alert("ભૂલ: " + res.message);
-          btn.innerText = "💾 સેવ કરો";
+        if(!res || res.status === "error") {
+          alert("❌ નિષ્ફળ (Failed): ઉપાડ એન્ટ્રી સેવ થઈ નથી! (Error: " + (res ? res.message : "Unknown") + ")");
+          btn.innerHTML = originalText;
+          btn.disabled = false;
           return;
         }
-        alert("ઉપાડ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
-        btn.innerText = "💾 સેવ કરો";
+        alert("✅ ઉપાડ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
+        btn.innerHTML = originalText;
+        btn.disabled = false;
         document.getElementById("upadForm").reset();
         document.getElementById("uDate").value = new Date().toISOString().split('T')[0];
         setEntryIdDate(document.getElementById("uDate").value);
+        document.getElementById("btnUpad").innerText = "💾 સેવ કરો";
         fetchData();
         switchTab('Dash');
       })
       .catch(err => {
-        alert("ભૂલ: " + err);
-        btn.innerText = "💾 સેવ કરો";
+        alert("❌ નિષ્ફળ (Failed): સર્વર સાથે કનેક્શન થઈ શક્યું નથી! ભૂલ: " + err);
+        btn.innerHTML = originalText;
+        btn.disabled = false;
       });
     });
-  }
-
-  function toggleSelectAll(master, tabName) {
-    let checkboxes = document.querySelectorAll('.row-select-' + tabName);
-    checkboxes.forEach(cb => cb.checked = master.checked);
-    updateTableActionBar(tabName);
-  }
-
-  function updateTableActionBar(tabName) {
-    let checkboxes = document.querySelectorAll('.row-select-' + tabName + ':checked');
-    let actionBar = document.getElementById('actionBar' + tabName);
-    if(!actionBar) return;
-
-    let sheetKey = tabName === 'Sales' ? 'Sales_Ledger' : tabName === 'Med' ? 'Pesticide_Items' : tabName === 'Fert' ? 'Fertilizer_Items' : tabName === 'Trac' ? 'Tractor_Expense' : 'Upad_Ledger';
-
-    if(checkboxes.length > 0) {
-      actionBar.style.display = 'flex';
-      if(checkboxes.length === 1) {
-        let singleId = checkboxes[0].value;
-        actionBar.innerHTML = `
-          <span style="font-size:12px; font-weight:bold; margin-right:5px;">1 સિલેક્ટ કરેલ:</span>
-          <button class="btn-edit" onclick="editSingleRecord('${sheetKey}', '${singleId}')">✏️ એડિટ</button>
-          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ ડિલીટ</button>
-        `;
-      } else {
-        actionBar.innerHTML = `
-          <span style="font-size:12px; font-weight:bold; margin-right:5px;">${checkboxes.length} સિલેક્ટ કરેલ (Warning):</span>
-          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ પસંદ કરેલ ડિલીટ કરો</button>
-        `;
-      }
-    } else {
-      actionBar.style.display = 'none';
-      actionBar.innerHTML = "";
-    }
-  }
-
-  function askMpinForDeleteSelected(sheetKey, tabName) {
-    let checkedBoxes = document.querySelectorAll('.row-select-' + tabName + ':checked');
-    if(checkedBoxes.length === 0) return alert("કૃપા કરીને ડિલીટ કરવા માટે ઓછામાં ઓછી એક એન્ટ્રી સિલેક્ટ કરો!");
-
-    let idsToDelete = Array.from(checkedBoxes).map(cb => cb.value);
-
-    askMpinAndExecute(() => {
-      if(!confirm("⚠️ સાવધાન: શું તમે ખરેખર પસંદ કરેલી " + idsToDelete.length + " એન્ટ્રીઓ ડિલીટ કરવા માંગો છો? આ ક્રિયા પાછી નહીં ખેંચી શકાય!")) return;
-      
-      let promises = idsToDelete.map(id => {
-        return fetch(SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "deleteRecord", entryId: id, sheetName: sheetKey })
-        });
-      });
-
-      Promise.all(promises).then(() => {
-        alert("પસંદ કરેલ એન્ટ્રીઓ સફળતાપૂર્વક ડિલીટ થઈ ગઈ!");
-        fetchData();
-      }).catch(err => { alert("ભૂલ: " + err); fetchData(); });
-    });
-  }
-
-  function filterTable(tabName) {
-    let query = document.getElementById("search" + tabName).value.toLowerCase();
-    let rows = document.querySelectorAll("#tableContainer" + tabName + " tr");
-    rows.forEach((row, i) => {
-      if(i === 0) return;
-      let text = row.innerText.toLowerCase();
-      row.style.display = text.includes(query) ? "" : "none";
-    });
-  }
-
-  function saveB() {
-    let name = v("nbName").trim(); 
-    let roll = v("nbRoll").trim() || "ભાગીદાર";
-    if(name == "") return alert("નામ જરૂરી છે!");
-    saveData("saveBhagiya", [ getYear(v("uDate") || new Date().toISOString().split('T')[0]), name, v("nbPhone"), v("nbAdd"), roll ]);
-    document.getElementById("modalBhagiya").style.display = "none";
-  }
-
-  function saveV() {
-    let name = v("nvName").trim(); if(name == "") return alert("નામ જરૂરી છે!");
-    saveData("saveVepari", [ name, v("nvPhone"), v("nvCity"), v("nvCategory") ]);
-    document.getElementById("modalVepari").style.display = "none";
-  }
-
-  function saveC() {
-    let name = v("ncName").trim(), share = v("ncShare"); if(name == "") return alert("નામ જરૂરી છે!");
-    saveData("saveCrop", [ name, share + "%" ]);
-    document.getElementById("modalCrop").style.display = "none";
-  }
-
-  function saveData(action, rowValues) {
-    fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: action, rowValues: rowValues }) })
-    .then(res => res.json()).then(() => { alert("સફળતાપૂર્વક ઉમેરાઈ ગયું!"); fetchData(); }).catch(err => alert("ભૂલ: " + err));
   }
 
   function handlePhotoUpload(fileInputId, callback) {
@@ -1851,31 +2201,10 @@
     } else { callback(""); }
   }
 
-  function v(id) { return document.getElementById(id).value; }
-  
-  function getYear(dateString) {
-    let d = new Date(dateString), m = d.getMonth() + 1, y = d.getFullYear();
-    return (m >= 5) ? (y + "-" + (y + 1).toString().slice(-2)) : ((y - 1) + "-" + y.toString().slice(-2));
-  }
-
-  function renderGallery() {
-    let container = document.getElementById("galleryContainer");
-    if(!container) return;
-    let photos = appData.Photo_Gallery || [];
-    if(photos.length === 0) { container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ ફોટો ઉપલબ્ધ નથી.</p>"; return; }
-    let html = `<table><tr><th>તારીખ</th><th>બિલ નં</th><th>ભાગીદાર</th><th>પ્રકાર</th><th>ફોટો</th><th>ક્રિયા</th></tr>`;
-    photos.forEach(p => {
-      let imgTag = p["Photo_Link"] ? `<a href="${p["Photo_Link"]}" target="_blank"><img src="${p["Photo_Link"]}" style="width:40px; height:40px; object-fit:cover;"></a>` : "ના";
-      html += `<tr><td>${String(p["Date"]||'').split('T')[0]}</td><td>${p["Bill_No"]||''}</td><td>${p["Bhagiya"]||''}</td><td>${p["Category"]||''}</td><td>${imgTag}</td><td><button class="btn-delete" onclick="askMpinForDeleteSelected('Photo_Gallery')">ડિલિટ</button></td></tr>`;
-    });
-    container.innerHTML = html + `</table>`;
-  }
-
-  function filterGallery() {
-    let query = document.getElementById("searchGallery").value.toLowerCase();
-    document.querySelectorAll("#galleryContainer tr").forEach((row, i) => {
-      if(i === 0) return; row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
-    });
+  function toggleSelectAll(master, tabName) {
+    let checkboxes = document.querySelectorAll('.row-select-' + tabName);
+    checkboxes.forEach(cb => cb.checked = master.checked);
+    updateTableActionBar(tabName);
   }
 
   function askMpinAndExecute(callback) {
@@ -1885,14 +2214,225 @@
   }
 
   function verifyMpinAndProceed() {
-    let entered = document.getElementById("inputMpin").value;
-    if(entered === CORRECT_MPIN) {
+    let enteredMpin = document.getElementById("inputMpin").value;
+    if(enteredMpin === CORRECT_MPIN) {
+      document.getElementById("modalMpin").style.display = "none";
+      if(pendingActionCallback) pendingActionCallback();
+      pendingActionCallback = null;
+    } else { alert("ખોટો પ્રોટેક્શન કોડ છે!"); }
+  }
+
+  function v(id) { return document.getElementById(id).value; }
+  
+  function getYear(dateString) {
+    let d = new Date(dateString), m = d.getMonth() + 1, y = d.getFullYear();
+    return (m >= 5) ? (y + "-" + (y + 1).toString().slice(-2)) : ((y - 1) + "-" + y.toString().slice(-2));
+  }
+
+  function renderGallery() {
+    let container = document.getElementById("galleryContainer");
+    let actionBar = document.getElementById("actionBarGallery");
+    if(!container) return;
+    let photos = appData.Photo_Gallery || [];
+    if(photos.length === 0) { 
+      container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ ફોટો ઉપલબ્ધ નથી.</p>"; 
+      if(actionBar) actionBar.style.display = "none";
+      return; 
+    }
+    
+    let html = `<table><tr>
+      <th style="width: 40px;"><input type="checkbox" id="selectAll_Gallery" onclick="toggleSelectAll(this, 'Gallery')"></th>
+      <th>તારીખ</th>
+      <th>બિલ નં</th>
+      <th>વેપારી</th>
+      <th>Bill To / નામ :</th>
+      <th>ફોટો</th>
+    </tr>`;
+
+    photos.forEach((p, index) => {
+      let link = p["Photo_Link"] || p["ફોટો"] || "";
+      let imgTag = link ? `<button type="button" onclick="openImageModal('${link}')" style="background:#2980b9; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">🖼️ બિલ જુઓ</button>` : "ના";
+      let dateVal = String(p["Date"] || p["તારીખ"] || '').split('T')[0];
+      let billNoVal = p["Bill_No"] || p["બિલ નં"] || '';
+      let vepariVal = p["વેપારી"] || p["Merchant"] || '-';
+      let billOwnerVal = p["Bill To / નામ :"] || p["Bill To/નામ:"] || p["બિલ માલિક"] || '-';
+      let entryId = p["એન્ટ્રી Id"] || p["Entry_ID"] || index;
+
+      html += `<tr>
+        <td><input type="checkbox" class="row-select-Gallery" value="${entryId}" onclick="updateTableActionBar('Gallery')"></td>
+        <td>${dateVal}</td>
+        <td><b>${billNoVal}</b></td>
+        <td>${vepariVal}</td>
+        <td>${billOwnerVal}</td>
+        <td>${imgTag}</td>
+      </tr>`;
+    });
+    container.innerHTML = html + `</table>`;
+    updateTableActionBar('Gallery');
+  }
+
+  function filterGallery() {
+    let query = document.getElementById("searchGallery").value.toLowerCase();
+    document.querySelectorAll("#galleryContainer tr").forEach((row, i) => {
+      if(i === 0) return; row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
+    });
+  }
+
+  function renderBillRecordTable() {
+    let container = document.getElementById("tableContainerBillRec");
+    let summaryBox = document.getElementById("latestRecordSummary");
+    let summaryText = document.getElementById("latestRecordText");
+    let actionBar = document.getElementById("actionBarBillRec");
+    if(!container) return;
+    
+    let rows = appData.Bill_Record || [];
+    if(rows.length === 0) {
+      container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ બિલ રેકોર્ડ ઉપલબ્ધ નથી.</p>";
+      if(summaryBox) summaryBox.style.display = "none";
+      if(actionBar) actionBar.style.display = "none";
+      return;
+    }
+
+    let selectedHastak = document.getElementById("filterHastak") ? document.getElementById("filterHastak").value.trim() : "";
+    let searchQuery = document.getElementById("searchBillRec") ? document.getElementById("searchBillRec").value.toLowerCase().trim() : "";
+
+    let filteredRows = rows.filter(r => {
+      let hVal = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || r["હસ્તે "] || "").trim();
+      let bNo = String(r["બીલ નં"] || r["બિલ નં"] || "").toLowerCase();
+      let dt = String(r["તારીખ"] || "").toLowerCase();
+
+      let targetHastak = selectedHastak.toLowerCase();
+      let cleanHVal = hVal.toLowerCase();
+
+      let matchHastak = !targetHastak || cleanHVal === targetHastak || cleanHVal.includes(targetHastak) || targetHastak.includes(cleanHVal);
+      let matchSearch = !searchQuery || bNo.includes(searchQuery) || dt.includes(searchQuery) || cleanHVal.includes(searchQuery);
+
+      return matchHastak && matchSearch;
+    });
+
+    if(selectedHastak && filteredRows.length > 0) {
+      let totalBills = filteredRows.length;
+      let totalPauchSum = 0;
+      let totalAmountSum = 0;
+      let latest = filteredRows[filteredRows.length - 1];
+      let lDate = String(latest["તારીખ"] || "").split('T')[0];
+
+      filteredRows.forEach(r => {
+        totalPauchSum += parseFloat(r["પાઉચ નં."] || r["Total_Pauch"] || 0);
+        totalAmountSum += parseFloat(r["રકમ"] || r["Amount"] || 0);
+      });
+
+      let finalPauch = latest["કુલ પાઉચ"] || latest["Cumulative_Pauch"] || totalPauchSum;
+      let finalAmount = parseFloat(latest["કુલ જમા રકમ"] || latest["Cumulative_Amount"] || totalAmountSum).toFixed(2);
+
+      summaryText.innerHTML = `
+        <div style="font-size: 16px; color: #117a65; font-weight: bold; margin-bottom: 6px; border-bottom: 2px solid #a3e4d7; padding-bottom: 4px;">
+          ${selectedHastak}
+        </div>
+        <div style="font-size: 13px; color: #d35400; font-weight: bold; margin-bottom: 8px;">
+          તારીખ સુધીની બિલની વિગત (${lDate})
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px; font-size: 14px; background: #ffffff; padding: 8px 12px; border-radius: 4px; border: 1px solid #a3e4d7; max-width: 320px;">
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: #2c3e50; font-weight: bold;">કુલ બિલ :</span>
+            <span style="font-weight: bold; color: #c0392b; text-align: right; min-width: 60px;">${totalBills}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: #2c3e50; font-weight: bold;">કુલ પાઉચ :</span>
+            <span style="font-weight: bold; color: #2980b9; text-align: right; min-width: 60px;">${finalPauch}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; border-top: 1px dashed #bdc3c7; padding-top: 4px; margin-top: 2px;">
+            <span style="color: #2c3e50; font-weight: bold;">કુલ રકમ :</span>
+            <span style="font-weight: bold; color: #8e44ad; text-align: right; min-width: 60px;">₹ ${finalAmount}</span>
+          </div>
+        </div>
+      `;
+      if(summaryBox) summaryBox.style.display = "block";
+    } else {
+      if(summaryBox) summaryBox.style.display = "none";
+    }
+
+    if(filteredRows.length === 0) {
+      container.innerHTML = "<p style='text-align:center; color:#c0392b; font-weight:bold;'>⚠️ આ હસ્તે / નામ માટે કોઈ રેકોર્ડ મળ્યો નથી.</p>";
+      if(actionBar) actionBar.style.display = "none";
+      return;
+    }
+
+    let html = `<table><tr>
+      <th style="width: 40px;"><input type="checkbox" id="selectAll_BillRec" onclick="toggleSelectAll(this, 'BillRec')"></th>
+      <th>વર્ષ</th>
+      <th>વેપારી</th>
+      <th>તારીખ</th>
+      <th>હસ્તે</th>
+      <th>Bill To / નામ :</th>
+      <th>બિલ નં</th>
+      <th>પાઉચ નં.</th>
+      <th>રકમ</th>
+      <th>જમા / બાકી</th>
+      <th>કુલ પાઉચ</th>
+      <th>કુલ જમા રકમ</th>
+      <th>Photo</th>
+    </tr>`;
+
+    filteredRows.forEach((r, index) => {
+      let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
+      let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
+      let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
+      let hastakVal = r["હસ્તે"] || r["હસ્તે "] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "-";
+      let billOwnerVal = r["Bill To / નામ :"] || r["Bill To/નામ:"] || r["બિલ માલિક"] || r["Bill Owner"] || "-";
+      let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || index;
+      let vepariVal = r["વેપારી"] || r["Merchant"] || "-";
+
+      html += `<tr>
+        <td><input type="checkbox" class="row-select-BillRec" value="${entryId}" onclick="updateTableActionBar('BillRec')"></td>
+        <td>${r["વર્ષ"] || r["Year"] || '-'}</td>
+        <td>${vepariVal}</td>
+        <td>${cleanDate}</td>
+        <td><b>${hastakVal}</b></td>
+        <td><b>${billOwnerVal}</b></td>
+        <td><b>${r["બીલ નં"] || r["બિલ નં"] || '-'}</b></td>
+        <td>${r["પાઉચ નં."] || r["Total_Pauch"] || 0}</td>
+        <td>₹ ${parseFloat(r["રકમ"] || r["Amount"] || 0).toFixed(2)}</td>
+        <td>${r["જમા / બાકી"] || r["Status"] || '-'}</td>
+        <td style="font-weight:bold; color:#2980b9;">${r["કુલ પાઉચ"] || r["Cumulative_Pauch"] || 0}</td>
+        <td style="font-weight:bold; color:#8e44ad;">₹ ${parseFloat(r["કુલ જમા રકમ"] || r["Cumulative_Amount"] || totalAmountSum).toFixed(2)}</td>
+        <td>${photoLink}</td>
+      </tr>`;
+    });
+
+    container.innerHTML = html + `</table>`;
+    updateTableActionBar('BillRec');
+  }
+
+  function filterBillRecordTable() {
+    renderBillRecordTable();
+  }
+
+  function openImageModal(url) {
+    document.getElementById("viewerImage").src = url;
+    document.getElementById("downloadPhotoBtn").href = url;
+    document.getElementById("modalImageViewer").style.display = "flex";
+  }
+
+  function closeImageModal() {
+    document.getElementById("modalImageViewer").style.display = "none";
+  }
+
+  function askMpinAndExecute(callback) {
+    pendingActionCallback = callback;
+    document.getElementById("inputMpin").value = "";
+    document.getElementById("modalMpin").style.display = "block";
+  }
+
+  function verifyMpinAndProceed() {
+    let enteredMpin = document.getElementById("inputMpin").value;
+    if(enteredMpin === CORRECT_MPIN) {
       document.getElementById("modalMpin").style.display = "none";
       if(pendingActionCallback) pendingActionCallback();
       pendingActionCallback = null;
     } else { alert("ખોટો પ્રોટેક્શન કોડ છે!"); }
   }
 </script>
+
 </body>
 </html>
-

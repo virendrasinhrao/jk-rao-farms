@@ -961,7 +961,7 @@
     return "અંકે રૂપિયા " + words.trim() + " પૂરા";
   }
 
-  function populateData() {
+    function populateData() {
     if(!appData.Bhagiya_Master) return;
     
     let farmerList = [];
@@ -982,13 +982,19 @@
       }
     });
 
-     document.querySelectorAll('.bhagiyaList').forEach(sel => {
-    let cur = sel.value;
-    sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-    farmerList.forEach(b => sel.add(new Option(b, b)));
-    sel.value = cur;
-  });
-     let uBhagiyaSelect = document.getElementById("uBhagiya");
+    // 🌟 વેચાણ, દવા અને ખાતરના ફોર્મમાં હસ્તે માટે ખેડૂત અને માલિક બંનેનું સંયુક્ત લિસ્ટ
+    let allFarmersAndOwners = [];
+    farmerList.forEach(f => { if(!allFarmersAndOwners.includes(f)) allFarmersAndOwners.push(f); });
+    ownerList.forEach(o => { if(!allFarmersAndOwners.includes(o)) allFarmersAndOwners.push(o); });
+
+    document.querySelectorAll('.bhagiyaList').forEach(sel => {
+      let cur = sel.value;
+      sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
+      allFarmersAndOwners.forEach(b => sel.add(new Option(b, b)));
+      sel.value = cur;
+    });
+
+    let uBhagiyaSelect = document.getElementById("uBhagiya");
     if(uBhagiyaSelect) {
       let cur = uBhagiyaSelect.value;
       uBhagiyaSelect.innerHTML = '<option value="">-- પસંદ કરો --</option>';
@@ -1096,6 +1102,7 @@
       sel.value = currentVal;
     });
   }
+
 
   function openMasterModal(sheetKey) {
     activeMasterSheet = sheetKey;

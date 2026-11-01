@@ -963,17 +963,17 @@
 function populateData() {
     if(!appData.Bhagiya_Master) return;
     
-    // ૧. માત્ર ખેડૂતોનું લિસ્ટ (જે મુખ્ય ભાગીદાર માટે વપરાશે)
-    let farmerList = [];
+    // ૧. મુખ્ય ભાગીદાર માટે માત્ર ખેડૂતોનું લિસ્ટ
+    let upadBhagiyas = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
       let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
       if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "ખેડૂ" || roll === "farmer")) {
-        farmerList.push(name.trim());
+        upadBhagiyas.push(name.trim());
       }
     });
 
-    // ૨. ખેડૂત અને માલિક બંનેનું સંયુક્ત લિસ્ટ (માત્ર હસ્ते માટે)
+    // ૨. માત્ર હસ્તે (વેચાણ, દવા, ખાતર) માટે ખેડૂત અને માલિક બંનેનું લિસ્ટ
     let hastakList = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
@@ -986,15 +986,6 @@ function populateData() {
       }
     });
     
-    let upadBhagiyas = [];
-    appData.Bhagiya_Master.forEach(r => {
-      let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
-      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
-      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "ખેડૂ" || roll === "farmer")) {
-        upadBhagiyas.push(name.trim());
-      }
-    });
-    
     let uBhagiyaSelect = document.getElementById("uBhagiya");
     if(uBhagiyaSelect) {
       let cur = uBhagiyaSelect.value;
@@ -1003,7 +994,7 @@ function populateData() {
       uBhagiyaSelect.value = cur;
     }
 
-    // 🌟 અહીં વેચાણ, દવા અને ખાતરના ફોર્મમાં હસ્તે માટે 'hastakList' (ખેડૂ + માલિક) મુક્યો છે
+    // 🌟 અહીં હસ્તેના ડ્રોપડાઉનમાં hastakList (ખેડૂ + માલિક) આવશે
     document.querySelectorAll('.bhagiyaList').forEach(sel => { 
       if(sel.id !== "uBhagiya") {
         let cur = sel.value; 
@@ -1095,8 +1086,7 @@ function populateData() {
   function checkMedVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("nvCategory").value = "દવા"; document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
   function checkFertVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("nvCategory").value = "ખાતર"; document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
   function checkCropNew(sel) { if(sel.value === "NEW") { document.getElementById("modalCrop").style.display = "block"; sel.value = ""; } }
-  function checkFertilizerNew(sel) { if(sel.value === "NEW") { document.getElementById("modalFertilizer").style.display = "block"; sel.value = ""; } }
-  function openMasterModal(sheetKey) {
+  function checkFertilizerNew(sel) { if(sel.value === "NEW") { document.getElementById("modalFertilizer").style.display = "block"; sel.value = ""; } }  function openMasterModal(sheetKey) {
     activeMasterSheet = sheetKey;
     selectedMasterRowName = '';
     let titleEl = document.getElementById("masterModalTitle");

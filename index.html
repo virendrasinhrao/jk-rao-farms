@@ -1,8 +1,8 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Last Updated Code Date & Time: 01/11/2026 - 21:24 IST
-  Final Complete & Perfected Version
+  Last Updated Code Date & Time: 01/11/2026 - 15:30 IST
+  Final Complete & Perfected Version with Upad & Success Alert
 -->
 <!DOCTYPE html>
 <html>
@@ -86,7 +86,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 12px; padding: 4px; font-weight: bold;">
-  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">01/11/2026 - 21:24 IST</span>
+  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">01/11/2026 - 15:30 IST</span>
 </div>
 
 <div class="header-bar">
@@ -1845,15 +1845,11 @@
         ]);
       });
 
-      if (typeof triggerUpadConfirmationModal === 'function') {
-        pendingBillData = { formType: 'Sales', itemRows, btnId: 'btnSales', formElementId: 'salesForm', originalBtnText: originalText, billTotal: totalBillAmount, partnerName: bhagiya, entryId, billNo };
-        let msg = "📋 આ બિલની કુલ રકમ ₹ " + totalBillAmount.toFixed(2) + " છે. શું આ બિલ ઉપાડમાં જમા કરવું છે?";
-        if(document.getElementById("upadConfirmMsg")) document.getElementById("upadConfirmMsg").innerText = msg;
-        if(document.getElementById("upadChoiceSelect")) document.getElementById("upadChoiceSelect").value = "no";
-        if(document.getElementById("modalUpadConfirm")) document.getElementById("modalUpadConfirm").style.display = "block";
-      } else {
-        triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm', originalText);
-      }
+      pendingBillData = { formType: 'Sales', itemRows, btnId: 'btnSales', formElementId: 'salesForm', originalBtnText: originalText, billTotal: totalBillAmount, partnerName: bhagiya, entryId, billNo };
+      let msg = "📋 આ બિલની કુલ રકમ ₹ " + totalBillAmount.toFixed(2) + " છે. શું આ બિલ ઉપાડમાં જમા કરવું છે?";
+      document.getElementById("upadConfirmMsg").innerText = msg;
+      document.getElementById("upadChoiceSelect").value = "no";
+      document.getElementById("modalUpadConfirm").style.display = "block";
     });
   }
 
@@ -1963,20 +1959,106 @@
     let currentBal = getCategoryBalanceVal(formType, partnerName);
     let categoryText = formType === 'Sales' ? 'વેચાણ બિલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
 
-    if (currentBal > 0) {
-      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
-      let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (ખેડૂ ઉપાડ : ₹ " + currentBal.toFixed(2) + ") શું આ બિલ ઉપાડમાં જમા કરવું છે?";
-      document.getElementById("upadConfirmMsg").innerText = msg;
-      document.getElementById("upadChoiceSelect").value = "no";
-      document.getElementById("modalUpadConfirm").style.display = "block";
-    } else {
-      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
-      document.getElementById("upadChoiceSelect").value = "no";
-      confirmUpadActionModal();
-    }
+    pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
+    let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (ખેડૂ ઉપાડ : ₹ " + currentBal.toFixed(2) + ") શું આ બિલ ઉપાડમાં જમા કરવું છે?";
+    document.getElementById("upadConfirmMsg").innerText = msg;
+    document.getElementById("upadChoiceSelect").value = "no";
+    document.getElementById("modalUpadConfirm").style.display = "block";
   }
 
- function confirmUpadActionModal()
+  function confirmUpadActionModal() {
+    document.getElementById("modalUpadConfirm").style.display = "none";
+    if(!pendingBillData) return;
+
+    let { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText } = pendingBillData;
+    let choice = document.getElementById("upadChoiceSelect").value;
+    let wantUpad = (choice === "yes");
+
+    if (wantUpad && formType === 'Sales') {
+      itemRows.forEach(r => { r[19] = "✅"; });
+    }
+
+    let btn = document.getElementById(btnId);
+    if(btn) {
+      btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
+      btn.disabled = true;
+    }
+
+    let actionName = formType === 'Sales' ? 'saveSales' : formType === 'Med' ? 'savePesticideBill' : 'saveFertilizerBill';
+    let payload = formType === 'Sales' ? { action: actionName, itemRows: itemRows, editEntryId: document.getElementById('editEntryId').value, wantUpad: wantUpad } :
+                        { action: actionName, billRow: billRow, itemRows: itemRows, editEntryId: document.getElementById(formType === 'Med' ? 'editMedId' : 'editFertId').value, wantUpad: wantUpad };
+
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+      if(!res || res.status === "error") {
+        let errText = res && res.message ? res.message : "અજ્ઞાત ભૂલ";
+        alert("❌ નિષ્ફળ (Failed): ડેટા ગૂગલ શીટમાં સેવ થયો નથી! (Error: " + errText + ")");
+        if(btn) { btn.innerHTML = originalBtnText || "💾 સેવ કરો"; btn.disabled = false; }
+        return Promise.reject(errText);
+      }
+
+      if(wantUpad && formType === 'Sales') {
+        let date = document.getElementById("sDate").value;
+        let year = getYear(date);
+        let salesEntryId = itemRows.length > 0 ? itemRows[0][1] : ("SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
+        let billNoVal = document.getElementById("sBill").value || "N/A";
+        let provider = document.getElementById("sVepari").value;
+        let upadEntryType = 'વેચાણ બિલ જમા';
+        let debit = 0;
+        let credit = billTotal; 
+        let status = "જમા";
+        let closeYear = "N";
+        let totalOutstanding = 0;
+
+        let upadRowValues = [
+          year, salesEntryId, date, partnerName, upadEntryType, provider, credit, "CASH", "-",
+          debit, credit, billNoVal, credit, categoryText || 'વેચાણ બિલ', "બિલ જમા એન્ટ્રી", 0, 0,
+          status, "", closeYear, totalOutstanding
+        ];
+
+        return fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "saveUpadLedger", rowValues: upadRowValues })
+        })
+        .then(resUpad => res.json())
+        .then(resU => {
+          if(!resU || resU.status === "error") {
+            alert("⚠️ ચેતવણી: બિલ સેવ થઈ ગયું પણ ઉપાડ જમા કરવામાં ભૂલ આવી: " + (resU ? resU.message : ""));
+          }
+        });
+      }
+    })
+    .then(() => {
+      // 🌟 સફળતાનો મેસેજ હવે બધી જગ્યાએ પરફેક્ટ આવશે (ઉપાડમાં જમા કર્યા પછી પણ)
+      alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ/અપડેટ થઈ ગઈ!");
+      
+      if(btn) { btn.innerHTML = originalBtnText || "💾 સેવ કરો"; btn.disabled = false; }
+      document.getElementById(formElementId).reset();
+      
+      let editInput = document.getElementById('editEntryId');
+      if(editInput) editInput.value = "";
+
+      let submitBtn = document.getElementById(btnId);
+      if(submitBtn) { submitBtn.style.display = "block"; submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText || "💾 સેવ કરો"; }
+
+      pendingBillData = null;
+      fetchData();
+      
+      let tabNameMap = { 'Sales': 'Sales', 'Med': 'Med', 'Fert': 'Fert' };
+      switchSubTab(tabNameMap[formType], 'View');
+    })
+    .catch(err => {
+      if(err && err !== "undefined") { console.error("Save Error:", err); }
+      let submitBtn = document.getElementById(btnId);
+      if(submitBtn) { submitBtn.style.display = "block"; submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText || "💾 સેવ કરો"; }
+      pendingBillData = null;
+    });
+  }
+
   function submitUpad(e) {
     e.preventDefault();
     let btn = document.getElementById("btnUpad");

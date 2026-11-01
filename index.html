@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Last Updated Code Date & Time: 01/11/2026 - 10:15 IST
+  Last Updated Code Date & Time: 01/11/2026 - 11:32 IST
   Final Complete Version with Correct Upad Linking & Spelling
 -->
 <!DOCTYPE html>
@@ -86,7 +86,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 12px; padding: 4px; font-weight: bold;">
-  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">01/11/2026 - 10:15 IST</span>
+  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">01/11/2026 - 11:35 IST</span>
 </div>
 
 <div class="header-bar">
@@ -960,254 +960,6 @@
     }
     return "અંકે રૂપિયા " + words.trim() + " પૂરા";
   }
-
-
-  function populateData() {
-    if(!appData.Bhagiya_Master) return;
-    
-    let farmerList = [];
-    appData.Bhagiya_Master.forEach(r => {
-      let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
-      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
-      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "ખેડૂ" || roll === "farmer")) {
-        farmerList.push(name.trim());
-      }
-    });
-    
-    let ownerList = [];
-    appData.Bhagiya_Master.forEach(r => {
-      let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
-      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
-      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "માલિક" || roll === "owner")) {
-        ownerList.push(name.trim());
-      }
-    });
-
-    // માત્ર હસ્તે માટે ખેડૂ અને માલિક બંનેનું સંયુક્ત લિસ્ટ
-    let hastakList = [];
-    farmerList.forEach(f => { if(!hastakList.includes(f)) hastakList.push(f); });
-    ownerList.forEach(o => { if(!hastakList.includes(o)) hastakList.push(o); });
-
-    // મુખ્ય ભાગીદાર ડ્રોપડાઉનમાં માત્ર ખેડૂ જ રહેશે
-    document.querySelectorAll('.bhagiyaList').forEach(sel => {
-      let cur = sel.value;
-      sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      farmerList.forEach(b => sel.add(new Option(b, b)));
-      sel.value = cur;
-    });
-
-    // હસ્તે કે જ્યાં બંને બતાવવાના છે (જો અલગ આઈડી હોય તો ત્યાં hastakList વાપરવું)
-    let uBhagiyaSelect = document.getElementById("uBhagiya");
-    if(uBhagiyaSelect) {
-      let cur = uBhagiyaSelect.value;
-      uBhagiyaSelect.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      hastakList.forEach(b => uBhagiyaSelect.add(new Option(b, b)));
-      uBhagiyaSelect.value = cur;
-    }
-
-    let ownerSelect = document.getElementById("sBillOwner");
-    if(ownerSelect) {
-      let curOwner = ownerSelect.value;
-      ownerSelect.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      ownerList.forEach(o => ownerSelect.add(new Option(o, o)));
-      ownerSelect.value = curOwner;
-    }
-
-    let filterHastakSelect = document.getElementById("filterHastak");
-    if(filterHastakSelect) {
-      let curFilter = filterHastakSelect.value;
-      let uniqueHastakSet = new Set();
-      if(appData.Bill_Record) {
-        appData.Bill_Record.forEach(r => {
-          let h = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "").trim();
-          if(h && h !== "-") uniqueHastakSet.add(h);
-        });
-      }
-      if(uniqueHastakSet.size === 0) {
-        farmerList.forEach(b => uniqueHastakSet.add(b));
-      }
-      filterHastakSelect.innerHTML = '<option value="">-- બધા (All) --</option>';
-      uniqueHastakSet.forEach(b => filterHastakSelect.add(new Option(b, b)));
-      filterHastakSelect.value = curFilter;
-    }
-
-    let vegVeparis = [];
-    let medVeparis = [];
-    let fertVeparis = [];
-    let allVeparis = [];
-
-    if(appData.Merchant_Master) {
-      appData.Merchant_Master.forEach(r => {
-        let name = r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"];
-        let type = String(r["પ્રકાર"] || "").trim().toLowerCase();
-        if(name) {
-          allVeparis.push(name);
-          if(type === "vegitable" || type.includes("શાકભાજી")) vegVeparis.push(name);
-          if(type === "દવા" || type.includes("દવા")) medVeparis.push(name);
-          if(type === "ખાતર" || type.includes("ખાતર")) fertVeparis.push(name);
-        }
-      });
-    }
-
-    let sVepari = document.getElementById("sVepari");
-    if(sVepari) {
-      let cur = sVepari.value; sVepari.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      vegVeparis.forEach(v => sVepari.add(new Option(v, v))); sVepari.value = cur;
-    }
-
-    let mVepari = document.getElementById("mVepari");
-    if(mVepari) {
-      let cur = mVepari.value; mVepari.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      medVeparis.forEach(v => mVepari.add(new Option(v, v))); mVepari.value = cur;
-    }
-
-    let fVepari = document.querySelector(".fertVepariList");
-    if(fVepari) {
-      let cur = fVepari.value; fVepari.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      fertVeparis.forEach(v => fVepari.add(new Option(v, v))); fVepari.value = cur;
-    }
-
-    let providers = [];
-    appData.Bhagiya_Master.forEach(r => {
-      let name = r["નામ"] || r["Name"];
-      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
-      if(name && roll !== "ખેડૂ" && roll !== "farmer") {
-        providers.push(name + " (" + (r["Roll"] || "ભાગીદાર") + ")");
-      }
-    });
-    allVeparis.forEach(v => providers.push(v + " (વેપારી)"));
-    
-    let uProvider = document.getElementById("uProvider");
-    if(uProvider) {
-      let cur = uProvider.value;
-      uProvider.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      providers.forEach(p => uProvider.add(new Option(p, p)));
-      uProvider.value = cur;
-  function populateData() {
-    if(!appData.Bhagiya_Master) return;
-    
-    let farmerList = [];
-    appData.Bhagiya_Master.forEach(r => {
-      let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
-      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
-      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "ખેડૂ" || roll === "farmer")) {
-        farmerList.push(name.trim());
-      }
-    });
-    
-    let ownerList = [];
-    appData.Bhagiya_Master.forEach(r => {
-      let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
-      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
-      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "માલિક" || roll === "owner")) {
-        ownerList.push(name.trim());
-      }
-    });
-
-    // માત્ર હસ્તે માટે ખેડૂ અને માલિક બંનેનું સંયુક્ત લિસ્ટ
-    let hastakList = [];
-    farmerList.forEach(f => { if(!hastakList.includes(f)) hastakList.push(f); });
-    ownerList.forEach(o => { if(!hastakList.includes(o)) hastakList.push(o); });
-
-    // મુખ્ય ભાગીદાર ડ્રોપડાઉનમાં માત્ર ખેડૂ જ રહેશે
-    document.querySelectorAll('.bhagiyaList').forEach(sel => {
-      let cur = sel.value;
-      sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      farmerList.forEach(b => sel.add(new Option(b, b)));
-      sel.value = cur;
-    });
-
-    // હસ્તે કે જ્યાં બંને બતાવવાના છે (જો અલગ આઈડી હોય તો ત્યાં hastakList વાપરવું)
-    let uBhagiyaSelect = document.getElementById("uBhagiya");
-    if(uBhagiyaSelect) {
-      let cur = uBhagiyaSelect.value;
-      uBhagiyaSelect.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      hastakList.forEach(b => uBhagiyaSelect.add(new Option(b, b)));
-      uBhagiyaSelect.value = cur;
-    }
-
-    let ownerSelect = document.getElementById("sBillOwner");
-    if(ownerSelect) {
-      let curOwner = ownerSelect.value;
-      ownerSelect.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      ownerList.forEach(o => ownerSelect.add(new Option(o, o)));
-      ownerSelect.value = curOwner;
-    }
-
-    let filterHastakSelect = document.getElementById("filterHastak");
-    if(filterHastakSelect) {
-      let curFilter = filterHastakSelect.value;
-      let uniqueHastakSet = new Set();
-      if(appData.Bill_Record) {
-        appData.Bill_Record.forEach(r => {
-          let h = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "").trim();
-          if(h && h !== "-") uniqueHastakSet.add(h);
-        });
-      }
-      if(uniqueHastakSet.size === 0) {
-        farmerList.forEach(b => uniqueHastakSet.add(b));
-      }
-      filterHastakSelect.innerHTML = '<option value="">-- બધા (All) --</option>';
-      uniqueHastakSet.forEach(b => filterHastakSelect.add(new Option(b, b)));
-      filterHastakSelect.value = curFilter;
-    }
-
-    let vegVeparis = [];
-    let medVeparis = [];
-    let fertVeparis = [];
-    let allVeparis = [];
-
-    if(appData.Merchant_Master) {
-      appData.Merchant_Master.forEach(r => {
-        let name = r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"];
-        let type = String(r["પ્રકાર"] || "").trim().toLowerCase();
-        if(name) {
-          allVeparis.push(name);
-          if(type === "vegitable" || type.includes("શાકભાજી")) vegVeparis.push(name);
-          if(type === "દવા" || type.includes("દવા")) medVeparis.push(name);
-          if(type === "ખાતર" || type.includes("ખાતર")) fertVeparis.push(name);
-        }
-      });
-    }
-
-    let sVepari = document.getElementById("sVepari");
-    if(sVepari) {
-      let cur = sVepari.value; sVepari.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      vegVeparis.forEach(v => sVepari.add(new Option(v, v))); sVepari.value = cur;
-    }
-
-    let mVepari = document.getElementById("mVepari");
-    if(mVepari) {
-      let cur = mVepari.value; mVepari.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      medVeparis.forEach(v => mVepari.add(new Option(v, v))); mVepari.value = cur;
-    }
-
-    let fVepari = document.querySelector(".fertVepariList");
-    if(fVepari) {
-      let cur = fVepari.value; fVepari.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      fertVeparis.forEach(v => fVepari.add(new Option(v, v))); fVepari.value = cur;
-    }
-
-    let providers = [];
-    appData.Bhagiya_Master.forEach(r => {
-      let name = r["નામ"] || r["Name"];
-      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
-      if(name && roll !== "ખેડૂ" && roll !== "farmer") {
-        providers.push(name + " (" + (r["Roll"] || "ભાગીદાર") + ")");
-      }
-    });
-    allVeparis.forEach(v => providers.push(v + " (વેપારી)"));
-    
-    let uProvider = document.getElementById("uProvider");
-    if(uProvider) {
-      let cur = uProvider.value;
-      uProvider.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      providers.forEach(p => uProvider.add(new Option(p, p)));
-      uProvider.value = cur;
-    }
-
-    document.querySelectorAll('.pakList').forEach(sel => {
-      let currentVal = sel.value; sel.innerHTML = '<option value="">-- પાક --</option><option value="NEW">➕ નવો</option>';
 function populateData() {
     if(!appData.Bhagiya_Master) return;
     
@@ -1229,23 +981,25 @@ function populateData() {
       }
     });
 
-    // 🌟 વેચાણ, દવા અને ખાતરના ફોર્મમાં હસ્તે માટે ખેડૂત અને માલિક બંનેનું સંયુક્ત લિસ્ટ
-    let allFarmersAndOwners = [];
-    farmerList.forEach(f => { if(!allFarmersAndOwners.includes(f)) allFarmersAndOwners.push(f); });
-    ownerList.forEach(o => { if(!allFarmersAndOwners.includes(o)) allFarmersAndOwners.push(o); });
+    // માત્ર હસ્તે માટે ખેડૂ અને માલિક બંનેનું સંયુક્ત લિસ્ટ
+    let hastakList = [];
+    farmerList.forEach(f => { if(!hastakList.includes(f)) hastakList.push(f); });
+    ownerList.forEach(o => { if(!hastakList.includes(o)) hastakList.push(o); });
 
+    // મુખ્ય ભાગીદાર ડ્રોપડાઉનમાં માત્ર ખેડૂ જ રહેશે
     document.querySelectorAll('.bhagiyaList').forEach(sel => {
       let cur = sel.value;
       sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      allFarmersAndOwners.forEach(b => sel.add(new Option(b, b)));
+      farmerList.forEach(b => sel.add(new Option(b, b)));
       sel.value = cur;
     });
 
+    // હસ્તે કે જ્યાં બંને બતાવવાના છે (જો અલગ આઈડી હોય તો ત્યાં hastakList વાપરવું)
     let uBhagiyaSelect = document.getElementById("uBhagiya");
     if(uBhagiyaSelect) {
       let cur = uBhagiyaSelect.value;
       uBhagiyaSelect.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      farmerList.forEach(b => uBhagiyaSelect.add(new Option(b, b)));
+      hastakList.forEach(b => uBhagiyaSelect.add(new Option(b, b)));
       uBhagiyaSelect.value = cur;
     }
 
@@ -1349,8 +1103,6 @@ function populateData() {
       sel.value = currentVal;
     });
   }
-
-
 
   function openMasterModal(sheetKey) {
     activeMasterSheet = sheetKey;

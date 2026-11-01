@@ -1,8 +1,8 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Last Updated Code Date & Time: 01/11/2026 - 11:32 IST
-  Final Complete Version with Correct Upad Linking & Spelling
+  Last Updated Code Date & Time: 31/10/2026 - 10:10 IST
+  Final Complete Version with Working Delete & Anti-Duplicate Logic
 -->
 <!DOCTYPE html>
 <html>
@@ -37,35 +37,85 @@
     .btn-back { background: linear-gradient(135deg, #7f8c8d, #95a5a6); color: white; border-radius: 6px; border: none; padding: 8px 14px; cursor: pointer; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     .btn-back:hover { background: linear-gradient(135deg, #6c7a89, #7f8c8d); }
 
+    /* Glossy Green Button Style */
     .btn-action-pill {
       background: linear-gradient(135deg, #1b5e20, #2e7d32, #4caf50, #81c784);
-      color: white; border: 2px solid #a5d6a7; padding: 8px 14px; border-radius: 25px; font-size: 13px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-top: 6px; box-shadow: 0 4px 10px rgba(46, 125, 50, 0.4);
+      color: white;
+      border: 2px solid #a5d6a7;
+      padding: 8px 14px;
+      border-radius: 25px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.4), inset 0 2px 3px rgba(255, 255, 255, 0.5);
+      transition: 0.2s;
     }
-    .btn-action-pill:hover { background: linear-gradient(135deg, #2e7d32, #388e3c, #66bb6a); transform: translateY(-2px); }
-    .btn-action-pill .icon-red { color: #ff4d4d; background: #fff; border-radius: 50%; padding: 2px 6px; font-weight: bold; }
+    .btn-action-pill:hover {
+      background: linear-gradient(135deg, #2e7d32, #388e3c, #66bb6a);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(46, 125, 50, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+    }
+    .btn-action-pill .icon-red {
+      color: #ff4d4d;
+      background: #fff;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
 
     .btn-table-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
     .btn-delete { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
+    .btn-delete:hover { background: #c0392b; }
     .btn-edit { background: #f39c12; color: white; border-radius: 4px; border: none; padding: 5px 10px; cursor: pointer; font-size: 12px; font-weight: bold; }
 
     .table-actions-bar { display: none; gap: 8px; margin-bottom: 10px; padding: 6px 10px; background: #f8f9f9; border: 1px solid #d5dbdb; border-radius: 4px; align-items: center; }
+
     .btn-add-item { background: #2980b9; color: white; border: none; padding: 6px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; margin-bottom: 8px; }
+    
     .badge-jama { background-color: #27ae60; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; display: inline-block; }
 
     .choice-container { display: flex; gap: 15px; margin: 25px 0; justify-content: center; }
-    .choice-card-new, .choice-card-view { flex: 1; border-radius: 10px; padding: 25px 15px; text-align: center; cursor: pointer; color: white; transition: 0.3s; }
-    .choice-card-new { background: linear-gradient(135deg, #27ae60, #2ecc71); box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
-    .choice-card-view { background: linear-gradient(135deg, #2980b9, #3498db); box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3); }
+    .choice-card-new { flex: 1; background: linear-gradient(135deg, #27ae60, #2ecc71); color: white; border-radius: 10px; padding: 25px 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
+    .choice-card-new:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(39, 174, 96, 0.4); }
+    .choice-card-new h3 { margin: 0 0 5px 0; font-size: 18px; }
+    .choice-card-new p { margin: 0; font-size: 12px; opacity: 0.9; }
+
+    .choice-card-view { flex: 1; background: linear-gradient(135deg, #2980b9, #3498db); color: white; border-radius: 10px; padding: 25px 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3); }
+    .choice-card-view:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(41, 128, 185, 0.4); }
+    .choice-card-view h3 { margin: 0 0 5px 0; font-size: 18px; }
+    .choice-card-view p { margin: 0; font-size: 12px; opacity: 0.9; }
 
     .top-banners-row { display: flex; gap: 8px; margin-bottom: 12px; display: none; }
-    .partner-sum-banner, .category-balance-box { flex: 1; color: white; padding: 8px 10px; border-radius: 6px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    .partner-sum-banner { background: linear-gradient(135deg, #16a085, #1abc9c); }
-    .category-balance-box { background: linear-gradient(135deg, #f39c12, #e67e22); font-weight: bold; }
+    .partner-sum-banner {
+      flex: 1; background: linear-gradient(135deg, #16a085, #1abc9c);
+      color: white; padding: 8px 10px; border-radius: 6px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .partner-sum-banner h4 { margin: 0 0 2px 0; font-size: 11px; opacity: 0.9; }
+    .partner-sum-banner .sum-amount { font-size: 18px; font-weight: bold; }
+
+    .category-balance-box {
+      flex: 1; background: linear-gradient(135deg, #f39c12, #e67e22);
+      color: white; padding: 8px 10px; border-radius: 6px; text-align: center; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .category-balance-box h4 { margin: 0 0 2px 0; font-size: 11px; opacity: 0.95; }
+    .category-balance-box .bal-val { font-size: 18px; }
 
     .readonly-bg { background-color: #f1f2f6; }
     .hidden-field { display: none !important; }
-    .highlight-total { background-color: #27ae60 !important; color: #ffffff !important; font-size: 20px !important; font-weight: bold !important; text-align: right; border: 2px solid #1e8449 !important; border-radius: 3px; padding: 6px 10px; }
-    .farmer-amount-box { background: linear-gradient(135deg, #2980b9, #3498db) !important; color: #ffffff !important; font-size: 18px !important; font-weight: bold !important; text-align: right; border: 2px solid #1f618d !important; border-radius: 4px; padding: 8px 12px; }
+    
+    .highlight-total { 
+      background-color: #27ae60 !important; color: #ffffff !important; font-size: 20px !important; font-weight: bold !important; text-align: right; border: 2px solid #1e8449 !important; border-radius: 3px; padding: 6px 10px;
+    }
+
+    .farmer-amount-box { 
+      background: linear-gradient(135deg, #2980b9, #3498db) !important; color: #ffffff !important; font-size: 18px !important; font-weight: bold !important; text-align: right; border: 2px solid #1f618d !important; border-radius: 4px; padding: 8px 12px; box-shadow: 0 2px 5px rgba(41, 128, 185, 0.3);
+    }
+
     .words-box { background-color: #2c3e50 !important; color: #ffffff !important; font-size: 14px !important; font-weight: bold !important; text-align: left; border: 2px solid #1a252f !important; border-radius: 3px; padding: 6px 10px; }
 
     .section { display: none; }
@@ -79,14 +129,15 @@
     table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; min-width: 900px; }
     th, td { border: 1px solid #ccc; padding: 10px 14px; text-align: center; white-space: nowrap; }
     th { background-color: #34495e; color: white; }
-    .item-row { background: #fdfefe; padding: 8px; border: 1px solid #dcdde1; border-radius: 4px; margin-bottom: 8px; position: relative; }
+    
+    .item-row { background: #fdfefe; padding: 8px; border: 1px solid #dcdde1; border-radius: 4px; margin-bottom: 8px; position: relative; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
     .sub-section { display: none; }
   </style>
 </head>
 <body>
 
-<div style="background: #1abc9c; color: white; text-align: center; font-size: 12px; padding: 4px; font-weight: bold;">
-  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">01/11/2026 - 11:35 IST</span>
+<div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 4px; font-weight: bold;">
+  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">31/10/2026 - 10:10 IST</span>
 </div>
 
 <div class="header-bar">
@@ -155,7 +206,7 @@
           <div class="sum-amount" id="bannerValSales">₹ 0.00</div>
         </div>
         <div id="balBoxSales" class="category-balance-box" style="display: block;">
-          <h4 id="balTitleSales">વેચાણ બિલ બેલેન્સ</h4>
+          <h4 id="balTitleSales">ખેડૂ વેચાણ, ઉપાડ</h4>
           <div class="bal-val" id="balValSales">₹ 0.00</div>
         </div>
       </div>
@@ -235,7 +286,7 @@
           <div class="sum-amount" id="bannerValMed">₹ 0.00</div>
         </div>
         <div id="balBoxMed" class="category-balance-box" style="display: block;">
-          <h4 id="balTitleMed">દવા બિલ બેલેન્સ</h4>
+          <h4 id="balTitleMed">ખેડૂ દવા માટે, ઉપાડ</h4>
           <div class="bal-val" id="balValMed">₹ 0.00</div>
         </div>
       </div>
@@ -325,7 +376,7 @@
           <div class="sum-amount" id="bannerValFert">₹ 0.00</div>
         </div>
         <div id="balBoxFert" class="category-balance-box" style="display: block;">
-          <h4 id="balTitleFert">ખાતર બિલ બેલેન્સ</h4>
+          <h4 id="balTitleFert">ખેડૂ ખાતર માટે, ઉપાડ</h4>
           <div class="bal-val" id="balValFert">₹ 0.00</div>
         </div>
       </div>
@@ -627,6 +678,7 @@
     </div>
 
     <div id="masterTableContainer" style="max-height: 300px; overflow: auto; border: 1px solid #ccc; border-radius: 4px;"></div>
+
     <button type="button" onclick="document.getElementById('modalMasterManager').style.display='none'" style="margin-top: 15px; width: 100%; padding: 8px; background: #7f8c8d; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">બંધ કરો</button>
   </div>
 </div>
@@ -698,7 +750,7 @@
 </div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby7m8_dmmJCDni9skYLfrQbw0n95isLbkN782-ZdrvK-fjGin1ct3JawhC2tTldsdiQwg/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyUQK6amVYZMY5pPFYYrFaipcSOzfOIJm7O3KYdhRhHwMh8P2_Dw_FndRYvVxdLqAptrA/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -768,7 +820,7 @@
     else if(sheetName === 'Fertilizer_Bill') rows = appData.Fertilizer_Bill || [];
 
     let isDuplicate = rows.some(r => {
-      let existingBill = String(r["બિલ નં"] || "").trim();
+      let existingBill = String(r["બીલ નં"] || r["બિલ નં"] || r["બિલ_નં"] || "").trim();
       return existingBill === billNo;
     });
 
@@ -834,7 +886,7 @@
     if(!partnerName) return 0;
     
     let targetType = '', altType = '';
-    if(sectionType === 'Sales') { targetType = 'વેચાણ બિલ'; altType = 'વેચાણ બિલ જમા'; }
+    if(sectionType === 'Sales') { targetType = 'વેચાણ બીલ'; altType = 'વેચાણ બિલ જમા'; }
     else if(sectionType === 'Med') { targetType = 'દવા ખરીદી માટે'; altType = 'દવા બિલ જમા'; }
     else if(sectionType === 'Fert') { targetType = 'ખાતર ખરીદી માટે'; altType = 'ખાતર બિલ જમા'; }
     
@@ -876,9 +928,9 @@
     let titleEl = document.getElementById(titleId);
 
     if(titleEl) {
-      if(sectionType === 'Sales') titleEl.innerText = "વેચાણ બિલ બેલેન્સ";
-      else if(sectionType === 'Med') titleEl.innerText = "દવા બિલ બેલેન્સ";
-      else if(sectionType === 'Fert') titleEl.innerText = "ખાતર બિલ બેલેન્સ";
+      if(sectionType === 'Sales') titleEl.innerText = "ખેડૂ વેચાણ, ઉપાડ";
+      else if(sectionType === 'Med') titleEl.innerText = "ખેડૂ દવા માટે, ઉપાડ";
+      else if(sectionType === 'Fert') titleEl.innerText = "ખેડૂ ખાતર માટે, ઉપાડ";
     }
 
     if(!selectedBhagiya) {
@@ -960,7 +1012,8 @@
     }
     return "અંકે રૂપિયા " + words.trim() + " પૂરા";
   }
-function populateData() {
+
+  function populateData() {
     if(!appData.Bhagiya_Master) return;
     
     let farmerList = [];
@@ -981,12 +1034,6 @@ function populateData() {
       }
     });
 
-    // માત્ર હસ્તે માટે ખેડૂ અને માલિક બંનેનું સંયુક્ત લિસ્ટ
-    let hastakList = [];
-    farmerList.forEach(f => { if(!hastakList.includes(f)) hastakList.push(f); });
-    ownerList.forEach(o => { if(!hastakList.includes(o)) hastakList.push(o); });
-
-    // મુખ્ય ભાગીદાર ડ્રોપડાઉનમાં માત્ર ખેડૂ જ રહેશે
     document.querySelectorAll('.bhagiyaList').forEach(sel => {
       let cur = sel.value;
       sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
@@ -994,12 +1041,11 @@ function populateData() {
       sel.value = cur;
     });
 
-    // હસ્તે કે જ્યાં બંને બતાવવાના છે (જો અલગ આઈડી હોય તો ત્યાં hastakList વાપરવું)
     let uBhagiyaSelect = document.getElementById("uBhagiya");
     if(uBhagiyaSelect) {
       let cur = uBhagiyaSelect.value;
       uBhagiyaSelect.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      hastakList.forEach(b => uBhagiyaSelect.add(new Option(b, b)));
+      farmerList.forEach(b => uBhagiyaSelect.add(new Option(b, b)));
       uBhagiyaSelect.value = cur;
     }
 
@@ -1264,7 +1310,7 @@ function populateData() {
       appData.Pesticide_Bill.forEach(r => {
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
         if(rYear === targetYear) {
-          totalSum += parseFloat(r["બિલની કુલ રકમ"] || r["બિલની_કુલ_રકમ"] || r["કુલ રકમ"] || r["Total_Bill"] || 0);
+          totalSum += parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || r["કુલ રકમ"] || r["Total_Bill"] || 0);
         }
       });
       document.getElementById('bannerTitleMed').innerText = "વર્ષ (" + targetYear + ") - કુલ ફાર્મ દવા ખર્ચ";
@@ -1272,7 +1318,7 @@ function populateData() {
       appData.Fertilizer_Bill.forEach(r => {
         let rYear = String(r["વર્ષ"] || r["Year"] || getYear(r["તારીખ"] || r["Date"] || ""));
         if(rYear === targetYear) {
-          totalSum += parseFloat(r["બિલની કુલ રકમ"] || r["બિલની_કુલ_રકમ"] || r["કુલ રકમ"] || r["Total_Bill"] || 0);
+          totalSum += parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || r["કુલ રકમ"] || r["Total_Bill"] || 0);
         }
       });
       document.getElementById('bannerTitleFert').innerText = "વર્ષ (" + targetYear + ") - કુલ ફાર્મ ખાતર ખર્ચ";
@@ -1483,7 +1529,7 @@ function populateData() {
 
   let getCropShare = function(cropName) {
     if (!cropName) return 0;
-    let match = cropName.match(/(.*?)/);
+    let match = cropName.match(/\((.*?)\)/);
     if (match) { let val = parseFloat(match[1]); if (!isNaN(val)) return val <= 1 ? val : val / 100; }
     if (!appData.Crop_Master) return 0;
     let crop = appData.Crop_Master.find(c => String(c["પાકનું નામ"]).trim() === String(cropName).trim());
@@ -1540,7 +1586,7 @@ function populateData() {
       let pakSelectVal = row.querySelector('.pakList').value;
       let share = getCropShare(pakSelectVal);
       if (share === 0 && pakSelectVal) {
-        let match = pakSelectVal.match(/(.*?)/);
+        let match = pakSelectVal.match(/\((.*?)\)/);
         if (match) {
           let val = parseFloat(match[1]);
           if (!isNaN(val)) share = val <= 1 ? val : val / 100;
@@ -1604,7 +1650,7 @@ function populateData() {
     }
     if(appData.Pesticide_Bill) {
       appData.Pesticide_Bill.forEach(r => {
-        let billAmt = parseFloat(r["બિલની કુલ રકમ"] || r["બિલની_કુલ_રકમ"] || 0);
+        let billAmt = parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || 0);
         if(!isNaN(billAmt)) totalExp += billAmt;
       });
     }
@@ -1617,7 +1663,7 @@ function populateData() {
     }
     if(appData.Fertilizer_Bill) {
       appData.Fertilizer_Bill.forEach(r => {
-        let billAmt = parseFloat(r["બિલની કુલ રકમ"] || r["બિલની_કુલ_રકમ"] || 0);
+        let billAmt = parseFloat(r["બીલની કુલ રકમ"] || r["બીલની_કુલ_રકમ"] || 0);
         if(!isNaN(billAmt)) totalExp += billAmt;
       });
     }
@@ -1656,7 +1702,7 @@ function populateData() {
     }
 
     let html = `<table><tr>
-      <th style="width: 40px;"><input type="checkbox" id="selectAll_tabName"onclick="toggleSelectAll(this,'{tabName}')"></th>
+      <th style="width: 40px;"><input type="checkbox" id="selectAll_${tabName}" onclick="toggleSelectAll(this, '${tabName}')"></th>
       <th>એન્ટ્રી Id</th><th>તારીખ</th>`;
 
     if(tabName === 'Sales') {
@@ -1679,37 +1725,37 @@ function populateData() {
       let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
 
       html += `<tr>
-        <td><input type="checkbox" class="row-select-tabName"value="{entryId}" onclick="updateTableActionBar('${tabName}')"></td>
+        <td><input type="checkbox" class="row-select-${tabName}" value="${entryId}" onclick="updateTableActionBar('${tabName}')"></td>
         <td><b>${entryId}</b></td>
         <td>${cleanDate}</td>`;
 
       if(tabName === 'Sales') {
         let billOwner = r["Bill To /નામ :"] || r["Bill To/નામ:"] || r["બિલ માલિક"] || r["Bill Owner"] || r["Bill To/નામ"] || "-";
-        let billNo = r["બિલ નં"] || "-";
+        let billNo = r["બીલ નં"] || r["બિલ નં"] || "-";
         let pakName = r["પાકનું નામ"] || "-";
         let pauch = r["પાઉચ / નંગ"] || 0;
         let weight = r["કુલ વજન (કિલો)"] || 0;
         let bhav20 = r[". ૧ મણનો ભાવ (20 Kg)"] || 0;
         let totalAmt = parseFloat(r["કુલ રકમ (₹)"] || 0).toFixed(2);
         let farmerAmt = parseFloat(r["ખેડૂ રકમ"] || 0).toFixed(2);
-        let statusVal = r["બિલની સ્થિતિ (બાકી/જમા)"] || "રોકડા / જમા";
+        let statusVal = r["બીલની સ્થિતિ (બાકી/જમા)"] || "રોકડા / જમા";
         let hastakVal = r["પૈસા કોણે લીધા (હસ્તે)"] || "-";
         let upadSymbol = r["ઉપાડ જમા✓/×"] || r["ઉપાડ જમા"] || "❌";
 
-        html += `<td><b>billOwner</b></td><td>{billNo}</td><td>bhagiya</td><td>{r["ખરીદનાર"]||'-'}</td><td>pakName</td><td>{pauch}</td><td>${weight} કિલો</td><td>₹ ${bhav20}</td><td>₹ ${totalAmt}</td><td>₹ farmerAmt</td><td><spanclass="badge-jama">{statusVal}</span></td><td>hastakVal</td><td><spanstyle="font-size:16px;">{upadSymbol}</span></td><td>${photoLink}</td>`;
+        html += `<td><b>${billOwner}</b></td><td>${billNo}</td><td>${bhagiya}</td><td>${r["ખરીદનાર"]||'-'}</td><td>${pakName}</td><td>${pauch}</td><td>${weight} કિલો</td><td>₹ ${bhav20}</td><td>₹ ${totalAmt}</td><td>₹ ${farmerAmt}</td><td><span class="badge-jama">${statusVal}</span></td><td>${hastakVal}</td><td><span style="font-size:16px;">${upadSymbol}</span></td><td>${photoLink}</td>`;
       } else if(tabName === 'Med' || tabName === 'Fert') {
-        let billNo = r["બિલ નં"] || "-";
+        let billNo = r["બીલ નં"] || r["બિલ નં"] || "-";
         let itemName = r["દવાનું નામ"] || r["ખાતરનું નામ"] || "-";
         let amt = r["રકમ"] || 0;
         let farmerAmt = r["ખેડૂ રકમ"] || 0;
-        html += `<td>billNo</td><td><b>{itemName}</b></td><td>-</td><td>-</td><td>-</td><td>-</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>-</td><td>-</td><td>₹ parseFloat(farmerAmt).toFixed(2)</td><td><spanclass="badge-jama">જમા</span></td><td>{photoLink}</td>`;
+        html += `<td>${billNo}</td><td><b>${itemName}</b></td><td>-</td><td>-</td><td>-</td><td>-</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>-</td><td>-</td><td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td><td>${photoLink}</td>`;
       } else if(tabName === 'Trac') {
         let owner = r["ટ્રેક્ટર માલિક"] || "-";
         let totalAmt = r["કુલ બિલ રકમ"] || 0;
         let farmerCost = r["ભાગિયાનો ખર્ચ"] || 0;
-        html += `<td>owner</td><td>{r["પાકનું નામ"]||'-'}</td><td>r["કામનીવિગત"]||'-'</td><td>{r["કલાક"]||0}</td><td>${r["મિનિટ"]||0}</td><td>₹ ${r["કલાકનો ભાવ"]||0}</td><td>₹ ${r["મિનિટનો ભાવ"]||0}</td><td>₹ parseFloat(totalAmt).toFixed(2)</td><td>{r["બિલની સ્થિતિ"]||'-'}</td><td>${r["હસ્તે"]||'-'}</td><td>₹ parseFloat(farmerCost).toFixed(2)</td><td><spanclass="badge-jama">જમા</span></td><td>{photoLink}</td>`;
+        html += `<td>${owner}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કામની વિગત"]||'-'}</td><td>${r["કલાક"]||0}</td><td>${r["મિનિટ"]||0}</td><td>₹ ${r["કલાકનો ભાવ"]||0}</td><td>₹ ${r["મિનિટનો ભાવ"]||0}</td><td>₹ ${parseFloat(totalAmt).toFixed(2)}</td><td>${r["બીલની સ્થિતિ"]||'-'}</td><td>${r["હસ્તે"]||'-'}</td><td>₹ ${parseFloat(farmerCost).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td><td>${photoLink}</td>`;
       } else if(tabName === 'Upad') {
-        html += `<td><b>bhagiya</b></td><td>{r["એન્ટ્રી પ્રકાર"]||'-'}</td><td>${r["આપનાર"]||'-'}</td><td style="color:#c0392b; font-weight:bold;">₹ ${parseFloat(r["ઉપાડ (Debit)"]||0).toFixed(2)}</td><td style="color:#27ae60; font-weight:bold;">₹ parseFloat(r["જમા(Credit)"]||0).toFixed(2)</td><td>{r["બિલ નં"]||'-'}</td><td style="color:#2980b9; font-weight:bold;">₹ parseFloat(r["TotalOutstanding"]||0).toFixed(2)</td><td><spanclass="badge-jama">{r["Status"]||'ઉધાર'}</span></td><td>${photoLink}</td>`;
+        html += `<td><b>${bhagiya}</b></td><td>${r["એન્ટ્રી પ્રકાર"]||'-'}</td><td>${r["આપનાર"]||'-'}</td><td style="color:#c0392b; font-weight:bold;">₹ ${parseFloat(r["ઉપાડ (Debit)"]||0).toFixed(2)}</td><td style="color:#27ae60; font-weight:bold;">₹ ${parseFloat(r["જમા (Credit)"]||0).toFixed(2)}</td><td>${r["બિલ નં"]||'-'}</td><td style="color:#2980b9; font-weight:bold;">₹ ${parseFloat(r["Total Outstanding"]||0).toFixed(2)}</td><td><span class="badge-jama">${r["Status"]||'ઉધાર'}</span></td><td>${photoLink}</td>`;
       }
 
       html += `</tr>`;
@@ -1732,12 +1778,12 @@ function populateData() {
         actionBar.innerHTML = `
           <span style="font-size:12px; font-weight:bold; margin-right:5px;">૧ પસંદ કરેલ:</span>
           ${(tabName !== 'BillRec' && tabName !== 'Gallery') ? `<button class="btn-edit" onclick="editSingleRecord('${sheetKey}', '${singleId}')">✏️ એડિટ કરો</button>` : ''}
-          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('sheetKey','{tabName}')">🗑️ ડિલીટ કરો</button>
+          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ ડિલીટ કરો</button>
         `;
       } else {
         actionBar.innerHTML = `
           <span style="font-size:12px; font-weight:bold; margin-right:5px;">${checkboxes.length} પસંદ કરેલ:</span>
-          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('sheetKey','{tabName}')">🗑️ પસંદ કરેલ ડિલીટ કરો</button>
+          <button class="btn-table-delete" onclick="askMpinForDeleteSelected('${sheetKey}', '${tabName}')">🗑️ પસંદ કરેલ ડિલીટ કરો</button>
         `;
       }
     } else {
@@ -1752,6 +1798,7 @@ function populateData() {
 
     askMpinAndExecute(() => {
       let idsToDelete = Array.from(checkboxes).map(cb => cb.value);
+      
       let promises = idsToDelete.map(id => {
         return fetch(SCRIPT_URL, {
           method: "POST",
@@ -1779,10 +1826,10 @@ function populateData() {
           switchSubTab('Sales', 'New');
           document.getElementById("sBillOwner").value = found["Bill To /નામ :"] || found["Bill To/નામ:"] || found["બિલ માલિક"] || found["Bill Owner"] || "";
           document.getElementById("sDate").value = String(found["તારીખ"] || "").split('T')[0];
-          document.getElementById("sBill").value = found["બિલ નં"] || "";
+          document.getElementById("sBill").value = found["બીલ નં"] || found["બિલ નં"] || "";
           document.getElementById("sBhagiya").value = found["ભાગીદાર"] || "";
           document.getElementById("sVepari").value = found["ખરીદનાર"] || "";
-          document.getElementById("sStatus").value = found["બિલની સ્થિતિ (બાકી/જમા)"] || found["બિલની સ્થિતિ"] || "રોકડા / જમા";
+          document.getElementById("sStatus").value = found["બીલની સ્થિતિ (બાકી/જમા)"] || found["બીલની સ્થિતિ"] || "રોકડા / જમા";
           document.getElementById("sHastak").value = found["પૈસા કોણે લીધા (હસ્તે)"] || found["હસ્તે"] || found["Hastak"] || "";
           document.getElementById("sBLidha").value = found["ખેડૂએ પૈસા લીધા? (Yes/No)"] || found["ભાગિયાએ લીધા?"] || "No";
           
@@ -1824,7 +1871,7 @@ function populateData() {
     });
   }
 
-   function submitSalesForm(e) {
+  function submitSalesForm(e) {
     e.preventDefault();
     let btn = document.getElementById("btnSales");
     let originalText = btn.innerHTML;
@@ -1845,7 +1892,6 @@ function populateData() {
 
     let rows = document.querySelectorAll("#salesItemsContainer .item-row");
     let itemRows = [];
-    let totalBillAmount = 0; // આખી આઇટમ્સની કુલ રકમ ગણવા માટે
 
     handlePhotoUpload("sPhoto", function(photoBase64) {
       rows.forEach((r, index) => {
@@ -1858,7 +1904,6 @@ function populateData() {
         let kShare = r.querySelector('.sKShare').value || 0;
         let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
         
-        totalBillAmount += total; // કુલ રકમ ઉમેરતા જાઓ
         let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
         
         itemRows.push([
@@ -1866,20 +1911,9 @@ function populateData() {
         ]);
       });
 
-      // અહીં કુલ રકમ (totalBillAmount), સાચો entryId અને billNo પાસ કરીએ છીએ જેથી ઉપાડમાં પૂરી કુલ રકમ જ જાય
-      if (typeof triggerUpadConfirmationModal === 'function') {
-        // જો તમારી સિસ્ટમમાં triggerUpadConfirmationModal ફંક્શન હોય તો તેને કુલ રકમ સાથે કૉલ કરો
-        pendingBillData = { formType: 'Sales', itemRows, btnId: 'btnSales', formElementId: 'salesForm', originalBtnText: originalText, billTotal: totalBillAmount, partnerName: bhagiya, entryId, billNo };
-        let msg = "📋 આ બિલની કુલ રકમ ₹ " + totalBillAmount.toFixed(2) + " છે. શું આ બિલ ઉપાડમાં જમા કરવું છે?";
-        if(document.getElementById("upadConfirmMsg")) document.getElementById("upadConfirmMsg").innerText = msg;
-        if(document.getElementById("upadChoiceSelect")) document.getElementById("upadChoiceSelect").value = "no";
-        if(document.getElementById("modalUpadConfirm")) document.getElementById("modalUpadConfirm").style.display = "block";
-      } else {
-        triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm', originalText);
-      }
+      triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm', originalText);
     });
   }
-
 
   function submitMedForm(e) {
     e.preventDefault();
@@ -1985,7 +2019,7 @@ function populateData() {
     }
 
     let currentBal = getCategoryBalanceVal(formType, partnerName);
-    let categoryText = formType === 'Sales' ? 'વેચાણ બિલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
+    let categoryText = formType === 'Sales' ? 'વેચાણ બીલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
 
     if (currentBal > 0) {
       pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
@@ -2000,7 +2034,7 @@ function populateData() {
     }
   }
 
-      function confirmUpadActionModal() {
+  function confirmUpadActionModal() {
     document.getElementById("modalUpadConfirm").style.display = "none";
     if(!pendingBillData) return;
 
@@ -2038,20 +2072,21 @@ function populateData() {
       if(wantUpad && formType === 'Sales') {
         let date = document.getElementById("sDate").value;
         let year = getYear(date);
-        
-        let salesEntryId = itemRows.length > 0 ? itemRows[0][1] : ("SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
-        let billNoVal = document.getElementById("sBill").value || "N/A";
+        let rand = Math.floor(1000 + Math.random() * 9000);
+        let entryId = "UP-" + date.replace(/-/g, '') + "-" + rand;
         let provider = document.getElementById("sVepari").value;
+        let billNo = document.getElementById("sBill").value || "N/A";
+        
         let upadEntryType = 'વેચાણ બિલ જમા';
         let debit = 0;
-        let credit = billTotal; 
+        let credit = currentBal; 
         let status = "જમા";
         let closeYear = "N";
         let totalOutstanding = 0;
 
         let upadRowValues = [
-          year, salesEntryId, date, partnerName, upadEntryType, provider, credit, "CASH", "-",
-          debit, credit, billNoVal, credit, categoryText || 'વેચાણ બિલ', "બિલ જમા એન્ટ્રી", 0, 0,
+          year, entryId, date, partnerName, upadEntryType, provider, credit, "CASH", "-",
+          debit, credit, billNo, credit, categoryText, "બિલ જમા એન્ટ્રી", 0, 0,
           status, "", closeYear, totalOutstanding
         ];
 
@@ -2059,7 +2094,7 @@ function populateData() {
           method: "POST",
           body: JSON.stringify({ action: "saveUpadLedger", rowValues: upadRowValues })
         })
-        .then(resUpad => res.json())
+        .then(resUpad => resUpad.json())
         .then(resU => {
           if(!resU || resU.status === "error") {
             alert("⚠️ ચેતવણી: બિલ સેવ થઈ ગયું પણ ઉપાડ જમા કરવામાં ભૂલ આવી: " + (resU ? resU.message : ""));
@@ -2067,34 +2102,27 @@ function populateData() {
         });
       }
     })
-        .then(() => {
-      alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ/અપડેટ થઈ ગઈ!");
+    .then(() => {
+      alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");
       if(btn) { btn.innerHTML = originalBtnText || "💾 સેવ કરો"; btn.disabled = false; }
       document.getElementById(formElementId).reset();
       
-      // 🌟 આ લાઇન ઉમેરી દેવી જેથી એડિટ મોડ બંધ થઈ જાય અને નવું ફોર્મ સાફ થઈ જાય
-      let editInput = document.getElementById('editEntryId');
-      if(editInput) editInput.value = "";
-
       let submitBtn = document.getElementById(btnId);
       if(submitBtn) { submitBtn.style.display = "block"; submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText || "💾 સેવ કરો"; }
 
       pendingBillData = null;
       fetchData();
-      
-      // ઑટોમેટિક ટેબલ વ્યુ માં જતું રહેશે
-      switchSubTab(formType === 'Sales' ? 'Sales' : formType === 'Med' ? 'Med' : 'Fert', 'View');
+      switchTab('Dash');
     })
-
     .catch(err => {
-      if(err && err !== "undefined") { console.error("Save Error:", err); }
+      if(err && err !== "undefined") {
+        console.error("Save Error:", err);
+      }
       let submitBtn = document.getElementById(btnId);
       if(submitBtn) { submitBtn.style.display = "block"; submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText || "💾 સેવ કરો"; }
       pendingBillData = null;
     });
   }
-
-
 
   function submitUpad(e) {
     e.preventDefault();
@@ -2195,6 +2223,7 @@ function populateData() {
   }
 
   function v(id) { return document.getElementById(id).value; }
+  
   function getYear(dateString) {
     let d = new Date(dateString), m = d.getMonth() + 1, y = d.getFullYear();
     return (m >= 5) ? (y + "-" + (y + 1).toString().slice(-2)) : ((y - 1) + "-" + y.toString().slice(-2));
@@ -2213,7 +2242,11 @@ function populateData() {
     
     let html = `<table><tr>
       <th style="width: 40px;"><input type="checkbox" id="selectAll_Gallery" onclick="toggleSelectAll(this, 'Gallery')"></th>
-      <th>તારીખ</th><th>બિલ નં</th><th>વેપારી</th><th>Bill To / નામ :</th><th>ફોટો</th>
+      <th>તારીખ</th>
+      <th>બિલ નં</th>
+      <th>વેપારી</th>
+      <th>Bill To / નામ :</th>
+      <th>ફોટો</th>
     </tr>`;
 
     photos.forEach((p, index) => {
@@ -2227,7 +2260,11 @@ function populateData() {
 
       html += `<tr>
         <td><input type="checkbox" class="row-select-Gallery" value="${entryId}" onclick="updateTableActionBar('Gallery')"></td>
-        <td>dateVal</td><td><b>{billNoVal}</b></td><td>vepariVal</td><td>{billOwnerVal}</td><td>${imgTag}</td>
+        <td>${dateVal}</td>
+        <td><b>${billNoVal}</b></td>
+        <td>${vepariVal}</td>
+        <td>${billOwnerVal}</td>
+        <td>${imgTag}</td>
       </tr>`;
     });
     container.innerHTML = html + `</table>`;
@@ -2260,8 +2297,8 @@ function populateData() {
     let searchQuery = document.getElementById("searchBillRec") ? document.getElementById("searchBillRec").value.toLowerCase().trim() : "";
 
     let filteredRows = rows.filter(r => {
-      let hVal = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "").trim();
-      let bNo = String(r["બિલ નં"] || "").toLowerCase();
+      let hVal = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || r["હસ્તે "] || "").trim();
+      let bNo = String(r["બીલ નં"] || r["બિલ નં"] || "").toLowerCase();
       let dt = String(r["તારીખ"] || "").toLowerCase();
 
       let targetHastak = selectedHastak.toLowerCase();
@@ -2289,12 +2326,25 @@ function populateData() {
       let finalAmount = parseFloat(latest["કુલ જમા રકમ"] || latest["Cumulative_Amount"] || totalAmountSum).toFixed(2);
 
       summaryText.innerHTML = `
-        <div style="font-size: 16px; color: #117a65; font-weight: bold; margin-bottom: 6px; border-bottom: 2px solid #a3e4d7; padding-bottom: 4px;">${selectedHastak}</div>
-        <div style="font-size: 13px; color: #d35400; font-weight: bold; margin-bottom: 8px;">તારીખ સુધીની બિલની વિગત (${lDate})</div>
+        <div style="font-size: 16px; color: #117a65; font-weight: bold; margin-bottom: 6px; border-bottom: 2px solid #a3e4d7; padding-bottom: 4px;">
+          ${selectedHastak}
+        </div>
+        <div style="font-size: 13px; color: #d35400; font-weight: bold; margin-bottom: 8px;">
+          તારીખ સુધીની બિલની વિગત (${lDate})
+        </div>
         <div style="display: flex; flex-direction: column; gap: 4px; font-size: 14px; background: #ffffff; padding: 8px 12px; border-radius: 4px; border: 1px solid #a3e4d7; max-width: 320px;">
-          <div style="display: flex; justify-content: space-between;"><span style="color: #2c3e50; font-weight: bold;">કુલ બિલ :</span><span style="font-weight: bold; color: #c0392b; text-align: right; min-width: 60px;">${totalBills}</span></div>
-          <div style="display: flex; justify-content: space-between;"><span style="color: #2c3e50; font-weight: bold;">કુલ પાઉચ :</span><span style="font-weight: bold; color: #2980b9; text-align: right; min-width: 60px;">${finalPauch}</span></div>
-          <div style="display: flex; justify-content: space-between; border-top: 1px dashed #bdc3c7; padding-top: 4px; margin-top: 2px;"><span style="color: #2c3e50; font-weight: bold;">કુલ રકમ :</span><span style="font-weight: bold; color: #8e44ad; text-align: right; min-width: 60px;">₹ ${finalAmount}</span></div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: #2c3e50; font-weight: bold;">કુલ બિલ :</span>
+            <span style="font-weight: bold; color: #c0392b; text-align: right; min-width: 60px;">${totalBills}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: #2c3e50; font-weight: bold;">કુલ પાઉચ :</span>
+            <span style="font-weight: bold; color: #2980b9; text-align: right; min-width: 60px;">${finalPauch}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; border-top: 1px dashed #bdc3c7; padding-top: 4px; margin-top: 2px;">
+            <span style="color: #2c3e50; font-weight: bold;">કુલ રકમ :</span>
+            <span style="font-weight: bold; color: #8e44ad; text-align: right; min-width: 60px;">₹ ${finalAmount}</span>
+          </div>
         </div>
       `;
       if(summaryBox) summaryBox.style.display = "block";
@@ -2310,7 +2360,18 @@ function populateData() {
 
     let html = `<table><tr>
       <th style="width: 40px;"><input type="checkbox" id="selectAll_BillRec" onclick="toggleSelectAll(this, 'BillRec')"></th>
-      <th>વર્ષ</th><th>વેપારી</th><th>તારીખ</th><th>હસ્તે</th><th>Bill To / નામ :</th><th>બિલ નં</th><th>પાઉચ નં.</th><th>રકમ</th><th>જમા / બાકી</th><th>કુલ પાઉચ</th><th>કુલ જમા રકમ</th><th>Photo</th>
+      <th>વર્ષ</th>
+      <th>વેપારી</th>
+      <th>તારીખ</th>
+      <th>હસ્તે</th>
+      <th>Bill To / નામ :</th>
+      <th>બિલ નં</th>
+      <th>પાઉચ નં.</th>
+      <th>રકમ</th>
+      <th>જમા / બાકી</th>
+      <th>કુલ પાઉચ</th>
+      <th>કુલ જમા રકમ</th>
+      <th>Photo</th>
     </tr>`;
 
     filteredRows.forEach((r, index) => {
@@ -2324,7 +2385,18 @@ function populateData() {
 
       html += `<tr>
         <td><input type="checkbox" class="row-select-BillRec" value="${entryId}" onclick="updateTableActionBar('BillRec')"></td>
-        <td>r["વર્ષ"]||r["Year"]||'-'</td><td>{vepariVal}</td><td>cleanDate</td><td><b>{hastakVal}</b></td><td><b>billOwnerVal</b></td><td><b>{r["બિલ નં"] || '-'}</b></td><td>${r["પાઉચ નં."] || r["Total_Pauch"] || 0}</td><td>₹ parseFloat(r["રકમ"]||r["Amount"]||0).toFixed(2)</td><td>{r["જમા / બાકી"] || r["Status"] || '-'}</td><td style="font-weight:bold; color:#2980b9;">${r["કુલ પાઉચ"] || r["Cumulative_Pauch"] || 0}</td><td style="font-weight:bold; color:#8e44ad;">₹ parseFloat(r["કુલજમારકમ"]||r["CumulativeAmount"]||totalAmountSum).toFixed(2)</td><td>{photoLink}</td>
+        <td>${r["વર્ષ"] || r["Year"] || '-'}</td>
+        <td>${vepariVal}</td>
+        <td>${cleanDate}</td>
+        <td><b>${hastakVal}</b></td>
+        <td><b>${billOwnerVal}</b></td>
+        <td><b>${r["બીલ નં"] || r["બિલ નં"] || '-'}</b></td>
+        <td>${r["પાઉચ નં."] || r["Total_Pauch"] || 0}</td>
+        <td>₹ ${parseFloat(r["રકમ"] || r["Amount"] || 0).toFixed(2)}</td>
+        <td>${r["જમા / બાકી"] || r["Status"] || '-'}</td>
+        <td style="font-weight:bold; color:#2980b9;">${r["કુલ પાઉચ"] || r["Cumulative_Pauch"] || 0}</td>
+        <td style="font-weight:bold; color:#8e44ad;">₹ ${parseFloat(r["કુલ જમા રકમ"] || r["Cumulative_Amount"] || totalAmountSum).toFixed(2)}</td>
+        <td>${photoLink}</td>
       </tr>`;
     });
 
@@ -2332,16 +2404,35 @@ function populateData() {
     updateTableActionBar('BillRec');
   }
 
-  function filterBillRecordTable() { renderBillRecordTable(); }
+  function filterBillRecordTable() {
+    renderBillRecordTable();
+  }
+
   function openImageModal(url) {
     document.getElementById("viewerImage").src = url;
     document.getElementById("downloadPhotoBtn").href = url;
     document.getElementById("modalImageViewer").style.display = "flex";
   }
-  function closeImageModal() { document.getElementById("modalImageViewer").style.display = "none"; }
+
+  function closeImageModal() {
+    document.getElementById("modalImageViewer").style.display = "none";
+  }
+
+  function askMpinAndExecute(callback) {
+    pendingActionCallback = callback;
+    document.getElementById("inputMpin").value = "";
+    document.getElementById("modalMpin").style.display = "block";
+  }
+
+  function verifyMpinAndProceed() {
+    let enteredMpin = document.getElementById("inputMpin").value;
+    if(enteredMpin === CORRECT_MPIN) {
+      document.getElementById("modalMpin").style.display = "none";
+      if(pendingActionCallback) pendingActionCallback();
+      pendingActionCallback = null;
+    } else { alert("ખોટો પ્રોટેક્શન કોડ છે!"); }
+  }
 </script>
 
 </body>
 </html>
-
-

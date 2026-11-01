@@ -1503,17 +1503,31 @@
     calcMedBill();
   }
 
-  let getCropShare = function(cropName) {
+    let getCropShare = function(cropName) {
     if (!cropName) return 0;
-    let match = cropName.match(/(.*?)/);
-    if (match) { let val = parseFloat(match[1]); if (!isNaN(val)) return val <= 1 ? val : val / 100; }
+    
+    // જો પાકના નામમાં જ ટકા લખેલા હોય (દા.ત. "કપાસ (50%)" અથવા "50")
+    let match = cropName.match(/\((.*?)\)/) || cropName.match(/([0-9.]+)%/);
+    if (match) { 
+      let val = parseFloat(match[1]); 
+      if (!isNaN(val)) return val <= 1 ? val : val / 100; 
+    }
+
     if (!appData.Crop_Master) return 0;
-    let crop = appData.Crop_Master.find(c => String(c["પાકનું નામ"]).trim() === String(cropName).trim());
+    
+    // Crop_Master માંથી પાકનું નામ સરખાવીને ટકા મેળવો
+    let crop = appData.Crop_Master.find(c => {
+      let cName = String(c["પાકનું નામ"] || c["Crop_Name"] || "").trim();
+      return cName.toLowerCase() === String(cropName).trim().toLowerCase();
+    });
+
     if (!crop) return 0;
-    let share = crop["ભાગ_ટકા"] || 0;
+    let share = crop["ભાગ_ટકા"] || crop["Share"] || crop["ટકા"] || 0;
     let parsed = parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
+    
     return parsed > 1 ? parsed / 100 : parsed;
   };
+
 
   function calcMedBill() {
     let rows = document.querySelectorAll("#medItemsContainer .item-row");

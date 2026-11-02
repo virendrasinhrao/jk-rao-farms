@@ -961,35 +961,33 @@
     return "અંકે રૂપિયા " + words.trim() + " પૂરા";
   }
 
-  function populateData() {
-    if(!appData.Bhagiya_Master) return;
+    function populateData() {
+    if (!window.appData) return;
     
+    // ૧. માલિક અને ખેડૂત અલગ તારવો
     let farmerList = [];
-        // ૧. ખેડૂતોના નામ અલગ તારવો
-    let farmerList = [];
-    appData.Bhagiya_Master.forEach(r => {
-      let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
-      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
-      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "ખેડૂ" || roll === "farmer")) {
-        farmerList.push(name.trim());
-      }
-    });
-    
-    // ૨. માલિકના નામ અલગ તારવો
     let ownerList = [];
-    appData.Bhagiya_Master.forEach(r => {
-      let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
-      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
-      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "માલિક" || roll === "owner")) {
-        ownerList.push(name.trim());
-      }
-    });
-
-    // ૩. હસ્તે માટે: માલિક અને ખેડૂત બંનેના નામ ભેગા કરો
+    
+    if (appData.Bhagiya_Master) {
+      appData.Bhagiya_Master.forEach(r => {
+        let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || "";
+        let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
+        
+        if (name && typeof name === 'string' && name.trim() !== "" && name !== "નામ") {
+          let cleanName = name.trim();
+          if (roll === "ખેડૂ" || roll === "farmer") {
+            if (!farmerList.includes(cleanName)) farmerList.push(cleanName);
+          } else if (roll === "માલિક" || roll === "owner") {
+            if (!ownerList.includes(cleanName)) ownerList.push(cleanName);
+          }
+        }
+      });
+    }
+    
+    // હસ્તે માટે: માલિક અને ખેડૂત બંને ભેગા
     let hastakList = [...ownerList, ...farmerList];
 
-
-        // ૧. સામાન્ય ભાગીદાર ડ્રોપડાઉન (માત્ર ખેડૂત)
+    // ૨. સામાન્ય ભાગીદાર ડ્રોપડાઉન (માત્ર ખેડૂત)
     document.querySelectorAll('.bhagiyaList').forEach(sel => {
       let cur = sel.value;
       sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
@@ -997,7 +995,7 @@
       sel.value = cur;
     });
 
-    // ૨. હસ્તે ડ્રોપડાઉન (માલિક અને ખેડૂત બંને)
+    // ૩. હસ્તે ડ્રોપડાઉન (માલિક અને ખેડૂત બંને)
     document.querySelectorAll('.hastakList').forEach(sel => {
       let cur = sel.value;
       sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
@@ -1005,21 +1003,19 @@
       sel.value = cur;
     });
 
-    // ૩. Bill_Record માં "હસ્તે / નામ ફિલ્ટર કરો" નું ડ્રોપડાઉન
+    // ૪. Bill_Record માં હસ્તે ફિલ્ટર
     let filterHastakSelect = document.getElementById("filterHastak");
-    if(filterHastakSelect) {
+    if (filterHastakSelect) {
       let curFilter = filterHastakSelect.value;
       let uniqueHastakSet = new Set();
       
-      // માલિક અને ખેડૂત બંનેના નામ ઉમેરો
       ownerList.forEach(o => uniqueHastakSet.add(o));
       farmerList.forEach(f => uniqueHastakSet.add(f));
 
-      // જો Bill_Record માં જૂના ડેટામાં બીજા કોઈ નામ હોય તો તે પણ લો
-      if(appData.Bill_Record) {
+      if (appData.Bill_Record) {
         appData.Bill_Record.forEach(r => {
-          let h = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "").trim();
-          if(h && h !== "-") uniqueHastakSet.add(h);
+          let h = String(r["હસ્તે"] || r["Hastak"] || "").trim();
+          if (h && h !== "-") uniqueHastakSet.add(h);
         });
       }
 
@@ -1027,7 +1023,7 @@
       uniqueHastakSet.forEach(b => filterHastakSelect.add(new Option(b, b)));
       filterHastakSelect.value = curFilter;
     }
-
+  }
 
     let vegVeparis = [];
     let medVeparis = [];

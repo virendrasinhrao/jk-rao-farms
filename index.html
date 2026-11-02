@@ -1981,21 +1981,16 @@
     }
   }
 
-        if(wantUpad && formType === 'Sales') {
+              let upadPromise = Promise.resolve();
+
+      if(wantUpad && formType === 'Sales') {
         let date = document.getElementById("sDate").value;
         let year = getYear(date);
-        
-        // 1. એન્ટ્રી નં = વેચાણ એન્ટ્રી ID
         let salesEntryId = itemRows.length > 0 ? itemRows[0][1] : ("SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
-        
-        // 2. બિલ નં = સાચો બિલ નંબર
         let billNoVal = document.getElementById("sBill").value || "N/A";
-        
         let provider = document.getElementById("sVepari").value;
         let upadEntryType = 'વેચાણ બિલ જમા';
-        let debit = 0; // ડેબિટ હંમેશા 0 રહેવું જોઈએ
-        
-        // 3. ઉપાડ (Credit) = બિલની કુલ રકમ (billTotal)
+        let debit = 0;
         let credit = billTotal; 
         let status = "જમા";
         let closeYear = "N";
@@ -2007,7 +2002,7 @@
           status, "", closeYear, totalOutstanding
         ];
 
-        return fetch(SCRIPT_URL, {
+        upadPromise = fetch(SCRIPT_URL, {
           method: "POST",
           body: JSON.stringify({ action: "saveUpadLedger", rowValues: upadRowValues })
         })
@@ -2018,6 +2013,9 @@
           }
         });
       }
+
+      return upadPromise;
+
 
 
     .then(() => {

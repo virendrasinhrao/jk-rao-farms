@@ -961,14 +961,13 @@
     return "અંકે રૂપિયા " + words.trim() + " પૂરા";
   }
 
-    function populateData() {
+     function populateData() {
     if (!window.appData) return;
     
-    // ૧. માલિક અને ખેડૂત અલગ તારવો
     let farmerList = [];
     let ownerList = [];
     
-        if (appData.Bhagiya_Master) {
+    if (appData.Bhagiya_Master) {
       appData.Bhagiya_Master.forEach(r => {
         let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || "";
         let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
@@ -983,12 +982,10 @@
         }
       });
     }
-
     
-    // હસ્તે માટે: માલિક અને ખેડૂત બંને ભેગા
     let hastakList = [...ownerList, ...farmerList];
 
-    // ૨. સામાન્ય ભાગીદાર ડ્રોપડાઉન (માત્ર ખેડૂત)
+    // ભાગીદાર ડ્રોપડાઉન
     document.querySelectorAll('.bhagiyaList').forEach(sel => {
       let cur = sel.value;
       sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
@@ -996,7 +993,7 @@
       sel.value = cur;
     });
 
-    // ૩. હસ્તે ડ્રોપડાઉન (માલિક અને ખેડૂત બંને)
+    // હસ્તે ડ્રોપડાઉન
     document.querySelectorAll('.hastakList').forEach(sel => {
       let cur = sel.value;
       sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
@@ -1004,7 +1001,7 @@
       sel.value = cur;
     });
 
-    // ૪. Bill_Record માં હસ્તે ફિલ્ટર
+    // બિલ રેકોર્ડ ફિલ્ટર
     let filterHastakSelect = document.getElementById("filterHastak");
     if (filterHastakSelect) {
       let curFilter = filterHastakSelect.value;

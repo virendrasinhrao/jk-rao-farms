@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Last Updated Code Date & Time: 02/11/2026 - 23:20 IST
+  Last Updated Code Date & Time: 02/11/2026 - 23:49 IST
   Final Complete Version with Correct Role-Based Dropdowns
 -->
 <!DOCTYPE html>
@@ -86,7 +86,7 @@
 <body>
 
 <div style="background: #1abc9c; color:Black; text-align: center; font-size: 16px; padding: 4px; font-weight: bold;">
-  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">01/11/2026 - 23:28 IST</span>
+  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">01/11/2026 - 23:49 IST</span>
 </div>
 
 <div class="header-bar">
@@ -2033,7 +2033,7 @@
     }
   }
 
-      function confirmUpadActionModal() {
+        function confirmUpadActionModal() {
     document.getElementById("modalUpadConfirm").style.display = "none";
     if(!pendingBillData) return;
 
@@ -2055,6 +2055,7 @@
     let payload = formType === 'Sales' ? { action: actionName, itemRows: itemRows, editEntryId: document.getElementById('editEntryId').value, wantUpad: wantUpad } :
                         { action: actionName, billRow: billRow, itemRows: itemRows, editEntryId: document.getElementById(formType === 'Med' ? 'editMedId' : 'editFertId').value, wantUpad: wantUpad };
 
+    // ૧. પહેલું સેવ ફેટ્ચ (Save Bill)
     fetch(SCRIPT_URL, {
       method: "POST",
       body: JSON.stringify(payload)
@@ -2068,6 +2069,7 @@
         return Promise.reject(errText);
       }
 
+      // ૨. જો ઉપાડમાં જમા કરવાનું કહ્યું હોય તો બીજું ફેટ્ચ રન કરો, નહિતર સીધા સક્સેસ પર જાઓ
       if(wantUpad && formType === 'Sales') {
         let date = document.getElementById("sDate").value;
         let year = getYear(date);
@@ -2092,18 +2094,16 @@
           method: "POST",
           body: JSON.stringify({ action: "saveUpadLedger", rowValues: upadRowValues })
         })
-        .then(resUpad => res.json())
-        .then(resU => {
-          if(!resU || resU.status === "error") {
-            alert("⚠️ ચેતવણી: બિલ સેવ થઈ ગયું પણ ઉપાડ જમા કરવામાં ભૂલ આવી: " + (resU ? resU.message : ""));
-          }
-        });
+        .then(resUpad => resUpad.json());
       }
     })
     .then(() => {
+      // ૩. ફાઇનલ સક્સેસ પ્રોસેસ (બધાજ કેસમાં અહીં આવશે)
       alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ/અપડેટ થઈ ગઈ!");
       if(btn) { btn.innerHTML = originalBtnText || "💾 સેવ કરો"; btn.disabled = false; }
-      document.getElementById(formElementId).reset();
+      
+      let formEl = document.getElementById(formElementId);
+      if(formEl) formEl.reset();
       
       let editInput = document.getElementById('editEntryId');
       if(editInput) editInput.value = "";
@@ -2123,6 +2123,7 @@
       pendingBillData = null;
     });
   }
+
 
 
   function submitUpad(e) {

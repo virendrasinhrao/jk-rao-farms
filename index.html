@@ -989,6 +989,7 @@
     let hastakList = [...ownerList, ...farmerList];
 
 
+        // ૧. સામાન્ય ભાગીદાર ડ્રોપડાઉન (માત્ર ખેડૂત)
     document.querySelectorAll('.bhagiyaList').forEach(sel => {
       let cur = sel.value;
       sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
@@ -996,39 +997,37 @@
       sel.value = cur;
     });
 
-    let uBhagiyaSelect = document.getElementById("uBhagiya");
-    if(uBhagiyaSelect) {
-      let cur = uBhagiyaSelect.value;
-      uBhagiyaSelect.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      farmerList.forEach(b => uBhagiyaSelect.add(new Option(b, b)));
-      uBhagiyaSelect.value = cur;
-    }
+    // ૨. હસ્તે ડ્રોપડાઉન (માલિક અને ખેડૂત બંને)
+    document.querySelectorAll('.hastakList').forEach(sel => {
+      let cur = sel.value;
+      sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
+      hastakList.forEach(h => sel.add(new Option(h, h)));
+      sel.value = cur;
+    });
 
-    let ownerSelect = document.getElementById("sBillOwner");
-    if(ownerSelect) {
-      let curOwner = ownerSelect.value;
-      ownerSelect.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      ownerList.forEach(o => ownerSelect.add(new Option(o, o)));
-      ownerSelect.value = curOwner;
-    }
-
+    // ૩. Bill_Record માં "હસ્તે / નામ ફિલ્ટર કરો" નું ડ્રોપડાઉન
     let filterHastakSelect = document.getElementById("filterHastak");
     if(filterHastakSelect) {
       let curFilter = filterHastakSelect.value;
       let uniqueHastakSet = new Set();
+      
+      // માલિક અને ખેડૂત બંનેના નામ ઉમેરો
+      ownerList.forEach(o => uniqueHastakSet.add(o));
+      farmerList.forEach(f => uniqueHastakSet.add(f));
+
+      // જો Bill_Record માં જૂના ડેટામાં બીજા કોઈ નામ હોય તો તે પણ લો
       if(appData.Bill_Record) {
         appData.Bill_Record.forEach(r => {
           let h = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "").trim();
           if(h && h !== "-") uniqueHastakSet.add(h);
         });
       }
-      if(uniqueHastakSet.size === 0) {
-        farmerList.forEach(b => uniqueHastakSet.add(b));
-      }
+
       filterHastakSelect.innerHTML = '<option value="">-- બધા (All) --</option>';
       uniqueHastakSet.forEach(b => filterHastakSelect.add(new Option(b, b)));
       filterHastakSelect.value = curFilter;
     }
+
 
     let vegVeparis = [];
     let medVeparis = [];

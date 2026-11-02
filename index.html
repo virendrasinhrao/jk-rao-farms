@@ -587,25 +587,64 @@
   </div>
 
   <!-- 7. BILL RECORD SECTION -->
+    <!-- 7. BILL RECORD SECTION (DYNAMIC FILTERS) -->
   <div id="formBillRec" class="section">
-    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📂 બિલ રેકોર્ડ્સ</h3>
+    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📂 બિલ રેકોર્ડ્સ (ડાયનેમિક ફિલ્ટર)</h3>
     
-    <div class="flex-row" style="margin-bottom: 10px;">
-      <div class="form-group">
-        <label>👤 હસ્તે / નામ ફિલ્ટર કરો:</label>
+    <div class="flex-row" style="margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+      <!-- ૧. હસ્તે / નામ ફિલ્ટર -->
+      <div class="form-group" style="flex: 1; min-width: 180px;">
+        <label>👤 હસ્તે / નામ:</label>
         <select id="filterHastak" onchange="filterBillRecordTable()">
           <option value="">-- બધા (All) --</option>
         </select>
       </div>
-      <div class="form-group">
+
+      <!-- ૨. મુખ્ય કેટેગરી ફિલ્ટર (વેચાણ, દવા, ખાતર, ટ્રેક્ટર) -->
+      <div class="form-group" style="flex: 1; min-width: 160px;">
+        <label>📌 આઇટમ / પ્રકાર:</label>
+        <select id="filterCategory" onchange="onCategoryFilterChange()">
+          <option value="">-- બધા પ્રકાર --</option>
+          <option value="વેચાણ">વેચાણ (Sales)</option>
+          <option value="દવા">દવા (Medicine)</option>
+          <option value="ખાતર">ખાતર (Fertilizer)</option>
+          <option value="ટ્રેક્ટર">ટ્રેક્ટર (Tractor)</option>
+        </select>
+      </div>
+
+      <!-- ૩. સબ-ફિલ્ટર ૧: દવા પ્રકાર (માટે દવા સિલેક્ટ થાય ત્યારે જ દેખાશે) -->
+      <div class="form-group" id="groupMedType" style="flex: 1; min-width: 150px; display: none;">
+        <label>🧪 દવા પ્રકાર:</label>
+        <select id="filterMedType" onchange="filterBillRecordTable()">
+          <option value="">-- બધા પ્રકાર --</option>
+          <option value="જંતુનાશક">જંતુનાશક</option>
+          <option value="ઉગાવો">ઉગાવો</option>
+          <option value="નીંદામણ">નીંદામણ</option>
+        </select>
+      </div>
+
+      <!-- ૪. સબ-ફિલ્ટર ૨: કામનો પ્રકાર (માટે ટ્રેક્ટર સિલેક્ટ થાય ત્યારે જ દેખાશે) -->
+      <div class="form-group" id="groupTracWork" style="flex: 1; min-width: 150px; display: none;">
+        <label>🚜 કામનો પ્રકાર:</label>
+        <select id="filterTracWork" onchange="filterBillRecordTable()">
+          <option value="">-- બધા કામ --</option>
+          <option value="હળામણ">હળામણ</option>
+          <option value="દાંતી">દાંતી</option>
+          <option value="રોટાવેટર">રોટાવેટર</option>
+          <option value="પાળા">પાળા</option>
+          <option value="નિકો">નિકો</option>
+          <option value="દવા છાંટવી">દવા છાંટવી</option>
+        </select>
+      </div>
+
+      <!-- ૫. સર્ચ બૉક્સ -->
+      <div class="form-group" style="flex: 1; min-width: 180px;">
         <label>🔍 શોધખોળ:</label>
-        <input type="text" id="searchBillRec" placeholder="બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterBillRecordTable()">
+        <input type="text" id="searchBillRec" placeholder="બિલ નં/તારીખ..." oninput="filterBillRecordTable()">
       </div>
     </div>
 
-    <div id="actionBarBillRec" class="table-actions-bar"></div>
-
-    <div id="latestRecordSummary" style="background: linear-gradient(135deg, #eafaf1, #d4efdf); border-left: 5px solid #27ae60; padding: 14px; border-radius: 6px; margin-bottom: 12px; display: none; box-shadow: 0 2px 5px rgba(0,0,0,0.08); max-width: 320px;">
+    <div id="latestRecordSummary" style="background: #eafaf1; border-left: 5px solid #27ae60; padding: 14px; border-radius: 6px; margin-bottom: 12px; display: none; max-width: 320px;">
       <p id="latestRecordText" style="margin:0;"></p>
     </div>
 
@@ -613,7 +652,7 @@
       <p style="text-align:center;">લોડ થઈ રહ્યું છે...</p>
     </div>
   </div>
-</div>
+
 
 <!-- Master Management Modal -->
 <div id="modalMasterManager" class="modal">

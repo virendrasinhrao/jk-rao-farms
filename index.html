@@ -2408,6 +2408,85 @@
     document.getElementById("modalImageViewer").style.display = "flex";
   }
   function closeImageModal() { document.getElementById("modalImageViewer").style.display = "none"; }
+  // મુખ્ય કેટેગરી બદલાય ત્યારે સબ-ડ્રોપડાઉન દેખાડવા કે છુપાવવા માટે
+  function onCategoryFilterChange() {
+    let cat = document.getElementById("filterCategory").value;
+    let groupMed = document.getElementById("groupMedType");
+    let groupTrac = document.getElementById("groupTracWork");
+
+    if(groupMed) groupMed.style.display = (cat === "દવા") ? "block" : "none";
+    if(groupTrac) groupTrac.style.display = (cat === "ટ્રેક્ટર") ? "block" : "none";
+
+    filterBillRecordTable();
+  }
+
+  // બિલ રેકોર્ડ ટેબલને ડાયનેમિક ફિલ્ટર કરવાનું મુખ્ય ફંક્શન
+  function renderBillRecordTable() {
+    let container = document.getElementById("tableContainerBillRec");
+    let summaryBox = document.getElementById("latestRecordSummary");
+    let summaryText = document.getElementById("latestRecordText");
+    if(!container) return;
+    
+    let rows = appData.Bill_Record || [];
+    if(rows.length === 0) {
+      container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ બિલ રેકોર્ડ ઉપલબ્ધ નથી.</p>";
+      if(summaryBox) summaryBox.style.display = "none";
+      return;
+    }
+
+    let selHastak = document.getElementById("filterHastak") ? document.getElementById("filterHastak").value.trim().toLowerCase() : "";
+    let selCategory = document.getElementById("filterCategory") ? document.getElementById("filterCategory").value.trim().toLowerCase() : "";
+    let selMedType = document.getElementById("filterMedType") ? document.getElementById("filterMedType").value.trim().toLowerCase() : "";
+    let selTracWork = document.getElementById("filterTracWork") ? document.getElementById("filterTracWork").value.trim().toLowerCase() : "";
+    let searchQuery = document.getElementById("searchBillRec") ? document.getElementById("searchBillRec").value.toLowerCase().trim() : "";
+
+    let filteredRows = rows.filter(r => {
+      let hVal = String(r["હસ્તે"] || r["Hastak"] || "").trim().toLowerCase();
+      let rType = String(r["પ્રકાર"] || "").trim().toLowerCase();
+      let subType = String(r["સબ_પ્રકાર"] || "").trim().toLowerCase();
+      let bNo = String(r["બિલ નં"] || "").toLowerCase();
+      let dt = String(r["તારીખ"] || "").toLowerCase();
+
+      let matchH = !selHastak || hVal.includes(selHastak);
+      let matchC = !selCategory || rType.includes(selCategory);
+      let matchM = selCategory !== "દવા" || !selMedType || subType.includes(selMedType);
+      let matchT = selCategory !== "ટ્રેક્ટર" || !selTracWork || subType.includes(selTracWork);
+      let matchS = !searchQuery || bNo.includes(searchQuery) || dt.includes(searchQuery) || hVal.includes(searchQuery);
+
+      return matchH && matchC && matchM && matchT && matchS;
+    });
+
+    if(selHastak && filteredRows.length > 0) {
+      let totalAmt = filteredRows.reduce((sum, r) => sum + parseFloat(r["રકમ"] || 0), 0);
+      summaryText.innerHTML = `<b>${selHastak}</b> - કુલ બિલ: ${filteredRows.length} | કુલ રકમ: ₹ ${totalAmt.toFixed(2)}`;
+      if(summaryBox) summaryBox.style.display = "block";
+    } else {
+      if(summaryBox) summaryBox.style.display = "none";
+    }
+
+    if(filteredRows.length === 0) {
+      container.innerHTML = "<p style='text-align:center; color:#c0392b;'>⚠️ આ ફિલ્ટર મુજબ કોઈ રેકોર્ડ મળ્યો નથી.</p>";
+      return;
+    }
+
+    let html = `<table><tr><th>વર્ષ</th><th>પ્રકાર</th><th>વેપારી/માલિક</th><th>તારીખ</th><th>હસ્તે</th><th>બિલ નં</th><th>રકમ</th><th>સ્ટેટસ</th></tr>`;
+    filteredRows.forEach(r => {
+      html += `<tr>
+        <td>${r["વર્ષ"]||'-'}</td>
+        <td><span class="badge-jama">${r["પ્રકાર"]||'-'}</span></td>
+        <td>${r["વેપારી/માલિક"]||'-'}</td>
+        <td>${String(r["તારીખ"]||'-').split('T')[0]}</td>
+        <td><b>${r["હસ્તે"]||'-'}</b></td>
+        <td>${r["બિલ નં"]||'-'}</td>
+        <td style="color:#8e44ad; font-weight:bold;">₹ ${parseFloat(r["રકમ"]||0).toFixed(2)}</td>
+        <td>${r["જમા / બાકી"]||'-'}</td>
+      </tr>`;
+    });
+    container.innerHTML = html + `</table>`;
+  }
+
+  function filterBillRecordTable() { renderBillRecordTable(); }
+
 </script>
 
 </body>

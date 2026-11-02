@@ -1981,42 +1981,7 @@
     }
   }
 
-  function confirmUpadActionModal() {
-    document.getElementById("modalUpadConfirm").style.display = "none";
-    if(!pendingBillData) return;
-
-    let { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText } = pendingBillData;
-    let choice = document.getElementById("upadChoiceSelect").value;
-    let wantUpad = (choice === "yes");
-
-    if (wantUpad && formType === 'Sales') {
-      itemRows.forEach(r => { r[19] = "✅"; });
-    }
-
-    let btn = document.getElementById(btnId);
-    if(btn) {
-      btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
-      btn.disabled = true;
-    }
-
-    let actionName = formType === 'Sales' ? 'saveSales' : formType === 'Med' ? 'savePesticideBill' : 'saveFertilizerBill';
-    let payload = formType === 'Sales' ? { action: actionName, itemRows: itemRows, editEntryId: document.getElementById('editEntryId').value, wantUpad: wantUpad } :
-                        { action: actionName, billRow: billRow, itemRows: itemRows, editEntryId: document.getElementById(formType === 'Med' ? 'editMedId' : 'editFertId').value, wantUpad: wantUpad };
-
-    fetch(SCRIPT_URL, {
-      method: "POST",
-      body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(res => {
-      if(!res || res.status === "error") {
-        let errText = res && res.message ? res.message : "અજ્ઞાત ભૂલ";
-        alert("❌ નિષ્ફળ (Failed): ડેટા ગૂગલ શીટમાં સેવ થયો નથી! (Error: " + errText + ")");
-        if(btn) { btn.innerHTML = originalBtnText || "💾 સેવ કરો"; btn.disabled = false; }
-        return Promise.reject(errText);
-      }
-
-            if(wantUpad && formType === 'Sales') {
+        if(wantUpad && formType === 'Sales') {
         let date = document.getElementById("sDate").value;
         let year = getYear(date);
         
@@ -2053,6 +2018,7 @@
           }
         });
       }
+
 
     .then(() => {
       alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ થઈ ગઈ!");

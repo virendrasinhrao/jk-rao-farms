@@ -961,27 +961,31 @@
     return "અંકે રૂપિયા " + words.trim() + " પૂરા";
   }
 
-  function populateData() {
-    if(!appData.Bhagiya_Master) return;
+ function populateData() {
+    if (!window.appData) return;
     
     let farmerList = [];
-    appData.Bhagiya_Master.forEach(r => {
-      let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
-      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
-      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "ખેડૂ" || roll === "farmer")) {
-        farmerList.push(name.trim());
-      }
-    });
-    
     let ownerList = [];
-    appData.Bhagiya_Master.forEach(r => {
-      let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
-      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
-      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "માલિક" || roll === "owner")) {
-        ownerList.push(name.trim());
-      }
-    });
+    
+    if (appData.Bhagiya_Master) {
+      appData.Bhagiya_Master.forEach(r => {
+        let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || "";
+        let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
+        
+        if (name && typeof name === 'string' && name.trim() !== "" && name !== "નામ") {
+          let cleanName = name.trim();
+          if (roll === "ખેડૂ" || roll === "farmer") {
+            if (!farmerList.includes(cleanName)) farmerList.push(cleanName);
+          } else if (roll === "માલિક" || roll === "owner") {
+            if (!ownerList.includes(cleanName)) ownerList.push(cleanName);
+          }
+        }
+      });
+    }
+    
+    let hastakList = [...ownerList, ...farmerList];
 
+    // ભાગીદાર ડ્રોપડાઉન (જો હોય તો જ ચાલશે, એરર નહીં આવે)
     document.querySelectorAll('.bhagiyaList').forEach(sel => {
       let cur = sel.value;
       sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
@@ -989,40 +993,35 @@
       sel.value = cur;
     });
 
-    let uBhagiyaSelect = document.getElementById("uBhagiya");
-    if(uBhagiyaSelect) {
-      let cur = uBhagiyaSelect.value;
-      uBhagiyaSelect.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      farmerList.forEach(b => uBhagiyaSelect.add(new Option(b, b)));
-      uBhagiyaSelect.value = cur;
-    }
+    // હસ્તે ડ્રોપડાઉન
+    document.querySelectorAll('.hastakList').forEach(sel => {
+      let cur = sel.value;
+      sel.innerHTML = '<option value="">-- પસંદ કરો --</option>';
+      hastakList.forEach(h => sel.add(new Option(h, h)));
+      sel.value = cur;
+    });
 
-    let ownerSelect = document.getElementById("sBillOwner");
-    if(ownerSelect) {
-      let curOwner = ownerSelect.value;
-      ownerSelect.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      ownerList.forEach(o => ownerSelect.add(new Option(o, o)));
-      ownerSelect.value = curOwner;
-    }
-
+    // બિલ રેકોર્ડ ફિલ્ટર
     let filterHastakSelect = document.getElementById("filterHastak");
-    if(filterHastakSelect) {
+    if (filterHastakSelect) {
       let curFilter = filterHastakSelect.value;
       let uniqueHastakSet = new Set();
-      if(appData.Bill_Record) {
+      
+      ownerList.forEach(o => uniqueHastakSet.add(o));
+      farmerList.forEach(f => uniqueHastakSet.add(f));
+
+      if (appData.Bill_Record) {
         appData.Bill_Record.forEach(r => {
-          let h = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "").trim();
-          if(h && h !== "-") uniqueHastakSet.add(h);
+          let h = String(r["હસ્તે"] || r["Hastak"] || "").trim();
+          if (h && h !== "-") uniqueHastakSet.add(h);
         });
       }
-      if(uniqueHastakSet.size === 0) {
-        farmerList.forEach(b => uniqueHastakSet.add(b));
-      }
+
       filterHastakSelect.innerHTML = '<option value="">-- બધા (All) --</option>';
       uniqueHastakSet.forEach(b => filterHastakSelect.add(new Option(b, b)));
       filterHastakSelect.value = curFilter;
     }
-
+  }
     let vegVeparis = [];
     let medVeparis = [];
     let fertVeparis = [];

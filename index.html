@@ -968,7 +968,7 @@
     let farmerList = [];
     let ownerList = [];
     
-    if (appData.Bhagiya_Master) {
+        if (appData.Bhagiya_Master) {
       appData.Bhagiya_Master.forEach(r => {
         let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || "";
         let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
@@ -983,6 +983,7 @@
         }
       });
     }
+
     
     // હસ્તે માટે: માલિક અને ખેડૂત બંને ભેગા
     let hastakList = [...ownerList, ...farmerList];

@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing
   File: index.html
-  Last Updated Code Date & Time: 02/11/2026 - 19:00 IST
+  Last Updated Code Date & Time: 02/11/2026 - 19:27 IST
   Final Complete Version with Fixed Promise Flow & Upad Credit
 -->
 <!DOCTYPE html>
@@ -86,7 +86,7 @@
 <body>
 
 <div style="background: #1abc9c; color: white; text-align: center; font-size: 11px; padding: 4px; font-weight: bold;">
-  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">02/11/2026 - 19:00 IST</span>
+  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">02/11/2026 - 19:27 IST</span>
 </div>
 
 <div class="header-bar">
@@ -961,7 +961,7 @@
     return "અંકે રૂપિયા " + words.trim() + " પૂરા";
   }
 
-         function populateData() {
+    function populateData() {
     if (!window.appData) return;
     
     let farmerList = [];
@@ -1035,31 +1035,41 @@
         let type = String(r["પ્રકાર"] || "").trim().toLowerCase();
         if(name) {
           allVeparis.push(name);
-          if(type === "vegitable" || type.includes("શાકભાજી")) vegVeparis.push(name);
-          if(type === "દવા" || type.includes("દવા")) medVeparis.push(name);
-          if(type === "ખાતર" || type.includes("ખાતર")) fertVeparis.push(name);
-        }
-      });
+function populateData() {
+    if(!appData.Bhagiya_Master) return;
+    
+    let upadBhagiyas = [];
+    appData.Bhagiya_Master.forEach(r => {
+      let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
+      let roll = String(r["Roll"] || r["રોલ"] || "").trim().toLowerCase();
+      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ" && (roll === "ખેડૂ" || roll === "farmer")) {
+        upadBhagiyas.push(name.trim());
+      }
+    });
+    
+    let uBhagiyaSelect = document.getElementById("uBhagiya");
+    if(uBhagiyaSelect) {
+      let cur = uBhagiyaSelect.value;
+      uBhagiyaSelect.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
+      upadBhagiyas.forEach(b => uBhagiyaSelect.add(new Option(b, b)));
+      uBhagiyaSelect.value = cur;
     }
 
-    let sVepari = document.getElementById("sVepari");
-    if(sVepari) {
-      let cur = sVepari.value; sVepari.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      vegVeparis.forEach(v => sVepari.add(new Option(v, v))); sVepari.value = cur;
-    }
+    let allBhagiyas = [];
+    appData.Bhagiya_Master.forEach(r => {
+      let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
+      if(name && typeof name === 'string' && name.trim() !== "" && name !== "નામ") allBhagiyas.push(name.trim());
+    });
 
-    let mVepari = document.getElementById("mVepari");
-    if(mVepari) {
-      let cur = mVepari.value; mVepari.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      medVeparis.forEach(v => mVepari.add(new Option(v, v))); mVepari.value = cur;
-    }
-
-    let fVepari = document.querySelector(".fertVepariList");
-    if(fVepari) {
-      let cur = fVepari.value; fVepari.innerHTML = '<option value="">-- પસંદ કરો --</option>';
-      fertVeparis.forEach(v => fVepari.add(new Option(v, v))); fVepari.value = cur;
-    }
-
+    document.querySelectorAll('.bhagiyaList').forEach(sel => { 
+      if(sel.id !== "uBhagiya") {
+        let cur = sel.value; 
+        sel.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
+        allBhagiyas.forEach(b => sel.add(new Option(b, b))); 
+        sel.value = cur;
+      }
+    });
+    
     let providers = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["Name"];
@@ -1068,14 +1078,52 @@
         providers.push(name + " (" + (r["Roll"] || "ભાગીદાર") + ")");
       }
     });
-    allVeparis.forEach(v => providers.push(v + " (વેપારી)"));
-    
+    if(appData.Merchant_Master) {
+      appData.Merchant_Master.forEach(r => {
+        let mName = r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"];
+        let mType = String(r["પ્રકાર"] || "").trim().toLowerCase();
+        if(mName && !mType.includes("દવા") && !mType.includes("ખાતર") && !mType.includes("medicine") && !mType.includes("fertilizer")) {
+          providers.push(mName + " (" + (r["પ્રકાર"] || "વેપારી") + ")");
+        }
+      });
+    }
     let uProvider = document.getElementById("uProvider");
     if(uProvider) {
       let cur = uProvider.value;
       uProvider.innerHTML = '<option value="">-- પસંદ કરો --</option>';
       providers.forEach(p => uProvider.add(new Option(p, p)));
       uProvider.value = cur;
+    }
+
+    let veparis = appData.Merchant_Master ? appData.Merchant_Master.filter(r => String(r["પ્રકાર"] || "").trim() === "Vegitable").map(r => r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"]) : [];
+    let sVepari = document.getElementById("sVepari");
+    if(sVepari) {
+      let cur = sVepari.value; sVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
+      veparis.forEach(v => sVepari.add(new Option(v, v))); sVepari.value = cur;
+    }
+
+    let medVeparis = [], fertVeparis = [];
+    if(appData.Merchant_Master) {
+      appData.Merchant_Master.forEach(r => {
+        let type = String(r["પ્રકાર"] || "").trim().toLowerCase();
+        let name = r["વેપારીનું_નામ"] || r["વેપારીનું નામ"] || r["નામ"];
+        if(name) {
+          if(type === "દવા" || type === "medicine" || type.includes("દવા")) medVeparis.push(name);
+          if(type === "ખાતર" || type === "fertilizer" || type.includes("ખાતર")) fertVeparis.push(name);
+        }
+      });
+    }
+
+    let mVepari = document.getElementById("mVepari");
+    if(mVepari) {
+      let cur = mVepari.value; mVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
+      medVeparis.forEach(v => mVepari.add(new Option(v, v))); mVepari.value = cur;
+    }
+
+    let fVepari = document.querySelector(".fertVepariList");
+    if(fVepari) {
+      let cur = fVepari.value; fVepari.innerHTML = '<option value="">-- પસંદ કરો --</option><option value="NEW">➕ નવો ઉમેરો</option>';
+      fertVeparis.forEach(v => fVepari.add(new Option(v, v))); fVepari.value = cur;
     }
 
     document.querySelectorAll('.pakList').forEach(sel => {
@@ -1092,12 +1140,13 @@
 
     document.querySelectorAll('.khatarList').forEach(sel => {
       let currentVal = sel.value; 
-      sel.innerHTML = '<option value="">-- ખાતર --</option>';
+      sel.innerHTML = '<option value="">-- ખાતર --</option><option value="NEW">➕ નવું ખાતર ઉમેરો</option>';
       let fertSource = appData.Fertilizer_Master || appData.Medicine_Master || [];
       fertSource.forEach(m => { let fName = m["ખાતરનું_નામ"] || m["ખાતરનું નામ"] || m["દવાનું_નામ"] || m["દવાનું નામ"] || m["નામ"] || ""; if(fName) sel.add(new Option(fName, fName)); });
       sel.value = currentVal;
     });
   }
+
 
   function openMasterModal(sheetKey) {
     activeMasterSheet = sheetKey;

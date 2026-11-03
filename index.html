@@ -1992,78 +1992,64 @@
     });
   }
 
-  function submitFertForm(e) {
-    e.preventDefault();
-    let btn = document.getElementById("btnFert");
-    let originalText = btn.innerHTML;
-    btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
-    btn.disabled = true;
+ function saveFertilizerBill(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var billSheet = ss.getSheetByName("Fertilizer_Bill");
+  var itemSheet = ss.getSheetByName("Fertilizer_Items");
+  var billRow = e.billRow;
+  var itemRows = e.itemRows;
+  var editEntryId = e.editEntryId;
 
-    let date = v("fDate");
-    let year = getYear(date);
-    let entryId = document.getElementById("editFertId").value || ("FERT-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
-    let billNo = v("fBill") || "N/A";
-    let bhagiya = v("fBhagiya");
-    let vepari = v("fVepari");
-    let subTotal = parseFloat(v("fSubTotal").replace("₹", "").trim()) || 0;
-    let tax = parseFloat(v("fTax")) || 0;
-    let gst = parseFloat(v("mGst2").replace("₹", "").trim()) || 0;
-    let cst = parseFloat(v("mCst2").replace("₹", "").trim()) || 0;
-    let totalBill = parseFloat(v("fTotalBill").replace("₹", "").trim()) || 0;
-    let words = v("fTotalWords");
-    let hastak = v("fHastak");
-    let status = v("fStatus");
-    let details = v("fDetails") || "-";
-
-    let rows = document.querySelectorAll("#fertItemsContainer .item-row");
-    let itemRows = [];
-
-    handlePhotoUpload("fPhoto", function(photoBase64) {
-      rows.forEach((r, index) => {
-        let khatar = r.querySelector('.khatarList').value;
-        let weight = r.querySelector('.fWeight').value || 0;
-        let pack = r.querySelector('.fPack').value || "";
-        let qty = r.querySelector('.fQty').value || 1;
-        let bhav = parseFloat(r.querySelector('.fBhav').value) || 0;
-        let amt = parseFloat(r.querySelector('.fAmt').value.replace("₹", "").trim()) || 0;
-        let pak = r.querySelector('.pakList').value;
-        let kShare = r.querySelector('.fKShare').value || 0;
-        let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
-
-        let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-        itemRows.push([year, rId, date, billNo, bhagiya, vepari, khatar, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
-      });
-
-      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, details, photoBase64];
-      triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm', originalText);
-    });
-  }
-
-  function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId, originalBtnText) {
-    let partnerName = (formType === 'Sales') ? document.getElementById("sBhagiya").value : billRow[4];
-    let billTotal = 0;
-    if(formType === 'Sales') {
-      itemRows.forEach(r => { billTotal += parseFloat(r[11]) || 0; });
-    } else {
-      billTotal = parseFloat(billRow[10]) || 0;
+  if (editEntryId) {
+    var bRows = billSheet.getDataRange().getValues();
+    for (var i = 1; i < bRows.length; i++) {
+      if (String(bRows[i][1]).trim() === String(editEntryId).trim()) {
+        billSheet.deleteRow(i + 1);
+        break;
+      }
+    }
+    var iRows = itemSheet.getDataRange().getValues();
+    for (var j = iRows.length - 1; j >= 1; j--) {
+      if (String(iRows[j][1]).trim() === String(editEntryId).trim()) {
+        itemSheet.deleteRow(j + 1);
+      }
     }
 
-    let currentBal = getCategoryBalanceVal(formType, partnerName);
-    let categoryText = formType === 'Sales' ? 'વેચાણ બિલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
-
-    if (currentBal > 0) {
-      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
-      let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (ખેડૂ ઉપાડ : ₹ " + currentBal.toFixed(2) + ") શું આ બિલ ઉપાડમાં જમા કરવું છે?";
-      document.getElementById("upadConfirmMsg").innerText = msg;
-      document.getElementById("upadChoiceSelect").value = "no";
-      document.getElementById("modalUpadConfirm").style.display = "block";
-    } else {
-      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
-      document.getElementById("upadChoiceSelect").value = "no";
-      confirmUpadActionModal();
+    var billRecSheet = ss.getSheetByName("Bill_Record");
+    if (billRecSheet) {
+      var billRows = billRecSheet.getDataRange().getValues();
+      for (var k = billRows.length - 1; k >= 1; k--) {
+        if (String(billRows[k][1]).trim().indexOf(String(editEntryId).trim()) > -1) {
+          billRecSheet.deleteRow(k + 1);
+        }
+      }
     }
   }
 
+  // ૧. મુખ્ય બિલ શીટમાં રો ઉમેરો (ફ્રન્ટએન્ડના સાચા ક્રમ મુજબ)
+  billSheet.appendRow(billRow);
+
+  // ૨. આઇટમ્સ શીટમાં રો ઉમેરો
+  itemRows.forEach(function (r) { itemSheet.appendRow(r); });
+
+  // ૩. Bill_Record માટે સાચા ક્રમ મુજબ ડેટા લો
+  var year = billRow[0];        // 0. વર્ષ
+  var entryId = billRow[1];     // 1. એન્ટ્રી Id
+  var date = billRow[2];        // 2. તારીખ
+  var billNo = billRow[3];      // 3. બિલ નં
+  var bhagiya = billRow[4];     // 4. ભાગીદાર (Bill To / નામ)
+  var vepari = billRow[5];      // 5. વેપારી
+  var totalBill = billRow[10];  // 10. બિલ ની કુલ રકમ
+  var hastak = billRow[12];     // 12. હસ્તે
+  var status = billRow[13];     // 13. સ્થિતિ
+  var photo = billRow[15] || "";  // 15. બિલ નો ફોટો
+
+  // Bill_Record ની કૉલમ્સનો ક્રમ: [વર્ષ, એન્ટ્રી Id, તારીખ, હસ્તે, વેપારી, બિલ નં, પાઉચ નં., રકમ, જમા / બાકી, કુલ પાઉચ, કુલ જમા રકમ, Photo, Bill To/નામ]
+  var billRecRow = [year, entryId, date, hastak, vepari, billNo, 0, totalBill, status, 0, 0, photo, bhagiya];
+  appendToBillRecordUnique(ss, billRecRow);
+
+  return ContentService.createTextOutput(JSON.stringify({ "status": "success" })).setMimeType(ContentService.MimeType.JSON);
+}
   function confirmUpadActionModal() {
     document.getElementById("modalUpadConfirm").style.display = "none";
     if(!pendingBillData) return;

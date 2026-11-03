@@ -2486,6 +2486,67 @@
   }
 
   function filterBillRecordTable() { renderBillRecordTable(); }
+  <div id="formBillRec" class="section" style="display:none;">
+    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📂 બિલ રેકોર્ડ્સ (ડાયનેમિક ફિલ્ટર)</h3>
+    
+    <div class="flex-row" style="margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+      <!-- ૧. હસ્તે / નામ ફિલ્ટર -->
+      <div class="form-group" style="flex: 1; min-width: 180px;">
+        <label>👤 હસ્તે / નામ:</label>
+        <select id="filterHastak" onchange="filterBillRecordTable()">
+          <option value="">-- બધા (All) --</option>
+        </select>
+      </div>
+
+      <!-- ૨. મુખ્ય કેટેગરી ફિલ્ટર -->
+      <div class="form-group" style="flex: 1; min-width: 160px;">
+        <label>📌 આઇટમ / પ્રકાર:</label>
+        <select id="filterCategory" onchange="onCategoryFilterChange()">
+          <option value="">-- બધા પ્રકાર --</option>
+          <option value="વેચાણ">વેચાણ (Sales)</option>
+          <option value="દવા">દવા (Medicine)</option>
+          <option value="ખાતર">ખાતર (Fertilizer)</option>
+          <option value="ટ્રેક્ટર">ટ્રેક્ટર (Tractor)</option>
+        </select>
+      </div>
+
+      <!-- ૩. દવા પ્રકાર સબ-ફિલ્ટર -->
+      <div class="form-group" id="groupMedType" style="flex: 1; min-width: 150px; display: none;">
+        <label>🧪 દવા પ્રકાર:</label>
+        <select id="filterMedType" onchange="filterBillRecordTable()">
+          <option value="">-- બધા પ્રકાર --</option>
+        </select>
+      </div>
+
+      <!-- ૪. ટ્રેક્ટર કામ પ્રકાર સબ-ફિલ્ટર -->
+      <div class="form-group" id="groupTracWork" style="flex: 1; min-width: 150px; display: none;">
+        <label>🚜 કામનો પ્રકાર:</label>
+        <select id="filterTracWork" onchange="filterBillRecordTable()">
+          <option value="">-- બધા કામ --</option>
+          <option value="હળામણ">હળામણ</option>
+          <option value="દાંતી">દાંતી</option>
+          <option value="રોટાવેટર">રોટાવેટર</option>
+          <option value="પાળા">પાળા</option>
+          <option value="નિકો">નિકો</option>
+          <option value="દવા છાંટવી">દવા છાંટવી</option>
+        </select>
+      </div>
+
+      <!-- ૫. સર્ચ બૉક્સ -->
+      <div class="form-group" style="flex: 1; min-width: 180px;">
+        <label>🔍 શોધખોળ:</label>
+        <input type="text" id="searchBillRec" placeholder="બિલ નં/તારીખ..." oninput="filterBillRecordTable()">
+      </div>
+    </div>
+
+    <div id="latestRecordSummary" style="background: #eafaf1; border-left: 5px solid #27ae60; padding: 14px; border-radius: 6px; margin-bottom: 12px; display: none; max-width: 320px;">
+      <p id="latestRecordText" style="margin:0;"></p>
+    </div>
+
+    <div id="tableContainerBillRec" style="overflow-x:auto;">
+      <p style="text-align:center;">લોડ થઈ રહ્યું છે...</p>
+    </div>
+  </div>
 
 </script>
 

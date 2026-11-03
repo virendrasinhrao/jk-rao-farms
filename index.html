@@ -1,8 +1,7 @@
 <!--  
-  Project: J K Rao Farms - POS Billing
-  File: index.html
-  Last Updated Code Date & Time: 03 /11/2026 - 19 :21 IST
-  Final Complete Version with Correct Role-Based Dropdowns
+  Project: J K Rao Farms - POS Billing  
+  File: index.html  
+  Final Cleaned Version  
 -->
 <!DOCTYPE html>
 <html>
@@ -586,8 +585,7 @@
     </div>
   </div>
 
-  <!-- 7. BILL RECORD SECTION -->
-    <!-- 7. BILL RECORD SECTION (DYNAMIC FILTERS) -->
+  <!-- 7. BILL RECORD SECTION (HTML - બરાબર અહીં જ મૂકવાનું છે) -->
   <div id="formBillRec" class="section">
     <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📂 બિલ રેકોર્ડ્સ (ડાયનેમિક ફિલ્ટર)</h3>
     
@@ -600,7 +598,7 @@
         </select>
       </div>
 
-      <!-- ૨. મુખ્ય કેટેગરી ફિલ્ટર (વેચાણ, દવા, ખાતર, ટ્રેક્ટર) -->
+      <!-- ૨. મુખ્ય કેટેગરી ફિલ્ટર -->
       <div class="form-group" style="flex: 1; min-width: 160px;">
         <label>📌 આઇટમ / પ્રકાર:</label>
         <select id="filterCategory" onchange="onCategoryFilterChange()">
@@ -612,18 +610,15 @@
         </select>
       </div>
 
-      <!-- ૩. સબ-ફિલ્ટર ૧: દવા પ્રકાર (માટે દવા સિલેક્ટ થાય ત્યારે જ દેખાશે) -->
+      <!-- ૩. દવા પ્રકાર સબ-ફિલ્ટર -->
       <div class="form-group" id="groupMedType" style="flex: 1; min-width: 150px; display: none;">
         <label>🧪 દવા પ્રકાર:</label>
         <select id="filterMedType" onchange="filterBillRecordTable()">
           <option value="">-- બધા પ્રકાર --</option>
-          <option value="જંતુનાશક">જંતુનાશક</option>
-          <option value="ઉગાવો">ઉગાવો</option>
-          <option value="નીંદામણ">નીંદામણ</option>
         </select>
       </div>
 
-      <!-- ૪. સબ-ફિલ્ટર ૨: કામનો પ્રકાર (માટે ટ્રેક્ટર સિલેક્ટ થાય ત્યારે જ દેખાશે) -->
+      <!-- ૪. ટ્રેક્ટર કામ પ્રકાર સબ-ફિલ્ટર -->
       <div class="form-group" id="groupTracWork" style="flex: 1; min-width: 150px; display: none;">
         <label>🚜 કામનો પ્રકાર:</label>
         <select id="filterTracWork" onchange="filterBillRecordTable()">
@@ -653,36 +648,32 @@
     </div>
   </div>
 
+</div> <!-- /.card પૂરો થયો -->
 
-<!-- Master Management Modal -->
+<!-- Modals -->
 <div id="modalMasterManager" class="modal">
   <div class="modal-content" style="max-width: 600px; text-align: left;">
     <h3 id="masterModalTitle" style="color:#2c3e50; margin-top:0; text-align:center;">⚙️ રેકોર્ડ મેનેજમેન્ટ</h3>
-    
     <div style="margin-bottom: 12px; display: flex; gap: 8px;">
       <button type="button" class="btn-submit" style="margin:0; background:#27ae60;" onclick="openAddMasterForm()">➕ નવો ઉમેરો</button>
       <button type="button" class="btn-submit" style="margin:0; background:#f39c12;" onclick="openEditMasterForm()">✏️ એડિટ કરો</button>
       <button type="button" class="btn-submit" style="margin:0; background:#e74c3c;" onclick="deleteSelectedMasterRecord()">🗑️ ડિલીટ કરો</button>
     </div>
-
     <div id="masterTableContainer" style="max-height: 300px; overflow: auto; border: 1px solid #ccc; border-radius: 4px;"></div>
     <button type="button" onclick="document.getElementById('modalMasterManager').style.display='none'" style="margin-top: 15px; width: 100%; padding: 8px; background: #7f8c8d; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">બંધ કરો</button>
   </div>
 </div>
 
-<!-- Add/Edit Master Modal Form -->
 <div id="modalAddEditMaster" class="modal">
   <div class="modal-content" style="max-width: 400px; text-align: left;">
     <h3 id="addEditMasterTitle" style="color:#2c3e50; margin-top:0; text-align:center;">➕ નવો રેકોર્ડ ઉમેરો</h3>
     <input type="hidden" id="masterSheetKey" value="">
     <input type="hidden" id="masterOriginalName" value="">
-    
     <div class="form-group"><label>નામ:</label><input type="text" id="mNameInput"></div>
     <div class="form-group"><label>મોબાઈલ નંબર:</label><input type="number" id="mPhoneInput"></div>
     <div class="form-group"><label>ગામ / સરનામું:</label><input type="text" id="mAddInput"></div>
     <div class="form-group" id="mRollGroup"><label>રોલ (દા.ત. ખેડૂ):</label><input type="text" id="mRollInput" value="ખેડૂ"></div>
     <div class="form-group" id="mCategoryGroup" style="display:none;"><label>પ્રકાર:</label><select id="mCategoryInput"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="દવા">દવા</option><option value="ખાતર">ખાતર</option><option value="અન્ય વેપારી">અન્ય વેપારી</option></select></div>
-
     <div style="display: flex; gap: 10px; margin-top: 15px;">
       <button type="button" class="btn-submit" style="background:#27ae60; margin:0;" onclick="saveMasterRecordData()">સેવ કરો</button>
       <button type="button" class="btn-submit" style="background:#7f8c8d; margin:0;" onclick="document.getElementById('modalAddEditMaster').style.display='none'">કેન્સલ</button>
@@ -690,7 +681,6 @@
   </div>
 </div>
 
-<!-- Modal Image Viewer -->
 <div id="modalImageViewer" class="modal">
   <div class="modal-content" style="max-width: 400px;">
     <h3 style="color:#2c3e50; margin-top:0;">📷 બિલ ફોટો વ્યુઅર</h3>
@@ -704,12 +694,10 @@
   </div>
 </div>
 
-<!-- Custom Confirmation Modal -->
 <div id="modalUpadConfirm" class="modal">
   <div class="modal-content" style="text-align:center;">
     <h3 style="color:#e67e22; margin-top:0;">💸 ઉપાડ લેજર જમા એન્ટ્રી</h3>
     <p id="upadConfirmMsg" style="font-size:15px; font-weight:bold; color:#c0392b; margin-bottom:12px; line-height:1.5;"></p>
-    
     <div class="form-group" style="text-align:left;">
       <label><b>ઉપાડમાં જમા કરવું છે?:</b></label>
       <select id="upadChoiceSelect" style="font-weight:bold; font-size:14px; background:#f4ecf7; color:#8e44ad; border: 2px solid #8e44ad;">
@@ -717,7 +705,6 @@
         <option value="yes">હા (જમા લો)</option>
       </select>
     </div>
-
     <div style="display: flex; gap: 10px; margin-top: 15px;">
       <button type="button" class="btn-submit" style="background:#27ae60;" onclick="confirmUpadActionModal()">કન્ફર્મ કરો</button>
       <button type="button" class="btn-submit" style="background:#e74c3c;" onclick="document.getElementById('modalUpadConfirm').style.display='none'">કેન્સલ</button>
@@ -725,7 +712,6 @@
   </div>
 </div>
 
-<!-- Modal MPIN -->
 <div id="modalMpin" class="modal">
   <div class="modal-content" style="text-align:center;">
     <h3 style="color:#c0392b; margin-top:0;">🔒 સિક્યુરિટી MPIN</h3>
@@ -736,6 +722,7 @@
   </div>
 </div>
 
+<!-- JavaScript Section -->
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby7m8_dmmJCDni9skYLfrQbw0n95isLbkN782-ZdrvK-fjGin1ct3JawhC2tTldsdiQwg/exec";
   const CORRECT_MPIN = "1234";
@@ -767,7 +754,7 @@
     }
   }
 
-    function fetchData() {
+  function fetchData() {
     let icon = document.getElementById("refreshIcon");
     if(icon) icon.className = "spin";
     fetch(SCRIPT_URL)
@@ -778,10 +765,7 @@
         updateDashboard(); 
         renderGallery(); 
         renderBillRecordTable();
-        
-        // 👉 અહીંયા આ નવી લાઇન ઉમેરી દો:
         populateBillRecordFilters(); 
-
         ['Sales', 'Med', 'Fert', 'Trac', 'Upad'].forEach(t => renderTable(t));
         if(icon) icon.className = "";
       })
@@ -792,6 +776,34 @@
       });
   }
 
+  // બિલ રેકોર્ડ ફિલ્ટર ડ્રોપડાઉન માસ્ટર શીટમાંથી ભરવા માટેનું ફંક્શન
+  function populateBillRecordFilters() {
+    let filterHastakSelect = document.getElementById("filterHastak");
+    if(filterHastakSelect && appData.Bhagiya_Master) {
+      let hastakSet = new Set();
+      appData.Bhagiya_Master.forEach(r => {
+        let name = r["નામ"] || r["Name"] || "";
+        if(name && name !== "નામ") hastakSet.add(name.trim());
+      });
+      let curVal = filterHastakSelect.value;
+      filterHastakSelect.innerHTML = '<option value="">-- બધા (All) --</option>';
+      hastakSet.forEach(h => filterHastakSelect.add(new Option(h, h)));
+      filterHastakSelect.value = curVal;
+    }
+
+    let filterMedTypeSelect = document.getElementById("filterMedType");
+    if(filterMedTypeSelect && appData.Medicine_Master) {
+      let medTypesSet = new Set();
+      appData.Medicine_Master.forEach(r => {
+        let pType = r["પ્રકાર"] || r["Type"] || Object.values(r)[1] || "";
+        if(pType && pType !== "પ્રકાર") medTypesSet.add(pType.trim());
+      });
+      let curMed = filterMedTypeSelect.value;
+      filterMedTypeSelect.innerHTML = '<option value="">-- બધા પ્રકાર --</option>';
+      medTypesSet.forEach(t => filterMedTypeSelect.add(new Option(t, t)));
+      filterMedTypeSelect.value = curMed;
+    }
+  }
 
   function checkDuplicateBill(inputEl, sheetName, btnId) {
     let billNo = inputEl.value.trim();
@@ -876,7 +888,6 @@
 
   function getCategoryBalanceVal(sectionType, partnerName) {
     if(!partnerName) return 0;
-    
     let targetType = '', altType = '';
     if(sectionType === 'Sales') { targetType = 'વેચાણ બિલ'; altType = 'વેચાણ બિલ જમા'; }
     else if(sectionType === 'Med') { targetType = 'દવા ખરીદી માટે'; altType = 'દવા બિલ જમા'; }
@@ -885,7 +896,6 @@
     let dateId = sectionType === 'Sales' ? 'sDate' : sectionType === 'Med' ? 'mDate' : 'fDate';
     let dateVal = document.getElementById(dateId) ? document.getElementById(dateId).value : new Date().toISOString().split('T')[0];
     let targetYear = getYear(dateVal);
-
     let totalDebit = 0, totalCredit = 0;
 
     if(appData.Upad_Ledger) {
@@ -904,7 +914,6 @@
         }
       });
     }
-
     return totalDebit - totalCredit;
   }
 
@@ -1008,7 +1017,6 @@
   function populateData() {
     if(!appData.Bhagiya_Master) return;
     
-    // ૧. માત્ર ખેડૂતોનું લિસ્ટ (ભાગીદાર માટે)
     let farmerList = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
@@ -1018,7 +1026,6 @@
       }
     });
 
-    // ૨. ખેડૂત અને માલિક બંનેનું લિસ્ટ (હસ્તે માટે)
     let hastakList = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
@@ -1031,7 +1038,6 @@
       }
     });
 
-    // ૩. માત્ર માલિકોનું લિસ્ટ (Bill To / નામ માટે)
     let ownerList = [];
     appData.Bhagiya_Master.forEach(r => {
       let name = r["નામ"] || r["નામ "] || r["Name"] || r["name"] || Object.values(r)[1] || Object.values(r)[0];
@@ -1044,7 +1050,6 @@
       }
     });
 
-    // ૪. ઉપાડ લેનાર ડ્રોપડાઉનમાં માત્ર ખેડૂત
     let uBhagiyaSelect = document.getElementById("uBhagiya");
     if(uBhagiyaSelect) {
       let cur = uBhagiyaSelect.value;
@@ -1053,7 +1058,6 @@
       uBhagiyaSelect.value = cur;
     }
 
-    // ૫. 🌟 Bill To / નામ (માલિક) ડ્રોપડાઉનમાં માત્ર માલિકો
     let ownerSelect = document.getElementById("sBillOwner");
     if(ownerSelect) {
       let curOwner = ownerSelect.value;
@@ -1062,7 +1066,6 @@
       ownerSelect.value = curOwner;
     }
 
-    // ૬. 🌟 મુખ્ય ભાગીદાર ડ્રોપડાઉનમાં માત્ર ખેડૂત
     let mainBhagiyaIds = ["sBhagiya", "mBhagiya", "fBhagiya", "tBhagiya"];
     mainBhagiyaIds.forEach(id => {
       let sel = document.getElementById(id);
@@ -1074,7 +1077,6 @@
       }
     });
 
-    // ૭. 🌟 હસ્તે ડ્રોપડાઉનમાં ખેડૂત અને માલિક બંને
     let hastakIds = ["sHastak", "mHastak", "fHastak", "tHastak"];
     hastakIds.forEach(id => {
       let sel = document.getElementById(id);
@@ -1162,13 +1164,6 @@
       sel.value = currentVal;
     });
   }
-
-  function checkBhagiyaNew(sel) { if(sel.value === "NEW") { document.getElementById("modalBhagiya").style.display = "block"; sel.value = ""; } }
-  function checkVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
-  function checkMedVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("nvCategory").value = "દવા"; document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
-  function checkFertVepariNew(sel) { if(sel.value === "NEW") { document.getElementById("nvCategory").value = "ખાતર"; document.getElementById("modalVepari").style.display = "block"; sel.value = ""; } }
-  function checkCropNew(sel) { if(sel.value === "NEW") { document.getElementById("modalCrop").style.display = "block"; sel.value = ""; } }
-  function checkFertilizerNew(sel) { if(sel.value === "NEW") { document.getElementById("modalFertilizer").style.display = "block"; sel.value = ""; } }
 
   function openMasterModal(sheetKey) {
     activeMasterSheet = sheetKey;
@@ -1547,31 +1542,23 @@
     calcMedBill();
   }
 
-    let getCropShare = function(cropName) {
+  let getCropShare = function(cropName) {
     if (!cropName) return 0;
-    
-    // જો પાકના નામમાં જ ટકા લખેલા હોય (દા.ત. "કપાસ (50%)" અથવા "50")
     let match = cropName.match(/\((.*?)\)/) || cropName.match(/([0-9.]+)%/);
     if (match) { 
       let val = parseFloat(match[1]); 
       if (!isNaN(val)) return val <= 1 ? val : val / 100; 
     }
-
     if (!appData.Crop_Master) return 0;
-    
-    // Crop_Master માંથી પાકનું નામ સરખાવીને ટકા મેળવો
     let crop = appData.Crop_Master.find(c => {
       let cName = String(c["પાકનું નામ"] || c["Crop_Name"] || "").trim();
       return cName.toLowerCase() === String(cropName).trim().toLowerCase();
     });
-
     if (!crop) return 0;
     let share = crop["ભાગ_ટકા"] || crop["Share"] || crop["ટકા"] || 0;
     let parsed = parseFloat(share.toString().replace(/[^0-9.]/g, '')) || 0;
-    
     return parsed > 1 ? parsed / 100 : parsed;
   };
-
 
   function calcMedBill() {
     let rows = document.querySelectorAll("#medItemsContainer .item-row");
@@ -2077,7 +2064,7 @@
     }
   }
 
-        function confirmUpadActionModal() {
+  function confirmUpadActionModal() {
     document.getElementById("modalUpadConfirm").style.display = "none";
     if(!pendingBillData) return;
 
@@ -2099,7 +2086,6 @@
     let payload = formType === 'Sales' ? { action: actionName, itemRows: itemRows, editEntryId: document.getElementById('editEntryId').value, wantUpad: wantUpad } :
                         { action: actionName, billRow: billRow, itemRows: itemRows, editEntryId: document.getElementById(formType === 'Med' ? 'editMedId' : 'editFertId').value, wantUpad: wantUpad };
 
-    // ૧. પહેલું સેવ ફેટ્ચ (Save Bill)
     fetch(SCRIPT_URL, {
       method: "POST",
       body: JSON.stringify(payload)
@@ -2113,11 +2099,9 @@
         return Promise.reject(errText);
       }
 
-      // ૨. જો ઉપાડમાં જમા કરવાનું કહ્યું હોય તો બીજું ફેટ્ચ રન કરો, નહિતર સીધા સક્સેસ પર જાઓ
       if(wantUpad && formType === 'Sales') {
         let date = document.getElementById("sDate").value;
         let year = getYear(date);
-        
         let salesEntryId = itemRows.length > 0 ? itemRows[0][1] : ("SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
         let billNoVal = document.getElementById("sBill").value || "N/A";
         let provider = document.getElementById("sVepari").value;
@@ -2142,7 +2126,6 @@
       }
     })
     .then(() => {
-      // ૩. ફાઇનલ સક્સેસ પ્રોસેસ (બધાજ કેસમાં અહીં આવશે)
       alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ/અપડેટ થઈ ગઈ!");
       if(btn) { btn.innerHTML = originalBtnText || "💾 સેવ કરો"; btn.disabled = false; }
       
@@ -2157,7 +2140,6 @@
 
       pendingBillData = null;
       fetchData();
-      
       switchSubTab(formType === 'Sales' ? 'Sales' : formType === 'Med' ? 'Med' : 'Fert', 'View');
     })
     .catch(err => {
@@ -2167,8 +2149,6 @@
       pendingBillData = null;
     });
   }
-
-
 
   function submitUpad(e) {
     e.preventDefault();
@@ -2315,105 +2295,14 @@
     });
   }
 
-  function renderBillRecordTable() {
-    let container = document.getElementById("tableContainerBillRec");
-    let summaryBox = document.getElementById("latestRecordSummary");
-    let summaryText = document.getElementById("latestRecordText");
-    let actionBar = document.getElementById("actionBarBillRec");
-    if(!container) return;
-    
-    let rows = appData.Bill_Record || [];
-    if(rows.length === 0) {
-      container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ બિલ રેકોર્ડ ઉપલબ્ધ નથી.</p>";
-      if(summaryBox) summaryBox.style.display = "none";
-      if(actionBar) actionBar.style.display = "none";
-      return;
-    }
-
-    let selectedHastak = document.getElementById("filterHastak") ? document.getElementById("filterHastak").value.trim() : "";
-    let searchQuery = document.getElementById("searchBillRec") ? document.getElementById("searchBillRec").value.toLowerCase().trim() : "";
-
-    let filteredRows = rows.filter(r => {
-      let hVal = String(r["હસ્તે"] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "").trim();
-      let bNo = String(r["બિલ નં"] || "").toLowerCase();
-      let dt = String(r["તારીખ"] || "").toLowerCase();
-
-      let targetHastak = selectedHastak.toLowerCase();
-      let cleanHVal = hVal.toLowerCase();
-
-      let matchHastak = !targetHastak || cleanHVal === targetHastak || cleanHVal.includes(targetHastak) || targetHastak.includes(cleanHVal);
-      let matchSearch = !searchQuery || bNo.includes(searchQuery) || dt.includes(searchQuery) || cleanHVal.includes(searchQuery);
-
-      return matchHastak && matchSearch;
-    });
-
-    if(selectedHastak && filteredRows.length > 0) {
-      let totalBills = filteredRows.length;
-      let totalPauchSum = 0;
-      let totalAmountSum = 0;
-      let latest = filteredRows[filteredRows.length - 1];
-      let lDate = String(latest["તારીખ"] || "").split('T')[0];
-
-      filteredRows.forEach(r => {
-        totalPauchSum += parseFloat(r["પાઉચ નં."] || r["Total_Pauch"] || 0);
-        totalAmountSum += parseFloat(r["રકમ"] || r["Amount"] || 0);
-      });
-
-      let finalPauch = latest["કુલ પાઉચ"] || latest["Cumulative_Pauch"] || totalPauchSum;
-      let finalAmount = parseFloat(latest["કુલ જમા રકમ"] || latest["Cumulative_Amount"] || totalAmountSum).toFixed(2);
-
-      summaryText.innerHTML = `
-        <div style="font-size: 16px; color: #117a65; font-weight: bold; margin-bottom: 6px; border-bottom: 2px solid #a3e4d7; padding-bottom: 4px;">${selectedHastak}</div>
-        <div style="font-size: 13px; color: #d35400; font-weight: bold; margin-bottom: 8px;">તારીખ સુધીની બિલની વિગત (${lDate})</div>
-        <div style="display: flex; flex-direction: column; gap: 4px; font-size: 14px; background: #ffffff; padding: 8px 12px; border-radius: 4px; border: 1px solid #a3e4d7; max-width: 320px;">
-          <div style="display: flex; justify-content: space-between;"><span style="color: #2c3e50; font-weight: bold;">કુલ બિલ :</span><span style="font-weight: bold; color: #c0392b; text-align: right; min-width: 60px;">${totalBills}</span></div>
-          <div style="display: flex; justify-content: space-between;"><span style="color: #2c3e50; font-weight: bold;">કુલ પાઉચ :</span><span style="font-weight: bold; color: #2980b9; text-align: right; min-width: 60px;">${finalPauch}</span></div>
-          <div style="display: flex; justify-content: space-between; border-top: 1px dashed #bdc3c7; padding-top: 4px; margin-top: 2px;"><span style="color: #2c3e50; font-weight: bold;">કુલ રકમ :</span><span style="font-weight: bold; color: #8e44ad; text-align: right; min-width: 60px;">₹ ${finalAmount}</span></div>
-        </div>
-      `;
-      if(summaryBox) summaryBox.style.display = "block";
-    } else {
-      if(summaryBox) summaryBox.style.display = "none";
-    }
-
-    if(filteredRows.length === 0) {
-      container.innerHTML = "<p style='text-align:center; color:#c0392b; font-weight:bold;'>⚠️ આ હસ્તે / નામ માટે કોઈ રેકોર્ડ મળ્યો નથી.</p>";
-      if(actionBar) actionBar.style.display = "none";
-      return;
-    }
-
-    let html = `<table><tr>
-      <th style="width: 40px;"><input type="checkbox" id="selectAll_BillRec" onclick="toggleSelectAll(this, 'BillRec')"></th>
-      <th>વર્ષ</th><th>વેપારી</th><th>તારીખ</th><th>હસ્તે</th><th>Bill To / નામ</th><th>બિલ નં</th><th>પાઉચ નં.</th><th>રકમ</th><th>જમા / બાકી</th><th>કુલ પાઉચ</th><th>કુલ જમા રકમ</th><th>Photo</th>
-    </tr>`;
-
-    filteredRows.forEach((r, index) => {
-      let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
-      let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
-      let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
-      let hastakVal = r["હસ્તે"] || r["હસ્તે "] || r["Hastak"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "-";
-      let billOwnerVal = r["Bill To / નામ :"] || r["Bill To/નામ:"] || r["બિલ માલિક"] || r["Bill Owner"] || "-";
-      let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || index;
-      let vepariVal = r["વેપારી"] || r["Merchant"] || "-";
-
-      html += `<tr>
-        <td><input type="checkbox" class="row-select-BillRec" value="${entryId}" onclick="updateTableActionBar('BillRec')"></td>
-        <td>${r["વર્ષ"]||r["Year"]||'-'}</td><td>${vepariVal}</td><td>${cleanDate}</td><td><b>${hastakVal}</b></td><td><b>${billOwnerVal}</b></td><td><b>${r["બિલ નં"] || '-'}</b></td><td>${r["પાઉચ નં."] || r["Total_Pauch"] || 0}</td><td>₹ ${parseFloat(r["રકમ"]||r["Amount"]||0).toFixed(2)}</td><td>${r["જમા / બાકી"] || r["Status"] || '-'}</td><td style="font-weight:bold; color:#2980b9;">${r["કુલ પાઉચ"] || r["Cumulative_Pauch"] || 0}</td><td style="font-weight:bold; color:#8e44ad;">₹ ${parseFloat(r["કુલ જમા રકમ"]||r["Cumulative_Amount"]||totalAmountSum).toFixed(2)}</td><td>${photoLink}</td>
-      </tr>`;
-    });
-
-    container.innerHTML = html + `</table>`;
-    updateTableActionBar('BillRec');
-  }
-
-  function filterBillRecordTable() { renderBillRecordTable(); }
   function openImageModal(url) {
     document.getElementById("viewerImage").src = url;
     document.getElementById("downloadPhotoBtn").href = url;
     document.getElementById("modalImageViewer").style.display = "flex";
   }
+
   function closeImageModal() { document.getElementById("modalImageViewer").style.display = "none"; }
-  // મુખ્ય કેટેગરી બદલાય ત્યારે સબ-ડ્રોપડાઉન દેખાડવા કે છુપાવવા માટે
+
   function onCategoryFilterChange() {
     let cat = document.getElementById("filterCategory").value;
     let groupMed = document.getElementById("groupMedType");
@@ -2425,7 +2314,10 @@
     filterBillRecordTable();
   }
 
-  // બિલ રેકોર્ડ ટેબલને ડાયનેમિક ફિલ્ટર કરવાનું મુખ્ય ફંક્શન
+  function filterBillRecordTable() { 
+    renderBillRecordTable(); 
+  }
+
   function renderBillRecordTable() {
     let container = document.getElementById("tableContainerBillRec");
     let summaryBox = document.getElementById("latestRecordSummary");
@@ -2448,7 +2340,7 @@
     let filteredRows = rows.filter(r => {
       let hVal = String(r["હસ્તે"] || r["Hastak"] || "").trim().toLowerCase();
       let rType = String(r["પ્રકાર"] || "").trim().toLowerCase();
-      let subType = String(r["સબ_પ્રકાર"] || "").trim().toLowerCase();
+      let subType = String(r["સબપ્રકાર"] || r["સબ_પ્રકાર"] || "").trim().toLowerCase();
       let bNo = String(r["બિલ નં"] || "").toLowerCase();
       let dt = String(r["તારીખ"] || "").toLowerCase();
 
@@ -2489,69 +2381,6 @@
     });
     container.innerHTML = html + `</table>`;
   }
-
-  function filterBillRecordTable() { renderBillRecordTable(); }
-  <div id="formBillRec" class="section" style="display:none;">
-    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📂 બિલ રેકોર્ડ્સ (ડાયનેમિક ફિલ્ટર)</h3>
-    
-    <div class="flex-row" style="margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
-      <!-- ૧. હસ્તે / નામ ફિલ્ટર -->
-      <div class="form-group" style="flex: 1; min-width: 180px;">
-        <label>👤 હસ્તે / નામ:</label>
-        <select id="filterHastak" onchange="filterBillRecordTable()">
-          <option value="">-- બધા (All) --</option>
-        </select>
-      </div>
-
-      <!-- ૨. મુખ્ય કેટેગરી ફિલ્ટર -->
-      <div class="form-group" style="flex: 1; min-width: 160px;">
-        <label>📌 આઇટમ / પ્રકાર:</label>
-        <select id="filterCategory" onchange="onCategoryFilterChange()">
-          <option value="">-- બધા પ્રકાર --</option>
-          <option value="વેચાણ">વેચાણ (Sales)</option>
-          <option value="દવા">દવા (Medicine)</option>
-          <option value="ખાતર">ખાતર (Fertilizer)</option>
-          <option value="ટ્રેક્ટર">ટ્રેક્ટર (Tractor)</option>
-        </select>
-      </div>
-
-      <!-- ૩. દવા પ્રકાર સબ-ફિલ્ટર -->
-      <div class="form-group" id="groupMedType" style="flex: 1; min-width: 150px; display: none;">
-        <label>🧪 દવા પ્રકાર:</label>
-        <select id="filterMedType" onchange="filterBillRecordTable()">
-          <option value="">-- બધા પ્રકાર --</option>
-        </select>
-      </div>
-
-      <!-- ૪. ટ્રેક્ટર કામ પ્રકાર સબ-ફિલ્ટર -->
-      <div class="form-group" id="groupTracWork" style="flex: 1; min-width: 150px; display: none;">
-        <label>🚜 કામનો પ્રકાર:</label>
-        <select id="filterTracWork" onchange="filterBillRecordTable()">
-          <option value="">-- બધા કામ --</option>
-          <option value="હળામણ">હળામણ</option>
-          <option value="દાંતી">દાંતી</option>
-          <option value="રોટાવેટર">રોટાવેટર</option>
-          <option value="પાળા">પાળા</option>
-          <option value="નિકો">નિકો</option>
-          <option value="દવા છાંટવી">દવા છાંટવી</option>
-        </select>
-      </div>
-
-      <!-- ૫. સર્ચ બૉક્સ -->
-      <div class="form-group" style="flex: 1; min-width: 180px;">
-        <label>🔍 શોધખોળ:</label>
-        <input type="text" id="searchBillRec" placeholder="બિલ નં/તારીખ..." oninput="filterBillRecordTable()">
-      </div>
-    </div>
-
-    <div id="latestRecordSummary" style="background: #eafaf1; border-left: 5px solid #27ae60; padding: 14px; border-radius: 6px; margin-bottom: 12px; display: none; max-width: 320px;">
-      <p id="latestRecordText" style="margin:0;"></p>
-    </div>
-
-    <div id="tableContainerBillRec" style="overflow-x:auto;">
-      <p style="text-align:center;">લોડ થઈ રહ્યું છે...</p>
-    </div>
-
 </script>
 
 </body>

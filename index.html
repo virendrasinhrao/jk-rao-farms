@@ -767,7 +767,7 @@
     }
   }
 
-  function fetchData() {
+    function fetchData() {
     let icon = document.getElementById("refreshIcon");
     if(icon) icon.className = "spin";
     fetch(SCRIPT_URL)
@@ -778,6 +778,10 @@
         updateDashboard(); 
         renderGallery(); 
         renderBillRecordTable();
+        
+        // 👉 અહીંયા આ નવી લાઇન ઉમેરી દો:
+        populateBillRecordFilters(); 
+
         ['Sales', 'Med', 'Fert', 'Trac', 'Upad'].forEach(t => renderTable(t));
         if(icon) icon.className = "";
       })
@@ -787,6 +791,7 @@
         alert("ડેટા લોડ કરવામાં ભૂલ: " + err); 
       });
   }
+
 
   function checkDuplicateBill(inputEl, sheetName, btnId) {
     let billNo = inputEl.value.trim();

@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing  
   File: index.html  
-  Fixed White Theme Text & Added Slider Toggle Button  
+  Fixed White Theme UI, Text Visibility & Nav Tabs  
 -->
 <!DOCTYPE html>
 <html>
@@ -10,17 +10,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>J K Rao Farms - POS Billing</title>
   <style>
-    /* ડિફોલ્ટ ડાર્ક થીમ સેટિંગ્સ */
+    /* Default Dark Theme Settings */
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; padding: 5px; margin: 0; color: #e0e0e0; transition: background 0.3s, color 0.3s; }
     
-    /* લાઈટ મોડ માટે ચોખ્ખા કલર્સ અને દેખાય તેવા ડાર્ક ટેક્સ્ટ */
+    /* Light Mode Adjustments for Crystal Clear Visibility */
     body.light-mode { background-color: #f4f6f7 !important; color: #1a202c !important; }
     body.light-mode .header-bar { background: #2c3e50 !important; color: white !important; }
     body.light-mode .card { background: #ffffff !important; color: #1a202c !important; box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important; border-top: 4px solid #27ae60 !important; }
     body.light-mode h2, body.light-mode h3, body.light-mode h4 { color: #1a202c !important; }
     body.light-mode label { color: #2d3748 !important; font-weight: bold; }
-    body.light-mode .nav button { background: #e2e8f0 !important; color: #2d3748 !important; border-color: #cbd5e0 !important; }
-    body.light-mode .nav button.active { background: #27ae60 !important; color: white !important; }
+    
+    /* White Theme Nav Tabs Fix */
+    body.light-mode .nav button { background: #e2e8f0 !important; color: #1a202c !important; border-color: #cbd5e0 !important; font-weight: bold; }
+    body.light-mode .nav button.active { background: #27ae60 !important; color: white !important; border-color: #1e8449 !important; }
+    
     body.light-mode input, body.light-mode select { background: #ffffff !important; color: #1a202c !important; border-color: #cbd5e0 !important; }
     body.light-mode .item-row { background: #f8fafc !important; border-color: #cbd5e0 !important; }
     body.light-mode .modal-content { background: #ffffff !important; color: #1a202c !important; }
@@ -39,7 +42,7 @@
     @keyframes smoothSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     .spin { animation: smoothSpin 0.8s linear infinite !important; display: inline-block; }
 
-    /* સ્લાઇડર ટૉગલ બટન સ્ટાઇલ */
+    /* Slider Toggle Button Style */
     .theme-switch-wrapper { display: flex; align-items: center; gap: 6px; }
     .theme-switch { position: relative; display: inline-block; width: 44px; height: 22px; }
     .theme-switch input { opacity: 0; width: 0; height: 0; }
@@ -114,7 +117,7 @@
 </head>
 <body>
 
-<!-- ટાઈમ અને અપડેટ સ્ટેટસ બેનર -->
+<!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
   🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">05/11/2026 - 00:40 IST</span>
 </div>
@@ -123,7 +126,7 @@
   <h2 style="margin:0; font-size: 15px;">🌾 J K Rao Farms</h2>
   
   <div style="display: flex; gap: 8px; align-items: center;">
-    <!-- નાનું સ્લાઇડર ટૉગલ બટન -->
+    <!-- Small Slider Toggle Button -->
     <div class="theme-switch-wrapper" title="Light / Dark Mode">
       <span style="font-size: 12px; font-weight: bold;">🌓</span>
       <label class="theme-switch">
@@ -579,7 +582,7 @@
         </div>
         <div class="form-group"><label>📝 વિગત:</label><input type="text" id="uDetails" placeholder="વધારાની માહિતી..."></div>
         
-        <!-- વ્યાજ સેક્શન -->
+        <!-- Interest Section -->
         <div style="border: 1px solid #444; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
           <h4 style="margin: 0 0 8px 0; font-size: 13px;">📊 વ્યાજ ગણતરી (૩% પ્રતિ મહિનો)</h4>
           <div class="flex-row">
@@ -779,7 +782,6 @@
       if(el) el.value = today;
     });
 
-    // સેવ કરેલી થીમ ઓટોમેટિક સેટ કરો
     let savedTheme = localStorage.getItem("app_theme");
     let checkbox = document.getElementById("themeCheckbox");
     if (savedTheme === "light") {
@@ -794,7 +796,6 @@
     addSalesItemRow(); addMedItemRow(); addFertItemRow(); addTracItemRow();
   };
 
-  // સ્લાઇડરથી થીમ બદલવા માટેનું ફંક્શન
   function toggleTheme() {
     let checkbox = document.getElementById("themeCheckbox");
     if (checkbox.checked) {

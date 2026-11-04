@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing  
   File: index.html  
-  Fixed Dark Mode Dashboard Titles & Light Mode Soft Green Nav Tabs  
+  Fixed Light Mode Dashboard Titles & Button-Type Nav Tabs  
 -->
 <!DOCTYPE html>
 <html>
@@ -21,19 +21,28 @@
     body.light-mode h2, body.light-mode h3, body.light-mode h4 { color: #2f3640 !important; }
     body.light-mode label { color: #353b48 !important; font-weight: bold; }
     
-    /* Soft Green Nav Tabs in Light Mode */
+    /* Light Mode Dashboard Box Titles Fix */
+    body.light-mode .dash-box h4 { color: #1b4332 !important; font-weight: bold !important; }
+
+    /* Button-Type Nav Tabs in Light Mode (Dashboard box style) */
     body.light-mode .nav button { 
-      background: linear-gradient(135deg, #d4efdf, #a9dfbf) !important; 
-      color: #145a32 !important; 
-      border: 1px solid #7dc49e !important; 
+      background: linear-gradient(135deg, #ffffff, #f1f2f6) !important; 
+      color: #2c3e50 !important; 
+      border: 2px solid #cbd5e0 !important; 
       font-weight: bold; 
-      border-radius: 6px !important;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border-radius: 8px !important;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      padding: 10px 8px;
+    }
+    body.light-mode .nav button:hover {
+      background: linear-gradient(135deg, #d4efdf, #a9dfbf) !important;
+      border-color: #27ae60 !important;
     }
     body.light-mode .nav button.active { 
       background: linear-gradient(135deg, #27ae60, #2ecc71) !important; 
       color: white !important; 
       border-color: #1e8449 !important; 
+      box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
     }
     
     body.light-mode input, body.light-mode select { background: #ffffff !important; color: #2f3640 !important; border-color: #b2bec3 !important; }
@@ -74,8 +83,8 @@
     input:checked + .slider { background-color: #27ae60; }
     input:checked + .slider:before { transform: translateX(22px); }
 
-    .nav { display: flex; gap: 4px; margin-bottom: 10px; max-width: 950px; margin-left: auto; margin-right: auto; flex-wrap: wrap; }
-    .nav button { flex: 1; padding: 8px; cursor: pointer; border: 1px solid #444; background: #2c2c2c; border-radius: 6px; font-weight: bold; font-size: 11px; color: #e0e0e0; min-width: 70px; }
+    .nav { display: flex; gap: 6px; margin-bottom: 12px; max-width: 950px; margin-left: auto; margin-right: auto; flex-wrap: wrap; }
+    .nav button { flex: 1; padding: 10px 8px; cursor: pointer; border: 1px solid #444; background: #2c2c2c; border-radius: 6px; font-weight: bold; font-size: 11px; color: #e0e0e0; min-width: 70px; }
     .nav button.active { background: #27ae60; color: white; border-color: #1e8449; }
 
     .card { background: #1e1e1e; padding: 15px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); max-width: 950px; margin: auto; border-top: 4px solid #27ae60; color: #e0e0e0; }

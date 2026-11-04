@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing  
   File: index.html  
-  Soft Green Light Mode & Polished UI  
+  Fixed Dark Mode Dashboard Titles & Light Mode Soft Green Nav Tabs  
 -->
 <!DOCTYPE html>
 <html>
@@ -21,11 +21,11 @@
     body.light-mode h2, body.light-mode h3, body.light-mode h4 { color: #2f3640 !important; }
     body.light-mode label { color: #353b48 !important; font-weight: bold; }
     
-    /* Dashboard Box style for Nav Tabs in Light Mode */
+    /* Soft Green Nav Tabs in Light Mode */
     body.light-mode .nav button { 
-      background: linear-gradient(135deg, #f1f2f6, #dfe4ea) !important; 
-      color: #2f3640 !important; 
-      border: 1px solid #ced6e0 !important; 
+      background: linear-gradient(135deg, #d4efdf, #a9dfbf) !important; 
+      color: #145a32 !important; 
+      border: 1px solid #7dc49e !important; 
       font-weight: bold; 
       border-radius: 6px !important;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
@@ -107,7 +107,7 @@
     .choice-container { display: flex; gap: 15px; margin: 25px 0; justify-content: center; }
     .choice-card-new, .choice-card-view { flex: 1; border-radius: 10px; padding: 25px 15px; text-align: center; cursor: pointer; color: white; transition: 0.3s; }
     .choice-card-new { background: linear-gradient(135deg, #1e8449, #27ae60); box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
-    .choice-card-view { background: linear-gradient(135deg, #1f618d, #2980b9); box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3); }
+    .choice-card-view { background: linear-gradient(135deg, #1f618d, #3498db); box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3); }
 
     .top-banners-row { display: flex; gap: 8px; margin-bottom: 12px; display: none; }
     .partner-sum-banner, .category-balance-box { flex: 1; color: white; padding: 8px 10px; border-radius: 6px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
@@ -186,19 +186,19 @@
     <h3 style="text-align:center; margin-top:0;">📊 ફાર્મ ડેશબોર્ડ (વર્ષવાર સારાંશ)</h3>
     <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px;">
       <div class="dash-box" style="background: linear-gradient(135deg, #1b3a2b, #12281d); border-left: 5px solid #27ae60; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#cbd5e0; font-size: 12px;">💰 કુલ વેચાણ</h4>
+        <h4 style="margin:0 0 5px 0; color:#e2e8f0; font-size: 12px;">💰 કુલ વેચાણ</h4>
         <p id="dashTotalSales" style="margin:0; font-size: 18px; font-weight: bold; color: #2ecc71;">₹ 0.00</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #172a3a, #0d1b2a); border-left: 5px solid #2980b9; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#cbd5e0; font-size: 12px;">👤 ખેડૂ વેચાણ હિસ્સો</h4>
+        <h4 style="margin:0 0 5px 0; color:#e2e8f0; font-size: 12px;">👤 ખેડૂ વેચાણ હિસ્સો</h4>
         <p id="dashFarmerSales" style="margin:0; font-size: 18px; font-weight: bold; color: #3498db;">₹ 0.00</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #3d2215, #26150d); border-left: 5px solid #d35400; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#cbd5e0; font-size: 12px;">📉 કુલ ખર્ચ</h4>
+        <h4 style="margin:0 0 5px 0; color:#e2e8f0; font-size: 12px;">📉 કુલ ખર્ચ</h4>
         <p id="dashTotalExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #e67e22;">₹ 0.00</p>
       </div>
       <div class="dash-box" style="background: linear-gradient(135deg, #2c1a38, #1c1024); border-left: 5px solid #8e44ad; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#cbd5e0; font-size: 12px;">👤 ખેડૂ ખર્ચ હિસ્સો</h4>
+        <h4 style="margin:0 0 5px 0; color:#e2e8f0; font-size: 12px;">👤 ખેડૂ ખર્ચ હિસ્સો</h4>
         <p id="dashFarmerExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #9b59b6;">₹ 0.00</p>
       </div>
     </div>

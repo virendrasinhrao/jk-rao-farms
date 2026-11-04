@@ -85,7 +85,7 @@
 <body>
 
 <div style="background: #1abc9c; color:Black; text-align: center; font-size: 16px; padding: 4px; font-weight: bold;">
-  🚀 અપડેટેડ કોડ સમય: <span id="auto-timestamp">04/11/2026 - 20:26 IST</span>
+  🚀 અપડેટેડ કોડ સમય: <span>05/11/2026 - 00:40 IST</span>
 
 
 
@@ -2395,18 +2395,6 @@
     });
     container.innerHTML = html + `</table>`;
   }
-  
-    // આ કોડ જેવું પેજ ખૂલશે કે તરત જ ફાઈલ સેવ થયાનો કે પેજ લોડ થયાનો સમય બતાવી દેશે
-    let now = new Date();
-    let day = String(now.getDate()).padStart(2, '0');
-    let month = String(now.getMonth() + 1).padStart(2, '0');
-    let year = now.getFullYear();
-    let hours = String(now.getHours()).padStart(2, '0');
-    let minutes = String(now.getMinutes()).padStart(2, '0');
-    
-    let timeString = day + '/' + month + '/' + year + ' - ' + hours + ':' + minutes + ' IST';
-    document.getElementById("auto-timestamp").innerText = timeString;
-
     
 </script>
 

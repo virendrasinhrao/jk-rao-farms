@@ -1986,8 +1986,20 @@
         let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
         itemRows.push([year, rId, date, billNo, bhagiya, vepari, dava, mType, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
       });
+      let firstShare = 0;
+      let totalFarmerAmt = 0;
 
-      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words,  status, photoBase64];
+      rows.forEach((row, index) => {
+        // તમારું કેલ્ક્યુલેશન લોજિક અહીંયા હશે જ, 
+        // બસ આ જ રીતે વેલ્યુ પકડી લેવાની છે:
+        let kShare = parseFloat(row.querySelector('.mKShare').value) || 0;
+        let kRakam = parseFloat(row.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
+
+        if (index === 0) firstShare = kShare; // પહેલી આઇટમનો હિસ્સો
+        totalFarmerAmt += kRakam; // બધી આઇટમ્સની કુલ રકમ
+      });
+
+      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, firstShare, totalFarmerAmt, status, photoBase64];
       triggerUpadConfirmationModal('Med', billRow, itemRows, 'btnMed', 'medForm', originalText);
     });
   }

@@ -85,7 +85,7 @@
 <body>
 
 <div style="background: #1abc9c; color:Black; text-align: center; font-size: 16px; padding: 4px; font-weight: bold;">
-  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">04/11/2026 - 21:30  IST</span>
+  🚀 અપડેટેડ કોડ સમય: <span id="liveTimestamp"></span>
 </div>
 
 <div class="header-bar">
@@ -775,7 +775,32 @@
         alert("ડેટા લોડ કરવામાં ભૂલ: " + err); 
       });
   }
+function updateLiveTime() {
+    let now = new Date();
+    
+    // તારીખ ફોર્મેટ: DD/MM/YYYY
+    let day = String(now.getDate()).padStart(2, '0');
+    let month = String(now.getMonth() + 1).padStart(2, '0');
+    let year = now.getFullYear();
+    let dateStr = `${day}/${month}/${year}`;
+    
+    // સમય ફોર્મેટ: HH:MM (24 કલાક કે 12 કલાક મુજબ)
+    let hours = String(now.getHours()).padStart(2, '0');
+    let minutes = String(now.getMinutes()).padStart(2, '0');
+    let timeStr = `${hours}:${minutes}`;
+    
+    let fullString = `${dateStr} - ${timeStr} IST`;
+    
+    // જો મેઇન પેજ પર પેલી ID હોય તો ત્યાં સેટ કરી દેવું
+    let elem = document.getElementById("liveTimestamp");
+    if (elem) {
+        elem.innerText = fullString;
+    }
+}
 
+// પેજ ચાલુ થાય એટલે તરત જ ટાઈમ બતાવે અને દર મિનિટે ઓટોમેટિક અપડેટ થયા કરે
+setInterval(updateLiveTime, 1000);
+window.onload = updateLiveTime;
   // બિલ રેકોર્ડ ફિલ્ટર ડ્રોપડાઉન માસ્ટર શીટમાંથી ભરવા માટેનું ફંક્શન
   function populateBillRecordFilters() {
     let filterHastakSelect = document.getElementById("filterHastak");

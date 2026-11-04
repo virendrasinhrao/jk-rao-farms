@@ -1,0 +1,30 @@
+name: Auto Update Timestamp on Commit
+
+on:
+  push:
+    branches:
+      - main  # (જો તમારી બ્રાન્ચ master હોય તો master કરી દેવું)
+
+jobs:
+  update-time:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update timestamp in HTML file
+        run: |
+          # આજની તારીખ અને ટાઈમ IST મુબજ મેળવો
+          CURRENT_TIME=$(TZ='Asia/Kolkata' date +'%d/%m/%Y - %H:%M IST')
+          
+          # તમારી HTML ફાઇલનું સાચું નામ અહીં લખવું (દા.ત. index.html)
+          FILENAME="index.html" 
+          
+          # ફાઇલમાં જ્યાં પેલું ટેગ હોય ત્યાં ઓટોમેટિક ટાઈમ બદલી નાખશે
+          sed -i "s|<કોડ અપडેટ :.*IST>|<કોડ અપડેટ : $CURRENT_TIME>|g" $FILENAME
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Auto-update timestamp [skip ci]"
+          file_pattern: "*.html"

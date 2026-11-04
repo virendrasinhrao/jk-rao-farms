@@ -85,7 +85,7 @@
 <body>
 
 <div style="background: #1abc9c; color:Black; text-align: center; font-size: 16px; padding: 4px; font-weight: bold;">
-  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">03/11/2026 - 00:04  IST</span>
+  🚀 અપડેટેડ કોડ સમય: <span id="codeTimestamp">04/11/2026 - 20:26  IST</span>
 </div>
 
 <div class="header-bar">
@@ -1987,7 +1987,7 @@
         itemRows.push([year, rId, date, billNo, bhagiya, vepari, dava, mType, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
       });
 
-      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, photoBase64];
+      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, kShare, kRakam,status, photoBase64];
       triggerUpadConfirmationModal('Med', billRow, itemRows, 'btnMed', 'medForm', originalText);
     });
   }

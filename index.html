@@ -1987,7 +1987,7 @@
         itemRows.push([year, rId, date, billNo, bhagiya, vepari, dava, mType, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
       });
 
-      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, kShare, kRakam, status, photoBase64];
+      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak,  kRakam, status, photoBase64];
       triggerUpadConfirmationModal('Med', billRow, itemRows, 'btnMed', 'medForm', originalText);
     });
   }

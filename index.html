@@ -10,8 +10,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>J K Rao Farms - POS Billing</title>
   <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #eef2f3; padding: 5px; margin: 0; color: #333; }
-    .header-bar { display: flex; justify-content: space-between; align-items: center; max-width: 950px; margin: 5px auto; background: #2c3e50; color: white; padding: 8px 15px; border-radius: 4px; }
+    /* ડાર્ક થીમ ડિફોલ્ટ સેટિંગ્સ */
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; padding: 5px; margin: 0; color: #e0e0e0; transition: background 0.3s, color 0.3s; }
+    .header-bar { display: flex; justify-content: space-between; align-items: center; max-width: 950px; margin: 5px auto; background: #1e1e1e; color: white; padding: 8px 15px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
     
     .refresh-btn { 
       background: #16a085; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; display: flex; align-items: center; gap: 6px; 
@@ -22,19 +23,19 @@
     .spin { animation: smoothSpin 0.8s linear infinite !important; display: inline-block; }
 
     .nav { display: flex; gap: 3px; margin-bottom: 10px; max-width: 950px; margin-left: auto; margin-right: auto; flex-wrap: wrap; }
-    .nav button { flex: 1; padding: 8px; cursor: pointer; border: 1px solid #b2bec3; background: #dfe6e9; border-radius: 3px; font-weight: bold; font-size: 11px; color: #2d3436; min-width: 70px; }
+    .nav button { flex: 1; padding: 8px; cursor: pointer; border: 1px solid #444; background: #2c2c2c; border-radius: 3px; font-weight: bold; font-size: 11px; color: #e0e0e0; min-width: 70px; }
     .nav button.active { background: #27ae60; color: white; border-color: #1e8449; }
 
-    .card { background: #fff; padding: 15px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.15); max-width: 950px; margin: auto; border-top: 4px solid #27ae60; }
+    .card { background: #1e1e1e; padding: 15px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); max-width: 950px; margin: auto; border-top: 4px solid #27ae60; color: #e0e0e0; }
     .form-group { margin-bottom: 10px; }
-    label { font-weight: bold; display: block; margin-bottom: 3px; font-size: 13px; color: #2c3e50; }
-    input, select { width: 100%; padding: 7px; border: 1px solid #bdc3c7; border-radius: 3px; box-sizing: border-box; font-size: 13px; background: #fff; }
+    label { font-weight: bold; display: block; margin-bottom: 3px; font-size: 13px; color: #a0aec0; }
+    input, select { width: 100%; padding: 7px; border: 1px solid #444; border-radius: 3px; box-sizing: border-box; font-size: 13px; background: #2d3748; color: #fff; }
     
     .btn-submit { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; font-size: 15px; cursor: pointer; margin-top: 10px; font-weight: bold; border-radius: 3px; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .btn-submit:hover { background: #219653; }
     
-    .btn-back { background: linear-gradient(135deg, #7f8c8d, #95a5a6); color: white; border-radius: 6px; border: none; padding: 8px 14px; cursor: pointer; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .btn-back:hover { background: linear-gradient(135deg, #6c7a89, #7f8c8d); }
+    .btn-back { background: linear-gradient(135deg, #4a5568, #2d3748); color: white; border-radius: 6px; border: none; padding: 8px 14px; cursor: pointer; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .btn-back:hover { background: linear-gradient(135deg, #2d3748, #1a202c); }
 
     .btn-action-pill {
       background: linear-gradient(135deg, #1b5e20, #2e7d32, #4caf50, #81c784);
@@ -47,50 +48,50 @@
     .btn-delete { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
     .btn-edit { background: #f39c12; color: white; border-radius: 4px; border: none; padding: 5px 10px; cursor: pointer; font-size: 12px; font-weight: bold; }
 
-    .table-actions-bar { display: none; gap: 8px; margin-bottom: 10px; padding: 6px 10px; background: #f8f9f9; border: 1px solid #d5dbdb; border-radius: 4px; align-items: center; }
+    .table-actions-bar { display: none; gap: 8px; margin-bottom: 10px; padding: 6px 10px; background: #2d3748; border: 1px solid #4a5568; border-radius: 4px; align-items: center; }
     .btn-add-item { background: #2980b9; color: white; border: none; padding: 6px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; margin-bottom: 8px; }
     .badge-jama { background-color: #27ae60; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; display: inline-block; }
 
     .choice-container { display: flex; gap: 15px; margin: 25px 0; justify-content: center; }
     .choice-card-new, .choice-card-view { flex: 1; border-radius: 10px; padding: 25px 15px; text-align: center; cursor: pointer; color: white; transition: 0.3s; }
-    .choice-card-new { background: linear-gradient(135deg, #27ae60, #2ecc71); box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
-    .choice-card-view { background: linear-gradient(135deg, #2980b9, #3498db); box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3); }
+    .choice-card-new { background: linear-gradient(135deg, #1e8449, #27ae60); box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
+    .choice-card-view { background: linear-gradient(135deg, #1f618d, #2980b9); box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3); }
 
     .top-banners-row { display: flex; gap: 8px; margin-bottom: 12px; display: none; }
     .partner-sum-banner, .category-balance-box { flex: 1; color: white; padding: 8px 10px; border-radius: 6px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    .partner-sum-banner { background: linear-gradient(135deg, #16a085, #1abc9c); }
-    .category-balance-box { background: linear-gradient(135deg, #f39c12, #e67e22); font-weight: bold; }
+    .partner-sum-banner { background: linear-gradient(135deg, #117a65, #16a085); }
+    .category-balance-box { background: linear-gradient(135deg, #b7950b, #d4ac0d); font-weight: bold; }
 
-    .readonly-bg { background-color: #f1f2f6; }
+    .readonly-bg { background-color: #2a3441 !important; color: #a0aec0 !important; }
     .hidden-field { display: none !important; }
-    .highlight-total { background-color: #27ae60 !important; color: #ffffff !important; font-size: 20px !important; font-weight: bold !important; text-align: right; border: 2px solid #1e8449 !important; border-radius: 3px; padding: 6px 10px; }
-    .farmer-amount-box { background: linear-gradient(135deg, #2980b9, #3498db) !important; color: #ffffff !important; font-size: 18px !important; font-weight: bold !important; text-align: right; border: 2px solid #1f618d !important; border-radius: 4px; padding: 8px 12px; }
-    .words-box { background-color: #2c3e50 !important; color: #ffffff !important; font-size: 14px !important; font-weight: bold !important; text-align: left; border: 2px solid #1a252f !important; border-radius: 3px; padding: 6px 10px; }
+    .highlight-total { background-color: #1b4d3e !important; color: #6ee7b7 !important; font-size: 20px !important; font-weight: bold !important; text-align: right; border: 2px solid #27ae60 !important; border-radius: 3px; padding: 6px 10px; }
+    .farmer-amount-box { background: linear-gradient(135deg, #1b3a4b, #214f6f) !important; color: #93c5fd !important; font-size: 18px !important; font-weight: bold !important; text-align: right; border: 2px solid #3b82f6 !important; border-radius: 4px; padding: 8px 12px; }
+    .words-box { background-color: #2d3748 !important; color: #e2e8f0 !important; font-size: 14px !important; font-weight: bold !important; text-align: left; border: 2px solid #4a5568 !important; border-radius: 3px; padding: 6px 10px; }
 
     .section { display: none; }
     .section.active { display: block; }
     .flex-row { display: flex; gap: 8px; }
     .flex-row > div { flex: 1; }
     
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; }
-    .modal-content { background: white; margin: auto; padding: 15px; width: 92%; max-width: 400px; border-radius: 8px; text-align: center; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-content { background: #1e1e1e; color: #e0e0e0; margin: auto; padding: 15px; width: 92%; max-width: 400px; border-radius: 8px; text-align: center; border: 1px solid #444; }
     
     table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; min-width: 900px; }
-    th, td { border: 1px solid #ccc; padding: 10px 14px; text-align: center; white-space: nowrap; }
-    th { background-color: #34495e; color: white; }
-    .item-row { background: #fdfefe; padding: 8px; border: 1px solid #dcdde1; border-radius: 4px; margin-bottom: 8px; position: relative; }
+    th, td { border: 1px solid #444; padding: 10px 14px; text-align: center; white-space: nowrap; color: #e0e0e0; }
+    th { background-color: #2c3e50; color: white; }
+    tr:nth-child(even) { background-color: #252525; }
+    tr:hover { background-color: #2d3748; }
+
+    .item-row { background: #252525; padding: 8px; border: 1px solid #444; border-radius: 4px; margin-bottom: 8px; position: relative; }
     .sub-section { display: none; }
   </style>
 </head>
 <body>
 
-<div style="background: #1abc9c; color:Black; text-align: center; font-size: 16px; padding: 4px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ:<span>05/11/2026-00:40IST</span>
-
-
-
-
-
+<!-- ટાઈમ અને અપડેટ સ્ટેટસ બેનર -->
+<div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">05/11/2026 - 00:40 IST</span>
+</div>
 
 <div class="header-bar">
   <h2 style="margin:0; font-size: 16px;">🌾 J K Rao Farms (POS Billing)</h2>
@@ -112,23 +113,23 @@
 
   <!-- 0. DASHBOARD -->
   <div id="formDash" class="section active">
-    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📊 ફાર્મ ડેશબોર્ડ (વર્ષવાર સારાંશ)</h3>
+    <h3 style="text-align:center; color:#6ee7b7; margin-top:0;">📊 ફાર્મ ડેશબોર્ડ (વર્ષવાર સારાંશ)</h3>
     <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px;">
-      <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #27ae60; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">💰 કુલ વેચાણ</h4>
-        <p id="dashTotalSales" style="margin:0; font-size: 18px; font-weight: bold; color: #16a085;">₹ 0.00</p>
+      <div class="dash-box" style="background: linear-gradient(135deg, #1b3a2b, #12281d); border-left: 5px solid #27ae60; padding: 12px; border-radius: 6px;">
+        <h4 style="margin:0 0 5px 0; color:#a0aec0; font-size: 12px;">💰 કુલ વેચાણ</h4>
+        <p id="dashTotalSales" style="margin:0; font-size: 18px; font-weight: bold; color: #2ecc71;">₹ 0.00</p>
       </div>
-      <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #2980b9; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 ખેડૂ વેચાણ હિસ્સો</h4>
-        <p id="dashFarmerSales" style="margin:0; font-size: 18px; font-weight: bold; color: #2980b9;">₹ 0.00</p>
+      <div class="dash-box" style="background: linear-gradient(135deg, #172a3a, #0d1b2a); border-left: 5px solid #2980b9; padding: 12px; border-radius: 6px;">
+        <h4 style="margin:0 0 5px 0; color:#a0aec0; font-size: 12px;">👤 ખેડૂ વેચાણ હિસ્સો</h4>
+        <p id="dashFarmerSales" style="margin:0; font-size: 18px; font-weight: bold; color: #3498db;">₹ 0.00</p>
       </div>
-      <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #d35400; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">📉 કુલ ખર્ચ</h4>
-        <p id="dashTotalExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #d35400;">₹ 0.00</p>
+      <div class="dash-box" style="background: linear-gradient(135deg, #3d2215, #26150d); border-left: 5px solid #d35400; padding: 12px; border-radius: 6px;">
+        <h4 style="margin:0 0 5px 0; color:#a0aec0; font-size: 12px;">📉 કુલ ખર્ચ</h4>
+        <p id="dashTotalExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #e67e22;">₹ 0.00</p>
       </div>
-      <div class="dash-box" style="background: linear-gradient(135deg, #e8f8f5, #d1f2eb); border-left: 5px solid #8e44ad; padding: 12px; border-radius: 6px;">
-        <h4 style="margin:0 0 5px 0; color:#2c3e50; font-size: 12px;">👤 ખેડૂ ખર્ચ હિસ્સો</h4>
-        <p id="dashFarmerExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #8e44ad;">₹ 0.00</p>
+      <div class="dash-box" style="background: linear-gradient(135deg, #2c1a38, #1c1024); border-left: 5px solid #8e44ad; padding: 12px; border-radius: 6px;">
+        <h4 style="margin:0 0 5px 0; color:#a0aec0; font-size: 12px;">👤 ખેડૂ ખર્ચ હિસ્સો</h4>
+        <p id="dashFarmerExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #9b59b6;">₹ 0.00</p>
       </div>
     </div>
   </div>
@@ -187,7 +188,7 @@
             <button type="button" class="btn-action-pill" onclick="openMasterModal('Merchant_Master')"><span class="icon-red">🛒</span> વેપારી રેકોર્ડ (અપડેટ કરો)</button>
           </div>
         </div>
-        <hr style="margin:10px 0;">
+        <hr style="margin:10px 0; border-color:#444;">
         <h4>📦 આઇટમ્સ લિસ્ટ:</h4>
         <button type="button" class="btn-add-item" onclick="addSalesItemRow()">➕ આઇટમ ઉમેરો</button>
         <div id="salesItemsContainer"></div>
@@ -215,7 +216,7 @@
 
   <!-- 2. MEDICINE SECTION -->
   <div id="formMed" class="section">
-    <h3 style="text-align:center; color:#2980b9; margin-top:0;">🧪 દવા ખર્ચ મેનેજમેન્ટ</h3>
+    <h3 style="text-align:center; color:#3498db; margin-top:0;">🧪 દવા ખર્ચ મેનેજમેન્ટ</h3>
     <div id="choiceMed" class="choice-container">
       <div class="choice-card-new" onclick="switchSubTab('Med', 'New')">
         <h3>➕ નવી એન્ટ્રી</h3>
@@ -229,7 +230,7 @@
 
     <div id="subContentMedNew" class="sub-section">
       <button type="button" class="btn-back" onclick="backToChoice('Med')">⬅️ પાછળ જાઓ</button>
-      <h3 id="formTitleMed" style="text-align:center; color:#2980b9; margin-top:0;">🧪 દવા ખર્ચ એન્ટ્રી</h3>
+      <h3 id="formTitleMed" style="text-align:center; color:#3498db; margin-top:0;">🧪 દવા ખર્ચ એન્ટ્રી</h3>
       
       <div id="topBannersRowMed" class="top-banners-row" style="display: flex;">
         <div id="partnerBannerMed" class="partner-sum-banner" style="display: block;">
@@ -260,13 +261,13 @@
             <button type="button" class="btn-action-pill" onclick="openMasterModal('Merchant_Master')"><span class="icon-red">🛒</span> વેપારી રેકોર્ડ (અપડેટ કરો)</button>
           </div>
         </div>
-        <hr style="margin:10px 0;">
+        <hr style="margin:10px 0; border-color:#444;">
         <h4>🧪 દવાઓની યાદી:</h4>
         <button type="button" class="btn-add-item" onclick="addMedItemRow()">➕ દવા ઉમેરો</button>
         <div id="medItemsContainer"></div>
 
-        <div class="bill-summary">
-          <h4 style="margin:0 0 8px 0; color:#2980b9;">📋 ટેક્સ અને બિલ સમરી</h4>
+        <div class="bill-summary" style="background:#252525; padding:10px; border-radius:4px; border:1px solid #444; margin-top:10px;">
+          <h4 style="margin:0 0 8px 0; color:#3498db;">📋 ટેક્સ અને બિલ સમરી</h4>
           <div class="flex-row">
             <div class="form-group"><label>કુલ આઇટમ રકમ:</label><input type="text" id="mSubTotal" class="readonly-bg" readonly value="₹ 0.00"></div>
             <div class="form-group"><label>ટેક્સ %:</label><input type="number" id="mTax" step="0.01" value="0" oninput="calcMedBill()" required></div>
@@ -285,7 +286,7 @@
           </div>
         </div>
 
-        <div class="flex-row">
+        <div class="flex-row" style="margin-top:10px;">
           <div class="form-group"><label>🤝 હસ્તે:</label><select id="mHastak" class="bhagiyaList" required></select></div>
           <div class="form-group"><label>📌 સ્થિતિ:</label><select id="mStatus"><option>જમા</option><option>બાકી</option></select></div>
         </div>
@@ -296,7 +297,7 @@
 
     <div id="subContentMedView" class="sub-section">
       <button type="button" class="btn-back" onclick="backToChoice('Med')">⬅️ પાછળ જાઓ</button>
-      <h3 style="text-align:center; color:#2980b9; margin-top:0;">📋 દવા આઇટમ રેકોર્ડ્સ</h3>
+      <h3 style="text-align:center; color:#3498db; margin-top:0;">📋 દવા આઇટમ રેકોર્ડ્સ</h3>
       <div class="form-group"><input type="text" id="searchMed" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterTable('Med')"></div>
       <div id="actionBarMed" class="table-actions-bar"></div>
       <div id="tableContainerMed" style="overflow-x:auto;"></div>
@@ -305,7 +306,7 @@
 
   <!-- 3. FERTILIZER SECTION -->
   <div id="formFert" class="section">
-    <h3 style="text-align:center; color:#d35400; margin-top:0;">🌾 ખાતર ખર્ચ મેનેજમેન્ટ</h3>
+    <h3 style="text-align:center; color:#e67e22; margin-top:0;">🌾 ખાતર ખર્ચ મેનેજમેન્ટ</h3>
     <div id="choiceFert" class="choice-container">
       <div class="choice-card-new" onclick="switchSubTab('Fert', 'New')">
         <h3>➕ નવી એન્ટ્રી</h3>
@@ -319,7 +320,7 @@
 
     <div id="subContentFertNew" class="sub-section">
       <button type="button" class="btn-back" onclick="backToChoice('Fert')">⬅️ પાછળ જાઓ</button>
-      <h3 id="formTitleFert" style="text-align:center; color:#d35400; margin-top:0;">🌾 ખાતર ખર્ચ એન્ટ્રી</h3>
+      <h3 id="formTitleFert" style="text-align:center; color:#e67e22; margin-top:0;">🌾 ખાતર ખર્ચ એન્ટ્રી</h3>
       
       <div id="topBannersRowFert" class="top-banners-row" style="display: flex;">
         <div id="partnerBannerFert" class="partner-sum-banner" style="display: block;">
@@ -350,13 +351,13 @@
             <button type="button" class="btn-action-pill" onclick="openMasterModal('Merchant_Master')"><span class="icon-red">🛒</span> વેપારી રેકોર્ડ (અપડેટ કરો)</button>
           </div>
         </div>
-        <hr style="margin:10px 0;">
+        <hr style="margin:10px 0; border-color:#444;">
         <h4>🌾 ખાતરની આઇટમ્સ:</h4>
         <button type="button" class="btn-add-item" onclick="addFertItemRow()">➕ ખાતર ઉમેરો</button>
         <div id="fertItemsContainer"></div>
 
-        <div class="bill-summary">
-          <h4 style="margin:0 0 8px 0; color:#d35400;">📋 ટેક્સ અને બિલ સમરી</h4>
+        <div class="bill-summary" style="background:#252525; padding:10px; border-radius:4px; border:1px solid #444; margin-top:10px;">
+          <h4 style="margin:0 0 8px 0; color:#e67e22;">📋 ટેક્સ અને બિલ સમરી</h4>
           <div class="flex-row">
             <div class="form-group"><label>કુલ આઇટમ રકમ:</label><input type="text" id="fSubTotal" class="readonly-bg" readonly value="₹ 0.00"></div>
             <div class="form-group"><label>ટેક્સ %:</label><input type="number" id="fTax" step="0.01" value="0" oninput="calcFertBill()" required></div>
@@ -366,7 +367,7 @@
             <div class="form-group"><label>સી.એસ.ટી. રકમ:</label><input type="text" id="mCst2" class="readonly-bg" readonly value="₹ 0.00"></div>
           </div>
           <div class="form-group">
-            <label style="color: #d35400; font-size: 14px;">બિલની કુલ રકમ (₹):</label><input type="text" id="fTotalBill" class="highlight-total" readonly value="₹ 0.00">
+            <label style="color: #e67e22; font-size: 14px;">બિલની કુલ રકમ (₹):</label><input type="text" id="fTotalBill" class="highlight-total" readonly value="₹ 0.00">
           </div>
           <div class="form-group" style="margin-top: 8px;">
             <label>અંકે રૂપિયા:</label>
@@ -374,7 +375,7 @@
           </div>
         </div>
 
-        <div class="flex-row">
+        <div class="flex-row" style="margin-top:10px;">
           <div class="form-group"><label>🤝 હસ્તે:</label><select id="fHastak" class="bhagiyaList" required></select></div>
           <div class="form-group"><label>📌 સ્થિતિ:</label><select id="fStatus"><option>જમા</option><option>બાકી</option></select></div>
         </div>
@@ -386,7 +387,7 @@
 
     <div id="subContentFertView" class="sub-section">
       <button type="button" class="btn-back" onclick="backToChoice('Fert')">⬅️ પાછળ જાઓ</button>
-      <h3 style="text-align:center; color:#d35400; margin-top:0;">📋 ખાતર આઇટમ રેકોર્ડ્સ</h3>
+      <h3 style="text-align:center; color:#e67e22; margin-top:0;">📋 ખાતર આઇટમ રેકોર્ડ્સ</h3>
       <div class="form-group"><input type="text" id="searchFert" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterTable('Fert')"></div>
       <div id="actionBarFert" class="table-actions-bar"></div>
       <div id="tableContainerFert" style="overflow-x:auto;"></div>
@@ -395,7 +396,7 @@
 
   <!-- 4. TRACTOR SECTION -->
   <div id="formTrac" class="section">
-    <h3 style="text-align:center; color:#8e44ad; margin-top:0;">🚜 ટ્રેક્ટર ખર્ચ મેનેજમેન્ટ</h3>
+    <h3 style="text-align:center; color:#9b59b6; margin-top:0;">🚜 ટ્રેક્ટર ખર્ચ મેનેજમેન્ટ</h3>
     <div id="choiceTrac" class="choice-container">
       <div class="choice-card-new" onclick="switchSubTab('Trac', 'New')">
         <h3>➕ નવી એન્ટ્રી</h3>
@@ -409,7 +410,7 @@
 
     <div id="subContentTracNew" class="sub-section">
       <button type="button" class="btn-back" onclick="backToChoice('Trac')">⬅️ પાછળ જાઓ</button>
-      <h3 id="formTitleTrac" style="text-align:center; color:#8e44ad; margin-top:0;">🚜 ટ્રેક્ટર ખર્ચ એન્ટ્રી</h3>
+      <h3 id="formTitleTrac" style="text-align:center; color:#9b59b6; margin-top:0;">🚜 ટ્રેક્ટર ખર્ચ એન્ટ્રી</h3>
       
       <div id="topBannersRowTrac" class="top-banners-row" style="display:flex;">
         <div id="partnerBannerTrac" class="partner-sum-banner" style="display:block;">
@@ -431,18 +432,18 @@
             <button type="button" class="btn-action-pill" onclick="openMasterModal('Bhagiya_Master')"><span class="icon-red">👥</span> ભાગીદાર રેકોર્ડ (અપડેટ કરો)</button>
           </div>
         </div>
-        <hr style="margin:10px 0;">
+        <hr style="margin:10px 0; border-color:#444;">
         <h4>🚜 ટ્રેક્ટર કામોની યાદી:</h4>
         <button type="button" class="btn-add-item" onclick="addTracItemRow()">➕ કામ ઉમેરો</button>
         <div id="tracItemsContainer"></div>
 
-        <div class="bill-summary" style="margin-top: 15px;">
+        <div class="bill-summary" style="margin-top: 15px; background:#252525; padding:10px; border-radius:4px; border:1px solid #444;">
           <div class="form-group">
-            <label style="color: #8e44ad; font-size: 14px;">કુલ બિલ રકમ (₹):</label>
+            <label style="color: #9b59b6; font-size: 14px;">કુલ બિલ રકમ (₹):</label>
             <input type="text" id="tTotalBill" class="highlight-total" readonly value="₹ 0.00">
           </div>
           <div class="form-group" style="margin-top: 8px;">
-            <label style="color: #2980b9; font-size: 15px;">ભાગિયાનો ખર્ચ (₹):</label>
+            <label style="color: #3498db; font-size: 15px;">ભાગિયાનો ખર્ચ (₹):</label>
             <input type="text" id="tFarmerTotal" class="farmer-amount-box" readonly value="₹ 0.00">
           </div>
         </div>
@@ -458,7 +459,7 @@
 
     <div id="subContentTracView" class="sub-section">
       <button type="button" class="btn-back" onclick="backToChoice('Trac')">⬅️ પાછળ જાઓ</button>
-      <h3 style="text-align:center; color:#8e44ad; margin-top:0;">📋 ટ્રેક્ટર ખર્ચ રેકોર્ડ્સ</h3>
+      <h3 style="text-align:center; color:#9b59b6; margin-top:0;">📋 ટ્રેક્ટર ખર્ચ રેકોર્ડ્સ</h3>
       <div class="form-group"><input type="text" id="searchTrac" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterTable('Trac')"></div>
       <div id="actionBarTrac" class="table-actions-bar"></div>
       <div id="tableContainerTrac" style="overflow-x:auto;"></div>
@@ -481,7 +482,7 @@
 
     <div id="subContentUpadNew" class="sub-section">
       <button type="button" class="btn-back" onclick="backToChoice('Upad')">⬅️ પાછળ જાઓ</button>
-      <h3 style="text-align:center; color:#e67e22; margin-top:0;">💸 નવો ઉપાડ / જમા એન્ટ્રી ફોર્મ</h3>
+      <h3 id="formTitleUpad" style="text-align:center; color:#e67e22; margin-top:0;">💸 નવો ઉપાડ / જમા એન્ટ્રી ફોર્મ</h3>
       <form id="upadForm" onsubmit="submitUpad(event)">
         <div class="flex-row">
           <div class="form-group"><label>📅 તારીખ:</label><input type="date" id="uDate" required onchange="setEntryIdDate(this.value)"></div>
@@ -540,8 +541,8 @@
         <div class="form-group"><label>📝 વિગત:</label><input type="text" id="uDetails" placeholder="વધારાની માહિતી..."></div>
         
         <!-- વ્યાજ સેક્શન -->
-        <div style="background: #fdfefe; border: 1px solid #d5dbdb; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
-          <h4 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 13px;">📊 વ્યાજ ગણતરી (૩% પ્રતિ મહિનો)</h4>
+        <div style="background: #252525; border: 1px solid #444; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+          <h4 style="margin: 0 0 8px 0; color: #e2e8f0; font-size: 13px;">📊 વ્યાજ ગણતરી (૩% પ્રતિ મહિનો)</h4>
           <div class="flex-row">
             <div class="form-group"><label>શરૂઆતની તારીખ:</label><input type="date" id="uStartDate"></div>
             <div class="form-group"><label>પૂરી થવાની તારીખ:</label><input type="date" id="uEndDate"></div>
@@ -578,7 +579,7 @@
 
   <!-- 6. GALLERY SECTION -->
   <div id="formGallery" class="section">
-    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">🖼️ ગેલેરી & રેકોર્ડ્સ</h3>
+    <h3 style="text-align:center; color:#e2e8f0; margin-top:0;">🖼️ ગેલેરી & રેકોર્ડ્સ</h3>
     <div class="form-group">
       <input type="text" id="searchGallery" placeholder="🔍 બિલ નંબર અથવા તારીખથી શોધો..." oninput="filterGallery()">
     </div>
@@ -588,12 +589,11 @@
     </div>
   </div>
 
-  <!-- 7. BILL RECORD SECTION (HTML - બરાબર અહીં જ મૂકવાનું છે) -->
+  <!-- 7. BILL RECORD SECTION -->
   <div id="formBillRec" class="section">
-    <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📂 બિલ રેકોર્ડ્સ (ડાયનેમિક ફિલ્ટર)</h3>
+    <h3 style="text-align:center; color:#e2e8f0; margin-top:0;">📂 બિલ રેકોર્ડ્સ (ડાયનેમિક ફિલ્ટર)</h3>
     
     <div class="flex-row" style="margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
-      <!-- ૧. હસ્તે / નામ ફિલ્ટર -->
       <div class="form-group" style="flex: 1; min-width: 180px;">
         <label>👤 હસ્તે / નામ:</label>
         <select id="filterHastak" onchange="filterBillRecordTable()">
@@ -601,7 +601,6 @@
         </select>
       </div>
 
-      <!-- ૨. મુખ્ય કેટેગરી ફિલ્ટર -->
       <div class="form-group" style="flex: 1; min-width: 160px;">
         <label>📌 આઇટમ / પ્રકાર:</label>
         <select id="filterCategory" onchange="onCategoryFilterChange()">
@@ -613,7 +612,6 @@
         </select>
       </div>
 
-      <!-- ૩. દવા પ્રકાર સબ-ફિલ્ટર -->
       <div class="form-group" id="groupMedType" style="flex: 1; min-width: 150px; display: none;">
         <label>🧪 દવા પ્રકાર:</label>
         <select id="filterMedType" onchange="filterBillRecordTable()">
@@ -621,7 +619,6 @@
         </select>
       </div>
 
-      <!-- ૪. ટ્રેક્ટર કામ પ્રકાર સબ-ફિલ્ટર -->
       <div class="form-group" id="groupTracWork" style="flex: 1; min-width: 150px; display: none;">
         <label>🚜 કામનો પ્રકાર:</label>
         <select id="filterTracWork" onchange="filterBillRecordTable()">
@@ -635,14 +632,13 @@
         </select>
       </div>
 
-      <!-- ૫. સર્ચ બૉક્સ -->
       <div class="form-group" style="flex: 1; min-width: 180px;">
         <label>🔍 શોધખોળ:</label>
         <input type="text" id="searchBillRec" placeholder="બિલ નં/તારીખ..." oninput="filterBillRecordTable()">
       </div>
     </div>
 
-    <div id="latestRecordSummary" style="background: #eafaf1; border-left: 5px solid #27ae60; padding: 14px; border-radius: 6px; margin-bottom: 12px; display: none; max-width: 320px;">
+    <div id="latestRecordSummary" style="background: #172a3a; border-left: 5px solid #27ae60; padding: 14px; border-radius: 6px; margin-bottom: 12px; display: none; max-width: 320px;">
       <p id="latestRecordText" style="margin:0;"></p>
     </div>
 
@@ -656,20 +652,20 @@
 <!-- Modals -->
 <div id="modalMasterManager" class="modal">
   <div class="modal-content" style="max-width: 600px; text-align: left;">
-    <h3 id="masterModalTitle" style="color:#2c3e50; margin-top:0; text-align:center;">⚙️ રેકોર્ડ મેનેજમેન્ટ</h3>
+    <h3 id="masterModalTitle" style="color:#e2e8f0; margin-top:0; text-align:center;">⚙️ રેકોર્ડ મેનેજમેન્ટ</h3>
     <div style="margin-bottom: 12px; display: flex; gap: 8px;">
       <button type="button" class="btn-submit" style="margin:0; background:#27ae60;" onclick="openAddMasterForm()">➕ નવો ઉમેરો</button>
       <button type="button" class="btn-submit" style="margin:0; background:#f39c12;" onclick="openEditMasterForm()">✏️ એડિટ કરો</button>
       <button type="button" class="btn-submit" style="margin:0; background:#e74c3c;" onclick="deleteSelectedMasterRecord()">🗑️ ડિલીટ કરો</button>
     </div>
-    <div id="masterTableContainer" style="max-height: 300px; overflow: auto; border: 1px solid #ccc; border-radius: 4px;"></div>
-    <button type="button" onclick="document.getElementById('modalMasterManager').style.display='none'" style="margin-top: 15px; width: 100%; padding: 8px; background: #7f8c8d; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">બંધ કરો</button>
+    <div id="masterTableContainer" style="max-height: 300px; overflow: auto; border: 1px solid #444; border-radius: 4px;"></div>
+    <button type="button" onclick="document.getElementById('modalMasterManager').style.display='none'" style="margin-top: 15px; width: 100%; padding: 8px; background: #4a5568; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">બંધ કરો</button>
   </div>
 </div>
 
 <div id="modalAddEditMaster" class="modal">
   <div class="modal-content" style="max-width: 400px; text-align: left;">
-    <h3 id="addEditMasterTitle" style="color:#2c3e50; margin-top:0; text-align:center;">➕ નવો રેકોર્ડ ઉમેરો</h3>
+    <h3 id="addEditMasterTitle" style="color:#e2e8f0; margin-top:0; text-align:center;">➕ નવો રેકોર્ડ ઉમેરો</h3>
     <input type="hidden" id="masterSheetKey" value="">
     <input type="hidden" id="masterOriginalName" value="">
     <div class="form-group"><label>નામ:</label><input type="text" id="mNameInput"></div>
@@ -679,20 +675,20 @@
     <div class="form-group" id="mCategoryGroup" style="display:none;"><label>પ્રકાર:</label><select id="mCategoryInput"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="દવા">દવા</option><option value="ખાતર">ખાતર</option><option value="અન્ય વેપારી">અન્ય વેપારી</option></select></div>
     <div style="display: flex; gap: 10px; margin-top: 15px;">
       <button type="button" class="btn-submit" style="background:#27ae60; margin:0;" onclick="saveMasterRecordData()">સેવ કરો</button>
-      <button type="button" class="btn-submit" style="background:#7f8c8d; margin:0;" onclick="document.getElementById('modalAddEditMaster').style.display='none'">કેન્સલ</button>
+      <button type="button" class="btn-submit" style="background:#4a5568; margin:0;" onclick="document.getElementById('modalAddEditMaster').style.display='none'">કેન્સલ</button>
     </div>
   </div>
 </div>
 
 <div id="modalImageViewer" class="modal">
   <div class="modal-content" style="max-width: 400px;">
-    <h3 style="color:#2c3e50; margin-top:0;">📷 બિલ ફોટો વ્યુઅર</h3>
+    <h3 style="color:#e2e8f0; margin-top:0;">📷 બિલ ફોટો વ્યુઅર</h3>
     <div style="margin: 10px 0; max-height: 350px; overflow: auto;">
-      <img id="viewerImage" src="" style="width: 100%; border-radius: 4px; border: 1px solid #ccc; object-fit: contain;">
+      <img id="viewerImage" src="" style="width: 100%; border-radius: 4px; border: 1px solid #444; object-fit: contain;">
     </div>
     <div style="display: flex; gap: 10px; margin-top: 15px;">
       <a id="downloadPhotoBtn" href="" target="_blank" download="Bill_Photo.jpg" style="flex:1; background:#27ae60; color:white; text-decoration:none; padding:8px; border-radius:4px; font-weight:bold; font-size:13px; text-align:center;">📥 ડાઉનલોડ કરો</a>
-      <button type="button" onclick="closeImageModal()" style="flex:1; background:#7f8c8d; color:white; border:none; padding:8px; border-radius:4px; font-weight:bold; font-size:13px; cursor:pointer;">⬅️ પાછળ (Back)</button>
+      <button type="button" onclick="closeImageModal()" style="flex:1; background:#4a5568; color:white; border:none; padding:8px; border-radius:4px; font-weight:bold; font-size:13px; cursor:pointer;">⬅️ પાછળ (Back)</button>
     </div>
   </div>
 </div>
@@ -700,10 +696,10 @@
 <div id="modalUpadConfirm" class="modal">
   <div class="modal-content" style="text-align:center;">
     <h3 style="color:#e67e22; margin-top:0;">💸 ઉપાડ લેજર જમા એન્ટ્રી</h3>
-    <p id="upadConfirmMsg" style="font-size:15px; font-weight:bold; color:#c0392b; margin-bottom:12px; line-height:1.5;"></p>
+    <p id="upadConfirmMsg" style="font-size:15px; font-weight:bold; color:#e74c3c; margin-bottom:12px; line-height:1.5;"></p>
     <div class="form-group" style="text-align:left;">
       <label><b>ઉપાડમાં જમા કરવું છે?:</b></label>
-      <select id="upadChoiceSelect" style="font-weight:bold; font-size:14px; background:#f4ecf7; color:#8e44ad; border: 2px solid #8e44ad;">
+      <select id="upadChoiceSelect" style="font-weight:bold; font-size:14px; background:#2d3748; color:#f6ad55; border: 2px solid #d69e2e;">
         <option value="no">ના (માત્ર બિલ સેવ કરો)</option>
         <option value="yes">હા (જમા લો)</option>
       </select>
@@ -717,11 +713,11 @@
 
 <div id="modalMpin" class="modal">
   <div class="modal-content" style="text-align:center;">
-    <h3 style="color:#c0392b; margin-top:0;">🔒 સિક્યુરિટી MPIN</h3>
-    <p style="font-size:13px; color:#555;">આ ક્રિયા કરવા માટે ૪ આંકડાનો MPIN નાખો:</p>
+    <h3 style="color:#e74c3c; margin-top:0;">🔒 સિક્યુરિટી MPIN</h3>
+    <p style="font-size:13px; color:#a0aec0;">આ ક્રિયા કરવા માટે ૪ આંકડાનો MPIN નાખો:</p>
     <input type="password" id="inputMpin" maxlength="4" style="text-align:center; font-size:20px; letter-spacing:8px; margin-bottom:12px;" placeholder="••••">
     <button type="button" class="btn-submit" onclick="verifyMpinAndProceed()">કન્ફર્મ કરો</button>
-    <button type="button" onclick="document.getElementById('modalMpin').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">કેન્સલ</button>
+    <button type="button" onclick="document.getElementById('modalMpin').style.display='none'" style="margin-top:8px; width:100%; padding:6px; background:#4a5568; color:#fff; border:none; border-radius:3px;">કેન્સલ</button>
   </div>
 </div>
 
@@ -779,7 +775,6 @@
       });
   }
 
-  // બિલ રેકોર્ડ ફિલ્ટર ડ્રોપડાઉન માસ્ટર શીટમાંથી ભરવા માટેનું ફંક્શન
   function populateBillRecordFilters() {
     let filterHastakSelect = document.getElementById("filterHastak");
     if(filterHastakSelect && appData.Bhagiya_Master) {
@@ -817,7 +812,7 @@
     if(editIdSales || editIdMed || editIdFert) return;
 
     if(!billNo || billNo === "N/A") {
-      inputEl.style.backgroundColor = "#fff"; inputEl.style.color = "#333"; inputEl.style.borderColor = "#bdc3c7";
+      inputEl.style.backgroundColor = "#2d3748"; inputEl.style.color = "#fff"; inputEl.style.borderColor = "#444";
       if(submitBtn) submitBtn.style.display = "block"; return;
     }
 
@@ -832,11 +827,11 @@
     });
 
     if(isDuplicate) {
-      inputEl.style.backgroundColor = "#ffcccc"; inputEl.style.color = "#c0392b"; inputEl.style.borderColor = "#c0392b";
+      inputEl.style.backgroundColor = "#5a2d2d"; inputEl.style.color = "#ffcccc"; inputEl.style.borderColor = "#e74c3c";
       if(submitBtn) submitBtn.style.display = "none";
       alert("⚠️ સાવધાન: આ બિલ નંબર (" + billNo + ") પહેલેથી જ સેવ થયેલ છે!");
     } else {
-      inputEl.style.backgroundColor = "#fff"; inputEl.style.color = "#333"; inputEl.style.borderColor = "#bdc3c7";
+      inputEl.style.backgroundColor = "#2d3748"; inputEl.style.color = "#fff"; inputEl.style.borderColor = "#444";
       if(submitBtn) submitBtn.style.display = "block";
     }
   }
@@ -1779,7 +1774,7 @@
         let farmerCost = r["ભાગિયાનો ખર્ચ"] || 0;
         html += `<td>${owner}</td><td>${r["પાકનું નામ"]||'-'}</td><td>${r["કામની વિગત"]||'-'}</td><td>${r["કલાક"]||0}</td><td>${r["મિનિટ"]||0}</td><td>₹ ${r["કલાકનો ભાવ"]||0}</td><td>₹ ${r["મિનિટનો ભાવ"]||0}</td><td>₹ ${parseFloat(totalAmt).toFixed(2)}</td><td>${r["બિલની સ્થિતિ"]||'-'}</td><td>${r["હસ્તે"]||'-'}</td><td>₹ ${parseFloat(farmerCost).toFixed(2)}</td><td><span class="badge-jama">જમા</span></td><td>${photoLink}</td>`;
       } else if(tabName === 'Upad') {
-        html += `<td><b>${bhagiya}</b></td><td>${r["એન્ટ્રી પ્રકાર"]||'-'}</td><td>${r["આપનાર"]||'-'}</td><td style="color:#c0392b; font-weight:bold;">₹ ${parseFloat(r["ઉપાડ (Debit)"]||0).toFixed(2)}</td><td style="color:#27ae60; font-weight:bold;">₹ ${parseFloat(r["જમા (Credit)"]||0).toFixed(2)}</td><td>${r["બિલ નં"]||'-'}</td><td style="color:#2980b9; font-weight:bold;">₹ ${parseFloat(r["TotalOutstanding"]||0).toFixed(2)}</td><td><span class="badge-jama">${r["Status"]||'ઉધાર'}</span></td><td>${photoLink}</td>`;
+        html += `<td><b>${bhagiya}</b></td><td>${r["એન્ટ્રી પ્રકાર"]||'-'}</td><td>${r["આપનાર"]||'-'}</td><td style="color:#e74c3c; font-weight:bold;">₹ ${parseFloat(r["ઉપાડ (Debit)"]||0).toFixed(2)}</td><td style="color:#2ecc71; font-weight:bold;">₹ ${parseFloat(r["જમા (Credit)"]||0).toFixed(2)}</td><td>${r["બિલ નં"]||'-'}</td><td style="color:#3498db; font-weight:bold;">₹ ${parseFloat(r["TotalOutstanding"]||0).toFixed(2)}</td><td><span class="badge-jama">${r["Status"]||'ઉધાર'}</span></td><td>${photoLink}</td>`;
       }
 
       html += `</tr>`;
@@ -1936,15 +1931,11 @@
         ]);
       });
 
-      if (typeof triggerUpadConfirmationModal === 'function') {
-        pendingBillData = { formType: 'Sales', itemRows, btnId: 'btnSales', formElementId: 'salesForm', originalBtnText: originalText, billTotal: totalBillAmount, partnerName: bhagiya, entryId, billNo };
-        let msg = "📋 આ બિલની કુલ રકમ ₹ " + totalBillAmount.toFixed(2) + " છે. શું આ બિલ ઉપાડમાં જમા કરવું છે?";
-        if(document.getElementById("upadConfirmMsg")) document.getElementById("upadConfirmMsg").innerText = msg;
-        if(document.getElementById("upadChoiceSelect")) document.getElementById("upadChoiceSelect").value = "no";
-        if(document.getElementById("modalUpadConfirm")) document.getElementById("modalUpadConfirm").style.display = "block";
-      } else {
-        triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm', originalText);
-      }
+      pendingBillData = { formType: 'Sales', itemRows, btnId: 'btnSales', formElementId: 'salesForm', originalBtnText: originalText, billTotal: totalBillAmount, partnerName: bhagiya, entryId, billNo };
+      let msg = "📋 આ બિલની કુલ રકમ ₹ " + totalBillAmount.toFixed(2) + " છે. શું આ બિલ ઉપાડમાં જમા કરવું છે?";
+      document.getElementById("upadConfirmMsg").innerText = msg;
+      document.getElementById("upadChoiceSelect").value = "no";
+      document.getElementById("modalUpadConfirm").style.display = "block";
     });
   }
 
@@ -1993,13 +1984,10 @@
       let totalFarmerAmt = 0;
 
       rows.forEach((row, index) => {
-        // તમારું કેલ્ક્યુલેશન લોજિક અહીંયા હશે જ, 
-        // બસ આ જ રીતે વેલ્યુ પકડી લેવાની છે:
         let kShare = parseFloat(row.querySelector('.mKShare').value) || 0;
         let kRakam = parseFloat(row.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
-
-        if (index === 0) firstShare = kShare; // પહેલી આઇટમનો હિસ્સો
-        totalFarmerAmt += kRakam; // બધી આઇટમ્સની કુલ રકમ
+        if (index === 0) firstShare = kShare;
+        totalFarmerAmt += kRakam;
       });
 
       let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, firstShare, totalFarmerAmt, status, photoBase64];
@@ -2007,77 +1995,72 @@
     });
   }
 
-  function submitFertForm(e) {
-    e.preventDefault();
-    let btn = document.getElementById("btnFert");
-    let originalText = btn.innerHTML;
-    btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
-    btn.disabled = true;
+  function submitFertForm(e) {
+    e.preventDefault();
+    let btn = document.getElementById("btnFert");
+    let originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
+    btn.disabled = true;
 
-    let date = v("fDate");
-    let year = getYear(date);
-    let entryId = document.getElementById("editFertId").value || ("FERT-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
-    let billNo = v("fBill") || "N/A";
-    let bhagiya = v("fBhagiya");
-    let vepari = v("fVepari");
-    let subTotal = parseFloat(v("fSubTotal").replace("₹", "").trim()) || 0;
-    let tax = parseFloat(v("fTax")) || 0;
-    let gst = parseFloat(v("mGst2").replace("₹", "").trim()) || 0;
-    let cst = parseFloat(v("mCst2").replace("₹", "").trim()) || 0;
-    let totalBill = parseFloat(v("fTotalBill").replace("₹", "").trim()) || 0;
-    let words = v("fTotalWords");
-    let hastak = v("fHastak");
-    let status = v("fStatus");
-    let details = v("fDetails") || "-";
+    let date = v("fDate");
+    let year = getYear(date);
+    let entryId = document.getElementById("editFertId").value || ("FERT-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
+    let billNo = v("fBill") || "N/A";
+    let bhagiya = v("fBhagiya");
+    let vepari = v("fVepari");
+    let subTotal = parseFloat(v("fSubTotal").replace("₹", "").trim()) || 0;
+    let tax = parseFloat(v("fTax")) || 0;
+    let gst = parseFloat(v("mGst2").replace("₹", "").trim()) || 0;
+    let cst = parseFloat(v("mCst2").replace("₹", "").trim()) || 0;
+    let totalBill = parseFloat(v("fTotalBill").replace("₹", "").trim()) || 0;
+    let words = v("fTotalWords");
+    let hastak = v("fHastak");
+    let status = v("fStatus");
+    let details = v("fDetails") || "-";
 
-    let rows = document.querySelectorAll("#fertItemsContainer .item-row");
-    let itemRows = [];
+    let rows = document.querySelectorAll("#fertItemsContainer .item-row");
+    let itemRows = [];
 
-    handlePhotoUpload("fPhoto", function(photoBase64) {
-      rows.forEach((r, index) => {
-        let khatar = r.querySelector('.khatarList').value;
-        let weight = r.querySelector('.fWeight').value || 0;
-        let pack = r.querySelector('.fPack').value || "";
-        let qty = r.querySelector('.fQty').value || 1;
-        let bhav = parseFloat(r.querySelector('.fBhav').value) || 0;
-        let amt = parseFloat(r.querySelector('.fAmt').value.replace("₹", "").trim()) || 0;
-        let pak = r.querySelector('.pakList').value;
-        let kShare = r.querySelector('.fKShare').value || 0;
-        let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
+    handlePhotoUpload("fPhoto", function(photoBase64) {
+      rows.forEach((r, index) => {
+        let khatar = r.querySelector('.khatarList').value;
+        let weight = r.querySelector('.fWeight').value || 0;
+        let pack = r.querySelector('.fPack').value || "";
+        let qty = r.querySelector('.fQty').value || 1;
+        let bhav = parseFloat(r.querySelector('.fBhav').value) || 0;
+        let amt = parseFloat(r.querySelector('.fAmt').value.replace("₹", "").trim()) || 0;
+        let pak = r.querySelector('.pakList').value;
+        let kShare = r.querySelector('.fKShare').value || 0;
+        let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
 
-        let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-        itemRows.push([year, rId, date, billNo, bhagiya, vepari, khatar, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
-      });
+        let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
+        itemRows.push([year, rId, date, billNo, bhagiya, vepari, khatar, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
+      });
 
-      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, details, photoBase64];
-      triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm', originalText);
-    });
-  }
+      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, details, photoBase64];
+      triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm', originalText);
+    });
+  }
 
-  function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId, originalBtnText) {
-    let partnerName = (formType === 'Sales') ? document.getElementById("sBhagiya").value : billRow[4];
-    let billTotal = 0;
-    if(formType === 'Sales') {
-      itemRows.forEach(r => { billTotal += parseFloat(r[11]) || 0; });
-    } else {
-      billTotal = parseFloat(billRow[10]) || 0;
-    }
+  function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId, originalBtnText) {
+    let partnerName = (formType === 'Sales') ? document.getElementById("sBhagiya").value : billRow[4];
+    let billTotal = 0;
+    if(formType === 'Sales') {
+      itemRows.forEach(r => { billTotal += parseFloat(r[11]) || 0; });
+    } else {
+      billTotal = parseFloat(billRow[10]) || 0;
+    }
 
-    let currentBal = getCategoryBalanceVal(formType, partnerName);
-    let categoryText = formType === 'Sales' ? 'વેચાણ બિલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
+    let currentBal = getCategoryBalanceVal(formType, partnerName);
+    let categoryText = formType === 'Sales' ? 'વેચાણ બિલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
 
-    if (currentBal > 0) {
-      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
-      let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (ખેડૂ ઉપાડ : ₹ " + currentBal.toFixed(2) + ") શું આ બિલ ઉપાડમાં જમા કરવું છે?";
-      document.getElementById("upadConfirmMsg").innerText = msg;
-      document.getElementById("upadChoiceSelect").value = "no";
-      document.getElementById("modalUpadConfirm").style.display = "block";
-    } else {
-      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
-      document.getElementById("upadChoiceSelect").value = "no";
-      confirmUpadActionModal();
-    }
-  }
+    pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
+    let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. શું આ બિલ ઉપાડમાં જમા કરવું છે?";
+    document.getElementById("upadConfirmMsg").innerText = msg;
+    document.getElementById("upadChoiceSelect").value = "no";
+    document.getElementById("modalUpadConfirm").style.display = "block";
+  }
+
   function confirmUpadActionModal() {
     document.getElementById("modalUpadConfirm").style.display = "none";
     if(!pendingBillData) return;
@@ -2376,7 +2359,7 @@
     }
 
     if(filteredRows.length === 0) {
-      container.innerHTML = "<p style='text-align:center; color:#c0392b;'>⚠️ આ ફિલ્ટર મુજબ કોઈ રેકોર્ડ મળ્યો નથી.</p>";
+      container.innerHTML = "<p style='text-align:center; color:#e74c3c;'>⚠️ આ ફિલ્ટર મુજબ કોઈ રેકોર્ડ મળ્યો નથી.</p>";
       return;
     }
 
@@ -2389,13 +2372,12 @@
         <td>${String(r["તારીખ"]||'-').split('T')[0]}</td>
         <td><b>${r["હસ્તે"]||'-'}</b></td>
         <td>${r["બિલ નં"]||'-'}</td>
-        <td style="color:#8e44ad; font-weight:bold;">₹ ${parseFloat(r["રકમ"]||0).toFixed(2)}</td>
+        <td style="color:#9b59b6; font-weight:bold;">₹ ${parseFloat(r["રકમ"]||0).toFixed(2)}</td>
         <td>${r["જમા / બાકી"]||'-'}</td>
       </tr>`;
     });
     container.innerHTML = html + `</table>`;
   }
-    
 </script>
 
 </body>

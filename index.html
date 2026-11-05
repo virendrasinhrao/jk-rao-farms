@@ -1958,9 +1958,9 @@ body.light-mode .dash-box h4 {
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
 
-      // 2. દવા (Med / Pesticide)
-      } else if(sheetKey === 'Pesticide_Ledger' || sheetKey === 'Med') {
-        let found = (appData.Pesticide_Ledger || appData.Med || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
+            // 2. દવા (Med / Pesticide_Items)
+      } else if(key.includes('med') || key.includes('pesticide') || key.includes('દવા') || key.includes('medic')) {
+        let found = (appData.Pesticide_Items || appData.Pesticide_Ledger || appData.Med || appData.Med_Ledger || appData.Pesticide || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
         if(found) {
           switchSubTab('Med', 'New');
           document.getElementById("mDate").value = String(found["તારીખ"] || "").split('T')[0];
@@ -1973,10 +1973,8 @@ body.light-mode .dash-box h4 {
           document.getElementById("editMedId").value = entryId;
           document.getElementById("btnMed").innerText = "અપડેટ કરો";
           alert("દવા એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
-       } else {
-        // જો ઉપરની કોઈ કી મેચ ન થાય, તો આ ડાયનામિક ફૉલબૅક તરીકે કામ કરશે
-        alert("રેકોર્ડ એડિટ કરવા માટે ડેટા મળી ગયો છે, પરંતુ ફોર્મ маપિંગ બાકી છે. (Key: " + sheetKey + ")");
-      }
+        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+
 
       // 3. ખાતર (Fertilizer)
       } else if(sheetKey === 'Fertilizer_Ledger' || sheetKey === 'Fert') {

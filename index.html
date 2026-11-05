@@ -155,7 +155,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">05/11/2026 - 21:59  IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">05/11/2026 - 23:23  IST</span>
 </div>
 
 <div class="header-bar">
@@ -2200,13 +2200,15 @@ body.light-mode .dash-box h4 {
         return Promise.reject(errText);
       }
 
-      if(wantUpad && formType === 'Sales') {
-        let date = document.getElementById("sDate").value;
+      if(wantUpad) {
+        let date = document.getElementById(formType === 'Sales' ? 'sDate' : formType === 'Med' ? 'mDate' : 'fDate').value;
         let year = getYear(date);
-        let salesEntryId = itemRows.length > 0 ? itemRows[0][1] : ("SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
-        let billNoVal = document.getElementById("sBill").value || "N/A";
-        let provider = document.getElementById("sVepari").value;
-        let upadEntryType = 'વેચાણ બિલ જમા';
+        let entryIdVal = formType === 'Sales' ? (itemRows.length > 0 ? itemRows[0][1] : "") : billRow[1];
+        let billNoVal = document.getElementById(formType === 'Sales' ? 'sBill' : formType === 'Med' ? 'mBill' : 'fBill').value || "N/A";
+        let provider = document.getElementById(formType === 'Sales' ? 'sVepari' : formType === 'Med' ? 'mVepari' : 'fVepari').value;
+        
+        let upadEntryType = formType === 'Sales' ? 'વેચાણ બિલ જમા' : (formType === 'Med' ? 'દવા બિલ જમા' : 'ખાતર બિલ જમા');
+        let catTextVal = formType === 'Sales' ? (categoryText || 'વેચાણ બિલ') : (formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે');
         let debit = 0;
         let credit = billTotal; 
         let status = "જમા";
@@ -2214,8 +2216,8 @@ body.light-mode .dash-box h4 {
         let totalOutstanding = 0;
 
         let upadRowValues = [
-          year, salesEntryId, date, partnerName, upadEntryType, provider, credit, "CASH", "-",
-          debit, credit, billNoVal, credit, categoryText || 'વેચાણ બિલ', "બિલ જમા એન્ટ્રી", 0, 0,
+          year, entryIdVal, date, partnerName, upadEntryType, provider, credit, "CASH", "-",
+          debit, credit, billNoVal, credit, catTextVal, "બિલ જમા એન્ટ્રી", 0, 0,
           status, "", closeYear, totalOutstanding
         ];
 
@@ -2225,7 +2227,6 @@ body.light-mode .dash-box h4 {
         })
         .then(resUpad => resUpad.json());
       }
-    })
     .then(() => {
       alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ/અપડેટ થઈ ગઈ!");
       if(btn) { btn.innerHTML = originalBtnText || "💾 સેવ કરો"; btn.disabled = false; }

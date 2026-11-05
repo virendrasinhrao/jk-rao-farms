@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing  
   File: index.html  
-  Final Cleaned Version  
+  Fixed Light Mode Nav Tabs White Text on Soft Green Box  
 -->
 <!DOCTYPE html>
 <html>
@@ -10,8 +10,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>J K Rao Farms - POS Billing</title>
   <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #eef2f3; padding: 5px; margin: 0; color: #333; }
-    .header-bar { display: flex; justify-content: space-between; align-items: center; max-width: 950px; margin: 5px auto; background: #2c3e50; color: white; padding: 8px 15px; border-radius: 4px; }
+    /* Default Dark Theme Settings */
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; padding: 5px; margin: 0; color: #e0e0e0; transition: background 0.3s, color 0.3s; }
+    
+    /* Soft Green Light Mode */
+    body.light-mode { background-color: #e8f8f5 !important; color: #2f3640 !important; }
+    body.light-mode .header-bar { background: #2c3e50 !important; color: white !important; box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important; }
+    body.light-mode .header-bar h2 { color: #ffffff !important; }
+    body.light-mode .card { background: #ffffff !important; color: #2f3640 !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important; border-top: 4px solid #27ae60 !important; }
+    body.light-mode h2, body.light-mode h3, body.light-mode h4 { color: #2f3640 !important; }
+    body.light-mode label { color: #353b48 !important; font-weight: bold; }
+    
+    /* Light Mode Dashboard Box Titles Fix */
+    body.light-mode .dash-box h4 { color: #1b4332 !important; font-weight: bold !important; }
+
+    /* Button-Type Nav Tabs with Soft Green Background & White Text in Light Mode */
+    body.light-mode .nav button { 
+      background: linear-gradient(135deg, #27ae60, #2ecc71) !important; 
+      color: #ffffff !important; 
+      border: 1px solid #1e8449 !important; 
+      font-weight: bold; 
+      border-radius: 8px !important;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+      padding: 10px 8px;
+    }
+    body.light-mode .nav button:hover {
+      background: linear-gradient(135deg, #219653, #27ae60) !important;
+    }
+    body.light-mode .nav button.active { 
+      background: linear-gradient(135deg, #145a32, #1e8449) !important; 
+      color: #ffffff !important; 
+      border-color: #0e3a20 !important; 
+      box-shadow: 0 4px 8px rgba(20, 90, 50, 0.4);
+    }
+    
+    body.light-mode input, body.light-mode select { background: #ffffff !important; color: #2f3640 !important; border-color: #b2bec3 !important; }
+    body.light-mode .item-row { background: #fdfefe !important; border-color: #dcdde1 !important; }
+    body.light-mode .modal-content { background: #ffffff !important; color: #2f3640 !important; }
+    
+    /* Table Header styled like Back Button */
+    body.light-mode th { 
+      background: linear-gradient(135deg, #2c3e50, #34495e) !important; 
+      color: #ffffff !important; 
+      border-color: #4b6584 !important; 
+      font-weight: bold; 
+    }
+    body.light-mode td { border-color: #dcdde1 !important; color: #2f3640 !important; }
+    body.light-mode tr:nth-child(even) { background-color: #f8f9fa; }
+    body.light-mode tr:hover { background-color: #f1f2f6; }
+
+    body.light-mode .readonly-bg { background-color: #dfe4ea !important; color: #2f3640 !important; }
+    body.light-mode #latestRecordSummary { background: #d4efdf !important; color: #2f3640 !important; }
+    body.light-mode .table-actions-bar { background: #f1f2f6 !important; border-color: #ced6e0 !important; }
+
+    .header-bar { display: flex; justify-content: space-between; align-items: center; max-width: 950px; margin: 5px auto; background: #1e1e1e; color: white; padding: 8px 15px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
     
     .refresh-btn { 
       background: #16a085; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; display: flex; align-items: center; gap: 6px; 
@@ -21,20 +73,29 @@
     @keyframes smoothSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     .spin { animation: smoothSpin 0.8s linear infinite !important; display: inline-block; }
 
-    .nav { display: flex; gap: 3px; margin-bottom: 10px; max-width: 950px; margin-left: auto; margin-right: auto; flex-wrap: wrap; }
-    .nav button { flex: 1; padding: 8px; cursor: pointer; border: 1px solid #b2bec3; background: #dfe6e9; border-radius: 3px; font-weight: bold; font-size: 11px; color: #2d3436; min-width: 70px; }
+    /* Slider Toggle Button Style */
+    .theme-switch-wrapper { display: flex; align-items: center; gap: 6px; }
+    .theme-switch { position: relative; display: inline-block; width: 44px; height: 22px; }
+    .theme-switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #4a5568; transition: .3s; border-radius: 22px; }
+    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+    input:checked + .slider { background-color: #27ae60; }
+    input:checked + .slider:before { transform: translateX(22px); }
+
+    .nav { display: flex; gap: 6px; margin-bottom: 12px; max-width: 950px; margin-left: auto; margin-right: auto; flex-wrap: wrap; }
+    .nav button { flex: 1; padding: 10px 8px; cursor: pointer; border: 1px solid #444; background: #2c2c2c; border-radius: 6px; font-weight: bold; font-size: 11px; color: #e0e0e0; min-width: 70px; }
     .nav button.active { background: #27ae60; color: white; border-color: #1e8449; }
 
-    .card { background: #fff; padding: 15px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.15); max-width: 950px; margin: auto; border-top: 4px solid #27ae60; }
+    .card { background: #1e1e1e; padding: 15px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); max-width: 950px; margin: auto; border-top: 4px solid #27ae60; color: #e0e0e0; }
     .form-group { margin-bottom: 10px; }
-    label { font-weight: bold; display: block; margin-bottom: 3px; font-size: 13px; color: #2c3e50; }
-    input, select { width: 100%; padding: 7px; border: 1px solid #bdc3c7; border-radius: 3px; box-sizing: border-box; font-size: 13px; background: #fff; }
+    label { font-weight: bold; display: block; margin-bottom: 3px; font-size: 13px; color: #cbd5e0; }
+    input, select { width: 100%; padding: 7px; border: 1px solid #444; border-radius: 3px; box-sizing: border-box; font-size: 13px; background: #2d3748; color: #fff; }
     
     .btn-submit { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; font-size: 15px; cursor: pointer; margin-top: 10px; font-weight: bold; border-radius: 3px; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .btn-submit:hover { background: #219653; }
     
-    .btn-back { background: linear-gradient(135deg, #7f8c8d, #95a5a6); color: white; border-radius: 6px; border: none; padding: 8px 14px; cursor: pointer; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .btn-back:hover { background: linear-gradient(135deg, #6c7a89, #7f8c8d); }
+    .btn-back { background: linear-gradient(135deg, #4a5568, #2d3748); color: white; border-radius: 6px; border: none; padding: 8px 14px; cursor: pointer; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .btn-back:hover { background: linear-gradient(135deg, #2d3748, #1a202c); }
 
     .btn-action-pill {
       background: linear-gradient(135deg, #1b5e20, #2e7d32, #4caf50, #81c784);
@@ -47,51 +108,85 @@
     .btn-delete { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
     .btn-edit { background: #f39c12; color: white; border-radius: 4px; border: none; padding: 5px 10px; cursor: pointer; font-size: 12px; font-weight: bold; }
 
-    .table-actions-bar { display: none; gap: 8px; margin-bottom: 10px; padding: 6px 10px; background: #f8f9f9; border: 1px solid #d5dbdb; border-radius: 4px; align-items: center; }
+    .table-actions-bar { display: none; gap: 8px; margin-bottom: 10px; padding: 6px 10px; background: #2d3748; border: 1px solid #4a5568; border-radius: 4px; align-items: center; }
     .btn-add-item { background: #2980b9; color: white; border: none; padding: 6px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; margin-bottom: 8px; }
     .badge-jama { background-color: #27ae60; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; display: inline-block; }
 
     .choice-container { display: flex; gap: 15px; margin: 25px 0; justify-content: center; }
     .choice-card-new, .choice-card-view { flex: 1; border-radius: 10px; padding: 25px 15px; text-align: center; cursor: pointer; color: white; transition: 0.3s; }
-    .choice-card-new { background: linear-gradient(135deg, #27ae60, #2ecc71); box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
-    .choice-card-view { background: linear-gradient(135deg, #2980b9, #3498db); box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3); }
+    .choice-card-new { background: linear-gradient(135deg, #1e8449, #27ae60); box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
+    .choice-card-view { background: linear-gradient(135deg, #1f618d, #3498db); box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3); }
 
     .top-banners-row { display: flex; gap: 8px; margin-bottom: 12px; display: none; }
     .partner-sum-banner, .category-balance-box { flex: 1; color: white; padding: 8px 10px; border-radius: 6px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    .partner-sum-banner { background: linear-gradient(135deg, #16a085, #1abc9c); }
-    .category-balance-box { background: linear-gradient(135deg, #f39c12, #e67e22); font-weight: bold; }
+    .partner-sum-banner { background: linear-gradient(135deg, #117a65, #16a085); }
+    .category-balance-box { background: linear-gradient(135deg, #b7950b, #d4ac0d); font-weight: bold; }
 
-    .readonly-bg { background-color: #f1f2f6; }
+    .readonly-bg { background-color: #2a3441 !important; color: #a0aec0 !important; }
     .hidden-field { display: none !important; }
-    .highlight-total { background-color: #27ae60 !important; color: #ffffff !important; font-size: 20px !important; font-weight: bold !important; text-align: right; border: 2px solid #1e8449 !important; border-radius: 3px; padding: 6px 10px; }
-    .farmer-amount-box { background: linear-gradient(135deg, #2980b9, #3498db) !important; color: #ffffff !important; font-size: 18px !important; font-weight: bold !important; text-align: right; border: 2px solid #1f618d !important; border-radius: 4px; padding: 8px 12px; }
-    .words-box { background-color: #2c3e50 !important; color: #ffffff !important; font-size: 14px !important; font-weight: bold !important; text-align: left; border: 2px solid #1a252f !important; border-radius: 3px; padding: 6px 10px; }
+    .highlight-total { background-color: #1b4d3e !important; color: #6ee7b7 !important; font-size: 20px !important; font-weight: bold !important; text-align: right; border: 2px solid #27ae60 !important; border-radius: 3px; padding: 6px 10px; }
+    body.light-mode .highlight-total { background-color: #e8f8f5 !important; color: #27ae60 !important; border: 2px solid #27ae60 !important; }
+
+    .farmer-amount-box { background: linear-gradient(135deg, #1b3a4b, #214f6f) !important; color: #93c5fd !important; font-size: 18px !important; font-weight: bold !important; text-align: right; border: 2px solid #3b82f6 !important; border-radius: 4px; padding: 8px 12px; }
+    body.light-mode .farmer-amount-box { background: #ebf8ff !important; color: #2b6cb0 !important; border: 2px solid #3182ce !important; }
+
+    .words-box { background-color: #2d3748 !important; color: #e2e8f0 !important; font-size: 14px !important; font-weight: bold !important; text-align: left; border: 2px solid #4a5568 !important; border-radius: 3px; padding: 6px 10px; }
+    body.light-mode .words-box { background-color: #f1f2f6 !important; color: #2f3640 !important; border: 2px solid #ced6e0 !important; }
 
     .section { display: none; }
     .section.active { display: block; }
     .flex-row { display: flex; gap: 8px; }
     .flex-row > div { flex: 1; }
     
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; }
-    .modal-content { background: white; margin: auto; padding: 15px; width: 92%; max-width: 400px; border-radius: 8px; text-align: center; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-content { background: #1e1e1e; color: #e0e0e0; margin: auto; padding: 15px; width: 92%; max-width: 400px; border-radius: 8px; text-align: center; border: 1px solid #444; }
     
     table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; min-width: 900px; }
-    th, td { border: 1px solid #ccc; padding: 10px 14px; text-align: center; white-space: nowrap; }
-    th { background-color: #34495e; color: white; }
-    .item-row { background: #fdfefe; padding: 8px; border: 1px solid #dcdde1; border-radius: 4px; margin-bottom: 8px; position: relative; }
+    th, td { border: 1px solid #444; padding: 10px 14px; text-align: center; white-space: nowrap; color: #e0e0e0; }
+    th { background-color: #2c3e50; color: white; }
+    tr:nth-child(even) { background-color: #252525; }
+    tr:hover { background-color: #2d3748; }
+
+    .item-row { background: #252525; padding: 8px; border: 1px solid #444; border-radius: 4px; margin-bottom: 8px; position: relative; }
     .sub-section { display: none; }
   </style>
 </head>
 <body>
+<!-- Time & Update Status Banner -->
+<div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">05/11/2026 - 00:40 IST</span>
+</div>
 
-<div style="background: #1abc9c; color:Black; text-align: center; font-size: 16px; padding: 4px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ:<span>05/11/2026-00:40IST</span>
+<div class="header-bar">
+  <h2 style="margin:0; font-size: 15px;">🌾 J K Rao Farms</h2>
+  
+  <div style="display: flex; gap: 8px; align-items: center;">
+    <!-- Small Slider Toggle Button -->
+    <div class="theme-switch-wrapper" title="Light / Dark Mode">
+      <span style="font-size: 12px; font-weight: bold;">🌓</span>
+      <label class="theme-switch">
+        <input type="checkbox" id="themeCheckbox" onchange="toggleTheme()">
+        <span class="slider"></span>
+      </label>
+    </div>
+    
+    <button class="refresh-btn" onclick="fetchData()">
+      <span id="refreshIcon">⟳</span> <span>ડેટા</span>
+    </button>
+  </div>
+</div>
 
-
-
-
-
-
+<div class="card">
+  <div class="nav">
+    <button id="tabDash" class="active" onclick="switchTab('Dash')">📊 ડેશબોર્ડ</button>
+    <button id="tabSales" onclick="switchTab('Sales')">💰 વેચાણ</button>
+    <button id="tabMed" onclick="switchTab('Med')">🧪 દવા</button>
+    <button id="tabFert" onclick="switchTab('Fert')">🌾 ખાતર</button>
+    <button id="tabTrac" onclick="switchTab('Trac')">🚜 ટ્રેક્ટર</button>
+    <button id="tabUpad" onclick="switchTab('Upad')">💸 ઉપાડ</button>
+    <button id="tabGallery" onclick="switchTab('Gallery')">🖼️ ગેલેરી</button>
+    <button id="tabBillRec" onclick="switchTab('BillRec')">📂 બિલ રેકોર્ડ</button>
+  </div>
 <div class="header-bar">
   <h2 style="margin:0; font-size: 16px;">🌾 J K Rao Farms (POS Billing)</h2>
   <button class="refresh-btn" onclick="fetchData()">

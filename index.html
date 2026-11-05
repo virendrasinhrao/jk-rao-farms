@@ -841,6 +841,16 @@
     fetchData();
     addSalesItemRow(); addMedItemRow(); addFertItemRow(); addTracItemRow();
   };
+  function toggleTheme() {
+    let checkbox = document.getElementById("themeCheckbox");
+    if (checkbox.checked) {
+      document.body.classList.add("light-mode");
+      localStorage.setItem("app_theme", "light");
+    } else {
+      document.body.classList.remove("light-mode");
+      localStorage.setItem("app_theme", "dark");
+    }
+  }
 
   function setEntryIdDate(dateVal) {
     let entryInput = document.getElementById("uEntryId");

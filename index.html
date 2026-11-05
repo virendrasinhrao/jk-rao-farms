@@ -1970,7 +1970,9 @@ body.light-mode .dash-box h4 {
           document.getElementById("editMedId").value = entryId;
           document.getElementById("btnMed").innerText = "અપડેટ કરો";
           alert("દવા એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
-        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+        } else {
+        alert("ડિબગ મેસેજ - મળેલી કી (sheetKey): " + sheetKey);
+      }
 
       // 3. ખાતર (Fertilizer)
       } else if(sheetKey === 'Fertilizer_Ledger' || sheetKey === 'Fert') {

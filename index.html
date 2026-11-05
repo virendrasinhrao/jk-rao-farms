@@ -1928,7 +1928,8 @@ body.light-mode .dash-box h4 {
     });
   }
 
- function editSingleRecord(sheetKey, entryId) {
+ function editSingleRecord(sheetKey, entryId) editSingleRecord(sheetKey, entryId) {
+    alert("ડિબગ કી (Key): " + sheetKey); // આ લાઈન તરત જ સાચું નામ બતાવી દેશે
     askMpinAndExecute(() => {
       // 1. વેચાણ (Sales)
       if(sheetKey === 'Sales_Ledger') {

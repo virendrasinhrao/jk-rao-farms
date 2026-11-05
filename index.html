@@ -1,5 +1,5 @@
 <!--  
-  Project: J K Rao Farms - POS Billing  
+  036a1d38ec73f6497f52687d5f2ff8ae6c8671d6: J K Rao Farms - POS Billing  
   File: index.html  
   Fixed Light Mode Nav Tabs White Text on Soft Green Box  
 -->
@@ -1929,9 +1929,8 @@ body.light-mode .dash-box h4 {
   }
 
    function editSingleRecord(sheetKey, entryId) {
-    alert("ડિબગ કી (Key): " + sheetKey); // આ લાઈન તરત જ સાચું નામ બતાવી દેશે
     askMpinAndExecute(() => {
-      // બાકીનો બધો કોડ એમનેમ રહેવા દો...
+      let key = String(sheetKey || "").toLowerCase();
 
       // 1. વેચાણ (Sales)
       if(sheetKey === 'Sales_Ledger') {

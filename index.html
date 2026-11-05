@@ -155,7 +155,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">05/11/2026 - 23:36  IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">05/11/2026 - 23:42   IST</span>
 </div>
 
 <div class="header-bar">
@@ -2199,14 +2199,14 @@ body.light-mode .dash-box h4 {
           body: JSON.stringify({ action: "saveUpadLedger", rowValues: upadRowValues })
         })
         .then(resUpad => resUpad.json());
-      }
+      } // <- અહીં if(wantUpad) નો કૌંસ બરાબર પૂરો થાય છે
+    }) // <- અને અહીં પેલી મુખ્ય fetch(payload) ની .then() ચેઈન પૂરી થાય છે
     .then(() => {
       alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ/અપડેટ થઈ ગઈ!");
       if(btn) { btn.innerHTML = originalBtnText || "💾 સેવ કરો"; btn.disabled = false; }
       
       let formEl = document.getElementById(formElementId);
       if(formEl) formEl.reset();
-      
       let editInput = document.getElementById('editEntryId');
       if(editInput) editInput.value = "";
 

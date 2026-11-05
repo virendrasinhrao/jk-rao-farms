@@ -1928,9 +1928,11 @@ body.light-mode .dash-box h4 {
     });
   }
 
- function editSingleRecord(sheetKey, entryId) editSingleRecord(sheetKey, entryId) {
+   function editSingleRecord(sheetKey, entryId) {
     alert("ડિબગ કી (Key): " + sheetKey); // આ લાઈન તરત જ સાચું નામ બતાવી દેશે
     askMpinAndExecute(() => {
+      // બાકીનો બધો કોડ એમનેમ રહેવા દો...
+
       // 1. વેચાણ (Sales)
       if(sheetKey === 'Sales_Ledger') {
         let found = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());

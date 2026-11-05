@@ -1983,6 +1983,59 @@ body.light-mode .dash-box h4 {
           switchSubTab('Fert', 'New');
           document.getElementById("fDate").value = String(found["તારીખ"] || "").split('T')[0];
           document.getElementById("fBill").value = found["બિલ નં"] || "";
+  function editSingleRecord(sheetKey, entryId) {
+    askMpinAndExecute(() => {
+      let key = String(sheetKey || "").toLowerCase();
+
+      // 1. વેચાણ (Sales)
+      if(key.includes('sales')) {
+        let found = (appData.Sales_Ledger || appData.Sales || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
+        if(found) {
+          switchSubTab('Sales', 'New');
+          document.getElementById("sBillOwner").value = found["Bill To /નામ :"] || found["Bill To/નામ:"] || found["બિલ માલિક"] || found["Bill Owner"] || "";
+          document.getElementById("sDate").value = String(found["તારીખ"] || "").split('T')[0];
+          document.getElementById("sBill").value = found["બિલ નં"] || "";
+          document.getElementById("sBhagiya").value = found["ભાગીદાર"] || "";
+          document.getElementById("sVepari").value = found["ખરીદનાર"] || "";
+          document.getElementById("sStatus").value = found["બિલની સ્થિતિ (બાકી/જમા)"] || found["બિલની સ્થિતિ"] || "રોકડા / જમા";
+          document.getElementById("sHastak").value = found["પૈસા કોણે લીધા (હસ્તે)"] || found["હસ્તે"] || found["Hastak"] || "";
+          document.getElementById("sBLidha").value = found["ખેડૂએ પૈસા લીધા? (Yes/No)"] || found["ભાગિયાએ લીધા?"] || "No";
+          
+          document.getElementById("editEntryId").value = entryId;
+          document.getElementById("btnSales").innerText = "અપડેટ કરો";
+          document.getElementById("salesItemsContainer").innerHTML = "";
+          
+          let pauchVal = found["પાઉચ / નંગ"] || found["પાઉચ નં."] || found["Total_Pauch"] || 0;
+          addSalesItemRow(pauchVal, found["કુલ વજન (કિલો)"] || found["કુલ વજન (કિલો"] || "", found[". ૧ મણનો ભાવ (20 Kg)"] || found["૧ મણનો ભાવ (20 Kg)"] || "", found["પાકનું નામ"] || "");
+          
+          updatePartnerSummary('Sales');
+          alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+
+      // 2. દવા (Med / Pesticide_Items)
+      } else if(key.includes('med') || key.includes('pesticide') || key.includes('દવા') || key.includes('medic')) {
+        let found = (appData.Pesticide_Items || appData.Pesticide_Ledger || appData.Med || appData.Med_Ledger || appData.Pesticide || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
+        if(found) {
+          switchSubTab('Med', 'New');
+          document.getElementById("mDate").value = String(found["તારીખ"] || "").split('T')[0];
+          document.getElementById("mBill").value = found["બિલ નં"] || "";
+          document.getElementById("mBhagiya").value = found["ભાગીદાર"] || "";
+          document.getElementById("mVepari").value = found["વ્યાપારી"] || found["આપનાર"] || "";
+          document.getElementById("mStatus").value = found["બિલની સ્થિતિ"] || "બાકી";
+          document.getElementById("mHastak").value = found["હસ્તે"] || "";
+          
+          document.getElementById("editMedId").value = entryId;
+          document.getElementById("btnMed").innerText = "અપડેટ કરો";
+          alert("દવા એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+
+      // 3. ખાતર (Fertilizer / Fert)
+      } else if(key.includes('fert') || key.includes('ખાતર')) {
+        let found = (appData.Fertilizer_Items || appData.Fertilizer_Ledger || appData.Fert || appData.Fertilizer || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
+        if(found) {
+          switchSubTab('Fert', 'New');
+          document.getElementById("fDate").value = String(found["તારીખ"] || "").split('T')[0];
+          document.getElementById("fBill").value = found["બિલ નં"] || "";
           document.getElementById("fBhagiya").value = found["ભાગીદાર"] || "";
           document.getElementById("fVepari").value = found["વ્યાપારી"] || found["આપનાર"] || "";
           document.getElementById("fStatus").value = found["બિલની સ્થિતિ"] || "બાકી";
@@ -1994,7 +2047,7 @@ body.light-mode .dash-box h4 {
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
 
       // 4. ટ્રેક્ટર (Tractor)
-      } else if(sheetKey === 'Tractor_Ledger' || sheetKey === 'Tractor') {
+      } else if(key.includes('tractor')) {
         let found = (appData.Tractor_Ledger || appData.Tractor || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
         if(found) {
           switchSubTab('Tractor', 'New');
@@ -2011,8 +2064,8 @@ body.light-mode .dash-box h4 {
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
 
       // 5. ઉપાડ (Upad)
-      } else if(sheetKey === 'Upad_Ledger') {
-        let found = (appData.Upad_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
+      } else if(key.includes('upad')) {
+        let found = (appData.Upad_Ledger || appData.Upad || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
         if(found) {
           switchSubTab('Upad', 'New');
           document.getElementById("uDate").value = String(found["તારીખ"] || "").split('T')[0];
@@ -2034,10 +2087,11 @@ body.light-mode .dash-box h4 {
           alert("ઉપાડ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       } else {
-        alert("આ સેક્શન માટે એડિટ સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે.");
+        alert("આ સેક્શન માટે એડિટ સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે. (Key: " + sheetKey + ")");
       }
     });
   }
+
   function submitSalesForm(e) {
     e.preventDefault();
     let btn = document.getElementById("btnSales");

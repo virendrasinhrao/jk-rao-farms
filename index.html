@@ -155,7 +155,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">05/11/2026 - 23:42   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">05/11/2026 - 23:45   IST</span>
 </div>
 
 <div class="header-bar">
@@ -2165,7 +2165,7 @@ body.light-mode .dash-box h4 {
       confirmUpadActionModal();
     }
   }
-  function confirmUpadActionModal() {
+ function confirmUpadActionModal() {
     document.getElementById("modalUpadConfirm").style.display = "none";
     if(!pendingBillData) return;
 
@@ -2173,7 +2173,34 @@ body.light-mode .dash-box h4 {
     let choice = document.getElementById("upadChoiceSelect").value;
     let wantUpad = (choice === "yes");
 
-   if (wantUpad) {
+    if (wantUpad && formType === 'Sales') {
+      itemRows.forEach(r => { r[19] = "✅"; });
+    }
+
+    let btn = document.getElementById(btnId);
+    if(btn) {
+      btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
+      btn.disabled = true;
+    }
+
+    let actionName = formType === 'Sales' ? 'saveSales' : formType === 'Med' ? 'savePesticideBill' : 'saveFertilizerBill';
+    let payload = formType === 'Sales' ? { action: actionName, itemRows: itemRows, editEntryId: document.getElementById('editEntryId').value, wantUpad: wantUpad } :
+                        { action: actionName, billRow: billRow, itemRows: itemRows, editEntryId: document.getElementById(formType === 'Med' ? 'editMedId' : 'editFertId').value, wantUpad: wantUpad };
+
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(res => {
+      if(!res || res.status === "error") {
+        let errText = res && res.message ? res.message : "અજ્ઞાત ભૂલ";
+        alert("❌ નિષ્ફળ (Failed): ડેટા ગૂગલ શીટમાં સેવ થયો નથી! (Error: " + errText + ")");
+        if(btn) { btn.innerHTML = originalBtnText || "💾 સેવ કરો"; btn.disabled = false; }
+        return Promise.reject(errText);
+      }
+
+      if(wantUpad) {
         let date = document.getElementById(formType === 'Sales' ? 'sDate' : formType === 'Med' ? 'mDate' : 'fDate').value;
         let year = getYear(date);
         let entryIdVal = formType === 'Sales' ? (itemRows.length > 0 ? itemRows[0][1] : "") : billRow[1];
@@ -2199,14 +2226,15 @@ body.light-mode .dash-box h4 {
           body: JSON.stringify({ action: "saveUpadLedger", rowValues: upadRowValues })
         })
         .then(resUpad => resUpad.json());
-      } // <- અહીં if(wantUpad) નો કૌંસ બરાબર પૂરો થાય છે
-    }) // <- અને અહીં પેલી મુખ્ય fetch(payload) ની .then() ચેઈન પૂરી થાય છે
+      }
+    })
     .then(() => {
       alert("✅ એન્ટ્રી સફળતાપૂર્વક સેવ/અપડેટ થઈ ગઈ!");
       if(btn) { btn.innerHTML = originalBtnText || "💾 સેવ કરો"; btn.disabled = false; }
       
       let formEl = document.getElementById(formElementId);
       if(formEl) formEl.reset();
+      
       let editInput = document.getElementById('editEntryId');
       if(editInput) editInput.value = "";
 
@@ -2224,7 +2252,6 @@ body.light-mode .dash-box h4 {
       pendingBillData = null;
     });
   }
-
   function submitUpad(e) {
     e.preventDefault();
     let btn = document.getElementById("btnUpad");

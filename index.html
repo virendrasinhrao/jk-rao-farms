@@ -1959,6 +1959,19 @@ body.light-mode .dash-box h4 {
           updatePartnerSummary('Sales');
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+        // 2. દવા (Med) - સેફ કોડ
+      if (key.includes('med') || key.includes('pesticide') || key.includes('દવા')) {
+        let found = (appData.Pesticide_Items || appData.Med || []).find(r => String(r["એન્ટ્રી Id"] || "").trim() === String(entryId).trim());
+        if (found) {
+          switchSubTab('Med', 'New');
+          document.getElementById("mDate").value = String(found["તારીખ"] || "").split('T')[0];
+          document.getElementById("mBill").value = found["બિલ નં"] || "";
+          document.getElementById("mBhagiya").value = found["ખેડૂનું નામ"] || "";
+          document.getElementById("mVepari").value = found["વેપારી"] || "";
+          document.getElementById("editMedId").value = entryId;
+          document.getElementById("btnMed").innerText = "અપડેટ કરો";
+        }
+      }
 // 2. દવા (Med)
       if (key.includes('med') || key.includes('pesticide') || key.includes('દવા') || key.includes('medic')) {
         let found = (appData.Pesticide_Items || appData.Pesticide_Ledger || appData.Med || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());

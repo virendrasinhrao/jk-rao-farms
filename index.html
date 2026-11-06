@@ -1959,12 +1959,11 @@ body.light-mode .dash-box h4 {
           updatePartnerSummary('Sales');
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
-
- // 2. દવા (Med)
-      else if(key.includes('med') || key.includes('pesticide') || key.includes('દવા') || key.includes('medic')) {
+// 2. દવા (Med)
+      if (key.includes('med') || key.includes('pesticide') || key.includes('દવા') || key.includes('medic')) {
         let found = (appData.Pesticide_Items || appData.Pesticide_Ledger || appData.Med || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
         
-        if(found) {
+        if (found) {
           switchSubTab('Med', 'New');
           
           document.getElementById("mDate").value = String(found["તારીખ"] || found["Date"] || "").split('T')[0];
@@ -1977,20 +1976,44 @@ body.light-mode .dash-box h4 {
           document.getElementById("mHastak").value = found["હસ્તે"] || "";
 
           // આઇટમ્સ ડેટા
-          if(document.getElementById("mMedName")) document.getElementById("mMedName").value = found["દવા નું નામ"] || "";
-          if(document.getElementById("mMedType")) document.getElementById("mMedType").value = found["પ્રકાર "] || found["પ્રકાર"] || "";
-          if(document.getElementById("mWeight")) document.getElementById("mWeight").value = found["વજન"] || "";
-          if(document.getElementById("mPacking")) document.getElementById("mPacking").value = found["પેકિંગ"] || "";
-          if(document.getElementById("mQty")) document.getElementById("mQty").value = found["નંગ"] || 1;
-          if(document.getElementById("mRate")) document.getElementById("mRate").value = found["ભાવ"] || "";
-          if(document.getElementById("mCrop")) document.getElementById("mCrop").value = found["પાકનું નામ"] || "";
+          if (document.getElementById("mMedName")) document.getElementById("mMedName").value = found["દવા નું નામ"] || "";
+          if (document.getElementById("mMedType")) document.getElementById("mMedType").value = found["પ્રકાર "] || found["પ્રકાર"] || "";
+          if (document.getElementById("mWeight")) document.getElementById("mWeight").value = found["વજન"] || "";
+          if (document.getElementById("mPacking")) document.getElementById("mPacking").value = found["પેકિંગ"] || "";
+          if (document.getElementById("mQty")) document.getElementById("mQty").value = found["નંગ"] || 1;
+          if (document.getElementById("mRate")) document.getElementById("mRate").value = found["ભાવ"] || "";
+          if (document.getElementById("mCrop")) document.getElementById("mCrop").value = found["પાકનું નામ"] || "";
           
           document.getElementById("editMedId").value = entryId;
           document.getElementById("btnMed").innerText = "અપડેટ કરો";
         } else { 
           alert("રેકોર્ડ નથી મળ્યો!"); 
         }
-      }      } // 3. ખાતર (Fertilizer / Fert)
+      }
+      
+      // 3. ખાતર (Fert)
+      else if (key.includes('fert') || key.includes('ખાતર')) {
+        let foundFert = (appData.Fertilizer_Items || appData.Fertilizer_Ledger || appData.Fert || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
+        
+        if (foundFert) {
+          switchSubTab('Fert', 'New');
+          
+          document.getElementById("fDate").value = String(foundFert["તારીખ"] || foundFert["Date"] || "").split('T')[0];
+          document.getElementById("fBill").value = foundFert["બિલ નં"] || foundFert["બિલ નંબર"] || "";
+          
+          document.getElementById("fBhagiya").value = foundFert["ખેડૂનું નામ"] || foundFert["ભાગીદાર"] || "";
+          document.getElementById("fVepari").value = foundFert["વેપારી"] || foundFert["વ્યાપારી"] || "";
+          
+          document.getElementById("fStatus").value = foundFert["બાકી જમા"] || foundFert["બિલની સ્થિતિ"] || "બાકી";
+          document.getElementById("fHastak").value = foundFert["હસ્તે"] || "";
+          
+          document.getElementById("editFertId").value = entryId;
+          document.getElementById("btnFert").innerText = "અપડેટ કરો";
+        } else { 
+          alert("રેકોર્ડ નથી મળ્યો!"); 
+        }
+      }
+        // 3. ખાતર (Fertilizer / Fert)
       } else if(key.includes('fert') || key.includes('ખાતર')) {
         let found = (appData.Fertilizer_Items || appData.Fertilizer_Ledger || appData.Fert || appData.Fertilizer || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
         if(found) {

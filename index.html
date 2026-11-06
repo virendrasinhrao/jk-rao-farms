@@ -155,7 +155,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">06/11/2026 -  14:57     IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">06/11/2026 -  15:14      IST</span>
 </div>
 
 <div class="header-bar">
@@ -1990,7 +1990,7 @@ body.light-mode .dash-box h4 {
         } else { 
           alert("રેકોર્ડ નથી મળ્યો!"); 
         }
-      } // 3. ખાતર (Fertilizer / Fert)
+      }      } // 3. ખાતર (Fertilizer / Fert)
       } else if(key.includes('fert') || key.includes('ખાતર')) {
         let found = (appData.Fertilizer_Items || appData.Fertilizer_Ledger || appData.Fert || appData.Fertilizer || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
         if(found) {

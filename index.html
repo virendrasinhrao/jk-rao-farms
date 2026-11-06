@@ -1927,6 +1927,10 @@ body.light-mode .dash-box h4 {
         });
     });
   }
+  function fetchData() {
+    // જો ડેટા લોડ કરવાનું બીજું કોઈ ફંક્શન હોય તો અહીં કોલ કરી શકાય
+    console.log("Data fetching...");
+  }
   function editSingleRecord(sheetKey, entryId) {
     askMpinAndExecute(() => {
       let key = String(sheetKey || "").toLowerCase();
@@ -1957,7 +1961,7 @@ body.light-mode .dash-box h4 {
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
 
  // 2. દવા (Med)
-      } else if(key.includes('med') || key.includes('pesticide') || key.includes('દવા') || key.includes('medic')) {
+      else if(key.includes('med') || key.includes('pesticide') || key.includes('દવા') || key.includes('medic')) {
         let found = (appData.Pesticide_Items || appData.Pesticide_Ledger || appData.Med || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
         
         if(found) {
@@ -1985,7 +1989,8 @@ body.light-mode .dash-box h4 {
           document.getElementById("btnMed").innerText = "અપડેટ કરો";
         } else { 
           alert("રેકોર્ડ નથી મળ્યો!"); 
-        }        }        }      // 3. ખાતર (Fertilizer / Fert)
+        }
+      } // 3. ખાતર (Fertilizer / Fert)
       } else if(key.includes('fert') || key.includes('ખાતર')) {
         let found = (appData.Fertilizer_Items || appData.Fertilizer_Ledger || appData.Fert || appData.Fertilizer || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
         if(found) {

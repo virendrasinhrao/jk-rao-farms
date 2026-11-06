@@ -1,5 +1,5 @@
 <!--  
-  036a1d38ec73f6497f52687d5f2ff8ae6c8671d6: J K Rao Farms - POS Billing  
+  Project: J K Rao Farms - POS Billing  
   File: index.html  
   Fixed Light Mode Nav Tabs White Text on Soft Green Box  
 -->
@@ -1928,13 +1928,12 @@ body.light-mode .dash-box h4 {
     });
   }
 
-     function editSingleRecord(sheetKey, entryId) {
+ function editSingleRecord(sheetKey, entryId) editSingleRecord(sheetKey, entryId) {
+    alert("ડિબગ કી (Key): " + sheetKey); // આ લાઈન તરત જ સાચું નામ બતાવી દેશે
     askMpinAndExecute(() => {
-      let key = String(sheetKey || "").toLowerCase();
-
       // 1. વેચાણ (Sales)
-      if(key.includes('sales')) {
-        let found = (appData.Sales_Ledger || appData.Sales || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
+      if(sheetKey === 'Sales_Ledger') {
+        let found = (appData.Sales_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
         if(found) {
           switchSubTab('Sales', 'New');
           document.getElementById("sBillOwner").value = found["Bill To /નામ :"] || found["Bill To/નામ:"] || found["બિલ માલિક"] || found["Bill Owner"] || "";
@@ -1957,9 +1956,9 @@ body.light-mode .dash-box h4 {
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
 
-      // 2. દવા (Med / Pesticide_Items)
-      } else if(key.includes('med') || key.includes('pesticide') || key.includes('દવા') || key.includes('medic')) {
-        let found = (appData.Pesticide_Items || appData.Pesticide_Ledger || appData.Med || appData.Med_Ledger || appData.Pesticide || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
+      // 2. દવા (Med / Pesticide)
+      } else if(sheetKey === 'Pesticide_Ledger' || sheetKey === 'Med') {
+        let found = (appData.Pesticide_Ledger || appData.Med || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
         if(found) {
           switchSubTab('Med', 'New');
           document.getElementById("mDate").value = String(found["તારીખ"] || "").split('T')[0];
@@ -1972,10 +1971,126 @@ body.light-mode .dash-box h4 {
           document.getElementById("editMedId").value = entryId;
           document.getElementById("btnMed").innerText = "અપડેટ કરો";
           alert("દવા એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+       } else {
+        // જો ઉપરની કોઈ કી મેચ ન થાય, તો આ ડાયનામિક ફૉલબૅક તરીકે કામ કરશે
+        alert("રેકોર્ડ એડિટ કરવા માટે ડેટા મળી ગયો છે, પરંતુ ફોર્મ маપિંગ બાકી છે. (Key: " + sheetKey + ")");
+      }
+
+      // 3. ખાતર (Fertilizer)
+      } else if(sheetKey === 'Fertilizer_Ledger' || sheetKey === 'Fert') {
+        let found = (appData.Fertilizer_Ledger || appData.Fert || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
+        if(found) {
+          switchSubTab('Fert', 'New');
+          document.getElementById("fDate").value = String(found["તારીખ"] || "").split('T')[0];
+          document.getElementById("fBill").value = found["બિલ નં"] || "";
+          document.getElementById("fBhagiya").value = found["ભાગીદાર"] || "";
+          document.getElementById("fVepari").value = found["વ્યાપારી"] || found["આપનાર"] || "";
+          document.getElementById("fStatus").value = found["બિલની સ્થિતિ"] || "બાકી";
+          document.getElementById("fHastak").value = found["હસ્તે"] || "";
+          
+          document.getElementById("editFertId").value = entryId;
+          document.getElementById("btnFert").innerText = "અપડેટ કરો";
+          alert("ખાતર એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
 
-      // 3. ખાતર (Fertilizer / Fert)
-      } else if(key.includes('fert') || key.includes('ખાતર')) {
+      // 4. ટ્રેક્ટર (Tractor)
+      } else if(sheetKey === 'Tractor_Ledger' || sheetKey === 'Tractor') {
+        let found = (appData.Tractor_Ledger || appData.Tractor || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
+        if(found) {
+          switchSubTab('Tractor', 'New');
+          document.getElementById("tDate").value = String(found["તારીખ"] || "").split('T')[0];
+          document.getElementById("tBhagiya").value = found["ભાગીદાર"] || "";
+          document.getElementById("tWork").value = found["કામ"] || found["વર્ક"] || "";
+          document.getElementById("tHours").value = found["કલાક"] || found["Hours"] || "";
+          document.getElementById("tRate").value = found["ભાવ"] || found["Rate"] || "";
+          document.getElementById("tAmount").value = found["રકમ"] || found["Amount"] || "";
+          
+          document.getElementById("editTractorId").value = entryId;
+          document.getElementById("btnTractor").innerText = "અપડેટ કરો";
+          alert("ટ્રેક્ટર એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+
+      // 5. ઉપાડ (Upad)
+      } else if(sheetKey === 'Upad_Ledger') {
+        let found = (appData.Upad_Ledger || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
+        if(found) {
+          switchSubTab('Upad', 'New');
+          document.getElementById("uDate").value = String(found["તારીખ"] || "").split('T')[0];
+          document.getElementById("uEntryId").value = entryId;
+          document.getElementById("uBhagiya").value = found["ઉપાડ લેનાર"] || found["ભાગીદાર"] || "";
+          document.getElementById("uType").value = found["એન્ટ્રી પ્રકાર"] || "";
+          document.getElementById("uProvider").value = found["આપનાર"] || "";
+          let amt = parseFloat(found["ઉપાડ (Debit)"] || found["જમા (Credit)"] || 0);
+          document.getElementById("uAmount").value = amt;
+          calcUpadDebitCredit(document.getElementById("uAmount"));
+          document.getElementById("uTxType").value = found["ટ્રાન્ઝેક્શન પ્રકાર"] || "CASH";
+          document.getElementById("uTxId").value = found["Transaction ID"] || "";
+          document.getElementById("uBillNo").value = found["બિલ નં"] || "";
+          document.getElementById("uBillType").value = found["બિલ પ્રકાર"] || "";
+          document.getElementById("uDetails").value = found["વિગત"] || "";
+          document.getElementById("uStatus").value = found["Status"] || "ઉધાર";
+          document.getElementById("uCloseYear").value = found["Close Year"] || "N";
+          document.getElementById("btnUpad").innerText = "અપડેટ કરો";
+          alert("ઉપાડ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+      } else {
+        alert("આ સેક્શન માટે એડિટ સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે.");
+      }
+    });
+  }
+  function submitSalesForm(e) {
+    e.preventDefault();
+    let btn = document.getElementById("btnSales");
+    let originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
+    btn.disabled = true;
+
+    let billOwner = v("sBillOwner");
+    let date = v("sDate");
+    let year = getYear(date);
+    let editId = document.getElementById("editEntryId").value;
+    let entryId = editId || ("SL-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
+    let billNo = v("sBill") || "N/A";
+    let bhagiya = v("sBhagiya");
+    let vepari = v("sVepari");
+    let status = v("sStatus");
+    let hastak = v("sHastak");
+    let bLidha = v("sBLidha");
+
+    let rows = document.querySelectorAll("#salesItemsContainer .item-row");
+    let itemRows = [];
+    let totalBillAmount = 0;
+
+    handlePhotoUpload("sPhoto", function(photoBase64) {
+      rows.forEach((r, index) => {
+        let pak = r.querySelector('.pakList').value;
+        let pauch = r.querySelector('.sPauch').value || 0;
+        let weight = r.querySelector('.sWeight').value || 0;
+        let bhav20 = r.querySelector('.sBhav20').value || 0;
+        let bhav1 = r.querySelector('.sBhav1').value.replace("₹", "").trim();
+        let total = parseFloat(r.querySelector('.sTotal').value.replace("₹", "").trim()) || 0;
+        let kShare = r.querySelector('.sKShare').value || 0;
+        let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
+        
+        totalBillAmount += total;
+        let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
+        
+        itemRows.push([
+          year, rId, date, billNo, bhagiya, vepari, pak, pauch, weight, bhav20, bhav1, total, kShare, kRakam, status, hastak, bLidha, photoBase64, new Date().toLocaleTimeString(), "❌", billOwner
+        ]);
+      });
+
+      if (typeof triggerUpadConfirmationModal === 'function') {
+        pendingBillData = { formType: 'Sales', itemRows, btnId: 'btnSales', formElementId: 'salesForm', originalBtnText: originalText, billTotal: totalBillAmount, partnerName: bhagiya, entryId, billNo };
+        let msg = "📋 આ બિલની કુલ રકમ ₹ " + totalBillAmount.toFixed(2) + " છે. શું આ બિલ ઉપાડમાં જમા કરવું છે?";
+        if(document.getElementById("upadConfirmMsg")) document.getElementById("upadConfirmMsg").innerText = msg;
+        if(document.getElementById("upadChoiceSelect")) document.getElementById("upadChoiceSelect").value = "no";
+        if(document.getElementById("modalUpadConfirm")) document.getElementById("modalUpadConfirm").style.display = "block";
+      } else {
+        triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm', originalText);
+      }
+    });
+  }
 
   function submitMedForm(e) {
     e.preventDefault();

@@ -155,7 +155,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">06/11/2026 -  14:52     IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">06/11/2026 -  14:57     IST</span>
 </div>
 
 <div class="header-bar">
@@ -1960,8 +1960,6 @@ body.light-mode .dash-box h4 {
       } else if(key.includes('med') || key.includes('pesticide') || key.includes('દવા') || key.includes('medic')) {
         let found = (appData.Pesticide_Items || appData.Pesticide_Ledger || appData.Med || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
         
-        console.log("મળેલો રેકોર્ડ:", found); // આ કન્સોલમાં બધું બતાવશે
-
         if(found) {
           switchSubTab('Med', 'New');
           
@@ -1985,10 +1983,9 @@ body.light-mode .dash-box h4 {
           
           document.getElementById("editMedId").value = entryId;
           document.getElementById("btnMed").innerText = "અપડેટ કરો";
-          alert("ડેટા સફળતાપૂર્વક લોડ થઈ ગયો!");
         } else { 
-          alert("રેકોર્ડ નથી મળ્યો! Entry ID મેચ નથી થતી."); 
-        }        }      // 3. ખાતર (Fertilizer / Fert)
+          alert("રેકોર્ડ નથી મળ્યો!"); 
+        }        }        }      // 3. ખાતર (Fertilizer / Fert)
       } else if(key.includes('fert') || key.includes('ખાતર')) {
         let found = (appData.Fertilizer_Items || appData.Fertilizer_Ledger || appData.Fert || appData.Fertilizer || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
         if(found) {

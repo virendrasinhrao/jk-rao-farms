@@ -155,7 +155,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">06/11/2026 -  14:45    IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">06/11/2026 -  14:52     IST</span>
 </div>
 
 <div class="header-bar">
@@ -1956,28 +1956,25 @@ body.light-mode .dash-box h4 {
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
 
-   // 2. દવા (Med / Pesticide_Items & Pesticide_Bill)
+ // 2. દવા (Med)
       } else if(key.includes('med') || key.includes('pesticide') || key.includes('દવા') || key.includes('medic')) {
-        // આઇટમ્સ અને બિલ બંનેમાંથી ડેટા શોધવા માટે
-        let foundItem = (appData.Pesticide_Items || appData.Med || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
-        let foundBill = (appData.Pesticide_Bill || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
+        let found = (appData.Pesticide_Items || appData.Pesticide_Ledger || appData.Med || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
         
-        let found = foundItem || foundBill; // ગમે તે એકમાં ડેટા મળી જાય
+        console.log("મળેલો રેકોર્ડ:", found); // આ કન્સોલમાં બધું બતાવશે
 
         if(found) {
           switchSubTab('Med', 'New');
           
-          // ૧. ઉપરના હેડરના ખાનાઓ ભરવા માટે
           document.getElementById("mDate").value = String(found["તારીખ"] || found["Date"] || "").split('T')[0];
-          document.getElementById("mBill").value = found["બિલ નં"] || found["બિલ નંબર"] || found["Bill_No"] || "";
+          document.getElementById("mBill").value = found["બિલ નં"] || found["બિલ નંબર"] || "";
           
-          document.getElementById("mBhagiya").value = found["ખેડૂનું નામ"] || found["ભાગીદાર"] || found["Bhagiya"] || "";
-          document.getElementById("mVepari").value = found["વેપારી"] || found["વ્યાપારી"] || found["દુકાન / વેપારી"] || "";
+          document.getElementById("mBhagiya").value = found["ખેડૂનું નામ"] || found["ભાગીદાર"] || "";
+          document.getElementById("mVepari").value = found["વેપારી"] || found["વ્યાપારી"] || "";
           
-          document.getElementById("mStatus").value = found["બાકી જમા"] || found["બિલની સ્થિતિ"] || found["Status"] || "બાકી";
+          document.getElementById("mStatus").value = found["બાકી જમા"] || found["બિલની સ્થિતિ"] || "બાકી";
           document.getElementById("mHastak").value = found["હસ્તે"] || "";
 
-          // ૨. નીચેની આઈટમ્સ / દવાઓની યાદીના ખાનાઓ ભરવા માટે
+          // આઇટમ્સ ડેટા
           if(document.getElementById("mMedName")) document.getElementById("mMedName").value = found["દવા નું નામ"] || "";
           if(document.getElementById("mMedType")) document.getElementById("mMedType").value = found["પ્રકાર "] || found["પ્રકાર"] || "";
           if(document.getElementById("mWeight")) document.getElementById("mWeight").value = found["વજન"] || "";
@@ -1988,10 +1985,10 @@ body.light-mode .dash-box h4 {
           
           document.getElementById("editMedId").value = entryId;
           document.getElementById("btnMed").innerText = "અપડેટ કરો";
-          alert("દવા એન્ટ્રીનો બધો ડેટા ફોર્મમાં લોડ થઈ ગયો છે!");
+          alert("ડેટા સફળતાપૂર્વક લોડ થઈ ગયો!");
         } else { 
-          alert("રેકોર્ડ મળ્યો નથી!"); 
-        }      // 3. ખાતર (Fertilizer / Fert)
+          alert("રેકોર્ડ નથી મળ્યો! Entry ID મેચ નથી થતી."); 
+        }        }      // 3. ખાતર (Fertilizer / Fert)
       } else if(key.includes('fert') || key.includes('ખાતર')) {
         let found = (appData.Fertilizer_Items || appData.Fertilizer_Ledger || appData.Fert || appData.Fertilizer || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
         if(found) {

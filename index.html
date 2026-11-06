@@ -155,7 +155,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">06/11/2026 -  14:18   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">06/11/2026 -  14:25   IST</span>
 </div>
 
 <div class="header-bar">
@@ -1959,31 +1959,28 @@ body.light-mode .dash-box h4 {
     // 2. દવા (Med / Pesticide_Items)
       } else if(key.includes('med') || key.includes('pesticide') || key.includes('દવા') || key.includes('medic')) {
         let found = (appData.Pesticide_Items || appData.Pesticide_Ledger || appData.Med || appData.Med_Ledger || appData.Pesticide || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
+        
+        // આ લાઈન કન્સોલમાં બધી જ કૉલમ્સના નામ બતાવી દેશે
+        if(found) {
+          console.log("શીટની બધી જ કી:", Object.keys(found));
+        }
+
         if(found) {
           switchSubTab('Med', 'New');
           document.getElementById("mDate").value = String(found["તારીખ"] || found["Date"] || "").split('T')[0];
           document.getElementById("mBill").value = found["બિલ નં"] || found["બિલ નંબર"] || found["Bill_No"] || found["Bill No"] || "";
           
-          // ભાગીદાર અને વેપારી
           document.getElementById("mBhagiya").value = found["ભાગીદાર"] || found["Bhagiya"] || found["Partner"] || found["ભાગિયા"] || found["નામ"] || found["ભાગીદારનું નામ"] || "";
           document.getElementById("mVepari").value = found["વ્યાપારી"] || found["દુકાન / વેપારી"] || found["વેપારી"] || found["આપનાર"] || found["Provider"] || found["Dealer"] || found["Vepari"] || "";
           
-          // ટેક્સ અને અન્ય વિગતો
-          let taxInput = document.getElementById("mTax");
-          if(taxInput) taxInput.value = found["ટેક્સ %"] || found["Tax"] || 0;
-          
-          let detailsInput = document.getElementById("mDetails");
-          if(detailsInput) detailsInput.value = found["વિગત"] || found["Details"] || "";
-
           document.getElementById("mStatus").value = found["બિલની સ્થિતિ"] || found["Status"] || found["સ્થિતિ"] || "બાકી";
           document.getElementById("mHastak").value = found["હસ્તે"] || found["પૈસા કોણે લીધા (હસ્તે)"] || found["Hastak"] || "";
           
           document.getElementById("editMedId").value = entryId;
           document.getElementById("btnMed").innerText = "અપડેટ કરો";
           alert("દવા એન્ટ્રી ફોર્મમાં ડેટા લોડ થઈ ગયો છે!");
-        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
-
-      // 3. ખાતર (Fertilizer / Fert)
+        } else { alert("રેકોર્ડ મળ્યો નથી!"); }     
+  // 3. ખાતર (Fertilizer / Fert)
       } else if(key.includes('fert') || key.includes('ખાતર')) {
         let found = (appData.Fertilizer_Items || appData.Fertilizer_Ledger || appData.Fert || appData.Fertilizer || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
         if(found) {

@@ -1960,7 +1960,7 @@ body.light-mode .dash-box h4 {
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
            // 2. દવા (Med / Pesticide_Items & Pesticide_Bill)
-      } else if(key.includes('med') || key.includes('pesticide') || key.includes('દવા') || key.includes('medic')) {
+       else if(key.includes('med') || key.includes('pesticide') || key.includes('દવા') || key.includes('medic')) {
         // આઇટમ્સ અને બિલ બંનેમાંથી ડેટા શોધવા માટે
         let foundItem = (appData.Pesticide_Items || appData.Med || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());
         let foundBill = (appData.Pesticide_Bill || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || "").trim() === String(entryId).trim());

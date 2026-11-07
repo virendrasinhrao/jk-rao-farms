@@ -155,7 +155,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">07/11/2026 -  20:03   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">07/11/2026 -  20:39   IST</span>
 </div>
 
 <div class="header-bar">
@@ -2111,8 +2111,10 @@ body.light-mode .dash-box h4 {
           setVal("fDate", String(getVal(found, ["તારીખ", "Date"])).split("T")[0]);
           setVal("fBill", getVal(found, ["બિલ નં", "બિલ નંબર", "Bill_No", "Bill No"]));
           setSelect(document.getElementById("fBhagiya"), getVal(found, ["ભાગીદાર", "ખેડૂનું નામ", "Bhagiya", "Partner", "ભાગિયા", "નામ"]));
-          document.getElementById("fVepari").value = found["વેપારી"] || found["વ્યાપારી"] || found["દુકાન / વેપારી"] || found["આપનાર"] || found["Provider"] || found["Dealer"] || "";
-		  setSelect(document.getElementById("fVepari"), getVal(found, ["વેપારી", "વ્યાપારી", "દુકાન / વેપારી", "આપનાર", "Provider", "Dealer"]));
+           setSelect(document.getElementById("fVepari"),
+            getVal(found, ["વેપારી", "વ્યાપારી", "દુકાન / વેપારી", "દુકાનનું નામ", "દુકાન", "વેપારીનું નામ", "વેપારીનું_નામ", "આપનાર", "Provider", "Dealer"],
+              getVal(medRows[0], ["વેપારી", "વ્યાપારી", "દુકાન / વેપારી", "દુકાનનું નામ", "દુકાન", "વેપારીનું નામ", "વેપારીનું_નામ", "આપનાર", "Provider", "Dealer"],
+			document.getElementById("fVepari").value = found["વેપારી"] || found["વ્યાપારી"] || found["દુકાન / વેપારી"] || found["આપનાર"] || found["Provider"] || found["Dealer"] || "";
           setSelect(document.getElementById("fStatus"), getVal(found, ["બાકી જમા", "બિલની સ્થિતિ", "Status"], "બાકી"));
           setSelect(document.getElementById("fHastak"), getVal(found, ["હસ્તે", "પૈસા કોણે લીધા (હસ્તે)", "Hastak"]));
           setVal("fDetails", getVal(found, ["વિગત", "Details", "નોંધ"], ""));

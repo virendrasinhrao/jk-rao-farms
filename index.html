@@ -2713,24 +2713,24 @@ body.light-mode .dash-box h4 {
       <th>Bill To/નામ</th>
     </tr>`;
     
-   filteredRows.forEach(function(r, index) {
+filteredRows.forEach(function(r, index) {
       let yearVal = r["વર્ષ"] || "-";
       let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || index;
       let cleanDate = String(r["તારીખ"] || "").split('T')[0];
       
-      // હસ્તે માટે અલગ-અલગ નામ ચેક કરવા
-      let hastak = r["હસ્તે"] || r["Hastak"] || r["હસ્તે નામ"] || "-";
+      // ૧. 'હસ્તે' માટે (જો ઉપરના નામોમાં ન મળે તો અંદરના અન્ય શબ્દો તપાસશે)
+      let hastak = r["હસ્તે"] || r["Hastak"] || r["હસ્તે નામ"] || r["પૈસા કોણે લીધા (હસ્તે)"] || "-";
       
       let vepari = r["વેપારી"] || r["વેપારી/માલિક"] || "-";
       let billNo = r["બિલ નં"] || "-";
       
-      // પાઉચ / પેકિંગ માટે તમામ સંભવિત નામો
-      let pauchVal = r["પાઉચ નં./ પેકિંગ / નંગ"] || r["પાઉચ / પેકિંગ / નંગ"] || r["પાઉચ/પેકિંગ/નંગ"] || r["પેકિંગ"] || r["નંગ"] || r["પાઉચ"] || "-";
+      // ૨. 'પાઉચ / પેકિંગ / નંગ' માટે તમામ સંભવિત નામો
+      let pauchVal = r["પાઉચ નં./ પેકિંગ / નંગ"] || r["પાઉચ / પેકિંગ / નંગ"] || r["પાઉચ/પેકિંગ/નંગ"] || r["પાઉચ / નંગ"] || r["પેકિંગ"] || r["નંગ"] || r["પાઉચ"] || "-";
       
       let amt = parseFloat(r["રકમ"] || 0).toFixed(2);
       let statusVal = r["જમા / બાકી"] || r["Status"] || "-";
       
-      // કુલ પાઉચ / પેકિંગ માટે તમામ સંભવિત નામો
+      // ૩. 'કુલ પાઉચ / પેકિંગ / નંગ' માટે તમામ સંભવિત નામો
       let totalPauchVal = r["કુલ પાઉચ / પેકિંગ / નંગ"] || r["કુલ પાઉચ નં./ પેકિંગ / નંગ"] || r["કુલ પાઉચ/પેકિંગ/નંગ"] || r["કુલ નંગ"] || r["કુલ પાઉચ"] || "-";
       
       let totalAmt = parseFloat(r["કુલ જમા રકમ"] || r["કુલ રકમ"] || 0).toFixed(2);
@@ -2738,7 +2738,6 @@ body.light-mode .dash-box h4 {
       let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
       let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
       
-      // Bill To/નામ માટે તમામ સંભવિત નામો
       let billToName = r["Bill To/નામ"] || r["Bill To /નામ"] || r["Bill To /નામ :"] || r["Bill To/નામ:"] || r["Bill Owner"] || r["બિલ માલિક"] || "-";
 
       html += `<tr>

@@ -155,7 +155,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">07/11/2026 -  10:59   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">07/11/2026 -  11:51   IST</span>
 </div>
 
 <div class="header-bar">
@@ -1958,43 +1958,168 @@ body.light-mode .dash-box h4 {
 
      // 2. દવા (Med / Pesticide_Items)
       } else if(key.includes('med') || key.includes('pesticide') || key.includes('દવા') || key.includes('medic')) {
-        let found = (appData.Pesticide_Items || appData.Pesticide_Ledger || appData.Med || appData.Med_Ledger || appData.Pesticide || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
-        if(found) {
+
+        // Item sheet માં એક બિલની ઘણી rows હોઈ શકે છે.
+        // પસંદ કરેલી row MED-...-1 હોય તો પણ મૂળ બિલ ID MED-... જ શોધવું.
+        const selectedId = String(entryId || "").trim();
+        const baseId = selectedId.replace(/-\d+$/, "");
+        const medRows = (appData.Pesticide_Items || []).filter(r => {
+          const id = String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim();
+          return id === selectedId || id === baseId || id.startsWith(baseId + "-");
+        });
+
+        // Bill/header sheet માંથી મુખ્ય વિગતો, ન મળે તો item sheet ની પહેલી row.
+        const medBillRows = appData.Pesticide_Bill || appData.Pesticide_Ledger || [];
+        const found = medBillRows.find(r =>
+          String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === baseId
+        ) || medRows[0];
+
+        if(found && medRows.length) {
           switchSubTab('Med', 'New');
-          document.getElementById("mDate").value = String(found["તારીખ"] || found["Date"] || "").split('T')[0];
-          document.getElementById("mBill").value = found["બિલ નં"] || found["બિલ નંબર"] || found["Bill_No"] || found["Bill No"] || "";
-          
-          // અહીં "ખેડૂનું નામ" ઉમેરી દીધું છે
-          document.getElementById("mBhagiya").value = found["ખેડૂનું નામ"] || found["ભાગીદાર"] || found["Bhagiya"] || found["Partner"] || found["ભાગિયા"] || found["નામ"] || "";
-          document.getElementById("mVepari").value = found["વેપારી"] || found["વ્યાપારી"] || found["દુકાન / વેપારી"] || found["આપનાર"] || found["Provider"] || found["Dealer"] || "";
-          
-          document.getElementById("mStatus").value = found["બાકી જમા"] || found["બિલની સ્થિતિ"] || found["Status"] || "બાકી";
-          document.getElementById("mHastak").value = found["હસ્તે"] || found["પૈસા કોણે લીધા (હસ્તે)"] || "";
-          
-          document.getElementById("editMedId").value = entryId;
+
+          const setVal = (id, value) => {
+            const el = document.getElementById(id);
+            if(el) el.value = value == null ? "" : String(value);
+          };
+          const getVal = (row, keys, fallback="") => {
+            for(const k of keys) {
+              if(row && row[k] !== undefined && row[k] !== null && String(row[k]).trim() !== "") return row[k];
+            }
+            return fallback;
+          };
+          const setSelect = (el, value) => {
+            if(!el) return;
+            const v = value == null ? "" : String(value).trim();
+            if(v && !Array.from(el.options).some(o => o.value.trim() === v)) {
+              el.add(new Option(v, v));
+            }
+            el.value = v;
+          };
+
+          document.getElementById("medItemsContainer").innerHTML = "";
+          setVal("mDate", String(getVal(found, ["તારીખ", "Date"])).split("T")[0]);
+          setVal("mBill", getVal(found, ["બિલ નં", "બિલ નંબર", "Bill_No", "Bill No"]));
+          setSelect(document.getElementById("mBhagiya"), getVal(found, ["ભાગીદાર", "ખેડૂનું નામ", "Bhagiya", "Partner", "ભાગિયા", "નામ"]));
+          setSelect(document.getElementById("mVepari"), getVal(found, ["વેપારી", "વ્યાપારી", "દુકાન / વેપારી", "આપનાર", "Provider", "Dealer"]));
+          setSelect(document.getElementById("mStatus"), getVal(found, ["બાકી જમા", "બિલની સ્થિતિ", "Status"], "બાકી"));
+          setSelect(document.getElementById("mHastak"), getVal(found, ["હસ્તે", "પૈસા કોણે લીધા (હસ્તે)", "Hastak"]));
+
+          // Tax / bill totals header sheet માં ઉપલબ્ધ હોય તો તેમાંથી લોડ કરો.
+          setVal("mTax", getVal(found, ["ટેક્સ %", "Tax", "Tax_Percent", "ટેક્સ"], 0));
+          setVal("editMedId", baseId);
+
+          medRows.forEach(r => {
+            const dava = getVal(r, ["દવાનું નામ", "દવાનું_નામ", "દવા", "Medicine", "Medicine_Name"]);
+            const weight = getVal(r, ["વજન", "Weight"], 0);
+            const pack = getVal(r, ["પેકિંગ", "Pack", "Packing"], "");
+            const qty = getVal(r, ["નંગ", "જથ્થો", "Qty", "Quantity"], 1);
+            const bhav = getVal(r, ["ભાવ", "દર", "Bhav", "Rate", "Price"], 0);
+            const pak = getVal(r, ["પાક", "પાકનું નામ", "Crop", "Crop_Name"], "");
+
+            addMedItemRow(dava, weight, pack, qty, bhav, pak);
+            const row = document.querySelector("#medItemsContainer .item-row:last-child");
+            if(!row) return;
+
+            // Medicine select પરથી પ્રકાર/પેકિંગ auto-fill થાય છે; પછી sheet ની સાચી value પ્રાધાન્યથી મૂકો.
+            const davaSelect = row.querySelector(".davaList");
+            setSelect(davaSelect, dava);
+            if(davaSelect && dava) onMedSelectRow(davaSelect);
+            row.querySelector(".mType").value = getVal(r, ["પ્રકાર", "દવાનો પ્રકાર", "Type", "Medicine_Type"], row.querySelector(".mType").value);
+            row.querySelector(".mWeight").value = weight;
+            row.querySelector(".mPack").value = pack || row.querySelector(".mPack").value;
+            row.querySelector(".mQty").value = qty;
+            row.querySelector(".mBhav").value = bhav;
+            setSelect(row.querySelector(".pakList"), pak);
+            calcMedRow(row.querySelector(".mBhav"));
+          });
+
+          calcMedBill();
           document.getElementById("btnMed").innerText = "અપડેટ કરો";
-          alert("દવા એન્ટ્રી ફોર્મમાં ડેટા લોડ થઈ ગયો છે!");
-        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+          updatePartnerSummary('Med');
+          updateCategoryBalance('Med');
+          alert("દવા બિલની બધી આઇટમ્સ સાથે એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+        } else {
+          alert("દવાનો રેકોર્ડ મળ્યો નથી! કૃપા કરીને ડેટા રિફ્રેશ કરો.");
+        }
 
       // 3. ખાતર (Fertilizer / Fert)
       } else if(key.includes('fert') || key.includes('ખાતર')) {
-        let found = (appData.Fertilizer_Items || appData.Fertilizer_Ledger || appData.Fert || appData.Fertilizer || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
-        if(found) {
+
+        const selectedId = String(entryId || "").trim();
+        const baseId = selectedId.replace(/-\d+$/, "");
+        const fertRows = (appData.Fertilizer_Items || []).filter(r => {
+          const id = String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim();
+          return id === selectedId || id === baseId || id.startsWith(baseId + "-");
+        });
+
+        const fertBillRows = appData.Fertilizer_Bill || appData.Fertilizer_Ledger || [];
+        const found = fertBillRows.find(r =>
+          String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === baseId
+        ) || fertRows[0];
+
+        if(found && fertRows.length) {
           switchSubTab('Fert', 'New');
-          document.getElementById("fDate").value = String(found["તારીખ"] || found["Date"] || "").split('T')[0];
-          document.getElementById("fBill").value = found["બિલ નં"] || found["બિલ નંબર"] || found["Bill_No"] || found["Bill No"] || "";
-          
-          // અહીં પણ "ખેડૂનું નામ" ઉમેરી દીધું છે
-          document.getElementById("fBhagiya").value = found["ખેડૂનું નામ"] || found["ભાગીદાર"] || found["Bhagiya"] || found["Partner"] || found["ભાગિયા"] || found["નામ"] || "";
-          document.getElementById("fVepari").value = found["વેપારી"] || found["વ્યાપારી"] || found["દુકાન / વેપારી"] || found["આપનાર"] || found["Provider"] || found["Dealer"] || "";
-          
-          document.getElementById("fStatus").value = found["બાકી જમા"] || found["બિલની સ્થિતિ"] || found["Status"] || "બાકી";
-          document.getElementById("fHastak").value = found["હસ્તે"] || found["પૈસા કોણે લીધા (હસ્તે)"] || "";
-          
-          document.getElementById("editFertId").value = entryId;
+
+          const setVal = (id, value) => {
+            const el = document.getElementById(id);
+            if(el) el.value = value == null ? "" : String(value);
+          };
+          const getVal = (row, keys, fallback="") => {
+            for(const k of keys) {
+              if(row && row[k] !== undefined && row[k] !== null && String(row[k]).trim() !== "") return row[k];
+            }
+            return fallback;
+          };
+          const setSelect = (el, value) => {
+            if(!el) return;
+            const v = value == null ? "" : String(value).trim();
+            if(v && !Array.from(el.options).some(o => o.value.trim() === v)) {
+              el.add(new Option(v, v));
+            }
+            el.value = v;
+          };
+
+          document.getElementById("fertItemsContainer").innerHTML = "";
+          setVal("fDate", String(getVal(found, ["તારીખ", "Date"])).split("T")[0]);
+          setVal("fBill", getVal(found, ["બિલ નં", "બિલ નંબર", "Bill_No", "Bill No"]));
+          setSelect(document.getElementById("fBhagiya"), getVal(found, ["ભાગીદાર", "ખેડૂનું નામ", "Bhagiya", "Partner", "ભાગિયા", "નામ"]));
+          setSelect(document.getElementById("fVepari"), getVal(found, ["વેપારી", "વ્યાપારી", "દુકાન / વેપારી", "આપનાર", "Provider", "Dealer"]));
+          setSelect(document.getElementById("fStatus"), getVal(found, ["બાકી જમા", "બિલની સ્થિતિ", "Status"], "બાકી"));
+          setSelect(document.getElementById("fHastak"), getVal(found, ["હસ્તે", "પૈસા કોણે લીધા (હસ્તે)", "Hastak"]));
+          setVal("fDetails", getVal(found, ["વિગત", "Details", "નોંધ"], ""));
+          setVal("fTax", getVal(found, ["ટેક્સ %", "Tax", "Tax_Percent", "ટેક્સ"], 0));
+          setVal("editFertId", baseId);
+
+          fertRows.forEach(r => {
+            const khatar = getVal(r, ["ખાતરનું નામ", "ખાતરનું_નામ", "ખાતર", "Fertilizer", "Fertilizer_Name"]);
+            const weight = getVal(r, ["વજન", "Weight"], 0);
+            const pack = getVal(r, ["પેકિંગ", "Pack", "Packing"], "");
+            const qty = getVal(r, ["નંગ", "થેલી", "જથ્થો", "Qty", "Quantity"], 1);
+            const bhav = getVal(r, ["ભાવ", "દર", "Bhav", "Rate", "Price"], 0);
+            const pak = getVal(r, ["પાક", "પાકનું નામ", "Crop", "Crop_Name"], "");
+
+            addFertItemRow(khatar, weight, pack, qty, bhav, pak);
+            const row = document.querySelector("#fertItemsContainer .item-row:last-child");
+            if(!row) return;
+
+            setSelect(row.querySelector(".khatarList"), khatar);
+            row.querySelector(".fWeight").value = weight;
+            row.querySelector(".fPack").value = pack;
+            row.querySelector(".fQty").value = qty;
+            row.querySelector(".fBhav").value = bhav;
+            setSelect(row.querySelector(".pakList"), pak);
+            calcFertBill();
+          });
+
+          calcFertBill();
           document.getElementById("btnFert").innerText = "અપડેટ કરો";
-          alert("ખાતર એન્ટ્રી ફોર્મમાં ડેટા લોડ થઈ ગયો છે!");
-        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+          updatePartnerSummary('Fert');
+          updateCategoryBalance('Fert');
+          alert("ખાતર બિલની બધી આઇટમ્સ સાથે એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+        } else {
+          alert("ખાતરનો રેકોર્ડ મળ્યો નથી! કૃપા કરીને ડેટા રિફ્રેશ કરો.");
+        }
+
         // 4. ટ્રેક્ટર (Tractor)
       } else if(key.includes('tractor')) {
         let found = (appData.Tractor_Ledger || appData.Tractor || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());

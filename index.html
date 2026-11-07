@@ -2714,34 +2714,46 @@ body.light-mode .dash-box h4 {
     </tr>`;
     
 filteredRows.forEach(function(r, index) {
-      // જો r એ ડબ્બા જેવો ઓબ્જેક્ટ હોય અથવા જો આપણે એરેમાંથી ડેટા લેવો હોય:
-      // આપણે સીધા જ શીટના કૉલમ નામ અથવા તેની કી ચેક કરી લઈએ:
-      
-      let yearVal = r["વર્ષ"] || "-";
-      let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || index;
-      let cleanDate = String(r["તારીખ"] || "").split('T')[0];
-      
-      // હસ્તે - બધી સંભવિત રીતો
-      let hastak = r["હસ્તે"] || r["Hastak"] || r["હસ્તે નામ"] || "-";
-      
-      let vepari = r["વેપારી"] || r["વેપારી/માલિક"] || "-";
-      let billNo = r["બિલ નં"] || "-";
-      
-      // પાઉચ નં./ પેકિંગ / નંગ - અહીં બધી સંભવિત સ્પેલિંગ સ્પેસ સાથે મૂકી છે
-      let pauchVal = r["પાઉચ નં./ પેકિંગ / નંગ"] || r["પાઉચ નં./પેકિંગ/નંગ"] || r["પાઉચ / પેકિંગ / નંગ"] || r["પાઉચ/પેકિંગ/નંગ"] || r["પેકિંગ"] || r["નંગ"] || "-";
-      
-      let amt = parseFloat(r["રકમ"] || 0).toFixed(2);
-      let statusVal = r["જમા / બાકી"] || r["Status"] || "-";
-      
-      // કુલ પાઉચ / પેકિંગ / નંગ - બધી સંભવિત સ્પેલિંગ
-      let totalPauchVal = r["કુલ પાઉચ / પેકિંગ / નંગ"] || r["કુલ પાઉચ નં./ પેકિંગ / નંગ"] || r["કુલ પાઉચ/પેકિંગ/નંગ"] || r["કુલ નંગ"] || "-";
-      
-      let totalAmt = parseFloat(r["કુલ જમા રકમ"] || r["કુલ રકમ"] || 0).toFixed(2);
-      
-      let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
+      // બધી જ કી (Keys) માંથી ડેટા શોધવા માટેના સ્માર્ટ વેરીએબલ્સ
+      let yearVal = "-";
+      let entryId = "-";
+      let cleanDate = "-";
+      let hastak = "-";
+      let vepari = "-";
+      let billNo = "-";
+      let pauchVal = "-";
+      let amt = "0.00";
+      let statusVal = "-";
+      let totalPauchVal = "-";
+      let totalAmt = "0.00";
+      let photoVal = "";
+      let billToName = "-";
+
+      // લૂપ ફેરવીને દરેક કૉલમનું નામ ચેક કરી લઈશું જેથી ક્યારેય ડેટા ખાલી ન રહે
+      for (let key in r) {
+        let k = key.trim().toLowerCase();
+        let val = r[key];
+        if (!val && val !== 0) continue;
+
+        if (k.includes("વર્ષ") || k.includes("year")) yearVal = val;
+        else if (k.includes("એન્ટ્રી") || k.includes("id")) entryId = val;
+        else if (k.includes("તારીખ") || k.includes("date")) cleanDate = String(val).split('T')[0];
+        else if (k.includes("હસ્તે") || k.includes("hastak")) hastak = val;
+        else if (k.includes("વેપારી") || k.includes("Merchant")) vepari = val;
+        else if (k.includes("બિલ નં") || k.includes("bill no")) billNo = val;
+        else if ((k.includes("પાઉચ") || k.includes("પેકિંગ") || k.includes("નંગ")) && !k.includes("કુલ")) pauchVal = val;
+        else if (k === "રકમ" || k.includes("amount")) amt = parseFloat(val || 0).toFixed(2);
+        else if (k.includes("જમા") || k.includes("બાકી") || k.includes("status")) statusVal = val;
+        else if (k.includes("કુલ પાઉચ") || k.includes("કુલ પેકિંગ") || k.includes("કુલ નંગ")) totalPauchVal = val;
+        else if (k.includes("કુલ રકમ") || k.includes("કુલ જમા રકમ")) totalAmt = parseFloat(val || 0).toFixed(2);
+        else if (k.includes("photo") || k.includes("ફોટો")) photoVal = val;
+        else if (k.includes("bill to") || k.includes("નામ")) billToName = val;
+      }
+
+      // જો એન્ટ્રી Id ખાલી હોય તો ઇન્ડેક્સ વાપરી લેવો
+      if (entryId === "-") entryId = index + 1;
+
       let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
-      
-      let billToName = r["Bill To/નામ"] || r["Bill To /નામ"] || r["Bill To/નામ:"] || r["Bill Owner"] || "-";
 
       html += `<tr>
         <td>${yearVal}</td>

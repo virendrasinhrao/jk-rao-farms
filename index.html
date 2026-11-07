@@ -2630,7 +2630,7 @@ body.light-mode .dash-box h4 {
   function closeImageModal() { document.getElementById("modalImageViewer").style.display = "none"; }
 
   function onCategoryFilterChange() {
-    let cat = document.getElementById("filterCategory").value;
+    let cat = document.getElementById("filterCategory") ? document.getElementById("filterCategory").value : "";
     let groupMed = document.getElementById("groupMedType");
     let groupTrac = document.getElementById("groupTracWork");
 
@@ -2650,8 +2650,10 @@ body.light-mode .dash-box h4 {
     let summaryText = document.getElementById("latestRecordText");
     if(!container) return;
     
-    let rows = appData.Bill_Record || [];
-    if(rows.length === 0) {
+    // બધી સંભવિત સ્પેલિંગ પદ્ધતિઓ ચેક કરવા માટે
+    let rows = appData.Bill_Record || appData.BillRecords || appData["Bill_Record"] || [];
+    
+    if(!rows || rows.length === 0) {
       container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ બિલ રેકોર્ડ ઉપલબ્ધ નથી.</p>";
       if(summaryBox) summaryBox.style.display = "none";
       return;
@@ -2669,12 +2671,14 @@ body.light-mode .dash-box h4 {
       let subType = String(r["સબપ્રકાર"] || r["સબ_પ્રકાર"] || "").trim().toLowerCase();
       let bNo = String(r["બિલ નં"] || "").toLowerCase();
       let dt = String(r["તારીખ"] || "").toLowerCase();
+      let vepariVal = String(r["વેપારી"] || r["વેપારી/માલિક"] || "").toLowerCase();
+      let billToVal = String(r["Bill To/નામ"] || r["Bill To /નામ"] || "").toLowerCase();
 
       let matchH = !selHastak || hVal.includes(selHastak);
       let matchC = !selCategory || rType.includes(selCategory);
       let matchM = selCategory !== "દવા" || !selMedType || subType.includes(selMedType);
       let matchT = selCategory !== "ટ્રેક્ટર" || !selTracWork || subType.includes(selTracWork);
-      let matchS = !searchQuery || bNo.includes(searchQuery) || dt.includes(searchQuery) || hVal.includes(searchQuery);
+      let matchS = !searchQuery || bNo.includes(searchQuery) || dt.includes(searchQuery) || hVal.includes(searchQuery) || vepariVal.includes(searchQuery) || billToVal.includes(searchQuery);
 
       return matchH && matchC && matchM && matchT && matchS;
     });
@@ -2692,29 +2696,61 @@ body.light-mode .dash-box h4 {
       return;
     }
 
-    let html = `<table><tr><th>વર્ષ</th><th>પ્રકાર</th><th>વેપારી/માલિક</th><th>તારીખ</th><th>હસ્તે</th><th>બિલ નં</th><th>પાઉચ / પેકિંગ / નંગ</th><th>રકમ</th><th>સ્ટેટસ</th><th>કુલ પાઉચ / પેકિંગ / નંગ</th></tr>`;
+    // હેડર - તમારી બધી જ કૉલમ્સના ક્રમ મુજબ
+    let html = `<table><tr>
+      <th>વર્ષ</th>
+      <th>એન્ટ્રી Id</th>
+      <th>તારીખ</th>
+      <th>હસ્તે</th>
+      <th>વેપારી</th>
+      <th>બિલ નં</th>
+      <th>પાઉચ નં./ પેકિંગ / નંગ</th>
+      <th>રકમ</th>
+      <th>જમા / બાકી</th>
+      <th>કુલ પાઉચ / પેકિંગ / નંગ</th>
+      <th>કુલ જમા રકમ</th>
+      <th>Photo</th>
+      <th>Bill To/નામ</th>
+    </tr>`;
     
-    filteredRows.forEach(r => {
+    filteredRows.forEach(function(r, index) {
+      let yearVal = r["વર્ષ"] || "-";
+      let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || index;
+      let cleanDate = String(r["તારીખ"] || "").split('T')[0];
+      let hastak = r["હસ્તે"] || "-";
+      let vepari = r["વેપારી"] || r["વેપારી/માલિક"] || "-";
+      let billNo = r["બિલ નં"] || "-";
+      
       let pauchVal = r["પાઉચ નં./ પેકિંગ / નંગ"] || r["પાઉચ / પેકિંગ / નંગ"] || r["પેકિંગ"] || r["નંગ"] || "-";
+      let amt = parseFloat(r["રકમ"] || 0).toFixed(2);
+      let statusVal = r["જમા / બાકી"] || r["Status"] || "-";
       let totalPauchVal = r["કુલ પાઉચ / પેકિંગ / નંગ"] || r["કુલ પાઉચ નં./ પેકિંગ / નંગ"] || r["કુલ નંગ"] || "-";
-      let cleanDate = String(r["તારીખ"] || '-').split('T')[0];
+      let totalAmt = parseFloat(r["કુલ જમા રકમ"] || 0).toFixed(2);
+      
+      let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
+      let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
+      
+      let billToName = r["Bill To/નામ"] || r["Bill To /નામ"] || r["Bill Owner"] || "-";
 
       html += `<tr>
-        <td>${r["વર્ષ"]||'-'}</td>
-        <td><span class="badge-jama">${r["પ્રકાર"]||'-'}</span></td>
-        <td>${r["વેપારી/માલિક"]||'-'}</td>
+        <td>${yearVal}</td>
+        <td><b>${entryId}</b></td>
         <td>${cleanDate}</td>
-        <td><b>${r["હસ્તે"]||'-'}</b></td>
-        <td>${r["બિલ નં"]||'-'}</td>
+        <td><b>${hastak}</b></td>
+        <td>${vepari}</td>
+        <td>${billNo}</td>
         <td>${pauchVal}</td>
-        <td style="color:#8e44ad; font-weight:bold;">₹ ${parseFloat(r["રકમ"]||0).toFixed(2)}</td>
-        <td>${r["જમા / બાકી"]||'-'}</td>
+        <td style="color:#8e44ad; font-weight:bold;">₹ ${amt}</td>
+        <td><span class="badge-jama">${statusVal}</span></td>
         <td>${totalPauchVal}</td>
+        <td style="color:#27ae60; font-weight:bold;">₹ ${totalAmt}</td>
+        <td>${photoLink}</td>
+        <td><b>${billToName}</b></td>
       </tr>`;
     });
+    
     container.innerHTML = html + `</table>`;
-  }    
-</script>
+  }</script>
 
 </body>
 </html>

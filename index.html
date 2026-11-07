@@ -2714,44 +2714,23 @@ body.light-mode .dash-box h4 {
     </tr>`;
     
 filteredRows.forEach(function(r, index) {
-      // બધી જ કી (Keys) માંથી ડેટા શોધવા માટેના સ્માર્ટ વેરીએબલ્સ
-      let yearVal = "-";
-      let entryId = "-";
-      let cleanDate = "-";
-      let hastak = "-";
-      let vepari = "-";
-      let billNo = "-";
-      let pauchVal = "-";
-      let amt = "0.00";
-      let statusVal = "-";
-      let totalPauchVal = "-";
-      let totalAmt = "0.00";
-      let photoVal = "";
-      let billToName = "-";
-
-      // લૂપ ફેરવીને દરેક કૉલમનું નામ ચેક કરી લઈશું જેથી ક્યારેય ડેટા ખાલી ન રહે
-      for (let key in r) {
-        let k = key.trim().toLowerCase();
-        let val = r[key];
-        if (!val && val !== 0) continue;
-
-        if (k.includes("વર્ષ") || k.includes("year")) yearVal = val;
-        else if (k.includes("એન્ટ્રી") || k.includes("id")) entryId = val;
-        else if (k.includes("તારીખ") || k.includes("date")) cleanDate = String(val).split('T')[0];
-        else if (k.includes("હસ્તે") || k.includes("hastak")) hastak = val;
-        else if (k.includes("વેપારી") || k.includes("Merchant")) vepari = val;
-        else if (k.includes("બિલ નં") || k.includes("bill no")) billNo = val;
-        else if ((k.includes("પાઉચ") || k.includes("પેકિંગ") || k.includes("નંગ")) && !k.includes("કુલ")) pauchVal = val;
-        else if (k === "રકમ" || k.includes("amount")) amt = parseFloat(val || 0).toFixed(2);
-        else if (k.includes("જમા") || k.includes("બાકી") || k.includes("status")) statusVal = val;
-        else if (k.includes("કુલ પાઉચ") || k.includes("કુલ પેકિંગ") || k.includes("કુલ નંગ")) totalPauchVal = val;
-        else if (k.includes("કુલ રકમ") || k.includes("કુલ જમા રકમ")) totalAmt = parseFloat(val || 0).toFixed(2);
-        else if (k.includes("photo") || k.includes("ફોટો")) photoVal = val;
-        else if (k.includes("bill to") || k.includes("નામ")) billToName = val;
-      }
-
-      // જો એન્ટ્રી Id ખાલી હોય તો ઇન્ડેક્સ વાપરી લેવો
-      if (entryId === "-") entryId = index + 1;
+      // જો r એરે (Array) હોય અથવા જો આપણે ઓબ્જેક્ટની કી (Keys) ના ક્રમ મુજબ લેવું હોય:
+      let keys = Object.keys(r);
+      
+      // જો ડેટા કી-વલ્યુ તરીકે ન આવતો હોય કે ડાયરેક્ટ એરે હોય તો આ સૌથી સુરક્ષિત રીત છે:
+      let yearVal = r[keys[0]] || "-";
+      let entryId = r[keys[1]] || index + 1;
+      let cleanDate = String(r[keys[2]] || "").split('T')[0];
+      let hastak = r[keys[3]] || "-";
+      let vepari = r[keys[4]] || "-";
+      let billNo = r[keys[5]] || "-";
+      let pauchVal = r[keys[6]] || "-";
+      let amt = parseFloat(r[keys[7]] || 0).toFixed(2);
+      let statusVal = r[keys[8]] || "-";
+      let totalPauchVal = r[keys[9]] || "-";
+      let totalAmt = parseFloat(r[keys[10]] || 0).toFixed(2);
+      let photoVal = r[keys[11]] || "";
+      let billToName = r[keys[12]] || "-";
 
       let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
 

@@ -155,7 +155,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">07/11/2026 -  11:51   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">07/11/2026 -  19:39   IST</span>
 </div>
 
 <div class="header-bar">
@@ -972,7 +972,14 @@ body.light-mode .dash-box h4 {
     } else {
       if(contentNew) contentNew.style.display = 'none';
       if(contentView) contentView.style.display = 'block';
-      renderTable(tabName);
+
+      // "બધી એન્ટ્રી" ખોલતી વખતે પહેલાં તાજો ડેટા લાવો.
+      // fetchData સફળ થયા પછી તમામ ટેબલ ફરી render કરે છે.
+      if(typeof fetchData === "function") {
+        fetchData();
+      } else {
+        renderTable(tabName);
+      }
     }
   }
 
@@ -1982,8 +1989,17 @@ body.light-mode .dash-box h4 {
             if(el) el.value = value == null ? "" : String(value);
           };
           const getVal = (row, keys, fallback="") => {
+            if(!row) return fallback;
+            // પહેલા ચોક્કસ column name તપાસો.
             for(const k of keys) {
-              if(row && row[k] !== undefined && row[k] !== null && String(row[k]).trim() !== "") return row[k];
+              if(row[k] !== undefined && row[k] !== null && String(row[k]).trim() !== "") return row[k];
+            }
+            // Google Sheet ના header માં underscore/space અથવા જોડણીનો નાનો ફેરફાર હોય
+            // તો પણ એ જ column શોધી શકાય.
+            const norm = value => String(value || "").toLowerCase().replace(/[\s_./()-]/g, "");
+            const wanted = keys.map(norm);
+            for(const [column, value] of Object.entries(row)) {
+              if(wanted.includes(norm(column)) && value !== undefined && value !== null && String(value).trim() !== "") return value;
             }
             return fallback;
           };
@@ -2000,7 +2016,9 @@ body.light-mode .dash-box h4 {
           setVal("mDate", String(getVal(found, ["તારીખ", "Date"])).split("T")[0]);
           setVal("mBill", getVal(found, ["બિલ નં", "બિલ નંબર", "Bill_No", "Bill No"]));
           setSelect(document.getElementById("mBhagiya"), getVal(found, ["ભાગીદાર", "ખેડૂનું નામ", "Bhagiya", "Partner", "ભાગિયા", "નામ"]));
-          setSelect(document.getElementById("mVepari"), getVal(found, ["વેપારી", "વ્યાપારી", "દુકાન / વેપારી", "આપનાર", "Provider", "Dealer"]));
+          setSelect(document.getElementById("mVepari"),
+            getVal(found, ["વેપારી", "વ્યાપારી", "દુકાન / વેપારી", "દુકાનનું નામ", "દુકાન", "વેપારીનું નામ", "વેપારીનું_નામ", "આપનાર", "Provider", "Dealer"],
+              getVal(medRows[0], ["વેપારી", "વ્યાપારી", "દુકાન / વેપારી", "દુકાનનું નામ", "દુકાન", "વેપારીનું નામ", "વેપારીનું_નામ", "આપનાર", "Provider", "Dealer"], Object.values(medRows[0] || {})[5] || "")));
           setSelect(document.getElementById("mStatus"), getVal(found, ["બાકી જમા", "બિલની સ્થિતિ", "Status"], "બાકી"));
           setSelect(document.getElementById("mHastak"), getVal(found, ["હસ્તે", "પૈસા કોણે લીધા (હસ્તે)", "Hastak"]));
 
@@ -2009,7 +2027,7 @@ body.light-mode .dash-box h4 {
           setVal("editMedId", baseId);
 
           medRows.forEach(r => {
-            const dava = getVal(r, ["દવાનું નામ", "દવાનું_નામ", "દવા", "Medicine", "Medicine_Name"]);
+            const dava = getVal(r, ["દવાનું નામ", "દવાનું_નામ", "દવા", "દવાનું નામ ", "દવા નું નામ", "Medicine", "Medicine_Name"], Object.values(r || {})[6] || "");
             const weight = getVal(r, ["વજન", "Weight"], 0);
             const pack = getVal(r, ["પેકિંગ", "Pack", "Packing"], "");
             const qty = getVal(r, ["નંગ", "જથ્થો", "Qty", "Quantity"], 1);
@@ -2024,7 +2042,7 @@ body.light-mode .dash-box h4 {
             const davaSelect = row.querySelector(".davaList");
             setSelect(davaSelect, dava);
             if(davaSelect && dava) onMedSelectRow(davaSelect);
-            row.querySelector(".mType").value = getVal(r, ["પ્રકાર", "દવાનો પ્રકાર", "Type", "Medicine_Type"], row.querySelector(".mType").value);
+            row.querySelector(".mType").value = getVal(r, ["પ્રકાર", "દવાનો પ્રકાર", "દવા નો પ્રકાર", "Type", "Medicine_Type"], Object.values(r || {})[7] || row.querySelector(".mType").value || "");
             row.querySelector(".mWeight").value = weight;
             row.querySelector(".mPack").value = pack || row.querySelector(".mPack").value;
             row.querySelector(".mQty").value = qty;
@@ -2065,8 +2083,17 @@ body.light-mode .dash-box h4 {
             if(el) el.value = value == null ? "" : String(value);
           };
           const getVal = (row, keys, fallback="") => {
+            if(!row) return fallback;
+            // પહેલા ચોક્કસ column name તપાસો.
             for(const k of keys) {
-              if(row && row[k] !== undefined && row[k] !== null && String(row[k]).trim() !== "") return row[k];
+              if(row[k] !== undefined && row[k] !== null && String(row[k]).trim() !== "") return row[k];
+            }
+            // Google Sheet ના header માં underscore/space અથવા જોડણીનો નાનો ફેરફાર હોય
+            // તો પણ એ જ column શોધી શકાય.
+            const norm = value => String(value || "").toLowerCase().replace(/[\s_./()-]/g, "");
+            const wanted = keys.map(norm);
+            for(const [column, value] of Object.entries(row)) {
+              if(wanted.includes(norm(column)) && value !== undefined && value !== null && String(value).trim() !== "") return value;
             }
             return fallback;
           };

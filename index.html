@@ -2692,22 +2692,28 @@ body.light-mode .dash-box h4 {
       return;
     }
 
-    let html = `<table><tr><th>વર્ષ</th><th>પ્રકાર</th><th>વેપારી/માલિક</th><th>તારીખ</th><th>હસ્તે</th><th>બિલ નં</th><th>રકમ</th><th>સ્ટેટસ</th></tr>`;
+    let html = `<table><tr><th>વર્ષ</th><th>પ્રકાર</th><th>વેપારી/માલિક</th><th>તારીખ</th><th>હસ્તે</th><th>બિલ નં</th><th>પાઉચ / પેકિંગ / નંગ</th><th>રકમ</th><th>સ્ટેટસ</th><th>કુલ પાઉચ / પેકિંગ / નંગ</th></tr>`;
+    
     filteredRows.forEach(r => {
+      let pauchVal = r["પાઉચ નં./ પેકિંગ / નંગ"] || r["પાઉચ / પેકિંગ / નંગ"] || r["પેકિંગ"] || r["નંગ"] || "-";
+      let totalPauchVal = r["કુલ પાઉચ / પેકિંગ / નંગ"] || r["કુલ પાઉચ નં./ પેકિંગ / નંગ"] || r["કુલ નંગ"] || "-";
+      let cleanDate = String(r["તારીખ"] || '-').split('T')[0];
+
       html += `<tr>
         <td>${r["વર્ષ"]||'-'}</td>
         <td><span class="badge-jama">${r["પ્રકાર"]||'-'}</span></td>
         <td>${r["વેપારી/માલિક"]||'-'}</td>
-        <td>${String(r["તારીખ"]||'-').split('T')[0]}</td>
+        <td>${cleanDate}</td>
         <td><b>${r["હસ્તે"]||'-'}</b></td>
         <td>${r["બિલ નં"]||'-'}</td>
+        <td>${pauchVal}</td>
         <td style="color:#8e44ad; font-weight:bold;">₹ ${parseFloat(r["રકમ"]||0).toFixed(2)}</td>
         <td>${r["જમા / બાકી"]||'-'}</td>
+        <td>${totalPauchVal}</td>
       </tr>`;
     });
     container.innerHTML = html + `</table>`;
-  }
-    
+  }    
 </script>
 
 </body>

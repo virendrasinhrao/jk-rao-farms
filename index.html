@@ -2665,29 +2665,24 @@ body.light-mode .dash-box h4 {
     let selTracWork = document.getElementById("filterTracWork") ? document.getElementById("filterTracWork").value.trim().toLowerCase() : "";
     let searchQuery = document.getElementById("searchBillRec") ? document.getElementById("searchBillRec").value.toLowerCase().trim() : "";
 
-    let selHastak = document.getElementById("filterHastak") ? document.getElementById("filterHastak").value.trim().toLowerCase() : "";
-    let selCategory = document.getElementById("filterCategory") ? document.getElementById("filterCategory").value.trim().toLowerCase() : "";
-    let selMedType = document.getElementById("filterMedType") ? document.getElementById("filterMedType").value.trim().toLowerCase() : "";
-    let selTracWork = document.getElementById("filterTracWork") ? document.getElementById("filterTracWork").value.trim().toLowerCase() : "";
-    let searchQuery = document.getElementById("searchBillRec") ? document.getElementById("searchBillRec").value.toLowerCase().trim() : "";
-
     let filteredRows = rows.filter(r => {
-      let keys = Object.keys(r);
-      // શીટની બધી જ કિંમતોને ભેગી કરીને સર્ચ માટે તૈયાર કરવી
-      let rowString = Object.values(r).join(" ").toLowerCase();
-      
-      let hVal = String(r["હસ્તે"] || r[keys[3]] || "").trim().toLowerCase();
+      let hVal = String(r["હસ્તે"] || r["Hastak"] || "").trim().toLowerCase();
       let rType = String(r["પ્રકાર"] || "").trim().toLowerCase();
-      let bNo = String(r["બિલ નં"] || r[keys[5]] || "").toLowerCase();
-      let dt = String(r["તારીખ"] || r[keys[2]] || "").toLowerCase();
+      let subType = String(r["સબપ્રકાર"] || r["સબ_પ્રકાર"] || "").trim().toLowerCase();
+      let bNo = String(r["બિલ નં"] || "").toLowerCase();
+      let dt = String(r["તારીખ"] || "").toLowerCase();
+      let vepariVal = String(r["વેપારી"] || r["વેપારી/માલિક"] || "").toLowerCase();
+      let billToVal = String(r["Bill To/નામ"] || r["Bill To /નામ"] || "").toLowerCase();
 
-      // જો ડ્રોપડાઉનમાં 'બધા' કે ખાલી હોય તો દરેક રેકોર્ડ પાસ થવા દેવો
-      let matchH = !selHastak || hVal.includes(selHastak) || rowString.includes(selHastak);
-      let matchC = !selCategory || rType.includes(selCategory) || rowString.includes(selCategory);
-      let matchS = !searchQuery || bNo.includes(searchQuery) || dt.includes(searchQuery) || rowString.includes(searchQuery);
+      let matchH = !selHastak || hVal.includes(selHastak);
+      let matchC = !selCategory || rType.includes(selCategory);
+      let matchM = selCategory !== "દવા" || !selMedType || subType.includes(selMedType);
+      let matchT = selCategory !== "ટ્રેક્ટર" || !selTracWork || subType.includes(selTracWork);
+      let matchS = !searchQuery || bNo.includes(searchQuery) || dt.includes(searchQuery) || hVal.includes(searchQuery) || vepariVal.includes(searchQuery) || billToVal.includes(searchQuery);
 
-      return matchH && matchC && matchS;
+      return matchH && matchC && matchM && matchT && matchS;
     });
+
     if(selHastak && filteredRows.length > 0) {
       let totalAmt = filteredRows.reduce((sum, r) => sum + parseFloat(r["રકમ"] || 0), 0);
       summaryText.innerHTML = `<b>${selHastak}</b> - કુલ બિલ: ${filteredRows.length} | કુલ રકમ: ₹ ${totalAmt.toFixed(2)}`;
@@ -2717,10 +2712,12 @@ body.light-mode .dash-box h4 {
       <th>Photo</th>
       <th>Bill To/નામ</th>
     </tr>`;
-    filteredRows.forEach(function(r, index) {
-      // ઓબ્જેક્ટની બધી કી (Columns) મેળવી લેવી
+    
+filteredRows.forEach(function(r, index) {
+      // જો r એરે (Array) હોય અથવા જો આપણે ઓબ્જેક્ટની કી (Keys) ના ક્રમ મુજબ લેવું હોય:
       let keys = Object.keys(r);
       
+      // જો ડેટા કી-વલ્યુ તરીકે ન આવતો હોય કે ડાયરેક્ટ એરે હોય તો આ સૌથી સુરક્ષિત રીત છે:
       let yearVal = r[keys[0]] || "-";
       let entryId = r[keys[1]] || index + 1;
       let cleanDate = String(r[keys[2]] || "").split('T')[0];

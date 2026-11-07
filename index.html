@@ -2714,53 +2714,34 @@ body.light-mode .dash-box h4 {
     </tr>`;
     
 filteredRows.forEach(function(r, index) {
+      // જો r એ ડબ્બા જેવો ઓબ્જેક્ટ હોય અથવા જો આપણે એરેમાંથી ડેટા લેવો હોય:
+      // આપણે સીધા જ શીટના કૉલમ નામ અથવા તેની કી ચેક કરી લઈએ:
+      
       let yearVal = r["વર્ષ"] || "-";
       let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || index;
       let cleanDate = String(r["તારીખ"] || "").split('T')[0];
       
-      // ૧. 'હસ્તે' શોધવા માટે લૂપની બધી કી તપાસી લેશે
-      let hastak = "-";
-      for (let key in r) {
-        if (key.includes("હસ્તે") || key.toLowerCase().includes("hastak")) {
-          if (r[key]) { hastak = r[key]; break; }
-        }
-      }
+      // હસ્તે - બધી સંભવિત રીતો
+      let hastak = r["હસ્તે"] || r["Hastak"] || r["હસ્તે નામ"] || "-";
       
       let vepari = r["વેપારી"] || r["વેપારી/માલિક"] || "-";
       let billNo = r["બિલ નં"] || "-";
       
-      // ૨. 'પાઉચ / પેકિંગ / નંગ' શોધવા માટે
-      let pauchVal = "-";
-      for (let key in r) {
-        if (key.includes("પાઉચ") || key.includes("પેકિંગ") || key.includes("નંગ")) {
-          // જો 'કુલ' શબ્દ ન હોય તો જ તેને સિંગલ પાઉચ ગણવું
-          if (!key.includes("કુલ") && r[key]) { 
-            pauchVal = r[key]; 
-            break; 
-          }
-        }
-      }
+      // પાઉચ નં./ પેકિંગ / નંગ - અહીં બધી સંભવિત સ્પેલિંગ સ્પેસ સાથે મૂકી છે
+      let pauchVal = r["પાઉચ નં./ પેકિંગ / નંગ"] || r["પાઉચ નં./પેકિંગ/નંગ"] || r["પાઉચ / પેકિંગ / નંગ"] || r["પાઉચ/પેકિંગ/નંગ"] || r["પેકિંગ"] || r["નંગ"] || "-";
       
       let amt = parseFloat(r["રકમ"] || 0).toFixed(2);
       let statusVal = r["જમા / બાકી"] || r["Status"] || "-";
       
-      // ૩. 'કુલ પાઉચ / પેકિંગ / નંગ' શોધવા માટે
-      let totalPauchVal = "-";
-      for (let key in r) {
-        if ((key.includes("કુલ") && key.includes("પાઉચ")) || (key.includes("કુલ") && key.includes("પેકિંગ")) || (key.includes("કુલ") && key.includes("નંગ"))) {
-          if (r[key]) { 
-            totalPauchVal = r[key]; 
-            break; 
-          }
-        }
-      }
+      // કુલ પાઉચ / પેકિંગ / નંગ - બધી સંભવિત સ્પેલિંગ
+      let totalPauchVal = r["કુલ પાઉચ / પેકિંગ / નંગ"] || r["કુલ પાઉચ નં./ પેકિંગ / નંગ"] || r["કુલ પાઉચ/પેકિંગ/નંગ"] || r["કુલ નંગ"] || "-";
       
       let totalAmt = parseFloat(r["કુલ જમા રકમ"] || r["કુલ રકમ"] || 0).toFixed(2);
       
       let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
       let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
       
-      let billToName = r["Bill To/નામ"] || r["Bill To /નામ"] || r["Bill Owner"] || "-";
+      let billToName = r["Bill To/નામ"] || r["Bill To /નામ"] || r["Bill To/નામ:"] || r["Bill Owner"] || "-";
 
       html += `<tr>
         <td>${yearVal}</td>

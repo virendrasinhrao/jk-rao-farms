@@ -2712,12 +2712,10 @@ body.light-mode .dash-box h4 {
       <th>Photo</th>
       <th>Bill To/નામ</th>
     </tr>`;
-    
-filteredRows.forEach(function(r, index) {
-      // જો r એરે (Array) હોય અથવા જો આપણે ઓબ્જેક્ટની કી (Keys) ના ક્રમ મુજબ લેવું હોય:
+    filteredRows.forEach(function(r, index) {
+      // ઓબ્જેક્ટની બધી કી (Columns) મેળવી લેવી
       let keys = Object.keys(r);
       
-      // જો ડેટા કી-વલ્યુ તરીકે ન આવતો હોય કે ડાયરેક્ટ એરે હોય તો આ સૌથી સુરક્ષિત રીત છે:
       let yearVal = r[keys[0]] || "-";
       let entryId = r[keys[1]] || index + 1;
       let cleanDate = String(r[keys[2]] || "").split('T')[0];

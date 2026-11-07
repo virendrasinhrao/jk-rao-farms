@@ -155,7 +155,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">07/11/2026 -  10:21      IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">06/11/2026 -  10:07   IST</span>
 </div>
 
 <div class="header-bar">
@@ -1926,7 +1926,7 @@ body.light-mode .dash-box h4 {
           console.error(err);
         });
     });
- 
+  }
   function editSingleRecord(sheetKey, entryId) {
     askMpinAndExecute(() => {
       let key = String(sheetKey || "").toLowerCase();
@@ -1955,41 +1955,22 @@ body.light-mode .dash-box h4 {
           updatePartnerSummary('Sales');
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
-          
-// 2. દવા (Med / Pesticide_Items)
+
+      // 2. દવા (Med / Pesticide_Items)
       } else if(key.includes('med') || key.includes('pesticide') || key.includes('દવા') || key.includes('medic')) {
         let found = (appData.Pesticide_Items || appData.Pesticide_Ledger || appData.Med || appData.Med_Ledger || appData.Pesticide || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
         if(found) {
           switchSubTab('Med', 'New');
-          
-          // --- ૧. દવા ના ફોર્મના બધા જ ઓરિજિનલ કોલમ ફિલ કરવાનું કોડિંગ ---
-          if(document.getElementById("mYear")) document.getElementById("mYear").value = found["વર્ષ"] || found["Year"] || "";
-          document.getElementById("mDate").value = String(found["તારીખ"] || found["Date"] || "").split('T')[0];
-          document.getElementById("mBill").value = found["બિલ નં"] || found["બિલ નંબર"] || found["Bill_No"] || found["Bill No"] || "";
-          document.getElementById("mBhagiya").value = found["ખેડૂનું નામ"] || found["ખેડૂતનું નામ"] || found["ભાગીદાર"] || "";
-          document.getElementById("mVepari").value = found["вепари"] || found["વેપારી"] || found["વ્યાપારી"] || "";
-          
-          // આઇટમ સ્પેસિફિક વિગતો
-          if(document.getElementById("mItemName")) document.getElementById("mItemName").value = found["દવા નું નામ"] || found["દવાનું નામ"] || "";
-          if(document.getElementById("mType")) document.getElementById("mType").value = found["પ્રકાર"] || "";
-          if(document.getElementById("mWeight")) document.getElementById("mWeight").value = found["વજન"] || "";
-          if(document.getElementById("mPacking")) document.getElementById("mPacking").value = found["પેકિંગ"] || "";
-          if(document.getElementById("mQty")) document.getElementById("mQty").value = found["નંગ"] || "";
-          if(document.getElementById("mPrice")) document.getElementById("mPrice").value = found["ભાવ"] || "";
-          if(document.getElementById("mAmount")) document.getElementById("mAmount").value = found["રકમ"] || "";
-          if(document.getElementById("mCrop")) document.getElementById("mCrop").value = found["પાકનું નામ"] || "";
-          
-          // હિસાબ અને શેરની વિગતો
-          if(document.getElementById("mTotalAmount")) document.getElementById("mTotalAmount").value = found["બિલની રકમ"] || found["બિલ ની કુલ રકમ"] || "";
-          if(document.getElementById("mSharePercent")) document.getElementById("mSharePercent").value = found["ખેડૂ હિસ્સો %"] || "";
-          if(document.getElementById("mShareAmount")) document.getElementById("mShareAmount").value = found["ખેડૂ રકમ"] || "";
-          
-          document.getElementById("mStatus").value = found["બાકી જમા"] || found["Status"] || "બાકી";
+          document.getElementById("mDate").value = String(found["તારીખ"] || "").split('T')[0];
+          document.getElementById("mBill").value = found["બિલ નં"] || "";
+          document.getElementById("mBhagiya").value = found["ભાગીદાર"] || "";
+          document.getElementById("mVepari").value = found["વ્યાપારી"] || found["આપનાર"] || "";
+          document.getElementById("mStatus").value = found["બિલની સ્થિતિ"] || "બાકી";
           document.getElementById("mHastak").value = found["હસ્તે"] || "";
           
           document.getElementById("editMedId").value = entryId;
           document.getElementById("btnMed").innerText = "અપડેટ કરો";
-          alert("દવા એન્ટ્રી ફોર્મમાં ડેટા લોડ થઈ ગયો છે!");
+          alert("દવા એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
 
       // 3. ખાતર (Fertilizer / Fert)
@@ -1997,35 +1978,33 @@ body.light-mode .dash-box h4 {
         let found = (appData.Fertilizer_Items || appData.Fertilizer_Ledger || appData.Fert || appData.Fertilizer || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
         if(found) {
           switchSubTab('Fert', 'New');
-          
-          // --- ૨. ખાતર ના ફોર્મના બધા જ ઓરિજિનલ કોલમ ફિલ કરવાનું કોડિંગ ---
-          if(document.getElementById("fYear")) document.getElementById("fYear").value = found["વર્ષ"] || found["Year"] || "";
-          document.getElementById("fDate").value = String(found["તારીખ"] || found["Date"] || "").split('T')[0];
-          document.getElementById("fBill").value = found["બિલ નં"] || found["બિલ નંબર"] || found["Bill_No"] || "";
-          document.getElementById("fBhagiya").value = found["ખેડૂનું નામ"] || found["ખેડૂતનું નામ"] || "";
-          document.getElementById("fVepari").value = found["વેપારી"] || found["વ્યાપારી"] || "";
-          
-          // આઇટમ સ્પેસિફિક વિગતો
-          if(document.getElementById("fItemName")) document.getElementById("fItemName").value = found["ખાતર નું નામ"] || found["ખાતરનું નામ"] || "";
-          if(document.getElementById("fType")) document.getElementById("fType").value = found["પ્રકાર"] || "";
-          if(document.getElementById("fWeight")) document.getElementById("fWeight").value = found["વજન"] || "";
-          if(document.getElementById("fPacking")) document.getElementById("fPacking").value = found["પેકિંગ"] || "";
-          if(document.getElementById("fQty")) document.getElementById("fQty").value = found["નંગ"] || "";
-          if(document.getElementById("fPrice")) document.getElementById("fPrice").value = found["ભાવ"] || "";
-          if(document.getElementById("fAmount")) document.getElementById("fAmount").value = found["રકમ"] || "";
-          if(document.getElementById("fCrop")) document.getElementById("fCrop").value = found["પાકનું નામ"] || "";
-          
-          // હિસાબ અને શેરની વિગતો
-          if(document.getElementById("fTotalAmount")) document.getElementById("fTotalAmount").value = found["બિલની રકમ"] || found["બિલ ની કુલ રકમ"] || "";
-          if(document.getElementById("fSharePercent")) document.getElementById("fSharePercent").value = found["ખેડૂ હિસ્સો %"] || "";
-          if(document.getElementById("fShareAmount")) document.getElementById("fShareAmount").value = found["ખેડૂ રકમ"] || "";
-          
-          document.getElementById("fStatus").value = found["બાકી જમા"] || found["Status"] || "બાકી";
+          document.getElementById("fDate").value = String(found["તારીખ"] || "").split('T')[0];
+          document.getElementById("fBill").value = found["બિલ નં"] || "";
+          document.getElementById("fBhagiya").value = found["ભાગીદાર"] || "";
+          document.getElementById("fVepari").value = found["વ્યાપારી"] || found["આપનાર"] || "";
+          document.getElementById("fStatus").value = found["બિલની સ્થિતિ"] || "બાકી";
           document.getElementById("fHastak").value = found["હસ્તે"] || "";
           
           document.getElementById("editFertId").value = entryId;
           document.getElementById("btnFert").innerText = "અપડેટ કરો";
-          alert("ખાતર એન્ટ્રી ફોર્મમાં ડેટા લોડ થઈ ગયો છે!");
+          alert("ખાતર એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
+        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
+
+      // 4. ટ્રેક્ટર (Tractor)
+      } else if(key.includes('tractor')) {
+        let found = (appData.Tractor_Ledger || appData.Tractor || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
+        if(found) {
+          switchSubTab('Tractor', 'New');
+          document.getElementById("tDate").value = String(found["તારીખ"] || "").split('T')[0];
+          document.getElementById("tBhagiya").value = found["ભાગીદાર"] || "";
+          document.getElementById("tWork").value = found["કામ"] || found["વર્ક"] || "";
+          document.getElementById("tHours").value = found["કલાક"] || found["Hours"] || "";
+          document.getElementById("tRate").value = found["ભાવ"] || found["Rate"] || "";
+          document.getElementById("tAmount").value = found["રકમ"] || found["Amount"] || "";
+          
+          document.getElementById("editTractorId").value = entryId;
+          document.getElementById("btnTractor").innerText = "અપડેટ કરો";
+          alert("ટ્રેક્ટર એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
 
       // 5. ઉપાડ (Upad)
@@ -2055,9 +2034,6 @@ body.light-mode .dash-box h4 {
         alert("આ સેક્શન માટે એડિટ સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે. (Key: " + sheetKey + ")");
       }
     });
-  }
-  function checkCropNew() {
-    // આ ખાલી ફંક્શન એરર અટકાવવા માટે છે
   }
   function submitSalesForm(e) {
     e.preventDefault();

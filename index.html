@@ -2019,7 +2019,7 @@ body.light-mode .dash-box h4 {
           setSelect(document.getElementById("mVepari"),
             getVal(found, ["વેપારી", "વ્યાપારી", "દુકાન / વેપારી", "દુકાનનું નામ", "દુકાન", "વેપારીનું નામ", "વેપારીનું_નામ", "આપનાર", "Provider", "Dealer"],
               getVal(medRows[0], ["વેપારી", "વ્યાપારી", "દુકાન / વેપારી", "દુકાનનું નામ", "દુકાન", "વેપારીનું નામ", "વેપારીનું_નામ", "આપનાર", "Provider", "Dealer"], Object.values(medRows[0] || {})[5] || "")));
-         document.getElementById("fVepari").value = found["વેપારી"] || found["વ્યાપારી"] || found["દુકાન / વેપારી"] || found["આપનાર"] || found["Provider"] || found["Dealer"] || "";
+         document.getElementById("mVepari").value = found["વેપારી"] || found["વ્યાપારી"] || found["દુકાન / વેપારી"] || found["આપનાર"] || found["Provider"] || found["Dealer"] || "";
 		 setSelect(document.getElementById("mStatus"), getVal(found, ["બાકી જમા", "બિલની સ્થિતિ", "Status"], "બાકી"));
           setSelect(document.getElementById("mHastak"), getVal(found, ["હસ્તે", "પૈસા કોણે લીધા (હસ્તે)", "Hastak"]));
 

@@ -25,6 +25,7 @@
 body.light-mode .dash-box h4 { 
   color: #ffffff !important; /* એકદમ ગાઢ કાળો કલર */
   font-weight: 900 !important; }
+	 
 
     /* Button-Type Nav Tabs with Soft Green Background & White Text in Light Mode */
     body.light-mode .nav button { 
@@ -35,6 +36,7 @@ body.light-mode .dash-box h4 {
       border-radius: 8px !important;
       box-shadow: 0 3px 6px rgba(0,0,0,0.15);
       padding: 10px 8px;
+		
     }    body.light-mode .nav button:hover {
       background: linear-gradient(135deg, #219653, #27ae60) !important;
     }
@@ -211,6 +213,8 @@ body.light-mode .dash-box h4 {
       </div>
     </div>
   </div>  <!-- 1. SALES SECTION -->
+
+						   
   <div id="formSales" class="section">
     <h3 style="text-align:center; color:#27ae60; margin-top:0;">💰 વેચાણ મેનેજમેન્ટ</h3>
     <div id="choiceSales" class="choice-container">
@@ -276,6 +280,17 @@ body.light-mode .dash-box h4 {
           </div>
           <div class="form-group"><label>❓ ભાગિયાએ લીધા?:</label><select id="sBLidha"><option>No</option><option>Yes</option></select></div>
         </div>
+		
+																				   
+								
+																														  
+																	 
+																																																																									
+																																																																						 
+				
+																																	
+																													
+			  
         <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="sPhoto" accept="image/*" capture="environment"></div>
         <button type="submit" id="btnSales" class="btn-submit">💾 સેવ કરો</button>
       </form>
@@ -367,6 +382,17 @@ body.light-mode .dash-box h4 {
           <div class="form-group"><label>📌 સ્થિતિ:</label><select id="mStatus"><option>જમા</option><option>બાકી</option></select></div>
         </div>
         <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="mPhoto" accept="image/*" capture="environment"></div>
+														  
+								
+																														  
+																	 
+																																																																									
+																																																																						 
+				
+																																	
+																													
+			  
+
         <button type="submit" id="btnMed" class="btn-submit">💾 સેવ કરો</button>
       </form>
     </div>
@@ -457,6 +483,18 @@ body.light-mode .dash-box h4 {
         </div>
         <div class="form-group"><label>📝 વિગત:</label><input type="text" id="fDetails" placeholder="ઓપ્શનલ"></div>
         <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="fPhoto" accept="image/*" capture="environment"></div>
+      
+        <!-- ખાતર ફોટો સેક્શન -->
+        <div class="form-group">
+          <label style="font-weight: bold; display: block; margin-bottom: 5px;">📷 બિલનો ફોટો:</label>
+          <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+            <button type="button" onclick="triggerMyCamera('fPhoto')" style="flex: 1; background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📸 કેમેરાથી ફોટો પાડો</button>
+            <button type="button" onclick="triggerMyGallery('fPhoto')" style="flex: 1; background: #e67e22; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📁 ફોટો અપલોડ કરો</button>
+          </div>
+          <input type="file" id="fPhoto" accept="image/*" style="display: none;" onchange="handlePhotoChange(this, 'fPhotoStatus')">
+          <div id="fPhotoStatus" style="font-size: 13px; color: #27ae60; font-weight: bold; margin-top: 5px;"></div>
+        </div>
+
         <button type="submit" id="btnFert" class="btn-submit">💾 સેવ કરો</button>
       </form>
     </div>
@@ -528,7 +566,18 @@ body.light-mode .dash-box h4 {
           <div class="form-group"><label>📌 બિલની સ્થિતિ:</label><select id="tStatus"><option>રોકડા</option><option>બાકી</option></select></div>
           <div class="form-group"><label>🤝 હસ્તે:</label><select id="tHastak" class="bhagiyaList" required></select></div>
         </div>
-        <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="tPhoto" accept="image/*" capture="environment"></div>
+		
+        <!-- ટ્રેક્ટર ફોટો સેક્શન -->
+        <div class="form-group">
+          <label style="font-weight: bold; display: block; margin-bottom: 5px;">📷 બિલનો ફોટો:</label>
+          <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+            <button type="button" onclick="triggerMyCamera('tPhoto')" style="flex: 1; background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📸 કેમેરાથી ફોટો પાડો</button>
+            <button type="button" onclick="triggerMyGallery('tPhoto')" style="flex: 1; background: #e67e22; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📁 ફોટો અપલોડ કરો</button>
+          </div>
+          <input type="file" id="tPhoto" accept="image/*" style="display: none;" onchange="handlePhotoChange(this, 'tPhotoStatus')">
+          <div id="tPhotoStatus" style="font-size: 13px; color: #27ae60; font-weight: bold; margin-top: 5px;"></div>
+        </div>
+
         <button type="submit" id="btnTrac" class="btn-submit">💾 સેવ કરો</button>
       </form>
     </div>
@@ -639,7 +688,18 @@ body.light-mode .dash-box h4 {
           <div class="form-group"><label>📌 Status:</label><select id="uStatus"><option value="Udhār">ઉધાર</option><option value="Jamā">જમા</option></select></div>
           <div class="form-group"><label>🔄 Close Year (Y/N):</label><select id="uCloseYear"><option value="N">N</option><option value="Y">Y</option></select></div>
         </div>
-        <div class="form-group"><label>📷 ટ્રાન્ઝેક્શન ફોટો:</label><input type="file" id="uPhoto" accept="image/*" capture="environment"></div>
+		
+        <!-- ઉપાડ પહોંચ ફોટો સેક્શન (Capture & Upload) -->
+        <div class="form-group">
+          <label style="font-weight: bold; display: block; margin-bottom: 5px;">📷 પહોંચ / રસીદનો ફોટો:</label>
+          <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+            <button type="button" onclick="triggerMyCamera('uPhoto')" style="flex: 1; background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📸 કેમેરાથી ફોટો પાડો</button>
+            <button type="button" onclick="triggerMyGallery('uPhoto')" style="flex: 1; background: #e67e22; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📁 ફોટો અપલોડ કરો</button>
+          </div>
+          <input type="file" id="uPhoto" accept="image/*" style="display: none;" onchange="handlePhotoChange(this, 'uPhotoStatus')">
+          <div id="uPhotoStatus" style="font-size: 13px; color: #27ae60; font-weight: bold; margin-top: 5px;"></div>
+        </div>
+																						
         <button type="submit" id="btnUpad" class="btn-submit">💾 સેવ કરો</button>
       </form>
     </div>
@@ -761,6 +821,17 @@ body.light-mode .dash-box h4 {
   </div>
 </div>
 
+!-- કોમન ફોટો મોડલ પૉપઅપ -->
+<div id="imageModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.8); justify-content:center; align-items:center;">
+  <div style="position:relative; max-width:90%; max-height:90%; text-align:center;">
+    <span onclick="closeImageModal()" style="position:absolute; top:-40px; right:0; color:white; font-size:35px; font-weight:bold; cursor:pointer; background:#c0392b; width:35px; height:35px; border-radius:50%; display:flex; justify-content:center; align-items:center; line-height:30px;">&times;</span>
+    <img id="modalImageSrc" src="" style="max-width:100%; max-height:80vh; border-radius:8px; box-shadow:0 5px 15px rgba(0,0,0,0.5);">
+																																																																					 
+																																																										   
+		  
+  </div>
+</div>
+
 <div id="modalImageViewer" class="modal">
   <div class="modal-content" style="max-width: 400px;">
     <h3 style="color:#2c3e50; margin-top:0;">📷 બિલ ફોટો વ્યુઅર</h3>
@@ -825,6 +896,7 @@ body.light-mode .dash-box h4 {
     fetchData();
     addSalesItemRow(); addMedItemRow(); addFertItemRow(); addTracItemRow();
   };
+
   function toggleTheme() {
     let checkbox = document.getElementById("themeCheckbox");
     if (checkbox.checked) {
@@ -834,6 +906,49 @@ body.light-mode .dash-box h4 {
       document.body.classList.remove("light-mode");
       localStorage.setItem("app_theme", "dark");
     }
+  }
+
+ // કેમેરા ઓપન કરવા માટે
+  function triggerMyCamera(inputId) {
+      let input = document.getElementById(inputId);
+      if(input) {
+          input.setAttribute('capture', 'environment');
+          input.click();
+      }
+  }
+
+  // ગેલેરી ખોલવા માટે
+  function triggerMyGallery(inputId) {
+      let input = document.getElementById(inputId);
+      if(input) {
+          input.removeAttribute('capture');
+          input.click();
+      }
+  }
+
+  // ફોટો સિલેક્ટ થયા પછી નામ બતાવવા અને બેઝ-૬૪ કરવા
+  function handlePhotoChange(input, statusId) {
+      if (input.files && input.files[0]) {
+          let file = input.files[0];
+          let status = document.getElementById(statusId);
+          if(status) status.innerHTML = `✅ પસંદ કરેલ: ${file.name}`;
+      }
+  }
+
+  // ફોટો મોડલ ખોલવા માટે
+  function openImageModal(url) {
+      let modal = document.getElementById('imageModal');
+      let modalImg = document.getElementById('modalImageSrc');
+      if(modal && modalImg) {
+          modalImg.src = url;
+          modal.style.display = 'flex';
+      }
+  }
+
+  // ફોટો મોડલ બંધ કરવા માટે
+  function closeImageModal() {
+      let modal = document.getElementById('imageModal');
+      if(modal) modal.style.display = 'none';
   }
 
   function setEntryIdDate(dateVal) {
@@ -1839,6 +1954,8 @@ body.light-mode .dash-box h4 {
       let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || index;
       let bhagiya = r["ભાગીદાર"] || r["ખેડૂનું નામ"] || r["ઉપાડ લેનાર"] || "-";
       let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
+	  
+																		 
       let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
 
       html += `<tr>
@@ -1943,6 +2060,7 @@ body.light-mode .dash-box h4 {
         });
     });
   }
+
   function editSingleRecord(sheetKey, entryId) {
     askMpinAndExecute(() => {
       let key = String(sheetKey || "").toLowerCase();
@@ -2205,6 +2323,7 @@ body.light-mode .dash-box h4 {
       }
     });
   }
+
   function submitSalesForm(e) {
     e.preventDefault();
     let btn = document.getElementById("btnSales");
@@ -2318,12 +2437,28 @@ body.light-mode .dash-box h4 {
     });
   }
 
+							  
+					   
+												 
+									 
+																								  
+						
+
   function submitFertForm(e) {
     e.preventDefault();
     let btn = document.getElementById("btnFert");
     let originalText = btn.innerHTML;
     btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
     btn.disabled = true;
+																			 
+										 
+																	
+																	
+																			   
+								 
+							  
+							  
+									   
 
     let date = v("fDate");
     let year = getYear(date);
@@ -2343,6 +2478,15 @@ body.light-mode .dash-box h4 {
 
     let rows = document.querySelectorAll("#fertItemsContainer .item-row");
     let itemRows = [];
+														  
+															
+														 
+													  
+																	
+																							
+													
+															
+																								  
 
     handlePhotoUpload("fPhoto", function(photoBase64) {
       rows.forEach((r, index) => {
@@ -2359,11 +2503,16 @@ body.light-mode .dash-box h4 {
         let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
         itemRows.push([year, rId, date, billNo, bhagiya, vepari, khatar, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
       });
+   
 
       let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, details, photoBase64];
       triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm', originalText);
+					  
+							  
     });
   }
+											   
+	 
 
   function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId, originalBtnText) {
     let partnerName = (formType === 'Sales') ? document.getElementById("sBhagiya").value : billRow[4];
@@ -2376,6 +2525,16 @@ body.light-mode .dash-box h4 {
 
     let currentBal = getCategoryBalanceVal(formType, partnerName);
     let categoryText = formType === 'Sales' ? 'વેચાણ બિલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
+																																																														
+																
+															   
+																		  
+			
+																																				 
+															   
+							   
+	 
+   
 
     if (currentBal > 0) {
       pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
@@ -2476,6 +2635,7 @@ body.light-mode .dash-box h4 {
       pendingBillData = null;
     });
   }
+
   function submitUpad(e) {
     e.preventDefault();
     let btn = document.getElementById("btnUpad");

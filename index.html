@@ -157,7 +157,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">08/11/2026 -  10:58   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">08/11/2026 -  12:51   IST</span>
 </div>
 
 <div class="header-bar">
@@ -281,17 +281,17 @@ body.light-mode .dash-box h4 {
           <div class="form-group"><label>❓ ભાગિયાએ લીધા?:</label><select id="sBLidha"><option>No</option><option>Yes</option></select></div>
         </div>
 		
-																				   
-								
-																														  
-																	 
-																																																																									
-																																																																						 
-				
-																																	
-																													
-			  
-        <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="sPhoto" accept="image/*" capture="environment"></div>
+  <!-- વેચાણ ફોટો સેક્શન (Capture & Upload) -->
+        <div class="form-group">
+          <label style="font-weight: bold; display: block; margin-bottom: 5px;">📷 બિલનો ફોટો:</label>
+          <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+            <button type="button" onclick="triggerMyCamera('sPhoto')" style="flex: 1; background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📸 કેમેરાથી ફોટો પાડો</button>
+            <button type="button" onclick="triggerMyGallery('sPhoto')" style="flex: 1; background: #e67e22; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📁 ફોટો અપલોડ કરો</button>
+          </div>
+          <input type="file" id="sPhoto" accept="image/*" style="display: none;" onchange="handlePhotoChange(this, 'sPhotoStatus')">
+          <div id="sPhotoStatus" style="font-size: 13px; color: #27ae60; font-weight: bold; margin-top: 5px;"></div>
+        </div>
+
         <button type="submit" id="btnSales" class="btn-submit">💾 સેવ કરો</button>
       </form>
     </div>
@@ -381,17 +381,17 @@ body.light-mode .dash-box h4 {
           <div class="form-group"><label>🤝 હસ્તે:</label><select id="mHastak" class="bhagiyaList" required></select></div>
           <div class="form-group"><label>📌 સ્થિતિ:</label><select id="mStatus"><option>જમા</option><option>બાકી</option></select></div>
         </div>
-        <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="mPhoto" accept="image/*" capture="environment"></div>
-														  
-								
-																														  
-																	 
-																																																																									
-																																																																						 
-				
-																																	
-																													
-			  
+	   
+ <!-- દવા ફોટો સેક્શન -->
+        <div class="form-group">
+          <label style="font-weight: bold; display: block; margin-bottom: 5px;">📷 બિલનો ફોટો:</label>
+          <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+            <button type="button" onclick="triggerMyCamera('mPhoto')" style="flex: 1; background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📸 કેમેરાથી ફોટો પાડો</button>
+            <button type="button" onclick="triggerMyGallery('mPhoto')" style="flex: 1; background: #e67e22; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📁 ફોટો અપલોડ કરો</button>
+          </div>
+          <input type="file" id="mPhoto" accept="image/*" style="display: none;" onchange="handlePhotoChange(this, 'mPhotoStatus')">
+          <div id="mPhotoStatus" style="font-size: 13px; color: #27ae60; font-weight: bold; margin-top: 5px;"></div>
+        </div>
 
         <button type="submit" id="btnMed" class="btn-submit">💾 સેવ કરો</button>
       </form>
@@ -2437,28 +2437,12 @@ body.light-mode .dash-box h4 {
     });
   }
 
-							  
-					   
-												 
-									 
-																								  
-						
-
   function submitFertForm(e) {
     e.preventDefault();
     let btn = document.getElementById("btnFert");
     let originalText = btn.innerHTML;
     btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
     btn.disabled = true;
-																			 
-										 
-																	
-																	
-																			   
-								 
-							  
-							  
-									   
 
     let date = v("fDate");
     let year = getYear(date);
@@ -2477,16 +2461,7 @@ body.light-mode .dash-box h4 {
     let details = v("fDetails") || "-";
 
     let rows = document.querySelectorAll("#fertItemsContainer .item-row");
-    let itemRows = [];
-														  
-															
-														 
-													  
-																	
-																							
-													
-															
-																								  
+    let itemRows = [];																								  
 
     handlePhotoUpload("fPhoto", function(photoBase64) {
       rows.forEach((r, index) => {
@@ -2499,6 +2474,10 @@ body.light-mode .dash-box h4 {
         let pak = r.querySelector('.pakList').value;
         let kShare = r.querySelector('.fKShare').value || 0;
         let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
+
+																	   
+																																						
+		 
 
         let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
         itemRows.push([year, rId, date, billNo, bhagiya, vepari, khatar, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);

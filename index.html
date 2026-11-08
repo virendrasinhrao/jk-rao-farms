@@ -155,7 +155,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">07/11/2026 -  00:07   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">08/11/2026 -  10:40   IST</span>
 </div>
 
 <div class="header-bar">
@@ -2644,48 +2644,49 @@ body.light-mode .dash-box h4 {
     renderBillRecordTable(); 
   }
 
-  function renderBillRecordTable() {
+ function renderBillRecordTable() {
     let container = document.getElementById("tableContainerBillRec");
     let summaryBox = document.getElementById("latestRecordSummary");
     let summaryText = document.getElementById("latestRecordText");
     if(!container) return;
     
-    // બધી સંભવિત સ્પેલિંગ પદ્ધતિઓ ચેક કરવા માટે
-    let rows = appData.Bill_Record || appData.BillRecords || appData["Bill_Record"] || [];
-    
-    if(!rows || rows.length === 0) {
+    let rows = appData.Bill_Record || [];
+    if(rows.length === 0) {
       container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ બિલ રેકોર્ડ ઉપલબ્ધ નથી.</p>";
       if(summaryBox) summaryBox.style.display = "none";
       return;
     }
 
     let selHastak = document.getElementById("filterHastak") ? document.getElementById("filterHastak").value.trim().toLowerCase() : "";
-    let selCategory = document.getElementById("filterCategory") ? document.getElementById("filterCategory").value.trim().toLowerCase() : "";
-    let selMedType = document.getElementById("filterMedType") ? document.getElementById("filterMedType").value.trim().toLowerCase() : "";
-    let selTracWork = document.getElementById("filterTracWork") ? document.getElementById("filterTracWork").value.trim().toLowerCase() : "";
     let searchQuery = document.getElementById("searchBillRec") ? document.getElementById("searchBillRec").value.toLowerCase().trim() : "";
 
     let filteredRows = rows.filter(r => {
-      let hVal = String(r["હસ્તે"] || r["Hastak"] || "").trim().toLowerCase();
-      let rType = String(r["પ્રકાર"] || "").trim().toLowerCase();
-      let subType = String(r["સબપ્રકાર"] || r["સબ_પ્રકાર"] || "").trim().toLowerCase();
-      let bNo = String(r["બિલ નં"] || "").toLowerCase();
-      let dt = String(r["તારીખ"] || "").toLowerCase();
-      let vepariVal = String(r["વેપારી"] || r["વેપારી/માલિક"] || "").toLowerCase();
-      let billToVal = String(r["Bill To/નામ"] || r["Bill To /નામ"] || "").toLowerCase();
+      let keys = Object.keys(r);
+      let rowString = Object.values(r).join(" ").toLowerCase();
+      
+      let hVal = String(r["હસ્તે"] || r[keys[3]] || "").trim().toLowerCase();
+      
+      let matchH = !selHastak || hVal.includes(selHastak) || rowString.includes(selHastak);
+      let matchS = !searchQuery || rowString.includes(searchQuery);
 
-      let matchH = !selHastak || hVal.includes(selHastak);
-      let matchC = !selCategory || rType.includes(selCategory);
-      let matchM = selCategory !== "દવા" || !selMedType || subType.includes(selMedType);
-      let matchT = selCategory !== "ટ્રેક્ટર" || !selTracWork || subType.includes(selTracWork);
-      let matchS = !searchQuery || bNo.includes(searchQuery) || dt.includes(searchQuery) || hVal.includes(searchQuery) || vepariVal.includes(searchQuery) || billToVal.includes(searchQuery);
-
-      return matchH && matchC && matchM && matchT && matchS;
+      return matchH && matchS;
     });
 
+    // કુલ રકમ અને કુલ પાઉચ/નંગનો હિસાબ (જ્યાં 0 ન આવે અને સાચો સરવાળો થાય)
     if(selHastak && filteredRows.length > 0) {
-      let totalAmt = filteredRows.reduce((sum, r) => sum + parseFloat(r["રકમ"] || 0), 0);
-      summaryText.innerHTML = `<b>${selHastak}</b> - કુલ બિલ: ${filteredRows.length} | કુલ રકમ: ₹ ${totalAmt.toFixed(2)}`;
+      let totalAmt = 0;
+      let totalPauchSum = 0;
+
+      filteredRows.forEach(r => {
+        let keys = Object.keys(r);
+        let amtVal = parseFloat(r["રકમ"] || r[keys[8]] || 0);
+        let pauchVal = parseFloat(r["કુલ પાઉચ / પેકિંગ / નંગ"] || r["કુલ પાઉચ નં./ પેકિંગ / નંગ"] || r[keys[10]] || 0);
+        
+        if(!isNaN(amtVal)) totalAmt += amtVal;
+        if(!isNaN(pauchVal)) totalPauchSum += pauchVal;
+      });
+
+      summaryText.innerHTML = `<b>${selHastak}</b> - કુલ બિલ: ${filteredRows.length} | કુલ પાઉચ/નંગ: <b>${totalPauchSum}</b> | કુલ રકમ: ₹ ${totalAmt.toFixed(2)}`;
       if(summaryBox) summaryBox.style.display = "block";
     } else {
       if(summaryBox) summaryBox.style.display = "none";
@@ -2696,13 +2697,14 @@ body.light-mode .dash-box h4 {
       return;
     }
 
-    // હેડર - તમારી બધી જ કૉલમ્સના ક્રમ મુજબ
+    // ટેબલ હેડર
     let html = `<table><tr>
       <th>વર્ષ</th>
       <th>એન્ટ્રી Id</th>
       <th>તારીખ</th>
       <th>હસ્તે</th>
       <th>વેપારી</th>
+      <th>Item (બિલ આઇટમ)</th>
       <th>બિલ નં</th>
       <th>પાઉચ નં./ પેકિંગ / નંગ</th>
       <th>રકમ</th>
@@ -2713,24 +2715,34 @@ body.light-mode .dash-box h4 {
       <th>Bill To/નામ</th>
     </tr>`;
     
-filteredRows.forEach(function(r, index) {
-      // જો r એરે (Array) હોય અથવા જો આપણે ઓબ્જેક્ટની કી (Keys) ના ક્રમ મુજબ લેવું હોય:
+    filteredRows.forEach(function(r, index) {
       let keys = Object.keys(r);
       
-      // જો ડેટા કી-વલ્યુ તરીકે ન આવતો હોય કે ડાયરેક્ટ એરે હોય તો આ સૌથી સુરક્ષિત રીત છે:
-      let yearVal = r[keys[0]] || "-";
-      let entryId = r[keys[1]] || index + 1;
-      let cleanDate = String(r[keys[2]] || "").split('T')[0];
-      let hastak = r[keys[3]] || "-";
-      let vepari = r[keys[4]] || "-";
-      let billNo = r[keys[5]] || "-";
-      let pauchVal = r[keys[6]] || "-";
-      let amt = parseFloat(r[keys[7]] || 0).toFixed(2);
-      let statusVal = r[keys[8]] || "-";
-      let totalPauchVal = r[keys[9]] || "-";
-      let totalAmt = parseFloat(r[keys[10]] || 0).toFixed(2);
-      let photoVal = r[keys[11]] || "";
-      let billToName = r[keys[12]] || "-";
+      let yearVal = r["વર્ષ"] || r[keys[0]] || "-";
+      let entryId = r["એન્ટ્રી Id"] || r[keys[1]] || index + 1;
+      let cleanDate = String(r["તારીખ"] || r[keys[2]] || "").split('T')[0];
+      let hastak = r["હસ્તે"] || r[keys[3]] || "-";
+      let vepari = r["વેપારી"] || r[keys[4]] || "-";
+      
+      // બિલ આઇટમ (જો ખાલી હોય તો ડેશ (-) દેખાડે અથવા વેલ્યુ પ્રિન્ટ કરે)
+      let itemVal = r["Item"] || r["આઇટમ"] || r[keys[5]] || "-";
+      
+      let billNo = r["બિલ નં"] || r[keys[6]] || "-";
+      
+      // પાઉચ / પેકિંગ / નંગ (જો 0 કે ખાલી હોય તો પ્રોપર દેખાય)
+      let pauchVal = r["પાઉચ નં./ પેકિંગ / નંગ"] || r["પાઉચ / પેકિંગ / નંગ"] || r[keys[7]] || "-";
+      if (pauchVal === "" || pauchVal === null) pauchVal = "-";
+
+      let amt = parseFloat(r["રકમ"] || r[keys[8]] || 0).toFixed(2);
+      let statusVal = r["જમા / બાકી"] || r[keys[9]] || "-";
+      
+      // કુલ પાઉચ / પેકિંગ / નંગ (જો ગણતરીમાં ઝીરો આવતો હોય તો તે સુધારી દીધું છે)
+      let totalPauchVal = r["કુલ પાઉચ / પેકિંગ / નંગ"] || r["કુલ પાઉચ નં./ પેકિંગ / નંગ"] || r[keys[10]] || "-";
+      if (totalPauchVal === "" || totalPauchVal === null) totalPauchVal = "-";
+
+      let totalAmt = parseFloat(r["કુલ જમા રકમ"] || r[keys[11]] || 0).toFixed(2);
+      let photoVal = r["Photo"] || r[keys[12]] || "";
+      let billToName = r["Bill To/નામ"] || r[keys[13]] || "-";
 
       let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
 
@@ -2740,11 +2752,12 @@ filteredRows.forEach(function(r, index) {
         <td>${cleanDate}</td>
         <td><b>${hastak}</b></td>
         <td>${vepari}</td>
+        <td><b>${itemVal}</b></td>
         <td>${billNo}</td>
         <td>${pauchVal}</td>
         <td style="color:#8e44ad; font-weight:bold;">₹ ${amt}</td>
         <td><span class="badge-jama">${statusVal}</span></td>
-        <td>${totalPauchVal}</td>
+        <td><b>${totalPauchVal}</b></td>
         <td style="color:#27ae60; font-weight:bold;">₹ ${totalAmt}</td>
         <td>${photoLink}</td>
         <td><b>${billToName}</b></td>
@@ -2752,6 +2765,7 @@ filteredRows.forEach(function(r, index) {
     });
     
     container.innerHTML = html + `</table>`;
+  }
 	  console.log("Bill_Record Data:", appData.Bill_Record);
   }</script>
 

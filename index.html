@@ -1,7 +1,7 @@
 <!--  
   Project: J K Rao Farms - POS Billing  
   File: index.html  
-  Fixed Light Mode Nav Tabs White Text on Soft Green Box  
+  Updated with Capture, Upload & Clean Photo Modal for All Forms & Tables  
 -->
 <!DOCTYPE html>
 <html>
@@ -21,27 +21,27 @@
     body.light-mode h2, body.light-mode h3, body.light-mode h4 { color: #2f3640 !important; }
     body.light-mode label { color: #353b48 !important; font-weight: bold; }
     
-    /* Light Mode Dashboard Box Titles Fix */
-body.light-mode .dash-box h4 { 
-  color: #ffffff !important; /* એકદમ ગાઢ કાળો કલર */
-  font-weight: 900 !important; }
-
-    /* Button-Type Nav Tabs with Soft Green Background & White Text in Light Mode */
-    body.light-mode .nav button { 
-      background: linear-gradient(135deg, #27ae60, #2ecc71) !important; 
+    body.light-mode .dash-box h4 {  
       color: #ffffff !important; 
-      border: 1px solid #1e8449 !important; 
-      font-weight: bold; 
+      font-weight: 900 !important; 
+    }
+
+    body.light-mode .nav button {  
+      background: linear-gradient(135deg, #27ae60, #2ecc71) !important;  
+      color: #ffffff !important;  
+      border: 1px solid #1e8449 !important;  
+      font-weight: bold;  
       border-radius: 8px !important;
       box-shadow: 0 3px 6px rgba(0,0,0,0.15);
       padding: 10px 8px;
-    }    body.light-mode .nav button:hover {
+    }   
+    body.light-mode .nav button:hover {
       background: linear-gradient(135deg, #219653, #27ae60) !important;
     }
-    body.light-mode .nav button.active { 
-      background: linear-gradient(135deg, #145a32, #1e8449) !important; 
-      color: #ffffff !important; 
-      border-color: #0e3a20 !important; 
+    body.light-mode .nav button.active {  
+      background: linear-gradient(135deg, #145a32, #1e8449) !important;  
+      color: #ffffff !important;  
+      border-color: #0e3a20 !important;  
       box-shadow: 0 4px 8px rgba(20, 90, 50, 0.4);
     }
     
@@ -49,12 +49,11 @@ body.light-mode .dash-box h4 {
     body.light-mode .item-row { background: #fdfefe !important; border-color: #dcdde1 !important; }
     body.light-mode .modal-content { background: #ffffff !important; color: #2f3640 !important; }
     
-    /* Table Header styled like Back Button */
-    body.light-mode th { 
-      background: linear-gradient(135deg, #2c3e50, #34495e) !important; 
-      color: #ffffff !important; 
-      border-color: #4b6584 !important; 
-      font-weight: bold; 
+    body.light-mode th {  
+      background: linear-gradient(135deg, #2c3e50, #34495e) !important;  
+      color: #ffffff !important;  
+      border-color: #4b6584 !important;  
+      font-weight: bold;  
     }
     body.light-mode td { border-color: #dcdde1 !important; color: #2f3640 !important; }
     body.light-mode tr:nth-child(even) { background-color: #f8f9fa; }
@@ -66,15 +65,14 @@ body.light-mode .dash-box h4 {
 
     .header-bar { display: flex; justify-content: space-between; align-items: center; max-width: 950px; margin: 5px auto; background: #1e1e1e; color: white; padding: 8px 15px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
     
-    .refresh-btn { 
-      background: #16a085; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; display: flex; align-items: center; gap: 6px; 
+    .refresh-btn {  
+      background: #16a085; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; display: flex; align-items: center; gap: 6px;  
     }
     .refresh-btn:hover { background: #1abc9c; }
     
     @keyframes smoothSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     .spin { animation: smoothSpin 0.8s linear infinite !important; display: inline-block; }
 
-    /* Slider Toggle Button Style */
     .theme-switch-wrapper { display: flex; align-items: center; gap: 6px; }
     .theme-switch { position: relative; display: inline-block; width: 44px; height: 22px; }
     .theme-switch input { opacity: 0; width: 0; height: 0; }
@@ -153,16 +151,14 @@ body.light-mode .dash-box h4 {
   </style>
 </head>
 <body>
-<!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">08/11/2026 -  10:58   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">08/11/2026 -  10:58    IST</span>
 </div>
 
 <div class="header-bar">
   <h2 style="margin:0; font-size: 15px;">🌾 J K Rao Farms</h2>
   
   <div style="display: flex; gap: 8px; align-items: center;">
-    <!-- Small Slider Toggle Button -->
     <div class="theme-switch-wrapper" title="Light / Dark Mode">
       <span style="font-size: 12px; font-weight: bold;">🌓</span>
       <label class="theme-switch">
@@ -210,7 +206,9 @@ body.light-mode .dash-box h4 {
         <p id="dashFarmerExpense" style="margin:0; font-size: 18px; font-weight: bold; color: #9b59b6;">₹ 0.00</p>
       </div>
     </div>
-  </div>  <!-- 1. SALES SECTION -->
+  </div>
+
+  <!-- 1. SALES SECTION -->
   <div id="formSales" class="section">
     <h3 style="text-align:center; color:#27ae60; margin-top:0;">💰 વેચાણ મેનેજમેન્ટ</h3>
     <div id="choiceSales" class="choice-container">
@@ -276,7 +274,18 @@ body.light-mode .dash-box h4 {
           </div>
           <div class="form-group"><label>❓ ભાગિયાએ લીધા?:</label><select id="sBLidha"><option>No</option><option>Yes</option></select></div>
         </div>
-        <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="sPhoto" accept="image/*" capture="environment"></div>
+        
+        <!-- વેચાણ ફોટો સેક્શન (Capture & Upload) -->
+        <div class="form-group">
+          <label style="font-weight: bold; display: block; margin-bottom: 5px;">📷 બિલનો ફોટો:</label>
+          <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+            <button type="button" onclick="triggerMyCamera('sPhoto')" style="flex: 1; background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📸 કેમેરાથી ફોટો પાડો</button>
+            <button type="button" onclick="triggerMyGallery('sPhoto')" style="flex: 1; background: #e67e22; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📁 ફોટો અપલોડ કરો</button>
+          </div>
+          <input type="file" id="sPhoto" accept="image/*" style="display: none;" onchange="handlePhotoChange(this, 'sPhotoStatus')">
+          <div id="sPhotoStatus" style="font-size: 13px; color: #27ae60; font-weight: bold; margin-top: 5px;"></div>
+        </div>
+
         <button type="submit" id="btnSales" class="btn-submit">💾 સેવ કરો</button>
       </form>
     </div>
@@ -366,7 +375,18 @@ body.light-mode .dash-box h4 {
           <div class="form-group"><label>🤝 હસ્તે:</label><select id="mHastak" class="bhagiyaList" required></select></div>
           <div class="form-group"><label>📌 સ્થિતિ:</label><select id="mStatus"><option>જમા</option><option>બાકી</option></select></div>
         </div>
-        <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="mPhoto" accept="image/*" capture="environment"></div>
+        
+        <!-- દવા ફોટો સેક્શન -->
+        <div class="form-group">
+          <label style="font-weight: bold; display: block; margin-bottom: 5px;">📷 બિલનો ફોટો:</label>
+          <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+            <button type="button" onclick="triggerMyCamera('mPhoto')" style="flex: 1; background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📸 કેમેરાથી ફોટો પાડો</button>
+            <button type="button" onclick="triggerMyGallery('mPhoto')" style="flex: 1; background: #e67e22; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📁 ફોટો અપલોડ કરો</button>
+          </div>
+          <input type="file" id="mPhoto" accept="image/*" style="display: none;" onchange="handlePhotoChange(this, 'mPhotoStatus')">
+          <div id="mPhotoStatus" style="font-size: 13px; color: #27ae60; font-weight: bold; margin-top: 5px;"></div>
+        </div>
+
         <button type="submit" id="btnMed" class="btn-submit">💾 સેવ કરો</button>
       </form>
     </div>
@@ -456,7 +476,18 @@ body.light-mode .dash-box h4 {
           <div class="form-group"><label>📌 સ્થિતિ:</label><select id="fStatus"><option>જમા</option><option>બાકી</option></select></div>
         </div>
         <div class="form-group"><label>📝 વિગત:</label><input type="text" id="fDetails" placeholder="ઓપ્શનલ"></div>
-        <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="fPhoto" accept="image/*" capture="environment"></div>
+        
+        <!-- ખાતર ફોટો સેક્શન -->
+        <div class="form-group">
+          <label style="font-weight: bold; display: block; margin-bottom: 5px;">📷 બિલનો ફોટો:</label>
+          <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+            <button type="button" onclick="triggerMyCamera('fPhoto')" style="flex: 1; background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📸 કેમેરાથી ફોટો પાડો</button>
+            <button type="button" onclick="triggerMyGallery('fPhoto')" style="flex: 1; background: #e67e22; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📁 ફોટો અપલોડ કરો</button>
+          </div>
+          <input type="file" id="fPhoto" accept="image/*" style="display: none;" onchange="handlePhotoChange(this, 'fPhotoStatus')">
+          <div id="fPhotoStatus" style="font-size: 13px; color: #27ae60; font-weight: bold; margin-top: 5px;"></div>
+        </div>
+
         <button type="submit" id="btnFert" class="btn-submit">💾 સેવ કરો</button>
       </form>
     </div>
@@ -528,7 +559,18 @@ body.light-mode .dash-box h4 {
           <div class="form-group"><label>📌 બિલની સ્થિતિ:</label><select id="tStatus"><option>રોકડા</option><option>બાકી</option></select></div>
           <div class="form-group"><label>🤝 હસ્તે:</label><select id="tHastak" class="bhagiyaList" required></select></div>
         </div>
-        <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="tPhoto" accept="image/*" capture="environment"></div>
+        
+        <!-- ટ્રેક્ટર ફોટો સેક્શન -->
+        <div class="form-group">
+          <label style="font-weight: bold; display: block; margin-bottom: 5px;">📷 બિલનો ફોટો:</label>
+          <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+            <button type="button" onclick="triggerMyCamera('tPhoto')" style="flex: 1; background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📸 કેમેરાથી ફોટો પાડો</button>
+            <button type="button" onclick="triggerMyGallery('tPhoto')" style="flex: 1; background: #e67e22; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📁 ફોટો અપલોડ કરો</button>
+          </div>
+          <input type="file" id="tPhoto" accept="image/*" style="display: none;" onchange="handlePhotoChange(this, 'tPhotoStatus')">
+          <div id="tPhotoStatus" style="font-size: 13px; color: #27ae60; font-weight: bold; margin-top: 5px;"></div>
+        </div>
+
         <button type="submit" id="btnTrac" class="btn-submit">💾 સેવ કરો</button>
       </form>
     </div>
@@ -616,7 +658,6 @@ body.light-mode .dash-box h4 {
         </div>
         <div class="form-group"><label>📝 વિગત:</label><input type="text" id="uDetails" placeholder="વધારાની માહિતી..."></div>
         
-        <!-- વ્યાજ સેક્શન -->
         <div style="background: #fdfefe; border: 1px solid #d5dbdb; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
           <h4 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 13px;">📊 વ્યાજ ગણતરી (૩% પ્રતિ મહિનો)</h4>
           <div class="flex-row">
@@ -639,7 +680,18 @@ body.light-mode .dash-box h4 {
           <div class="form-group"><label>📌 Status:</label><select id="uStatus"><option value="Udhār">ઉધાર</option><option value="Jamā">જમા</option></select></div>
           <div class="form-group"><label>🔄 Close Year (Y/N):</label><select id="uCloseYear"><option value="N">N</option><option value="Y">Y</option></select></div>
         </div>
-        <div class="form-group"><label>📷 ટ્રાન્ઝેક્શન ફોટો:</label><input type="file" id="uPhoto" accept="image/*" capture="environment"></div>
+        
+        <!-- ઉપાડ પહોંચ ફોટો સેક્શન (Capture & Upload) -->
+        <div class="form-group">
+          <label style="font-weight: bold; display: block; margin-bottom: 5px;">📷 પહોંચ / રસીદનો ફોટો:</label>
+          <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+            <button type="button" onclick="triggerMyCamera('uPhoto')" style="flex: 1; background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📸 કેમેરાથી ફોટો પાડો</button>
+            <button type="button" onclick="triggerMyGallery('uPhoto')" style="flex: 1; background: #e67e22; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">📁 ફોટો અપલોડ કરો</button>
+          </div>
+          <input type="file" id="uPhoto" accept="image/*" style="display: none;" onchange="handlePhotoChange(this, 'uPhotoStatus')">
+          <div id="uPhotoStatus" style="font-size: 13px; color: #27ae60; font-weight: bold; margin-top: 5px;"></div>
+        </div>
+
         <button type="submit" id="btnUpad" class="btn-submit">💾 સેવ કરો</button>
       </form>
     </div>
@@ -665,12 +717,11 @@ body.light-mode .dash-box h4 {
     </div>
   </div>
 
-  <!-- 7. BILL RECORD SECTION (HTML - બરાબર અહીં જ મૂકવાનું છે) -->
+  <!-- 7. BILL RECORD SECTION -->
   <div id="formBillRec" class="section">
     <h3 style="text-align:center; color:#2c3e50; margin-top:0;">📂 બિલ રેકોર્ડ્સ (ડાયનેમિક ફિલ્ટર)</h3>
     
     <div class="flex-row" style="margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
-      <!-- ૧. હસ્તે / નામ ફિલ્ટર -->
       <div class="form-group" style="flex: 1; min-width: 180px;">
         <label>👤 હસ્તે / નામ:</label>
         <select id="filterHastak" onchange="filterBillRecordTable()">
@@ -678,7 +729,6 @@ body.light-mode .dash-box h4 {
         </select>
       </div>
 
-      <!-- ૨. મુખ્ય કેટેગરી ફિલ્ટર -->
       <div class="form-group" style="flex: 1; min-width: 160px;">
         <label>📌 આઇટમ / પ્રકાર:</label>
         <select id="filterCategory" onchange="onCategoryFilterChange()">
@@ -690,7 +740,6 @@ body.light-mode .dash-box h4 {
         </select>
       </div>
 
-      <!-- ૩. દવા પ્રકાર સબ-ફિલ્ટર -->
       <div class="form-group" id="groupMedType" style="flex: 1; min-width: 150px; display: none;">
         <label>🧪 દવા પ્રકાર:</label>
         <select id="filterMedType" onchange="filterBillRecordTable()">
@@ -698,7 +747,6 @@ body.light-mode .dash-box h4 {
         </select>
       </div>
 
-      <!-- ૪. ટ્રેક્ટર કામ પ્રકાર સબ-ફિલ્ટર -->
       <div class="form-group" id="groupTracWork" style="flex: 1; min-width: 150px; display: none;">
         <label>🚜 કામનો પ્રકાર:</label>
         <select id="filterTracWork" onchange="filterBillRecordTable()">
@@ -712,7 +760,6 @@ body.light-mode .dash-box h4 {
         </select>
       </div>
 
-      <!-- ૫. સર્ચ બૉક્સ -->
       <div class="form-group" style="flex: 1; min-width: 180px;">
         <label>🔍 શોધખોળ:</label>
         <input type="text" id="searchBillRec" placeholder="બિલ નં/તારીખ..." oninput="filterBillRecordTable()">
@@ -761,16 +808,11 @@ body.light-mode .dash-box h4 {
   </div>
 </div>
 
-<div id="modalImageViewer" class="modal">
-  <div class="modal-content" style="max-width: 400px;">
-    <h3 style="color:#2c3e50; margin-top:0;">📷 બિલ ફોટો વ્યુઅર</h3>
-    <div style="margin: 10px 0; max-height: 350px; overflow: auto;">
-      <img id="viewerImage" src="" style="width: 100%; border-radius: 4px; border: 1px solid #ccc; object-fit: contain;">
-    </div>
-    <div style="display: flex; gap: 10px; margin-top: 15px;">
-      <a id="downloadPhotoBtn" href="" target="_blank" download="Bill_Photo.jpg" style="flex:1; background:#27ae60; color:white; text-decoration:none; padding:8px; border-radius:4px; font-weight:bold; font-size:13px; text-align:center;">📥 ડાઉનલોડ કરો</a>
-      <button type="button" onclick="closeImageModal()" style="flex:1; background:#7f8c8d; color:white; border:none; padding:8px; border-radius:4px; font-weight:bold; font-size:13px; cursor:pointer;">⬅️ પાછળ (Back)</button>
-    </div>
+<!-- કોમન ફોટો મોડલ પૉપઅપ -->
+<div id="imageModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.8); justify-content:center; align-items:center;">
+  <div style="position:relative; max-width:90%; max-height:90%; text-align:center;">
+    <span onclick="closeImageModal()" style="position:absolute; top:-40px; right:0; color:white; font-size:35px; font-weight:bold; cursor:pointer; background:#c0392b; width:35px; height:35px; border-radius:50%; display:flex; justify-content:center; align-items:center; line-height:30px;">&times;</span>
+    <img id="modalImageSrc" src="" style="max-width:100%; max-height:80vh; border-radius:8px; box-shadow:0 5px 15px rgba(0,0,0,0.5);">
   </div>
 </div>
 
@@ -825,6 +867,7 @@ body.light-mode .dash-box h4 {
     fetchData();
     addSalesItemRow(); addMedItemRow(); addFertItemRow(); addTracItemRow();
   };
+
   function toggleTheme() {
     let checkbox = document.getElementById("themeCheckbox");
     if (checkbox.checked) {
@@ -834,6 +877,49 @@ body.light-mode .dash-box h4 {
       document.body.classList.remove("light-mode");
       localStorage.setItem("app_theme", "dark");
     }
+  }
+
+  // કેમેરા ઓપન કરવા માટે
+  function triggerMyCamera(inputId) {
+      let input = document.getElementById(inputId);
+      if(input) {
+          input.setAttribute('capture', 'environment');
+          input.click();
+      }
+  }
+
+  // ગેલેરી ખોલવા માટે
+  function triggerMyGallery(inputId) {
+      let input = document.getElementById(inputId);
+      if(input) {
+          input.removeAttribute('capture');
+          input.click();
+      }
+  }
+
+  // ફોટો સિલેક્ટ થયા પછી નામ બતાવવા અને બેઝ-૬૪ કરવા
+  function handlePhotoChange(input, statusId) {
+      if (input.files && input.files[0]) {
+          let file = input.files[0];
+          let status = document.getElementById(statusId);
+          if(status) status.innerHTML = `✅ પસંદ કરેલ: ${file.name}`;
+      }
+  }
+
+  // ફોટો મોડલ ખોલવા માટે
+  function openImageModal(url) {
+      let modal = document.getElementById('imageModal');
+      let modalImg = document.getElementById('modalImageSrc');
+      if(modal && modalImg) {
+          modalImg.src = url;
+          modal.style.display = 'flex';
+      }
+  }
+
+  // ફોટો મોડલ બંધ કરવા માટે
+  function closeImageModal() {
+      let modal = document.getElementById('imageModal');
+      if(modal) modal.style.display = 'none';
   }
 
   function setEntryIdDate(dateVal) {
@@ -866,7 +952,6 @@ body.light-mode .dash-box h4 {
       });
   }
 
-  // બિલ રેકોર્ડ ફિલ્ટર ડ્રોપડાઉન માસ્ટર શીટમાંથી ભરવા માટેનું ફંક્શન
   function populateBillRecordFilters() {
     let filterHastakSelect = document.getElementById("filterHastak");
     if(filterHastakSelect && appData.Bhagiya_Master) {
@@ -972,14 +1057,7 @@ body.light-mode .dash-box h4 {
     } else {
       if(contentNew) contentNew.style.display = 'none';
       if(contentView) contentView.style.display = 'block';
-
-      // "બધી એન્ટ્રી" ખોલતી વખતે પહેલાં તાજો ડેટા લાવો.
-      // fetchData સફળ થયા પછી તમામ ટેબલ ફરી render કરે છે.
-      if(typeof fetchData === "function") {
-        fetchData();
-      } else {
-        renderTable(tabName);
-      }
+      fetchData();
     }
   }
 
@@ -1839,7 +1917,9 @@ body.light-mode .dash-box h4 {
       let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || index;
       let bhagiya = r["ભાગીદાર"] || r["ખેડૂનું નામ"] || r["ઉપાડ લેનાર"] || "-";
       let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
-      let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
+      
+      // નાનું બટન ફોટો જોવા માટે
+      let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:12px;">🖼️ ફોટો જુઓ</button>` : "-";
 
       html += `<tr>
         <td><input type="checkbox" class="row-select-${tabName}" value="${entryId}" onclick="updateTableActionBar('${tabName}')"></td>`;
@@ -1943,11 +2023,10 @@ body.light-mode .dash-box h4 {
         });
     });
   }
+
   function editSingleRecord(sheetKey, entryId) {
     askMpinAndExecute(() => {
       let key = String(sheetKey || "").toLowerCase();
-
-      // 1. વેચાણ (Sales)
       if(key.includes('sales')) {
         let found = (appData.Sales_Ledger || appData.Sales || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
         if(found) {
@@ -1971,240 +2050,12 @@ body.light-mode .dash-box h4 {
           updatePartnerSummary('Sales');
           alert("વેચાણ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
         } else { alert("રેકોર્ડ મળ્યો નથી!"); }
-
-     // 2. દવા (Med / Pesticide_Items)
-      } else if(key.includes('med') || key.includes('pesticide') || key.includes('દવા') || key.includes('medic')) {
-
-        // Item sheet માં એક બિલની ઘણી rows હોઈ શકે છે.
-        // પસંદ કરેલી row MED-...-1 હોય તો પણ મૂળ બિલ ID MED-... જ શોધવું.
-        const selectedId = String(entryId || "").trim();
-        const baseId = selectedId.replace(/-\d+$/, "");
-        const medRows = (appData.Pesticide_Items || []).filter(r => {
-          const id = String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim();
-          return id === selectedId || id === baseId || id.startsWith(baseId + "-");
-        });
-
-        // Bill/header sheet માંથી મુખ્ય વિગતો, ન મળે તો item sheet ની પહેલી row.
-        const medBillRows = appData.Pesticide_Bill || appData.Pesticide_Ledger || [];
-        const found = medBillRows.find(r =>
-          String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === baseId
-        ) || medRows[0];
-
-        if(found && medRows.length) {
-          switchSubTab('Med', 'New');
-
-          const setVal = (id, value) => {
-            const el = document.getElementById(id);
-            if(el) el.value = value == null ? "" : String(value);
-          };
-          const getVal = (row, keys, fallback="") => {
-            if(!row) return fallback;
-            // પહેલા ચોક્કસ column name તપાસો.
-            for(const k of keys) {
-              if(row[k] !== undefined && row[k] !== null && String(row[k]).trim() !== "") return row[k];
-            }
-            // Google Sheet ના header માં underscore/space અથવા જોડણીનો નાનો ફેરફાર હોય
-            // તો પણ એ જ column શોધી શકાય.
-            const norm = value => String(value || "").toLowerCase().replace(/[\s_./()-]/g, "");
-            const wanted = keys.map(norm);
-            for(const [column, value] of Object.entries(row)) {
-              if(wanted.includes(norm(column)) && value !== undefined && value !== null && String(value).trim() !== "") return value;
-            }
-            return fallback;
-          };
-          const setSelect = (el, value) => {
-            if(!el) return;
-            const v = value == null ? "" : String(value).trim();
-            if(v && !Array.from(el.options).some(o => o.value.trim() === v)) {
-              el.add(new Option(v, v));
-            }
-            el.value = v;
-          };
-
-          document.getElementById("medItemsContainer").innerHTML = "";
-          setVal("mDate", String(getVal(found, ["તારીખ", "Date"])).split("T")[0]);
-          setVal("mBill", getVal(found, ["બિલ નં", "બિલ નંબર", "Bill_No", "Bill No"]));
-          setSelect(document.getElementById("mBhagiya"), getVal(found, ["ભાગીદાર", "ખેડૂનું નામ", "Bhagiya", "Partner", "ભાગિયા", "નામ"]));
-          setSelect(document.getElementById("mVepari"),
-            getVal(found, ["વેપારી", "વ્યાપારી", "દુકાન / વેપારી", "દુકાનનું નામ", "દુકાન", "વેપારીનું નામ", "વેપારીનું_નામ", "આપનાર", "Provider", "Dealer"],
-              getVal(medRows[0], ["વેપારી", "વ્યાપારી", "દુકાન / વેપારી", "દુકાનનું નામ", "દુકાન", "વેપારીનું નામ", "વેપારીનું_નામ", "આપનાર", "Provider", "Dealer"], Object.values(medRows[0] || {})[5] || "")));
-         document.getElementById("mVepari").value = found["વેપારી"] || found["વ્યાપારી"] || found["દુકાન / વેપારી"] || found["આપનાર"] || found["Provider"] || found["Dealer"] || "";
-		 setSelect(document.getElementById("mStatus"), getVal(found, ["બાકી જમા", "બિલની સ્થિતિ", "Status"], "બાકી"));
-          setSelect(document.getElementById("mHastak"), getVal(found, ["હસ્તે", "પૈસા કોણે લીધા (હસ્તે)", "Hastak"]));
-
-          // Tax / bill totals header sheet માં ઉપલબ્ધ હોય તો તેમાંથી લોડ કરો.
-          setVal("mTax", getVal(found, ["ટેક્સ %", "Tax", "Tax_Percent", "ટેક્સ"], 0));
-          setVal("editMedId", baseId);
-
-          medRows.forEach(r => {
-            const dava = getVal(r, ["દવાનું નામ", "દવાનું_નામ", "દવા", "દવાનું નામ ", "દવા નું નામ", "Medicine", "Medicine_Name"], Object.values(r || {})[6] || "");
-            const weight = getVal(r, ["વજન", "Weight"], 0);
-            const pack = getVal(r, ["પેકિંગ", "Pack", "Packing"], "");
-            const qty = getVal(r, ["નંગ", "જથ્થો", "Qty", "Quantity"], 1);
-            const bhav = getVal(r, ["ભાવ", "દર", "Bhav", "Rate", "Price"], 0);
-            const pak = getVal(r, ["પાક", "પાકનું નામ", "Crop", "Crop_Name"], "");
-
-            addMedItemRow(dava, weight, pack, qty, bhav, pak);
-            const row = document.querySelector("#medItemsContainer .item-row:last-child");
-            if(!row) return;
-
-            // Medicine select પરથી પ્રકાર/પેકિંગ auto-fill થાય છે; પછી sheet ની સાચી value પ્રાધાન્યથી મૂકો.
-            const davaSelect = row.querySelector(".davaList");
-            setSelect(davaSelect, dava);
-            if(davaSelect && dava) onMedSelectRow(davaSelect);
-            row.querySelector(".mType").value = getVal(r, ["પ્રકાર", "દવાનો પ્રકાર", "દવા નો પ્રકાર", "Type", "Medicine_Type"], Object.values(r || {})[7] || row.querySelector(".mType").value || "");
-            row.querySelector(".mWeight").value = weight;
-            row.querySelector(".mPack").value = pack || row.querySelector(".mPack").value;
-            row.querySelector(".mQty").value = qty;
-            row.querySelector(".mBhav").value = bhav;
-            setSelect(row.querySelector(".pakList"), pak);
-            calcMedRow(row.querySelector(".mBhav"));
-          });
-
-          calcMedBill();
-          document.getElementById("btnMed").innerText = "અપડેટ કરો";
-          updatePartnerSummary('Med');
-          updateCategoryBalance('Med');
-          alert("દવા બિલની બધી આઇટમ્સ સાથે એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
-        } else {
-          alert("દવાનો રેકોર્ડ મળ્યો નથી! કૃપા કરીને ડેટા રિફ્રેશ કરો.");
-        }
-
-      // 3. ખાતર (Fertilizer / Fert)
-      } else if(key.includes('fert') || key.includes('ખાતર')) {
-
-        const selectedId = String(entryId || "").trim();
-        const baseId = selectedId.replace(/-\d+$/, "");
-        const fertRows = (appData.Fertilizer_Items || []).filter(r => {
-          const id = String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim();
-          return id === selectedId || id === baseId || id.startsWith(baseId + "-");
-        });
-
-        const fertBillRows = appData.Fertilizer_Bill || appData.Fertilizer_Ledger || [];
-        const found = fertBillRows.find(r =>
-          String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === baseId
-        ) || fertRows[0];
-
-        if(found && fertRows.length) {
-          switchSubTab('Fert', 'New');
-
-          const setVal = (id, value) => {
-            const el = document.getElementById(id);
-            if(el) el.value = value == null ? "" : String(value);
-          };
-          const getVal = (row, keys, fallback="") => {
-            if(!row) return fallback;
-            // પહેલા ચોક્કસ column name તપાસો.
-            for(const k of keys) {
-              if(row[k] !== undefined && row[k] !== null && String(row[k]).trim() !== "") return row[k];
-            }
-            // Google Sheet ના header માં underscore/space અથવા જોડણીનો નાનો ફેરફાર હોય
-            // તો પણ એ જ column શોધી શકાય.
-            const norm = value => String(value || "").toLowerCase().replace(/[\s_./()-]/g, "");
-            const wanted = keys.map(norm);
-            for(const [column, value] of Object.entries(row)) {
-              if(wanted.includes(norm(column)) && value !== undefined && value !== null && String(value).trim() !== "") return value;
-            }
-            return fallback;
-          };
-          const setSelect = (el, value) => {
-            if(!el) return;
-            const v = value == null ? "" : String(value).trim();
-            if(v && !Array.from(el.options).some(o => o.value.trim() === v)) {
-              el.add(new Option(v, v));
-            }
-            el.value = v;
-          };
-
-          document.getElementById("fertItemsContainer").innerHTML = "";
-          setVal("fDate", String(getVal(found, ["તારીખ", "Date"])).split("T")[0]);
-          setVal("fBill", getVal(found, ["બિલ નં", "બિલ નંબર", "Bill_No", "Bill No"]));
-          setSelect(document.getElementById("fBhagiya"), getVal(found, ["ભાગીદાર", "ખેડૂનું નામ", "Bhagiya", "Partner", "ભાગિયા", "નામ"]));
-           setSelect(document.getElementById("fVepari"),
-            getVal(found, ["વેપારી", "વ્યાપારી", "દુકાન / વેપારી", "દુકાનનું નામ", "દુકાન", "વેપારીનું નામ", "વેપારીનું_નામ", "આપનાર", "Provider", "Dealer"],
-              getVal(fertRows[0], ["વેપારી", "વ્યાપારી", "દુકાન / વેપારી", "દુકાનનું નામ", "દુકાન", "વેપારીનું નામ", "વેપારીનું_નામ", "આપનાર", "Provider", "Dealer"], Object.values(fertRows[0] || {})[5] || "")));
-			document.getElementById("fVepari").value = found["વેપારી"] || found["વ્યાપારી"] || found["દુકાન / વેપારી"] || found["આપનાર"] || found["Provider"] || found["Dealer"] || "";
-          setSelect(document.getElementById("fStatus"), getVal(found, ["બાકી જમા", "બિલની સ્થિતિ", "Status"], "બાકી"));
-          setSelect(document.getElementById("fHastak"), getVal(found, ["હસ્તે", "પૈસા કોણે લીધા (હસ્તે)", "Hastak"]));
-          setVal("fDetails", getVal(found, ["વિગત", "Details", "નોંધ"], ""));
-          setVal("fTax", getVal(found, ["ટેક્સ %", "Tax", "Tax_Percent", "ટેક્સ"], 0));
-          setVal("editFertId", baseId);
-
-          fertRows.forEach(r => {
-            const khatar = getVal(r, ["ખાતરનું નામ", "ખાતરનું_નામ", "ખાતર", "Fertilizer", "Fertilizer_Name"]);
-            const weight = getVal(r, ["વજન", "Weight"], 0);
-            const pack = getVal(r, ["પેકિંગ", "Pack", "Packing"], "");
-            const qty = getVal(r, ["નંગ", "થેલી", "જથ્થો", "Qty", "Quantity"], 1);
-            const bhav = getVal(r, ["ભાવ", "દર", "Bhav", "Rate", "Price"], 0);
-            const pak = getVal(r, ["પાક", "પાકનું નામ", "Crop", "Crop_Name"], "");
-
-            addFertItemRow(khatar, weight, pack, qty, bhav, pak);
-            const row = document.querySelector("#fertItemsContainer .item-row:last-child");
-            if(!row) return;
-
-            setSelect(row.querySelector(".khatarList"), khatar);
-            row.querySelector(".fWeight").value = weight;
-            row.querySelector(".fPack").value = pack;
-            row.querySelector(".fQty").value = qty;
-            row.querySelector(".fBhav").value = bhav;
-            setSelect(row.querySelector(".pakList"), pak);
-            calcFertBill();
-          });
-
-          calcFertBill();
-          document.getElementById("btnFert").innerText = "અપડેટ કરો";
-          updatePartnerSummary('Fert');
-          updateCategoryBalance('Fert');
-          alert("ખાતર બિલની બધી આઇટમ્સ સાથે એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
-        } else {
-          alert("ખાતરનો રેકોર્ડ મળ્યો નથી! કૃપા કરીને ડેટા રિફ્રેશ કરો.");
-        }
-
-        // 4. ટ્રેક્ટર (Tractor)
-      } else if(key.includes('tractor')) {
-        let found = (appData.Tractor_Ledger || appData.Tractor || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
-        if(found) {
-          switchSubTab('Tractor', 'New');
-          document.getElementById("tDate").value = String(found["તારીખ"] || "").split('T')[0];
-          document.getElementById("tBhagiya").value = found["ભાગીદાર"] || "";
-          document.getElementById("tWork").value = found["કામ"] || found["વર્ક"] || "";
-          document.getElementById("tHours").value = found["કલાક"] || found["Hours"] || "";
-          document.getElementById("tRate").value = found["ભાવ"] || found["Rate"] || "";
-          document.getElementById("tAmount").value = found["રકમ"] || found["Amount"] || "";
-          
-          document.getElementById("editTractorId").value = entryId;
-          document.getElementById("btnTractor").innerText = "અપડેટ કરો";
-          alert("ટ્રેક્ટર એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
-        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
-
-      // 5. ઉપાડ (Upad)
-      } else if(key.includes('upad')) {
-        let found = (appData.Upad_Ledger || appData.Upad || []).find(r => String(r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || "").trim() === String(entryId).trim());
-        if(found) {
-          switchSubTab('Upad', 'New');
-          document.getElementById("uDate").value = String(found["તારીખ"] || "").split('T')[0];
-          document.getElementById("uEntryId").value = entryId;
-          document.getElementById("uBhagiya").value = found["ઉપાડ લેનાર"] || found["ભાગીદાર"] || "";
-          document.getElementById("uType").value = found["એન્ટ્રી પ્રકાર"] || "";
-          document.getElementById("uProvider").value = found["આપનાર"] || "";
-          let amt = parseFloat(found["ઉપાડ (Debit)"] || found["જમા (Credit)"] || 0);
-          document.getElementById("uAmount").value = amt;
-          calcUpadDebitCredit(document.getElementById("uAmount"));
-          document.getElementById("uTxType").value = found["ટ્રાન્ઝેક્શન પ્રકાર"] || "CASH";
-          document.getElementById("uTxId").value = found["Transaction ID"] || "";
-          document.getElementById("uBillNo").value = found["બિલ નં"] || "";
-          document.getElementById("uBillType").value = found["બિલ પ્રકાર"] || "";
-          document.getElementById("uDetails").value = found["વિગત"] || "";
-          document.getElementById("uStatus").value = found["Status"] || "ઉધાર";
-          document.getElementById("uCloseYear").value = found["Close Year"] || "N";
-          document.getElementById("btnUpad").innerText = "અપડેટ કરો";
-          alert("ઉપાડ એન્ટ્રી ફોર્મમાં લોડ થઈ ગઈ છે!");
-        } else { alert("રેકોર્ડ મળ્યો નથી!"); }
       } else {
-        alert("આ સેક્શન માટે એડિટ સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે. (Key: " + sheetKey + ")");
+        alert("આ સેક્શન માટે એડિટ સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે.");
       }
     });
   }
+
   function submitSalesForm(e) {
     e.preventDefault();
     let btn = document.getElementById("btnSales");
@@ -2247,15 +2098,7 @@ body.light-mode .dash-box h4 {
         ]);
       });
 
-      if (typeof triggerUpadConfirmationModal === 'function') {
-        pendingBillData = { formType: 'Sales', itemRows, btnId: 'btnSales', formElementId: 'salesForm', originalBtnText: originalText, billTotal: totalBillAmount, partnerName: bhagiya, entryId, billNo };
-        let msg = "📋 આ બિલની કુલ રકમ ₹ " + totalBillAmount.toFixed(2) + " છે. શું આ બિલ ઉપાડમાં જમા કરવું છે?";
-        if(document.getElementById("upadConfirmMsg")) document.getElementById("upadConfirmMsg").innerText = msg;
-        if(document.getElementById("upadChoiceSelect")) document.getElementById("upadChoiceSelect").value = "no";
-        if(document.getElementById("modalUpadConfirm")) document.getElementById("modalUpadConfirm").style.display = "block";
-      } else {
-        triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm', originalText);
-      }
+      triggerUpadConfirmationModal('Sales', null, itemRows, 'btnSales', 'salesForm', originalText);
     });
   }
 
@@ -2304,13 +2147,10 @@ body.light-mode .dash-box h4 {
       let totalFarmerAmt = 0;
 
       rows.forEach((row, index) => {
-        // તમારું કેલ્ક્યુલેશન લોજિક અહીંયા હશે જ, 
-        // બસ આ જ રીતે વેલ્યુ પકડી લેવાની છે:
         let kShare = parseFloat(row.querySelector('.mKShare').value) || 0;
         let kRakam = parseFloat(row.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
-
-        if (index === 0) firstShare = kShare; // પહેલી આઇટમનો હિસ્સો
-        totalFarmerAmt += kRakam; // બધી આઇટમ્સની કુલ રકમ
+        if (index === 0) firstShare = kShare;
+        totalFarmerAmt += kRakam;
       });
 
       let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, firstShare, totalFarmerAmt, status, photoBase64];
@@ -2318,78 +2158,79 @@ body.light-mode .dash-box h4 {
     });
   }
 
-  function submitFertForm(e) {
-    e.preventDefault();
-    let btn = document.getElementById("btnFert");
-    let originalText = btn.innerHTML;
-    btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
-    btn.disabled = true;
+  function submitFertForm(e) {
+    e.preventDefault();
+    let btn = document.getElementById("btnFert");
+    let originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
+    btn.disabled = true;
 
-    let date = v("fDate");
-    let year = getYear(date);
-    let entryId = document.getElementById("editFertId").value || ("FERT-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
-    let billNo = v("fBill") || "N/A";
-    let bhagiya = v("fBhagiya");
-    let vepari = v("fVepari");
-    let subTotal = parseFloat(v("fSubTotal").replace("₹", "").trim()) || 0;
-    let tax = parseFloat(v("fTax")) || 0;
-    let gst = parseFloat(v("mGst2").replace("₹", "").trim()) || 0;
-    let cst = parseFloat(v("mCst2").replace("₹", "").trim()) || 0;
-    let totalBill = parseFloat(v("fTotalBill").replace("₹", "").trim()) || 0;
-    let words = v("fTotalWords");
-    let hastak = v("fHastak");
-    let status = v("fStatus");
-    let details = v("fDetails") || "-";
+    let date = v("fDate");
+    let year = getYear(date);
+    let entryId = document.getElementById("editFertId").value || ("FERT-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
+    let billNo = v("fBill") || "N/A";
+    let bhagiya = v("fBhagiya");
+    let vepari = v("fVepari");
+    let subTotal = parseFloat(v("fSubTotal").replace("₹", "").trim()) || 0;
+    let tax = parseFloat(v("fTax")) || 0;
+    let gst = parseFloat(v("mGst2").replace("₹", "").trim()) || 0;
+    let cst = parseFloat(v("mCst2").replace("₹", "").trim()) || 0;
+    let totalBill = parseFloat(v("fTotalBill").replace("₹", "").trim()) || 0;
+    let words = v("fTotalWords");
+    let hastak = v("fHastak");
+    let status = v("fStatus");
+    let details = v("fDetails") || "-";
 
-    let rows = document.querySelectorAll("#fertItemsContainer .item-row");
-    let itemRows = [];
+    let rows = document.querySelectorAll("#fertItemsContainer .item-row");
+    let itemRows = [];
 
-    handlePhotoUpload("fPhoto", function(photoBase64) {
-      rows.forEach((r, index) => {
-        let khatar = r.querySelector('.khatarList').value;
-        let weight = r.querySelector('.fWeight').value || 0;
-        let pack = r.querySelector('.fPack').value || "";
-        let qty = r.querySelector('.fQty').value || 1;
-        let bhav = parseFloat(r.querySelector('.fBhav').value) || 0;
-        let amt = parseFloat(r.querySelector('.fAmt').value.replace("₹", "").trim()) || 0;
-        let pak = r.querySelector('.pakList').value;
-        let kShare = r.querySelector('.fKShare').value || 0;
-        let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
+    handlePhotoUpload("fPhoto", function(photoBase64) {
+      rows.forEach((r, index) => {
+        let khatar = r.querySelector('.khatarList').value;
+        let weight = r.querySelector('.fWeight').value || 0;
+        let pack = r.querySelector('.fPack').value || "";
+        let qty = r.querySelector('.fQty').value || 1;
+        let bhav = parseFloat(r.querySelector('.fBhav').value) || 0;
+        let amt = parseFloat(r.querySelector('.fAmt').value.replace("₹", "").trim()) || 0;
+        let pak = r.querySelector('.pakList').value;
+        let kShare = r.querySelector('.fKShare').value || 0;
+        let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
 
-        let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-        itemRows.push([year, rId, date, billNo, bhagiya, vepari, khatar, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
-      });
+        let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
+        itemRows.push([year, rId, date, billNo, bhagiya, vepari, khatar, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
+      });
 
-      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, details, photoBase64];
-      triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm', originalText);
-    });
-  }
+      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, details, photoBase64];
+      triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm', originalText);
+    });
+  }
 
-  function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId, originalBtnText) {
-    let partnerName = (formType === 'Sales') ? document.getElementById("sBhagiya").value : billRow[4];
-    let billTotal = 0;
-    if(formType === 'Sales') {
-      itemRows.forEach(r => { billTotal += parseFloat(r[11]) || 0; });
-    } else {
-      billTotal = parseFloat(billRow[10]) || 0;
-    }
+  function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId, originalBtnText) {
+    let partnerName = (formType === 'Sales') ? document.getElementById("sBhagiya").value : billRow[4];
+    let billTotal = 0;
+    if(formType === 'Sales') {
+      itemRows.forEach(r => { billTotal += parseFloat(r[11]) || 0; });
+    } else {
+      billTotal = parseFloat(billRow[10]) || 0;
+    }
 
-    let currentBal = getCategoryBalanceVal(formType, partnerName);
-    let categoryText = formType === 'Sales' ? 'વેચાણ બિલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
+    let currentBal = getCategoryBalanceVal(formType, partnerName);
+    let categoryText = formType === 'Sales' ? 'વેચાણ બિલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
 
-    if (currentBal > 0) {
-      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
-      let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (ખેડૂ ઉપાડ : ₹ " + currentBal.toFixed(2) + ") શું આ બિલ ઉપાડમાં જમા કરવું છે?";
-      document.getElementById("upadConfirmMsg").innerText = msg;
-      document.getElementById("upadChoiceSelect").value = "no";
-      document.getElementById("modalUpadConfirm").style.display = "block";
-    } else {
-      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
-      document.getElementById("upadChoiceSelect").value = "no";
-      confirmUpadActionModal();
-    }
-  }
- function confirmUpadActionModal() {
+    if (currentBal > 0) {
+      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
+      let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (ખેડૂ ઉપાડ : ₹ " + currentBal.toFixed(2) + ") શું આ બિલ ઉપાડમાં જમા કરવું છે?";
+      document.getElementById("upadConfirmMsg").innerText = msg;
+      document.getElementById("upadChoiceSelect").value = "no";
+      document.getElementById("modalUpadConfirm").style.display = "block";
+    } else {
+      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
+      document.getElementById("upadChoiceSelect").value = "no";
+      confirmUpadActionModal();
+    }
+  }
+
+  function confirmUpadActionModal() {
     document.getElementById("modalUpadConfirm").style.display = "none";
     if(!pendingBillData) return;
 
@@ -2476,6 +2317,7 @@ body.light-mode .dash-box h4 {
       pendingBillData = null;
     });
   }
+
   function submitUpad(e) {
     e.preventDefault();
     let btn = document.getElementById("btnUpad");
@@ -2598,7 +2440,7 @@ body.light-mode .dash-box h4 {
 
     photos.forEach((p, index) => {
       let link = p["Photo_Link"] || p["ફોટો"] || "";
-      let imgTag = link ? `<button type="button" onclick="openImageModal('${link}')" style="background:#2980b9; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">🖼️ બિલ જુઓ</button>` : "ના";
+      let imgTag = link ? `<button type="button" onclick="openImageModal('${link}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:12px;">🖼️ ફોટો જુઓ</button>` : "ના";
       let dateVal = String(p["Date"] || p["તારીખ"] || '').split('T')[0];
       let billNoVal = p["Bill_No"] || p["બિલ નં"] || '';
       let vepariVal = p["વેપારી"] || p["Merchant"] || '-';
@@ -2621,14 +2463,6 @@ body.light-mode .dash-box h4 {
     });
   }
 
-  function openImageModal(url) {
-    document.getElementById("viewerImage").src = url;
-    document.getElementById("downloadPhotoBtn").href = url;
-    document.getElementById("modalImageViewer").style.display = "flex";
-  }
-
-  function closeImageModal() { document.getElementById("modalImageViewer").style.display = "none"; }
-
   function onCategoryFilterChange() {
     let cat = document.getElementById("filterCategory") ? document.getElementById("filterCategory").value : "";
     let groupMed = document.getElementById("groupMedType");
@@ -2644,7 +2478,7 @@ body.light-mode .dash-box h4 {
     renderBillRecordTable(); 
   }
 
-function renderBillRecordTable() {
+  function renderBillRecordTable() {
     let container = document.getElementById("tableContainerBillRec");
     let summaryBox = document.getElementById("latestRecordSummary");
     let summaryText = document.getElementById("latestRecordText");
@@ -2670,7 +2504,6 @@ function renderBillRecordTable() {
       return matchH && matchS;
     });
 
-    // સમરી અને સરવાળા માટેનો ભાગ
     if(selHastak && filteredRows.length > 0) {
       let totalAmt = 0;
       let totalPauchSum = 0;
@@ -2709,7 +2542,6 @@ function renderBillRecordTable() {
       <th>Bill To/નામ</th>
     </tr>`;
 
-    // ⬇️ **અહીંથી તમારે તમે મોકલેલો કોડ મૂકવાનો છે:**
     filteredRows.forEach(function(r, index) {
       let keys = Object.keys(r);
       
@@ -2735,7 +2567,6 @@ function renderBillRecordTable() {
       let photoVal = r["Photo"] || r[keys[12]] || "";
       let billToName = r["Bill To/નામ"] || r[keys[13]] || "-";
 
-      // નાનું બટન ફોટો જોવા માટે
       let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:12px;">🖼️ ફોટો જુઓ</button>` : "-";
 
       html += `<tr>
@@ -2757,8 +2588,7 @@ function renderBillRecordTable() {
     });
     
     container.innerHTML = html + `</table>`;
-    console.log("Bill_Record Data:", appData.Bill_Record);
-  } // 👈 આ ફંક્શનનો છેલ્લો કૌંસ
+  }
 </script>
 </body>
 </html>

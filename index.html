@@ -155,7 +155,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">08/11/2026 -  10:40   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">08/11/2026 -  10:58   IST</span>
 </div>
 
 <div class="header-bar">
@@ -2644,7 +2644,7 @@ body.light-mode .dash-box h4 {
     renderBillRecordTable(); 
   }
 
- function renderBillRecordTable() {
+function renderBillRecordTable() {
     let container = document.getElementById("tableContainerBillRec");
     let summaryBox = document.getElementById("latestRecordSummary");
     let summaryText = document.getElementById("latestRecordText");
@@ -2663,29 +2663,24 @@ body.light-mode .dash-box h4 {
     let filteredRows = rows.filter(r => {
       let keys = Object.keys(r);
       let rowString = Object.values(r).join(" ").toLowerCase();
-      
       let hVal = String(r["હસ્તે"] || r[keys[3]] || "").trim().toLowerCase();
       
       let matchH = !selHastak || hVal.includes(selHastak) || rowString.includes(selHastak);
       let matchS = !searchQuery || rowString.includes(searchQuery);
-
       return matchH && matchS;
     });
 
-    // કુલ રકમ અને કુલ પાઉચ/નંગનો હિસાબ (જ્યાં 0 ન આવે અને સાચો સરવાળો થાય)
+    // સમરી અને સરવાળા માટેનો ભાગ
     if(selHastak && filteredRows.length > 0) {
       let totalAmt = 0;
       let totalPauchSum = 0;
-
       filteredRows.forEach(r => {
         let keys = Object.keys(r);
-        let amtVal = parseFloat(r["રકમ"] || r[keys[8]] || 0);
-        let pauchVal = parseFloat(r["કુલ પાઉચ / પેકિંગ / નંગ"] || r["કુલ પાઉચ નં./ પેકિંગ / નંગ"] || r[keys[10]] || 0);
-        
-        if(!isNaN(amtVal)) totalAmt += amtVal;
-        if(!isNaN(pauchVal)) totalPauchSum += pauchVal;
+        let amtVal = parseFloat(String(r["રકમ"] || r[keys[8]] || 0).replace(/[^0-9.-]+/g,"")) || 0;
+        let pauchVal = parseFloat(String(r["કુલ પાઉચ / પેકિંગ / નંગ"] || r[keys[10]] || 0).replace(/[^0-9.-]+/g,"")) || 0;
+        totalAmt += amtVal;
+        totalPauchSum += pauchVal;
       });
-
       summaryText.innerHTML = `<b>${selHastak}</b> - કુલ બિલ: ${filteredRows.length} | કુલ પાઉચ/નંગ: <b>${totalPauchSum}</b> | કુલ રકમ: ₹ ${totalAmt.toFixed(2)}`;
       if(summaryBox) summaryBox.style.display = "block";
     } else {
@@ -2697,14 +2692,13 @@ body.light-mode .dash-box h4 {
       return;
     }
 
-    // ટેબલ હેડર
     let html = `<table><tr>
       <th>વર્ષ</th>
       <th>એન્ટ્રી Id</th>
       <th>તારીખ</th>
       <th>હસ્તે</th>
       <th>વેપારી</th>
-      <th>Item (બિલ આઇટમ)</th>
+      <th>Item</th>
       <th>બિલ નં</th>
       <th>પાઉચ નં./ પેકિંગ / નંગ</th>
       <th>રકમ</th>
@@ -2714,7 +2708,8 @@ body.light-mode .dash-box h4 {
       <th>Photo</th>
       <th>Bill To/નામ</th>
     </tr>`;
-    
+
+    // ⬇️ **અહીંથી તમારે તમે મોકલેલો કોડ મૂકવાનો છે:**
     filteredRows.forEach(function(r, index) {
       let keys = Object.keys(r);
       
@@ -2724,19 +2719,15 @@ body.light-mode .dash-box h4 {
       let hastak = r["હસ્તે"] || r[keys[3]] || "-";
       let vepari = r["વેપારી"] || r[keys[4]] || "-";
       
-      // બિલ આઇટમ (જો ખાલી હોય તો ડેશ (-) દેખાડે અથવા વેલ્યુ પ્રિન્ટ કરે)
       let itemVal = r["Item"] || r["આઇટમ"] || r[keys[5]] || "-";
-      
       let billNo = r["બિલ નં"] || r[keys[6]] || "-";
       
-      // પાઉચ / પેકિંગ / નંગ (જો 0 કે ખાલી હોય તો પ્રોપર દેખાય)
       let pauchVal = r["પાઉચ નં./ પેકિંગ / નંગ"] || r["પાઉચ / પેકિંગ / નંગ"] || r[keys[7]] || "-";
       if (pauchVal === "" || pauchVal === null) pauchVal = "-";
 
       let amt = parseFloat(r["રકમ"] || r[keys[8]] || 0).toFixed(2);
       let statusVal = r["જમા / બાકી"] || r[keys[9]] || "-";
       
-      // કુલ પાઉચ / પેકિંગ / નંગ (જો ગણતરીમાં ઝીરો આવતો હોય તો તે સુધારી દીધું છે)
       let totalPauchVal = r["કુલ પાઉચ / પેકિંગ / નંગ"] || r["કુલ પાઉચ નં./ પેકિંગ / નંગ"] || r[keys[10]] || "-";
       if (totalPauchVal === "" || totalPauchVal === null) totalPauchVal = "-";
 
@@ -2744,9 +2735,10 @@ body.light-mode .dash-box h4 {
       let photoVal = r["Photo"] || r[keys[12]] || "";
       let billToName = r["Bill To/નામ"] || r[keys[13]] || "-";
 
-      let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
+      // નાનું બટન ફોટો જોવા માટે
+      let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:12px;">🖼️ ફોટો જુઓ</button>` : "-";
 
-     html += `<tr>
+      html += `<tr>
         <td>${yearVal}</td>
         <td><b>${entryId}</b></td>
         <td>${cleanDate}</td>
@@ -2765,10 +2757,8 @@ body.light-mode .dash-box h4 {
     });
     
     container.innerHTML = html + `</table>`;
-    
-    // જો ડેટા કન્સોલમાં ચેક કરવો હોય તો તે ફંક્શનની અંદર જ લખવો:
     console.log("Bill_Record Data:", appData.Bill_Record);
-  } 
+  } // 👈 આ ફંક્શનનો છેલ્લો કૌંસ
 </script>
 </body>
 </html>

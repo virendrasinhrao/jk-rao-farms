@@ -2746,7 +2746,7 @@ body.light-mode .dash-box h4 {
 
       let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
 
-      html += `<tr>
+     html += `<tr>
         <td>${yearVal}</td>
         <td><b>${entryId}</b></td>
         <td>${cleanDate}</td>
@@ -2765,9 +2765,10 @@ body.light-mode .dash-box h4 {
     });
     
     container.innerHTML = html + `</table>`;
-  }
-	  console.log("Bill_Record Data:", appData.Bill_Record);
-  }</script>
-
+    
+    // જો ડેટા કન્સોલમાં ચેક કરવો હોય તો તે ફંક્શનની અંદર જ લખવો:
+    console.log("Bill_Record Data:", appData.Bill_Record);
+  } 
+</script>
 </body>
 </html>

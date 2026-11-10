@@ -2578,6 +2578,9 @@ body.light-mode .dash-box h4 {
         let status = "જમા";
         let closeYear = "N";
         let totalOutstanding = 0;
+		 console.log("FORM TYPE:", formType);
+console.log("UPAD PHOTO:", upadPhoto);
+alert("Photo Data: " + (upadPhoto ? "મળ્યો" : "ખાલી છે")); 
 let upadPhoto = formType === 'Sales'
   ? (itemRows[0] ? itemRows[0][17] : "")
   : (billRow ? billRow[15] : "");

@@ -1,3 +1,5 @@
+
+
 <!--  
   Project: J K Rao Farms - POS Billing  
   File: index.html  
@@ -157,7 +159,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">08/11/2026 -  13:01   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">10/11/2026 -  10:14   IST</span>
 </div>
 
 <div class="header-bar">
@@ -2437,73 +2439,73 @@ body.light-mode .dash-box h4 {
     });
   }
 
-  function submitFertForm(e) {
-    e.preventDefault();
-    let btn = document.getElementById("btnFert");
-    let originalText = btn.innerHTML;
-    btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
-    btn.disabled = true;
+  function submitFertForm(e) {
+    e.preventDefault();
+    let btn = document.getElementById("btnFert");
+    let originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spin">⟳</span> સેવ થઈ રહ્યું છે...';
+    btn.disabled = true;
 
-    let date = v("fDate");
-    let year = getYear(date);
-    let entryId = document.getElementById("editFertId").value || ("FERT-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
-    let billNo = v("fBill") || "N/A";
-    let bhagiya = v("fBhagiya");
-    let vepari = v("fVepari");
-    let subTotal = parseFloat(v("fSubTotal").replace("₹", "").trim()) || 0;
-    let tax = parseFloat(v("fTax")) || 0;
-    let gst = parseFloat(v("mGst2").replace("₹", "").trim()) || 0;
-    let cst = parseFloat(v("mCst2").replace("₹", "").trim()) || 0;
-    let totalBill = parseFloat(v("fTotalBill").replace("₹", "").trim()) || 0;
-    let words = v("fTotalWords");
-    let hastak = v("fHastak");
-    let status = v("fStatus");
-    let details = v("fDetails") || "-";
+    let date = v("fDate");
+    let year = getYear(date);
+    let entryId = document.getElementById("editFertId").value || ("FERT-" + date.replace(/-/g, '') + "-" + Math.floor(1000 + Math.random() * 9000));
+    let billNo = v("fBill") || "N/A";
+    let bhagiya = v("fBhagiya");
+    let vepari = v("fVepari");
+    let subTotal = parseFloat(v("fSubTotal").replace("₹", "").trim()) || 0;
+    let tax = parseFloat(v("fTax")) || 0;
+    let gst = parseFloat(v("mGst2").replace("₹", "").trim()) || 0;
+    let cst = parseFloat(v("mCst2").replace("₹", "").trim()) || 0;
+    let totalBill = parseFloat(v("fTotalBill").replace("₹", "").trim()) || 0;
+    let words = v("fTotalWords");
+    let hastak = v("fHastak");
+    let status = v("fStatus");
+    let details = v("fDetails") || "-";
 
-    let rows = document.querySelectorAll("#fertItemsContainer .item-row");
-    let itemRows = [];																								  
+    let rows = document.querySelectorAll("#fertItemsContainer .item-row");
+    let itemRows = [];																								  
 
-    handlePhotoUpload("fPhoto", function(photoBase64) {
-      rows.forEach((r, index) => {
-        let khatar = r.querySelector('.khatarList').value;
-        let weight = r.querySelector('.fWeight').value || 0;
-        let pack = r.querySelector('.fPack').value || "";
-        let qty = r.querySelector('.fQty').value || 1;
-        let bhav = parseFloat(r.querySelector('.fBhav').value) || 0;
-        let amt = parseFloat(r.querySelector('.fAmt').value.replace("₹", "").trim()) || 0;
-        let pak = r.querySelector('.pakList').value;
-        let kShare = r.querySelector('.fKShare').value || 0;
-        let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
+    handlePhotoUpload("fPhoto", function(photoBase64) {
+      rows.forEach((r, index) => {
+        let khatar = r.querySelector('.khatarList').value;
+        let weight = r.querySelector('.fWeight').value || 0;
+        let pack = r.querySelector('.fPack').value || "";
+        let qty = r.querySelector('.fQty').value || 1;
+        let bhav = parseFloat(r.querySelector('.fBhav').value) || 0;
+        let amt = parseFloat(r.querySelector('.fAmt').value.replace("₹", "").trim()) || 0;
+        let pak = r.querySelector('.pakList').value;
+        let kShare = r.querySelector('.fKShare').value || 0;
+        let kRakam = parseFloat(r.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
 
 																	   
 																																						
 		 
 
-        let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
-        itemRows.push([year, rId, date, billNo, bhagiya, vepari, khatar, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
-      });
+        let rId = entryId + (rows.length > 1 ? "-" + (index + 1) : "");
+        itemRows.push([year, rId, date, billNo, bhagiya, vepari, khatar, weight, pack, qty, bhav, amt, pak, totalBill, kShare, kRakam, status, hastak]);
+      });
    
 
-      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, details, photoBase64];
-      triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm', originalText);
+      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, details, photoBase64];
+      triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm', originalText);
 					  
 							  
-    });
-  }
+    });
+  }
 											   
 	 
 
-  function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId, originalBtnText) {
-    let partnerName = (formType === 'Sales') ? document.getElementById("sBhagiya").value : billRow[4];
-    let billTotal = 0;
-    if(formType === 'Sales') {
-      itemRows.forEach(r => { billTotal += parseFloat(r[11]) || 0; });
-    } else {
-      billTotal = parseFloat(billRow[10]) || 0;
-    }
+  function triggerUpadConfirmationModal(formType, billRow, itemRows, btnId, formElementId, originalBtnText) {
+    let partnerName = (formType === 'Sales') ? document.getElementById("sBhagiya").value : billRow[4];
+    let billTotal = 0;
+    if(formType === 'Sales') {
+      itemRows.forEach(r => { billTotal += parseFloat(r[11]) || 0; });
+    } else {
+      billTotal = parseFloat(billRow[10]) || 0;
+    }
 
-    let currentBal = getCategoryBalanceVal(formType, partnerName);
-    let categoryText = formType === 'Sales' ? 'વેચાણ બિલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
+    let currentBal = getCategoryBalanceVal(formType, partnerName);
+    let categoryText = formType === 'Sales' ? 'વેચાણ બિલ' : formType === 'Med' ? 'દવા ખરીદી માટે' : 'ખાતર ખરીદી માટે';
 																																																														
 																
 															   
@@ -2515,18 +2517,18 @@ body.light-mode .dash-box h4 {
 	 
    
 
-    if (currentBal > 0) {
-      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
-      let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (ખેડૂ ઉપાડ : ₹ " + currentBal.toFixed(2) + ") શું આ બિલ ઉપાડમાં જમા કરવું છે?";
-      document.getElementById("upadConfirmMsg").innerText = msg;
-      document.getElementById("upadChoiceSelect").value = "no";
-      document.getElementById("modalUpadConfirm").style.display = "block";
-    } else {
-      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
-      document.getElementById("upadChoiceSelect").value = "no";
-      confirmUpadActionModal();
-    }
-  }
+    if (currentBal > 0) {
+      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
+      let msg = "📋 આ બિલની કુલ રકમ ₹ " + billTotal.toFixed(2) + " છે. (ખેડૂ ઉપાડ : ₹ " + currentBal.toFixed(2) + ") શું આ બિલ ઉપાડમાં જમા કરવું છે?";
+      document.getElementById("upadConfirmMsg").innerText = msg;
+      document.getElementById("upadChoiceSelect").value = "no";
+      document.getElementById("modalUpadConfirm").style.display = "block";
+    } else {
+      pendingBillData = { formType, billRow, itemRows, btnId, formElementId, billTotal, categoryText, partnerName, currentBal, originalBtnText };
+      document.getElementById("upadChoiceSelect").value = "no";
+      confirmUpadActionModal();
+    }
+  }
  function confirmUpadActionModal() {
     document.getElementById("modalUpadConfirm").style.display = "none";
     if(!pendingBillData) return;
@@ -2576,11 +2578,13 @@ body.light-mode .dash-box h4 {
         let status = "જમા";
         let closeYear = "N";
         let totalOutstanding = 0;
+let upadPhoto = formType === 'Sales'
+  ? (itemRows[0] ? itemRows[0][17] : "")
+  : (billRow ? billRow[15] : "");
 
         let upadRowValues = [
           year, entryIdVal, date, partnerName, upadEntryType, provider, credit, "CASH", "-",
-          debit, credit, billNoVal, credit, catTextVal, "બિલ જમા એન્ટ્રી", 0, 0,
-          status, "", closeYear, totalOutstanding
+          debit, credit, billNoVal, credit, catTextVal, "બિલ જમા એન્ટ્રી", 0, 0,status, upadPhoto, closeYear totalOutstanding
         ];
 
         return fetch(SCRIPT_URL, {
@@ -2901,3 +2905,5 @@ function renderBillRecordTable() {
 </script>
 </body>
 </html>
+
+

@@ -173,7 +173,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">13/11/2026 -  00:26   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">13/11/2026 -  01:02   IST</span>
 </div>
 
 <div class="header-bar">
@@ -2035,14 +2035,23 @@ if (tabName === 'Fert') {
     }
 }
 
+// દવાના બિલમાંથી ફોટો મેળવવો
 if (tabName === 'Med') {
+    let itemId = String(entryId || "").trim();
+    let baseId = itemId.replace(/-\d+$/, "");
+
     let medBill = (appData["Pesticide_Bill"] || []).find(b => {
-        let billId = String(b["એન્ટ્રી Id"] || b["Entry_ID"] || b["એન્ટ્રી નં"] || "").trim();
+        let billId = String(
+            b["એન્ટ્રી Id"] || b["Entry_ID"] || b["એન્ટ્રી નં"] || ""
+        ).trim();
+
         return billId !== "" && billId === baseId;
     });
 
     if (medBill) {
-        photoVal = medBill["બિલનો ફોટો"] || medBill["Photo"] || medBill["Photo_Link"] || photoVal;
+        photoVal = medBill["બિલનો ફોટો"] ||
+                   medBill["Photo"] ||
+                   medBill["Photo_Link"] || photoVal;
     }
 }
 

@@ -154,12 +154,26 @@ body.light-mode .dash-box h4 {
 
     .item-row { background: #252525; padding: 8px; border: 1px solid #444; border-radius: 4px; margin-bottom: 8px; position: relative; }
     .sub-section { display: none; }
+  .btn-photo {
+    background: #2196F3 !important;
+    color: #ffffff !important;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-photo:hover {
+    background: #1565C0 !important;
+    color: #ffffff !important;
+}
   </style>
 </head>
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">12/11/2026 -  23:40   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">13/11/2026 -  00:26   IST</span>
 </div>
 
 <div class="header-bar">
@@ -1961,20 +1975,16 @@ body.light-mode .dash-box h4 {
                r["બિલનો ફોટો"] ||
                "";
 																		 
-      let transactionType = (
-  r["Transaction Type"] ||
-  r["Transaction Type 2"] ||
-  ""
-).toUpperCase().trim();
+let transactionType = (r["Transaction Type"] || "").toUpperCase();
 
 let photoButtonText =
-  (transactionType === "UPI" || transactionType === "BANK")
-    ? "Trn. Image"
-    : "બિલ જુઓ";
+    (transactionType === "UPI" || transactionType === "BANK")
+        ? "Trn. Image"
+        : "બિલ જુઓ";
 
 let photoLink = photoVal
-  ? `<button onclick="openImageModal('${photoVal}')">${photoButtonText}</button>`
-  : '';
+    ? `<button type="button" class="btn-photo" onclick="openImageModal('${photoVal}')">${photoButtonText}</button>`
+    : '';
       html += `<tr>
         <td><input type="checkbox" class="row-select-${tabName}" value="${entryId}" onclick="updateTableActionBar('${tabName}')"></td>`;
 

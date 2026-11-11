@@ -159,7 +159,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">11/11/2026 -  14:40   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">12/11/2026 -  17:02   IST</span>
 </div>
 
 <div class="header-bar">
@@ -1972,8 +1972,9 @@ let photoButtonText =
     ? "Trn. Image"
     : "બિલ જુઓ";
 
-let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
-
+let photoLink = photoVal
+  ? `<button onclick="openImageModal('${photoVal}')">${photoButtonText}</button>`
+  : '';
       html += `<tr>
         <td><input type="checkbox" class="row-select-${tabName}" value="${entryId}" onclick="updateTableActionBar('${tabName}')"></td>`;
 
@@ -2448,53 +2449,10 @@ let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${pho
         totalFarmerAmt += kRakam; // બધી આઇટમ્સની કુલ રકમ
       });
 
-      let firstShare = 0;
-let totalFarmerAmt = 0;
-
-// બધી આઇટમમાંથી ખેડૂ હિસ્સો અને ખેડૂ રકમ મેળવવી
-rows.forEach((row, index) => {
-    let kShare = parseFloat(row.querySelector('.fKShare').value) || 0;
-
-    let kRakam = parseFloat(
-        row.querySelector('.sKRakam').value.replace("₹", "").trim()
-    ) || 0;
-
-    if (index === 0) {
-        firstShare = kShare;
-    }
-
-    totalFarmerAmt += kRakam;
-});
-
-// Fertilizer_Bill માં 17 કોલમના ક્રમ પ્રમાણે ડેટા
-let billRow = [
-    year,
-    entryId,
-    date,
-    billNo,
-    bhagiya,
-    vepari,
-    subTotal,
-    tax,
-    gst,
-    cst,
-    totalBill,
-    words,
-    hastak,
-    status,
-    firstShare,
-    totalFarmerAmt,
-    photoBase64
-];
-
-triggerUpadConfirmationModal(
-    'Fert',
-    billRow,
-    itemRows,
-    'btnFert',
-    'fertForm',
-    originalText
-);
+      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, firstShare, totalFarmerAmt, status, photoBase64];
+      triggerUpadConfirmationModal('Med', billRow, itemRows, 'btnMed', 'medForm', originalText);
+    });
+  }
 
   function submitFertForm(e) {
     e.preventDefault();
@@ -2543,7 +2501,22 @@ triggerUpadConfirmationModal(
       });
    
 
-      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, hastak, status, details, photoBase64];
+      let firstShare = 0;
+let totalFarmerAmt = 0;
+
+rows.forEach((row, index) => {
+    let kShare = parseFloat(row.querySelector('.fKShare').value) || 0;
+    let kRakam = parseFloat(row.querySelector('.sKRakam').value.replace("₹", "").trim()) || 0;
+
+    if (index === 0) firstShare = kShare;
+    totalFarmerAmt += kRakam;
+});
+
+let billRow = [
+    year, entryId, date, billNo, bhagiya, vepari,
+    subTotal, tax, gst, cst, totalBill, words,
+    hastak, status, firstShare, totalFarmerAmt, photoBase64
+];
       triggerUpadConfirmationModal('Fert', billRow, itemRows, 'btnFert', 'fertForm', originalText);
 					  
 							  
@@ -2966,5 +2939,6 @@ function renderBillRecordTable() {
 </script>
 </body>
 </html>
+
 
 

@@ -1955,8 +1955,11 @@ body.light-mode .dash-box h4 {
       let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
       let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || index;
       let bhagiya = r["ભાગીદાર"] || r["ખેડૂનું નામ"] || r["ઉપાડ લેનાર"] || "-";
-      let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
-	  
+      let photoVal = r["Transaction Image"] ||
+               r["Photo"] ||
+               r["Photo_Link"] ||
+               r["બિલનો ફોટો"] ||
+               "";
 																		 
       let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
 

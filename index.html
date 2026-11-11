@@ -1972,9 +1972,8 @@ let photoButtonText =
     ? "Trn. Image"
     : "બિલ જુઓ";
 
-let photoLink = photoVal
-  ? `<button onclick="openImageModal('${photoVal}')">${photoButtonText}</button>`
-  : '';
+let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
+
       html += `<tr>
         <td><input type="checkbox" class="row-select-${tabName}" value="${entryId}" onclick="updateTableActionBar('${tabName}')"></td>`;
 

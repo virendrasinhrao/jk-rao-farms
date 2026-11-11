@@ -2448,10 +2448,53 @@ let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${pho
         totalFarmerAmt += kRakam; // બધી આઇટમ્સની કુલ રકમ
       });
 
-      let billRow = [year, entryId, date, billNo, bhagiya, vepari, subTotal, tax, gst, cst, totalBill, words, firstShare, totalFarmerAmt, status, photoBase64];
-      triggerUpadConfirmationModal('Med', billRow, itemRows, 'btnMed', 'medForm', originalText);
-    });
-  }
+      let firstShare = 0;
+let totalFarmerAmt = 0;
+
+// બધી આઇટમમાંથી ખેડૂ હિસ્સો અને ખેડૂ રકમ મેળવવી
+rows.forEach((row, index) => {
+    let kShare = parseFloat(row.querySelector('.fKShare').value) || 0;
+
+    let kRakam = parseFloat(
+        row.querySelector('.sKRakam').value.replace("₹", "").trim()
+    ) || 0;
+
+    if (index === 0) {
+        firstShare = kShare;
+    }
+
+    totalFarmerAmt += kRakam;
+});
+
+// Fertilizer_Bill માં 17 કોલમના ક્રમ પ્રમાણે ડેટા
+let billRow = [
+    year,
+    entryId,
+    date,
+    billNo,
+    bhagiya,
+    vepari,
+    subTotal,
+    tax,
+    gst,
+    cst,
+    totalBill,
+    words,
+    hastak,
+    status,
+    firstShare,
+    totalFarmerAmt,
+    photoBase64
+];
+
+triggerUpadConfirmationModal(
+    'Fert',
+    billRow,
+    itemRows,
+    'btnFert',
+    'fertForm',
+    originalText
+);
 
   function submitFertForm(e) {
     e.preventDefault();

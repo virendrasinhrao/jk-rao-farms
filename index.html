@@ -174,7 +174,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">13/11/2026 -  23:56   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">14/11/2026 -  01:51   IST</span>
 </div>
 
 <div class="header-bar">
@@ -2812,39 +2812,79 @@ alert("Photo Data: " + (upadPhoto ? "મળ્યો" : "ખાલી છે"));
     return (m >= 5) ? (y + "-" + (y + 1).toString().slice(-2)) : ((y - 1) + "-" + y.toString().slice(-2));
   }
 
-  function renderGallery() {
-    let container = document.getElementById("galleryContainer");
-    let actionBar = document.getElementById("actionBarGallery");
-    if(!container) return;
-    let photos = appData.Photo_Gallery || [];
-    if(photos.length === 0) { 
-      container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ ફોટો ઉપલબ્ધ નથી.</p>"; 
-      if(actionBar) actionBar.style.display = "none";
-      return; 
-    }
-    
-    let html = `<table><tr>
-      <th style="width: 40px;"><input type="checkbox" id="selectAll_Gallery" onclick="toggleSelectAll(this, 'Gallery')"></th>
-      <th>તારીખ</th><th>બિલ નં</th><th>વેપારી</th><th>Bill To / નામ</th><th>ફોટો</th>
+  
+function renderGallery() {
+  let container = document.getElementById("galleryContainer");
+  let actionBar = document.getElementById("actionBarGallery");
+
+  if (!container) return;
+
+  let photos = appData.Photo_Gallery || [];
+
+  if (photos.length === 0) {
+    container.innerHTML =
+      "<p style='text-align:center;color:#7f8c8d;'>કોઈ બિલનો ફોટો ઉપલબ્ધ નથી.</p>";
+
+    if (actionBar) actionBar.style.display = "none";
+    return;
+  }
+
+  let html = `<table>
+    <tr>
+      <th style="width:40px;">
+        <input type="checkbox"
+          id="selectAll_Gallery"
+          onclick="toggleSelectAll(this, 'Gallery')">
+      </th>
+      <th>તારીખ</th>
+      <th>બિલ નં</th>
+      <th>વેપારી</th>
+      <th>Bill To / નામ</th>
+      <th>બિલનો ફોટો</th>
     </tr>`;
 
-    photos.forEach((p, index) => {
-      let link = p["Photo_Link"] || p["ફોટો"] || "";
-      let imgTag = link ? `<button type="button" onclick="openImageModal('${link}')" style="background:#2980b9; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">🖼️ બિલ જુઓ</button>` : "ના";
-      let dateVal = String(p["Date"] || p["તારીખ"] || '').split('T')[0];
-      let billNoVal = p["Bill_No"] || p["બિલ નં"] || '';
-      let vepariVal = p["વેપારી"] || p["Merchant"] || '-';
-      let billOwnerVal = p["Bill To / નામ :"] || p["Bill To/નામ:"] || p["બિલ માલિક"] || '-';
-      let entryId = p["એન્ટ્રી Id"] || p["Entry_ID"] || index;
+  photos.forEach((p, index) => {
+    let link = p["Photo_Link"] || "";
 
-      html += `<tr>
-        <td><input type="checkbox" class="row-select-Gallery" value="${entryId}" onclick="updateTableActionBar('Gallery')"></td>
-        <td>${dateVal}</td><td><b>${billNoVal}</b></td><td>${vepariVal}</td><td>${billOwnerVal}</td><td>${imgTag}</td>
-      </tr>`;
-    });
-    container.innerHTML = html + `</table>`;
-    updateTableActionBar('Gallery');
-  }
+    let imgTag = link
+      ? `<button type="button"
+          onclick="openImageModal('${link}')"
+          style="background:#2980b9;color:white;border:none;
+          padding:5px 10px;border-radius:4px;cursor:pointer;">
+          🖼️ બિલ જુઓ
+        </button>`
+      : "ના";
+
+    let dateVal = p["Date"] || "";
+    if (dateVal instanceof Date) {
+      dateVal = dateVal.toLocaleDateString("en-IN");
+    } else {
+      dateVal = String(dateVal).split("T")[0];
+    }
+
+    let billNoVal = p["Bill_No"] || "-";
+    let vepariVal = p["વેપારી"] || "-";
+    let billOwnerVal = p["Bill To / નામ :"] || "-";
+    let entryId = p["Entry_ID"] || index;
+
+    html += `<tr>
+      <td>
+        <input type="checkbox"
+          class="row-select-Gallery"
+          value="${entryId}"
+          onclick="updateTableActionBar('Gallery')">
+      </td>
+      <td>${dateVal}</td>
+      <td><b>${billNoVal}</b></td>
+      <td>${vepariVal}</td>
+      <td>${billOwnerVal}</td>
+      <td>${imgTag}</td>
+    </tr>`;
+  });
+
+  container.innerHTML = html + "</table>";
+  updateTableActionBar("Gallery");
+}
 
   function filterGallery() {
     let query = document.getElementById("searchGallery").value.toLowerCase();

@@ -2019,16 +2019,14 @@ let photoLink = photoVal
         let sharePercent = r["ખેડૂ હિસ્સો %"] || "-";
         let farmerAmt = r["ખેડૂ રકમ"] || 0;
         let statusVal = r["બિલની સ્થિતિ"] || r["બાકી જમા"] || "બાકી";
-        // બિલની શીટમાંથી ફોટો મેળવવો
+        
+// બિલની શીટમાંથી ફોટો મેળવવો
 let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
 
 let itemId = String(entryId || "").trim();
 let baseId = itemId.replace(/-\d+$/, "");
 
-if (tabName === 'Fert')
-console.log("FERT ITEM ID:", itemId);
-console.log("FERT BILL DATA:", appData["Fertilizer_Bill"]);
-		  {
+if (tabName === 'Fert') {
     let fertBill = (appData["Fertilizer_Bill"] || []).find(b => {
         let billId = String(b["એન્ટ્રી Id"] || b["Entry_ID"] || b["એન્ટ્રી નં"] || "").trim();
         return billId !== "" && billId === baseId;
@@ -2039,9 +2037,7 @@ console.log("FERT BILL DATA:", appData["Fertilizer_Bill"]);
     }
 }
 
-if (tabName === 'Med') 
-console.log("FERT ITEM ID:", itemId);
-console.log("FERT BILL DATA:", appData["Fertilizer_Bill"]);{
+if (tabName === 'Med') {
     let medBill = (appData["Pesticide_Bill"] || []).find(b => {
         let billId = String(b["એન્ટ્રી Id"] || b["Entry_ID"] || b["એન્ટ્રી નં"] || "").trim();
         return billId !== "" && billId === baseId;
@@ -2055,7 +2051,6 @@ console.log("FERT BILL DATA:", appData["Fertilizer_Bill"]);{
 let photoLink = photoVal
     ? `<button type="button" onclick="openImageModal('${photoVal}')" class="btn-photo">બિલ જુઓ</button>`
     : "-";
-
         html += `<td>${yearVal}</td><td><b>${entryId}</b></td><td>${cleanDate}</td><td>${billNo}</td><td>${bhagiya}</td><td>${vepari}</td><td><b>${itemName}</b></td><td>${typeVal}</td><td>${weight}</td><td>${packing}</td><td>${qty}</td><td>₹ ${rate}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${crop}</td><td>₹ ${parseFloat(totalBillAmt).toFixed(2)}</td><td>${sharePercent}</td><td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td><td><span class="badge-jama">${statusVal}</span></td><td>${photoLink}</td>`;
       } else if(tabName === 'Trac') {
         let owner = r["ટ્રેક્ટર માલિક"] || "-";

@@ -1,5 +1,6 @@
 
 
+
 <!--  
   Project: J K Rao Farms - POS Billing  
   File: index.html  
@@ -2046,136 +2047,8 @@ let photoButtonText =
     : "બિલ જુઓ";
 
 
-let photoLink = photoVal
-  ? <button onclick="openImageModal('${photoVal}')">${photoButtonText}</button> 
-  : ''; આ કોડ આપણે આગળ મૂકેલો છે એ માં trn. Image છે એની વાત કરું છું
 
-…
-હવે સમજાયું. તમે ઉપાડ (Upad) ટેબલમાં UPI/BANK ટ્રાન્ઝેક્શન માટે “Trn. Image” અને બીજા ફોટા માટે “બિલ જુઓ” એવું રાખ્યું છે.
 
-આ કોડમાં બંને બટન માટે બ્લુ કલર અને સફેદ ટેક્સ્ટ કરવા માટે ફક્ત class="btn-photo" ઉમેરો.
-
-તમારો કોડ આ રીતે બદલો:
-
-let transactionType = (r["Transaction Type"] || "").toUpperCase();
-
-let photoButtonText =
-    (transactionType === "UPI" || transactionType === "BANK")
-        ? "Trn. Image"
-        : "બિલ જુઓ";
-
-let photoLink = photoVal
-    ? `<button type="button" class="btn-photo" onclick="openImageModal('${photoVal}')">${photoButtonText}</button>`
-    : '';
-
-CSS માં અગાઉ આપેલો આ કલર કોડ એક જ વાર રાખો:
-
-.btn-photo {
-    background: #2196F3 !important;
-    color: #ffffff !important;
-    border: none;
-    padding: 5px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-હવે પરિણામ:
-
-UPI / BANK → 🔵 Trn. Image (સફેદ ટેક્સ્ટ)
-
-અન્ય ફોટા → 🔵 બિલ જુઓ (સફેદ ટેક્સ્ટ)
-
-આ રીતે ઉપાડ સહિત બધા ટેબલમાં એકસરખો બ્લુ બટન રહેશે.
-
-.btm ક્યાં શોધવું
-તમારે HTML ફાઇલમાં .btn-photo શોધવાનું છે.
-
-આ રીતે શોધો:
-
-તમારી HTML ફાઇલ ખોલો.
-
-ઉપરના Search (🔍) પર ક્લિક કરો.
-
-Search માં લખો:
-
-.btn-photo
-
-4. જો પહેલેથી ન મળે તો <style> ટૅગની અંદર, </style> આવે તે પહેલાં આ CSS ઉમેરો:
-
-.btn-photo {
-    background: #2196F3 !important;
-    color: #ffffff !important;
-    border: none;
-    padding: 5px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.btn-photo:hover {
-    background: #1565C0 !important;
-    color: #ffffff !important;
-}
-
-નોંધ: .btn-photo અને .btm અલગ છે. તમારે .btn-photo જ શોધવાનું છે.
-
-દવા માં ટેબલ view માં ફોટો નથી આવતો
-દવામાં ફોટો ન દેખાવાનું કારણ એ છે કે દવાની ટેબલ (Pesticide_Items) માં વસ્તુની વિગતો છે, જ્યારે બિલનો ફોટો અલગ Pesticide_Bill શીટમાં સેવ થાય છે. એટલે બંને શીટને એન્ટ્રી Id દ્વારા જોડીને ફોટો લાવવો પડશે.
-
-તમારા HTML કોડમાં આ જ વ્યવસ્થા યોગ્ય રીતે મૂકવા માટે renderTable() માં ફોટો બનાવવાનો ભાગ તપાસવો જરૂરી છે.દવા (Med) માટે આ સુધારો કરો. તમારા renderTable() માં આ ભાગ શોધો:
-
-let statusVal = r["બિલની સ્થિતિ"] || r["બાકી જમા"] || "બાકી";
-
-તેની તરત નીચે આ કોડ મૂકો:
-
-// દવાના બિલમાંથી ફોટો મેળવવો
-if (tabName === 'Med') {
-    let itemId = String(entryId || "").trim();
-    let baseId = itemId.replace(/-\d+$/, "");
-
-    let medBill = (appData["Pesticide_Bill"] || []).find(b => {
-        let billId = String(
-            b["એન્ટ્રી Id"] || b["Entry_ID"] || b["એન્ટ્રી નં"] || ""
-        ).trim();
-
-        return billId !== "" && billId === baseId;
-    });
-
-    if (medBill) {
-        photoVal = medBill["બિલનો ફોટો"] ||
-                   medBill["Photo"] ||
-                   medBill["Photo_Link"] || photoVal;
-    }
-}
-
-અને ખાતરી કરો કે આ કોડ આ ફોટો શોધવાના કોડ પછી આવે:
-
-let photoLink = photoVal
-    ? `<button type="button" class="btn-photo" onclick="openImageModal('${photoVal}')">બિલ જુઓ</button>`
-    : "-";
-
-એક જરૂરી તપાસ: appData["Pesticide_Bill"] માં દવાના બિલની માહિતી લોડ થતી હોવી જોઈએ. જો આ કોડ પછી પણ ફોટો ન દેખાય, તો મને Pesticide_Bill લોડ કરતો કોડ મોકલો. પછી ચોક્કસ કારણ શોધીશું.
-
-નથી આવતું હજુ
-
-Worked for 15s
-હવે તમારી HTML અને Google Apps Script ની સેવ કરવાની પ્રક્રિયા તપાસતાં એક ભૂલ મળી છે.
-
-મુખ્ય ભૂલ: photoLink પહેલાં જ બની જાય છે અને ત્યારબાદ આપણે photoVal માં દવાનો ફોટો શોધીએ છીએ. એટલે ફોટો મળતો હોવા છતાં બટનમાં આવતો નથી.
-
-ચાલો, આ વખતે યોગ્ય જગ્યાએ સુધારો કરીએ.
-
-1. renderTable() માં આ જૂની લાઇન શોધો
-let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
-
-let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold;">બિલ જુઓ</button>` : "-";
-
-2. ઉપરનો આખો કોડ કાઢીને આ કોડ મૂકો
-let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
-
-let itemId = String(entryId || "").trim();
-let baseId = itemId.replace(/-\d+$/, "");
 
 // દવાનો ફોટો Pesticide_Bill માંથી મેળવો
 if (tabName === 'Med') {

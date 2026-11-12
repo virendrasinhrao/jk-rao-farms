@@ -2037,19 +2037,6 @@ if (tabName === 'Fert') {
 }
 
 
-Loading older messages…
-ઉપાડમાં let transactionType = (r["Transaction Type"] || r["Transaction Type"] || "").toUpperCase();
-
-
-let photoButtonText = 
-  (transactionType === "UPI" || transactionType === "BANK")
-    ? "Trn. Image"
-    : "બિલ જુઓ";
-
-
-
-
-
 // દવાનો ફોટો Pesticide_Bill માંથી મેળવો
 if (tabName === 'Med') {
     let medBill = (appData["Pesticide_Bill"] || []).find(b => {

@@ -174,7 +174,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">13/11/2026 -  11:38   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">13/11/2026 -  15:54   IST</span>
 </div>
 
 <div class="header-bar">
@@ -2025,7 +2025,10 @@ let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"
 let itemId = String(entryId || "").trim();
 let baseId = itemId.replace(/-\d+$/, "");
 
-if (tabName === 'Fert') {
+if (tabName === 'Fert')
+console.log("FERT ITEM ID:", itemId);
+console.log("FERT BILL DATA:", appData["Fertilizer_Bill"]);
+		  {
     let fertBill = (appData["Fertilizer_Bill"] || []).find(b => {
         let billId = String(b["એન્ટ્રી Id"] || b["Entry_ID"] || b["એન્ટ્રી નં"] || "").trim();
         return billId !== "" && billId === baseId;
@@ -2036,7 +2039,9 @@ if (tabName === 'Fert') {
     }
 }
 
-if (tabName === 'Med') {
+if (tabName === 'Med') 
+console.log("FERT ITEM ID:", itemId);
+console.log("FERT BILL DATA:", appData["Fertilizer_Bill"]);{
     let medBill = (appData["Pesticide_Bill"] || []).find(b => {
         let billId = String(b["એન્ટ્રી Id"] || b["Entry_ID"] || b["એન્ટ્રી નં"] || "").trim();
         return billId !== "" && billId === baseId;

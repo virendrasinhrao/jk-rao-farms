@@ -174,7 +174,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">13/11/2026 -  15:54   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">13/11/2026 -  23:56   IST</span>
 </div>
 
 <div class="header-bar">
@@ -2021,35 +2021,41 @@ let photoLink = photoVal
         let statusVal = r["બિલની સ્થિતિ"] || r["બાકી જમા"] || "બાકી";
         
 // બિલની શીટમાંથી ફોટો મેળવવો
-let photoVal = r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "";
+// Bill Sheet માંથી Entry ID વડે ફોટો મેળવવો
+let billPhotoVal = "";
 
 let itemId = String(entryId || "").trim();
 let baseId = itemId.replace(/-\d+$/, "");
 
-if (tabName === 'Fert') {
-    let fertBill = (appData["Fertilizer_Bill"] || []).find(b => {
-        let billId = String(b["એન્ટ્રી Id"] || b["Entry_ID"] || b["એન્ટ્રી નં"] || "").trim();
-        return billId !== "" && billId === baseId;
-    });
+let billSheet = tabName === "Med"
+    ? "Pesticide_Bill"
+    : "Fertilizer_Bill";
 
-    if (fertBill) {
-        photoVal = fertBill["બિલનો ફોટો"] || fertBill["Photo"] || fertBill["Photo_Link"] || photoVal;
-    }
+let billData = appData[billSheet] || [];
+
+let matchedBill = billData.find(b => {
+    let billId = String(
+        b["એન્ટ્રી Id"] ||
+        b["Entry_ID"] ||
+        b["એન્ટ્રી નં"] ||
+        ""
+    ).trim();
+
+    return billId === baseId;
+});
+
+if (matchedBill) {
+    billPhotoVal =
+        matchedBill["બિલનો ફોટો"] ||
+        matchedBill["Photo"] ||
+        matchedBill["Photo_Link"] ||
+        "";
 }
 
-if (tabName === 'Med') {
-    let medBill = (appData["Pesticide_Bill"] || []).find(b => {
-        let billId = String(b["એન્ટ્રી Id"] || b["Entry_ID"] || b["એન્ટ્રી નં"] || "").trim();
-        return billId !== "" && billId === baseId;
-    });
-
-    if (medBill) {
-        photoVal = medBill["બિલનો ફોટો"] || medBill["Photo"] || medBill["Photo_Link"] || photoVal;
-    }
-}
-
-let photoLink = photoVal
-    ? `<button type="button" onclick="openImageModal('${photoVal}')" class="btn-photo">બિલ જુઓ</button>`
+let photoLink = billPhotoVal
+    ? `<button type="button"
+        onclick="openImageModal('${billPhotoVal}')"
+        class="btn-photo">બિલ જુઓ</button>`
     : "-";
         html += `<td>${yearVal}</td><td><b>${entryId}</b></td><td>${cleanDate}</td><td>${billNo}</td><td>${bhagiya}</td><td>${vepari}</td><td><b>${itemName}</b></td><td>${typeVal}</td><td>${weight}</td><td>${packing}</td><td>${qty}</td><td>₹ ${rate}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${crop}</td><td>₹ ${parseFloat(totalBillAmt).toFixed(2)}</td><td>${sharePercent}</td><td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td><td><span class="badge-jama">${statusVal}</span></td><td>${photoLink}</td>`;
       } else if(tabName === 'Trac') {

@@ -174,7 +174,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">13/11/2026 -  01:25   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">13/11/2026 -  11:38   IST</span>
 </div>
 
 <div class="header-bar">
@@ -2036,22 +2036,21 @@ if (tabName === 'Fert') {
     }
 }
 
-
-// દવાનો ફોટો Pesticide_Bill માંથી મેળવો
 if (tabName === 'Med') {
     let medBill = (appData["Pesticide_Bill"] || []).find(b => {
-        let billId = String(b["એન્ટ્રી Id"] || b["Entry_ID"] || "").trim();
-        return billId === baseId;
+        let billId = String(b["એન્ટ્રી Id"] || b["Entry_ID"] || b["એન્ટ્રી નં"] || "").trim();
+        return billId !== "" && billId === baseId;
     });
 
     if (medBill) {
-        photoVal = medBill["બિલનો ફોટો"] || photoVal;
+        photoVal = medBill["બિલનો ફોટો"] || medBill["Photo"] || medBill["Photo_Link"] || photoVal;
     }
 }
 
 let photoLink = photoVal
     ? `<button type="button" onclick="openImageModal('${photoVal}')" class="btn-photo">બિલ જુઓ</button>`
     : "-";
+
         html += `<td>${yearVal}</td><td><b>${entryId}</b></td><td>${cleanDate}</td><td>${billNo}</td><td>${bhagiya}</td><td>${vepari}</td><td><b>${itemName}</b></td><td>${typeVal}</td><td>${weight}</td><td>${packing}</td><td>${qty}</td><td>₹ ${rate}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${crop}</td><td>₹ ${parseFloat(totalBillAmt).toFixed(2)}</td><td>${sharePercent}</td><td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td><td><span class="badge-jama">${statusVal}</span></td><td>${photoLink}</td>`;
       } else if(tabName === 'Trac') {
         let owner = r["ટ્રેક્ટર માલિક"] || "-";

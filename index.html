@@ -2824,8 +2824,7 @@ function renderGallery() {
 
   if (photos.length === 0) {
     container.innerHTML =
-      "<p style='text-align:center; color:#7f8c8d;'>કોઈ ફોટો ઉપલબ્ધ નથી.</p>";
-
+      "<p style='text-align:center;'>કોઈ ફોટો ઉપલબ્ધ નથી.</p>";
     if (actionBar) actionBar.style.display = "none";
     return;
   }
@@ -2834,44 +2833,43 @@ function renderGallery() {
     <tr>
       <th style="width:40px;">
         <input type="checkbox" id="selectAll_Gallery"
-          onclick="toggleSelectAll(this, 'Gallery')">
+        onclick="toggleSelectAll(this, 'Gallery')">
       </th>
       <th>વર્ષ</th>
       <th>તારીખ</th>
       <th>બિલ નં</th>
       <th>વેપારી</th>
-      <th>Bill To / નામ</th>
+      <th>Bill To/નામ</th>
       <th>બિલનો ફોટો</th>
       <th>એન્ટ્રી Id</th>
     </tr>`;
 
   photos.forEach((p, index) => {
     let yearVal = p["વર્ષ"] || "";
-    let dateVal = String(p["તારીખ"] || "").split("T")[0];
+    let dateVal = p["તારીખ"] || "";
     let billNoVal = p["બિલ નં"] || "";
     let vepariVal = p["વેપારી"] || "-";
-    let ownerVal = p["Bill To /નામ"] || "-";
+    let ownerVal = p["Bill To/નામ"] || "-";
     let link = p["બિલનો ફોટો"] || "";
-    let entryId = p["એન્ટ્રી Id"] || index;
+    let entryId = p["એન્ટ્રી Id"] || "";
 
     let imgTag = link
       ? `<button type="button"
-          onclick="openImageModal('${link}')"
-          style="background:#2980b9;color:white;border:none;
-          padding:5px 10px;border-radius:4px;cursor:pointer;">
+          onclick="openImageModal('${link}')">
           🖼️ બિલ જુઓ
         </button>`
       : "ના";
 
     html += `<tr>
       <td>
-        <input type="checkbox" class="row-select-Gallery"
+        <input type="checkbox"
+          class="row-select-Gallery"
           value="${entryId}"
           onclick="updateTableActionBar('Gallery')">
       </td>
       <td>${yearVal}</td>
       <td>${dateVal}</td>
-      <td><b>${billNoVal}</b></td>
+      <td>${billNoVal}</td>
       <td>${vepariVal}</td>
       <td>${ownerVal}</td>
       <td>${imgTag}</td>

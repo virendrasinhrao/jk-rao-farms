@@ -174,7 +174,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">14/11/2026 -  09:44   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">14/11/2026 -  19:11   IST</span>
 </div>
 
 <div class="header-bar">
@@ -2817,42 +2817,48 @@ alert("Photo Data: " + (upadPhoto ? "મળ્યો" : "ખાલી છે"));
 function renderGallery() {
   let container = document.getElementById("galleryContainer");
   let actionBar = document.getElementById("actionBarGallery");
+
   if (!container) return;
 
   let photos = appData.Photo_Gallery || [];
 
   if (photos.length === 0) {
     container.innerHTML =
-      "<p style='text-align:center;color:#7f8c8d;'>કોઈ ફોટો ઉપલબ્ધ નથી.</p>";
+      "<p style='text-align:center; color:#7f8c8d;'>કોઈ ફોટો ઉપલબ્ધ નથી.</p>";
+
     if (actionBar) actionBar.style.display = "none";
     return;
   }
 
-  let html = `<table><tr>
-    <th style="width:40px;">
-      <input type="checkbox" id="selectAll_Gallery"
-      onclick="toggleSelectAll(this, 'Gallery')">
-    </th>
-    <th>તારીખ</th>
-    <th>બિલ નં</th>
-    <th>વેપારી</th>
-    <th>Bill To / નામ</th>
-    <th>ફોટો</th>
-  </tr>`;
+  let html = `<table>
+    <tr>
+      <th style="width:40px;">
+        <input type="checkbox" id="selectAll_Gallery"
+          onclick="toggleSelectAll(this, 'Gallery')">
+      </th>
+      <th>વર્ષ</th>
+      <th>તારીખ</th>
+      <th>બિલ નં</th>
+      <th>વેપારી</th>
+      <th>Bill To / નામ</th>
+      <th>બિલનો ફોટો</th>
+      <th>એન્ટ્રી Id</th>
+    </tr>`;
 
   photos.forEach((p, index) => {
-    let link = p["Photo_Link"] || "";
+    let yearVal = p["વર્ષ"] || "";
     let dateVal = String(p["તારીખ"] || "").split("T")[0];
-    let billNo = p["બિલ નં"] || "-";
-    let merchant = p["વેપારી"] || "-";
-    let owner = p["Bill To / નામ"] || "-";
-    let entryId = p["Entry_ID"] || index;
+    let billNoVal = p["બિલ નં"] || "";
+    let vepariVal = p["વેપારી"] || "-";
+    let ownerVal = p["Bill To / નામ"] || "-";
+    let link = p["બિલનો ફોટો"] || "";
+    let entryId = p["એન્ટ્રી Id"] || index;
 
-    let photoButton = link
+    let imgTag = link
       ? `<button type="button"
-          onclick="openImageModal(${JSON.stringify(link)})"
-          style="background:#2980b9;color:white;border:0;
-          padding:5px 10px;border-radius:4px;">
+          onclick="openImageModal('${link}')"
+          style="background:#2980b9;color:white;border:none;
+          padding:5px 10px;border-radius:4px;cursor:pointer;">
           🖼️ બિલ જુઓ
         </button>`
       : "ના";
@@ -2860,14 +2866,16 @@ function renderGallery() {
     html += `<tr>
       <td>
         <input type="checkbox" class="row-select-Gallery"
-        value="${entryId}"
-        onclick="updateTableActionBar('Gallery')">
+          value="${entryId}"
+          onclick="updateTableActionBar('Gallery')">
       </td>
+      <td>${yearVal}</td>
       <td>${dateVal}</td>
-      <td><b>${billNo}</b></td>
-      <td>${merchant}</td>
-      <td>${owner}</td>
-      <td>${photoButton}</td>
+      <td><b>${billNoVal}</b></td>
+      <td>${vepariVal}</td>
+      <td>${ownerVal}</td>
+      <td>${imgTag}</td>
+      <td>${entryId}</td>
     </tr>`;
   });
 

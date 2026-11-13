@@ -983,6 +983,7 @@ body.light-mode .dash-box h4 {
       .then(res => res.json())
       .then(res => {
         appData = (res && res.data) ? res.data : {}; 
+		  alert("DATA RECEIVED");
 		  alert(JSON.stringify(
   (appData.Photo_Gallery || []).slice(0, 2),
   null,

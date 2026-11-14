@@ -2895,13 +2895,47 @@ function renderGallery() {
     });
   }
 
-  function openImageModal(url) {
-    document.getElementById("viewerImage").src = url;
-    document.getElementById("downloadPhotoBtn").href = url;
-    document.getElementById("modalImageViewer").style.display = "flex";
-  }
+  
+// ફોટો મોડલ ખોલવા માટે
+function openImageModal(photoRef) {
+    let modal = document.getElementById('imageModal');
+    let modalImg = document.getElementById('modalImageSrc');
 
-  function closeImageModal() { document.getElementById("modalImageViewer").style.display = "none"; }
+    if (!modal || !modalImg || !photoRef) return;
+
+    let value = String(photoRef).trim();
+    let fileId = "";
+
+    // Google Drive URL માંથી File ID મેળવો
+    let match = value.match(/(?:\/d\/|[?&]id=)([a-zA-Z0-9_-]{10,})/);
+
+    if (match) {
+        fileId = match[1];
+    } else if (/^[a-zA-Z0-9_-]{20,}$/.test(value)) {
+        fileId = value;
+    }
+
+    // File ID હોય તો Drive Thumbnail URL બનાવો
+    if (fileId) {
+        modalImg.src =
+            "https://drive.google.com/thumbnail?id=" +
+            encodeURIComponent(fileId) + "&sz=w1600";
+    } else {
+        // જૂની URL અથવા Base64 માટે
+        modalImg.src = value;
+    }
+
+    modal.style.display = 'flex';
+}
+
+// ફોટો મોડલ બંધ કરવા માટે
+function closeImageModal() {
+    let modal = document.getElementById('imageModal');
+    let modalImg = document.getElementById('modalImageSrc');
+
+    if (modal) modal.style.display = 'none';
+    if (modalImg) modalImg.src = '';
+}
 
   function onCategoryFilterChange() {
     let cat = document.getElementById("filterCategory") ? document.getElementById("filterCategory").value : "";

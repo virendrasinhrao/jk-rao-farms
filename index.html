@@ -174,7 +174,7 @@ body.light-mode .dash-box h4 {
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">14/11/2026 -  19:11   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">14/11/2026 -  18:54   IST</span>
 </div>
 
 <div class="header-bar">
@@ -892,7 +892,7 @@ body.light-mode .dash-box h4 {
 
 <!-- JavaScript Section -->
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzL_YzXjKsVCkNwPZGPJkHqG0G4ZZfH61n-w9UqA1fHVPfCqGTb99Eesqr1BlyFpz7OzQ/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxwyqtiUSQNJxPe7q_kQLGjSugRY4fvpJGPeS767xBM__3oMhWxzkYGcyhtiFqxCNMxzg/exec";
   const CORRECT_MPIN = "1234";
   let pendingActionCallback = null;
   let appData = {};
@@ -983,12 +983,6 @@ body.light-mode .dash-box h4 {
       .then(res => res.json())
       .then(res => {
         appData = (res && res.data) ? res.data : {}; 
-		  alert("DATA RECEIVED");
-		  alert(JSON.stringify(
-  (appData.Photo_Gallery || []).slice(0, 2),
-  null,
-  2
-));
         populateData(); 
         updateDashboard(); 
         renderGallery(); 
@@ -1991,7 +1985,7 @@ let photoButtonText =
 
 let photoLink = photoVal
     ? `<button type="button" class="btn-photo" onclick="openImageModal('${photoVal}')">${photoButtonText}</button>`
-    : '';
+    : '<span style="color:#888;">ફોટો ઉપલબ્ધ નથી</span>';
       html += `<tr>
         <td><input type="checkbox" class="row-select-${tabName}" value="${entryId}" onclick="updateTableActionBar('${tabName}')"></td>`;
 
@@ -2028,15 +2022,10 @@ let photoLink = photoVal
         
 // બિલની શીટમાંથી ફોટો મેળવવો
 // Bill Sheet માંથી Entry ID વડે ફોટો મેળવવો
-// Bill Sheet માંથી Entry ID વડે ફોટો મેળવવો
 let billPhotoVal = "";
 
-let itemId = String(
-    r["એન્ટ્રી Id"] ||
-    r["Entry_ID"] ||
-    r["એન્ટ્રી નં"] ||
-    ""
-).trim();
+let itemId = String(entryId || "").trim();
+let baseId = itemId.replace(/-\d+$/, "");
 
 let billSheet = tabName === "Med"
     ? "Pesticide_Bill"
@@ -2045,31 +2034,27 @@ let billSheet = tabName === "Med"
 let billData = appData[billSheet] || [];
 
 let matchedBill = billData.find(b => {
-    let keys = Object.keys(b);
+    let billId = String(
+        b["એન્ટ્રી Id"] ||
+        b["Entry_ID"] ||
+        b["એન્ટ્રી નં"] ||
+        ""
+    ).trim();
 
-    let idKey = keys.find(k =>
-        ["એન્ટ્રી Id", "Entry_ID", "એન્ટ્રી નં", "Entry Id"].includes(k.trim())
-    );
-
-    return idKey &&
-        String(b[idKey] || "").trim() === itemId;
+    return billId === baseId;
 });
 
 if (matchedBill) {
-    let photoKey = Object.keys(matchedBill).find(k =>
-        ["બિલનો ફોટો", "Photo", "Photo_Link", "ફોટો", "બિલનો ફોટો "].includes(k.trim())
-    );
-
-    if (photoKey) {
-        billPhotoVal = String(matchedBill[photoKey] || "").trim();
-    }
+    billPhotoVal =
+        matchedBill["બિલનો ફોટો"] ||
+        matchedBill["Photo"] ||
+        matchedBill["Photo_Link"] ||
+        "";
 }
 
 let photoLink = billPhotoVal
-    ? `<button type="button"
-        onclick="openImageModal('${billPhotoVal}')"
-        class="btn-photo">બિલ જુઓ</button>`
-    : "-";
+    ? `<button type="button" onclick="openImageModal('${billPhotoVal}')" class="btn-photo">બિલ જુઓ</button>`
+    : '<span style="color:#888;">ફોટો ઉપલબ્ધ નથી</span>';
         html += `<td>${yearVal}</td><td><b>${entryId}</b></td><td>${cleanDate}</td><td>${billNo}</td><td>${bhagiya}</td><td>${vepari}</td><td><b>${itemName}</b></td><td>${typeVal}</td><td>${weight}</td><td>${packing}</td><td>${qty}</td><td>₹ ${rate}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${crop}</td><td>₹ ${parseFloat(totalBillAmt).toFixed(2)}</td><td>${sharePercent}</td><td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td><td><span class="badge-jama">${statusVal}</span></td><td>${photoLink}</td>`;
       } else if(tabName === 'Trac') {
         let owner = r["ટ્રેક્ટર માલિક"] || "-";
@@ -2818,75 +2803,39 @@ alert("Photo Data: " + (upadPhoto ? "મળ્યો" : "ખાલી છે"));
     return (m >= 5) ? (y + "-" + (y + 1).toString().slice(-2)) : ((y - 1) + "-" + y.toString().slice(-2));
   }
 
-  
+  function renderGallery() {
+    let container = document.getElementById("galleryContainer");
+    let actionBar = document.getElementById("actionBarGallery");
+    if(!container) return;
+    let photos = appData.Photo_Gallery || [];
+    if(photos.length === 0) { 
+      container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ ફોટો ઉપલબ્ધ નથી.</p>"; 
+      if(actionBar) actionBar.style.display = "none";
+      return; 
+    }
+    
+    let html = `<table><tr>
+      <th style="width: 40px;"><input type="checkbox" id="selectAll_Gallery" onclick="toggleSelectAll(this, 'Gallery')"></th>
+      <th>તારીખ</th><th>બિલ નં</th><th>વેપારી</th><th>Bill To / નામ</th><th>ફોટો</th>
+    </tr>`;
 
-function renderGallery() {
-  let container = document.getElementById("galleryContainer");
-  let actionBar = document.getElementById("actionBarGallery");
+    photos.forEach((p, index) => {
+      let link = p["Photo_Link"] || p["ફોટો"] || "";
+      let imgTag = link ? `<button type="button" onclick="openImageModal('${link}')" style="background:#2980b9; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">🖼️ ફોટો જુઓ</button>` : '<span style="color:#888;">ફોટો ઉપલબ્ધ નથી</span>';
+      let dateVal = String(p["Date"] || p["તારીખ"] || '').split('T')[0];
+      let billNoVal = p["Bill_No"] || p["બિલ નં"] || '';
+      let vepariVal = p["વેપારી"] || p["Merchant"] || '-';
+      let billOwnerVal = p["Bill To / નામ :"] || p["Bill To/નામ:"] || p["બિલ માલિક"] || '-';
+      let entryId = p["એન્ટ્રી Id"] || p["Entry_ID"] || index;
 
-  if (!container) return;
-
-  let photos = appData.Photo_Gallery || [];
-
-  if (photos.length === 0) {
-    container.innerHTML =
-      "<p style='text-align:center;'>કોઈ ફોટો ઉપલબ્ધ નથી.</p>";
-    if (actionBar) actionBar.style.display = "none";
-    return;
+      html += `<tr>
+        <td><input type="checkbox" class="row-select-Gallery" value="${entryId}" onclick="updateTableActionBar('Gallery')"></td>
+        <td>${dateVal}</td><td><b>${billNoVal}</b></td><td>${vepariVal}</td><td>${billOwnerVal}</td><td>${imgTag}</td>
+      </tr>`;
+    });
+    container.innerHTML = html + `</table>`;
+    updateTableActionBar('Gallery');
   }
-
-  let html = `<table>
-    <tr>
-      <th style="width:40px;">
-        <input type="checkbox" id="selectAll_Gallery"
-        onclick="toggleSelectAll(this, 'Gallery')">
-      </th>
-      <th>વર્ષ</th>
-      <th>તારીખ</th>
-      <th>બિલ નં</th>
-      <th>વેપારી</th>
-      <th>Bill To/નામ</th>
-      <th>બિલનો ફોટો</th>
-      <th>એન્ટ્રી Id</th>
-    </tr>`;
-
-  photos.forEach((p, index) => {
-    let yearVal = p["વર્ષ"] || "";
-    let dateVal = p["તારીખ"] || "";
-    let billNoVal = p["બિલ નં"] || "";
-    let vepariVal = p["વેપારી"] || "-";
-    let ownerVal = p["Bill To/નામ"] || "-";
-    let link = p["બિલનો ફોટો"] || "";
-    let entryId = p["એન્ટ્રી Id"] || "";
-
-    let imgTag = link
-      ? `<button type="button"
-          onclick="openImageModal('${link}')">
-          🖼️ બિલ જુઓ
-        </button>`
-      : "ના";
-
-    html += `<tr>
-      <td>
-        <input type="checkbox"
-          class="row-select-Gallery"
-          value="${entryId}"
-          onclick="updateTableActionBar('Gallery')">
-      </td>
-      <td>${yearVal}</td>
-      <td>${dateVal}</td>
-      <td>${billNoVal}</td>
-      <td>${vepariVal}</td>
-      <td>${ownerVal}</td>
-      <td>${imgTag}</td>
-      <td>${entryId}</td>
-    </tr>`;
-  });
-
-  container.innerHTML = html + "</table>";
-  updateTableActionBar("Gallery");
-}
-
 
   function filterGallery() {
     let query = document.getElementById("searchGallery").value.toLowerCase();
@@ -2895,47 +2844,54 @@ function renderGallery() {
     });
   }
 
-  
-// ફોટો મોડલ ખોલવા માટે
-function openImageModal(photoRef) {
-    let modal = document.getElementById('imageModal');
-    let modalImg = document.getElementById('modalImageSrc');
-
-    if (!modal || !modalImg || !photoRef) return;
-
-    let value = String(photoRef).trim();
-    let fileId = "";
-
-    // Google Drive URL માંથી File ID મેળવો
-    let match = value.match(/(?:\/d\/|[?&]id=)([a-zA-Z0-9_-]{10,})/);
-
-    if (match) {
-        fileId = match[1];
-    } else if (/^[a-zA-Z0-9_-]{20,}$/.test(value)) {
-        fileId = value;
+  function getPhotoDisplayUrl(photoRef) {
+    let ref = String(photoRef || "").trim();
+    if (!ref) return "";
+    if (/^https?:\/\//i.test(ref)) {
+      let m = ref.match(/(?:\/d\/|[?&]id=)([a-zA-Z0-9_-]{10,})/);
+      if (m) ref = m[1];
+      else return ref;
     }
+    return "https://drive.google.com/thumbnail?id=" + encodeURIComponent(ref) + "&sz=w1600";
+  }
 
-    // File ID હોય તો Drive Thumbnail URL બનાવો
-    if (fileId) {
-        modalImg.src =
-            "https://drive.google.com/thumbnail?id=" +
-            encodeURIComponent(fileId) + "&sz=w1600";
-    } else {
-        // જૂની URL અથવા Base64 માટે
-        modalImg.src = value;
+  async function openImageModal(photoRef) {
+    let raw = String(photoRef || "").trim();
+    if (!raw) return;
+    let match = raw.match(/(?:\/d\/|[?&]id=)([a-zA-Z0-9_-]{10,})/);
+    let fileId = match ? match[1] : raw;
+    let image = document.getElementById("viewerImage");
+    let modal = document.getElementById("modalImageViewer");
+    let download = document.getElementById("downloadPhotoBtn");
+    if (!image || !modal) return;
+    modal.style.display = "flex";
+    image.alt = "ફોટો લોડ થઈ રહ્યો છે...";
+    image.removeAttribute("src");
+    try {
+      const response = await fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "getPhoto", fileId: fileId })
+      });
+      const result = await response.json();
+      if (result.status !== "success" || !result.base64) {
+        throw new Error(result.message || "ફોટો લોડ થઈ શક્યો નથી.");
+      }
+      const dataUrl = "data:" + result.mimeType + ";base64," + result.base64;
+      image.src = dataUrl;
+      image.alt = result.fileName || "Bill Photo";
+      if (download) {
+        download.href = dataUrl;
+        download.download = result.fileName || "Bill_Photo.jpg";
+      }
+    } catch (err) {
+      image.alt = "ફોટો લોડ કરવામાં ભૂલ: " + err.message;
+      image.src = "";
+      alert("ફોટો લોડ થઈ શક્યો નથી: " + err.message);
     }
+  }
 
-    modal.style.display = 'flex';
-}
-
-// ફોટો મોડલ બંધ કરવા માટે
-function closeImageModal() {
-    let modal = document.getElementById('imageModal');
-    let modalImg = document.getElementById('modalImageSrc');
-
-    if (modal) modal.style.display = 'none';
-    if (modalImg) modalImg.src = '';
-}
+  function closeImageModal() { document.getElementById("modalImageViewer").style.display = "none"; }
 
   function onCategoryFilterChange() {
     let cat = document.getElementById("filterCategory") ? document.getElementById("filterCategory").value : "";
@@ -3044,7 +3000,7 @@ function renderBillRecordTable() {
       let billToName = r["Bill To/નામ"] || r[keys[13]] || "-";
 
       // નાનું બટન ફોટો જોવા માટે
-      let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:12px;">🖼️ ફોટો જુઓ</button>` : "-";
+      let photoLink = photoVal ? `<button type="button" onclick="openImageModal('${photoVal}')" style="background:#27ae60; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:12px;">🖼️ ફોટો જુઓ</button>` : '<span style="color:#888;">ફોટો ઉપલબ્ધ નથી</span>';
 
       html += `<tr>
         <td>${yearVal}</td>

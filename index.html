@@ -169,22 +169,12 @@ body.light-mode .dash-box h4 {
     background: #1565C0 !important;
     color: #ffffff !important;
 }
-  
-    /* Photo viewer loading animation */
-    @keyframes photoSpin { to { transform: rotate(360deg); } }
-    @keyframes photoPulse { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-5px); } }
-    #photoLoadingAnimation { display:none; min-height:190px; flex-direction:column; align-items:center; justify-content:center; gap:14px; color:#2c3e50; font-weight:600; }
-    #photoLoadingAnimation .photo-spinner { width:48px; height:48px; border:5px solid #dcefe3; border-top-color:#27ae60; border-radius:50%; animation:photoSpin .8s linear infinite; }
-    #photoLoadingAnimation .photo-loading-dots { display:flex; gap:6px; }
-    #photoLoadingAnimation .photo-loading-dots span { width:7px; height:7px; border-radius:50%; background:#27ae60; animation:photoPulse 1.1s infinite ease-in-out; }
-    #photoLoadingAnimation .photo-loading-dots span:nth-child(2) { animation-delay:.15s; }
-    #photoLoadingAnimation .photo-loading-dots span:nth-child(3) { animation-delay:.3s; }
-</style>
+  </style>
 </head>
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">15/11/2026 -  09:01   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">15/11/2026 -  09:08   IST</span>
 </div>
 
 <div class="header-bar">
@@ -509,9 +499,7 @@ body.light-mode .dash-box h4 {
           <div class="form-group"><label>📌 સ્થિતિ:</label><select id="fStatus"><option>જમા</option><option>બાકી</option></select></div>
         </div>
         <div class="form-group"><label>📝 વિગત:</label><input type="text" id="fDetails" placeholder="ઓપ્શનલ"></div>
-        <div class="form-group"><label>📷 બિલનો ફોટો:</label><input type="file" id="fPhoto" accept="image/*" capture="environment"></div>
-      
-        <!-- ખાતર ફોટો સેક્શન -->
+        <!-- ખાતર ફોટો સેક્શન: એક જ hidden file input ને camera અને gallery બટનો વાપરે છે -->
         <div class="form-group">
           <label style="font-weight: bold; display: block; margin-bottom: 5px;">📷 બિલનો ફોટો:</label>
           <div style="display: flex; gap: 10px; margin-bottom: 8px;">
@@ -862,11 +850,10 @@ body.light-mode .dash-box h4 {
 <div id="modalImageViewer" class="modal">
   <div class="modal-content" style="max-width: 400px;">
     <h3 style="color:#2c3e50; margin-top:0;">📷 બિલ ફોટો વ્યુઅર</h3>
-    <div style="margin: 10px 0; max-height: 350px; min-height:190px; overflow:auto; position:relative;">
-      <div id="photoLoadingAnimation" role="status" aria-live="polite">
-        <div class="photo-spinner"></div>
-        <div>ફોટો લોડ થઈ રહ્યો છે</div>
-        <div class="photo-loading-dots"><span></span><span></span><span></span></div>
+    <div id="photoViewerStage" style="position:relative; margin:10px 0; min-height:120px; max-height:350px; overflow:auto; display:flex; align-items:center; justify-content:center;">
+      <div id="photoLoadingIndicator" style="display:none; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:24px; color:#27ae60; font-weight:bold;">
+        <div style="width:42px;height:42px;border:5px solid #dfeee6;border-top:5px solid #27ae60;border-radius:50%;animation:smoothSpin .8s linear infinite;"></div>
+        <span>ફોટો લોડ થઈ રહ્યો છે...</span>
       </div>
       <img id="viewerImage" src="" style="display:none; width:100%; border-radius:4px; border:1px solid #ccc; object-fit:contain;">
     </div>
@@ -1985,9 +1972,11 @@ body.light-mode .dash-box h4 {
       let cleanDate = String(r["તારીખ"] || r["Date"] || "").split('T')[0];
       let entryId = r["એન્ટ્રી Id"] || r["Entry_ID"] || r["એન્ટ્રી નં"] || index;
       let bhagiya = r["ભાગીદાર"] || r["ખેડૂનું નામ"] || r["ઉપાડ લેનાર"] || "-";
-      let photoVal = tabName === 'Sales'
-          ? (r["બિલનો ફોટો"] || r["Photo_Link"] || r["Photo"] || "")
-          : (r["Transaction Image"] || r["Photo"] || r["Photo_Link"] || r["બિલનો ફોટો"] || "");
+      let photoVal = r["Transaction Image"] ||
+               r["Photo"] ||
+               r["Photo_Link"] ||
+               r["બિલનો ફોટો"] ||
+               "";
 																		 
 let transactionType = (r["Transaction Type"] || "").toUpperCase();
 
@@ -2033,40 +2022,46 @@ let photoLink = photoVal
         let farmerAmt = r["ખેડૂ રકમ"] || 0;
         let statusVal = r["બિલની સ્થિતિ"] || r["બાકી જમા"] || "બાકી";
         
-// બિલની શીટમાંથી ફોટો મેળવવો
-// Bill Sheet માંથી Entry ID વડે ફોટો મેળવવો
+// Pesticide_Bill / Fertilizer_Bill માંથી બિલનો ફોટો મેળવો.
+// Header માં વધારાની જગ્યા, BOM અથવા invisible character હોય તો પણ key શોધી શકાશે.
 let billPhotoVal = "";
+const normalizeSheetKey = value => String(value == null ? "" : value)
+    .normalize("NFC")
+    .replace(/[\u200B-\u200D\uFEFF]/g, "")
+    .replace(/\s+/g, "")
+    .trim()
+    .toLowerCase();
+const readSheetValue = (row, possibleNames) => {
+    if (!row) return "";
+    const wanted = possibleNames.map(normalizeSheetKey);
+    const actualKey = Object.keys(row).find(key => wanted.includes(normalizeSheetKey(key)));
+    return actualKey == null ? "" : row[actualKey];
+};
+const normalizeEntryId = value => String(value == null ? "" : value)
+    .normalize("NFC")
+    .replace(/[\u200B-\u200D\uFEFF]/g, "")
+    .trim()
+    .toUpperCase();
 
-let itemId = String(entryId || "").trim();
-let baseId = itemId.replace(/-\d+$/, "");
+const itemId = normalizeEntryId(readSheetValue(r, ["એન્ટ્રી Id", "એન્ટ્રી ID", "Entry_ID", "Entry ID", "એન્ટ્રી નં"]));
+const itemBillNo = normalizeEntryId(readSheetValue(r, ["બિલ નં", "બિલ નંબર", "Bill No", "Bill_No"]));
+const billSheet = tabName === "Med" ? "Pesticide_Bill" : "Fertilizer_Bill";
+const billData = Array.isArray(appData[billSheet]) ? appData[billSheet] : [];
 
-let billSheet = tabName === "Med"
-    ? "Pesticide_Bill"
-    : "Fertilizer_Bill";
+let matchedBill = billData.find(b => normalizeEntryId(readSheetValue(b, ["એન્ટ્રી Id", "એન્ટ્રી ID", "Entry_ID", "Entry ID", "એન્ટ્રી નં"])) === itemId && itemId);
 
-let billData = appData[billSheet] || [];
-
-let matchedBill = billData.find(b => {
-    let billId = String(
-        b["એન્ટ્રી Id"] ||
-        b["Entry_ID"] ||
-        b["એન્ટ્રી નં"] ||
-        ""
-    ).trim();
-
-    return billId === baseId;
-});
-
-if (matchedBill) {
-    billPhotoVal =
-        matchedBill["બિલનો ફોટો"] ||
-        matchedBill["Photo"] ||
-        matchedBill["Photo_Link"] ||
-        "";
+// Entry ID match ન મળે તો એ જ બિલ નંબરથી fallback.
+if (!matchedBill && itemBillNo) {
+    matchedBill = billData.find(b => normalizeEntryId(readSheetValue(b, ["બિલ નં", "બિલ નંબર", "Bill No", "Bill_No"])) === itemBillNo);
 }
 
+if (matchedBill) {
+    billPhotoVal = readSheetValue(matchedBill, ["બિલનો ફોટો", "બિલ નો ફોટો", "Bill Photo", "Photo", "Photo_Link"]);
+}
+
+// URL હોય કે સીધી Drive File ID હોય, બંને openImageModal સ્વીકારે છે.
 let photoLink = billPhotoVal
-    ? `<button type="button" onclick="openImageModal('${billPhotoVal}')" class="btn-photo">બિલ જુઓ</button>`
+    ? `<button type="button" onclick="openImageModal('${String(billPhotoVal).replace(/\\/g, "\\\\").replace(/'/g, "\\'")}')" class="btn-photo">બિલ જુઓ</button>`
     : '<span style="color:#888;">ફોટો ઉપલબ્ધ નથી</span>';
         html += `<td>${yearVal}</td><td><b>${entryId}</b></td><td>${cleanDate}</td><td>${billNo}</td><td>${bhagiya}</td><td>${vepari}</td><td><b>${itemName}</b></td><td>${typeVal}</td><td>${weight}</td><td>${packing}</td><td>${qty}</td><td>₹ ${rate}</td><td>₹ ${parseFloat(amt).toFixed(2)}</td><td>${crop}</td><td>₹ ${parseFloat(totalBillAmt).toFixed(2)}</td><td>${sharePercent}</td><td>₹ ${parseFloat(farmerAmt).toFixed(2)}</td><td><span class="badge-jama">${statusVal}</span></td><td>${photoLink}</td>`;
       } else if(tabName === 'Trac') {
@@ -2876,13 +2871,16 @@ alert("Photo Data: " + (upadPhoto ? "મળ્યો" : "ખાલી છે"));
     let image = document.getElementById("viewerImage");
     let modal = document.getElementById("modalImageViewer");
     let download = document.getElementById("downloadPhotoBtn");
-    let loader = document.getElementById("photoLoadingAnimation");
+    let loader = document.getElementById("photoLoadingIndicator");
     if (!image || !modal) return;
+
     modal.style.display = "flex";
+    image.onload = null;
+    image.onerror = null;
     image.style.display = "none";
-    image.alt = "";
     image.removeAttribute("src");
     if (loader) loader.style.display = "flex";
+
     try {
       const response = await fetch(SCRIPT_URL, {
         method: "POST",
@@ -2893,20 +2891,25 @@ alert("Photo Data: " + (upadPhoto ? "મળ્યો" : "ખાલી છે"));
       if (result.status !== "success" || !result.base64) {
         throw new Error(result.message || "ફોટો લોડ થઈ શક્યો નથી.");
       }
-      const dataUrl = "data:" + result.mimeType + ";base64," + result.base64;
+
+      const dataUrl = "data:" + (result.mimeType || "image/jpeg") + ";base64," + result.base64;
+      image.onload = function () {
+        image.style.display = "block";
+        if (loader) loader.style.display = "none";
+      };
+      image.onerror = function () {
+        if (loader) loader.style.display = "none";
+        image.alt = "ફોટો બતાવી શકાયો નથી.";
+      };
       image.src = dataUrl;
-      image.alt = result.fileName || "Bill Photo";
-      image.style.display = "block";
-      if (loader) loader.style.display = "none";
       if (download) {
         download.href = dataUrl;
         download.download = result.fileName || "Bill_Photo.jpg";
       }
     } catch (err) {
-      image.alt = "ફોટો લોડ કરવામાં ભૂલ: " + err.message;
-      image.src = "";
-      image.style.display = "none";
       if (loader) loader.style.display = "none";
+      image.style.display = "none";
+      image.alt = "ફોટો લોડ કરવામાં ભૂલ: " + err.message;
       alert("ફોટો લોડ થઈ શક્યો નથી: " + err.message);
     }
   }

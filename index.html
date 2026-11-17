@@ -294,12 +294,21 @@ body.light-mode .dash-box h4 {
     .farmer-balance-line strong{font-size:clamp(16px,3.8vw,22px) !important;line-height:1.15 !important;}
     .farmer-balance-line b{font-size:10px !important;line-height:1.2 !important;}
     @media(max-width:420px){.farmer-balance-card{margin-top:8px !important;padding:8px 9px !important;min-height:0 !important;border-radius:11px !important;}.farmer-balance-card>span,.farmer-balance-line b{font-size:9px !important;}.farmer-balance-line{flex-direction:row !important;align-items:center !important;}.farmer-balance-line strong{font-size:17px !important;}}
+
+/* OTP modal: keep verification form on-page so Android WebView survives Gmail app switching */
+#farmOtpModal{display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.78);align-items:center;justify-content:center;padding:18px;box-sizing:border-box}
+#farmOtpModal .farm-otp-card{width:100%;max-width:420px;background:#202a33;color:#fff;border:1px solid #3b4a56;border-radius:16px;padding:20px;box-shadow:0 12px 40px rgba(0,0,0,.45)}
+#farmOtpModal h3{margin:0 0 10px;font-size:20px}#farmOtpModal p{line-height:1.5;color:#d5dde5;font-size:14px}
+#farmOtpModal input{font-size:22px;letter-spacing:5px;text-align:center;padding:13px;margin:10px 0}
+#farmOtpModal .otp-actions{display:flex;gap:10px;margin-top:12px}#farmOtpModal button{flex:1;border:0;border-radius:9px;padding:12px;font-weight:700;font-size:15px}
+#farmOtpVerifyBtn{background:#20a464;color:white}#farmOtpCancelBtn{background:#46515c;color:white}
+
 </style>
 </head>
 <body>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">16/11/2026 -  9:15  IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">14/11/2026 -  18:54   IST</span>
 </div>
 
 <div class="header-bar">
@@ -337,6 +346,14 @@ body.light-mode .dash-box h4 {
   <div id="formDash" class="section active">
     <div class="main-year-dashboard">
       <h2 class="main-year-title">J K RAO FARMS</h2>
+      <div style="display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin:0 0 12px;">
+        <label for="dashboardYearFilter" style="margin:0;color:#aebbd0;font-size:12px;">વર્ષ પસંદ કરો:</label>
+        <select id="dashboardYearFilter" onchange="updateDashboard()" style="width:auto;min-width:125px;padding:6px 10px;border-radius:8px;background:#26364d;color:#fff;border:1px solid #60758f;font-weight:bold;"></select>
+        <button id="closeYearButton" type="button" onclick="confirmCloseYear()" style="display:none;background:#b91c1c;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:bold;cursor:pointer;">🔒 CLOSE YEAR</button>
+        <button id="undoYearButton" type="button" onclick="confirmUndoCloseYear()" style="display:none;background:#d97706;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:bold;cursor:pointer;">↩ UNDO CLOSE</button>
+        <button type="button" onclick="setupOwnerMpinFromApp()" style="background:#0f766e;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:bold;cursor:pointer;">👑 OWNER SETUP</button>
+        <button type="button" onclick="resetAdminMpin()" style="background:#475569;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:bold;cursor:pointer;">🔑 RESET MPIN</button>
+      </div>
       <div class="main-year-label" id="dashYearLabel">વર્ષ (2026-27)</div>
       <div class="main-year-grid">
         <div class="main-year-stat main-year-green main-year-full"><span>💰 કુલ વેચાણ (+)</span><strong id="dashMainSales">₹ 0.00</strong></div>
@@ -816,23 +833,12 @@ body.light-mode .dash-box h4 {
         </div>
         <div class="form-group"><label>📝 વિગત:</label><input type="text" id="uDetails" placeholder="વધારાની માહિતી..."></div>
         
-        <!-- વ્યાજ સેક્શન -->
-        <div style="background: #fdfefe; border: 1px solid #d5dbdb; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
-          <h4 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 13px;">📊 વ્યાજ ગણતરી (૩% પ્રતિ મહિનો)</h4>
-          <div class="flex-row">
-            <div class="form-group"><label>શરૂઆતની તારીખ:</label><input type="date" id="uStartDate"></div>
-            <div class="form-group"><label>પૂરી થવાની તારીખ:</label><input type="date" id="uEndDate"></div>
-          </div>
-          <div class="flex-row" style="align-items: flex-end;">
-            <div class="form-group"><label>📈 વ્યાજપાત્ર રકમ:</label><input type="number" id="uInterestAmt" step="0.01" value="0"></div>
-            <div class="form-group">
-              <button type="button" onclick="calculateDateWiseInterest()" style="width: 100%; background: #2980b9; color: white; border: none; padding: 8px; border-radius: 3px; font-weight: bold; cursor: pointer; font-size: 12px;">🔄 તારીખ મુજબ વ્યાજ ગણો</button>
-            </div>
-          </div>
-          <div class="form-group" style="margin-top: 8px;">
-            <label>ગણતરી કરેલ વ્યાજ રકમ:</label>
-            <input type="text" id="uInterestCalc" class="readonly-bg" readonly value="₹ 0.00">
-          </div>
+        <!-- વ્યાજ પાત્ર રકમ: દરેક એન્ટ્રી માટે અલગ -->
+        <div style="background:#fdfefe;border:1px solid #d5dbdb;padding:10px;border-radius:8px;margin-bottom:10px;">
+          <h4 style="margin:0 0 8px;color:#2c3e50;font-size:13px;">📊 વ્યાજ પાત્ર રકમ</h4>
+          <div class="form-group"><label>📈 આ એન્ટ્રીની વ્યાજ પાત્ર રકમ (₹):</label><input type="number" id="uInterestAmt" step="0.01" min="0" value="0"></div>
+          <small style="color:#667085;">એન્ટ્રીની તારીખ ઉપરના તારીખના બોક્સમાંથી આપમેળે લેવામાં આવશે. વ્યાજની અંતિમ તારીખ ઉપાડ લેજરના વ્યાજ ગણતરી વિભાગમાં પસંદ કરશો.</small>
+          <input type="hidden" id="uInterestCalc" value="0">
         </div>
 
         <div class="flex-row">
@@ -858,6 +864,17 @@ body.light-mode .dash-box h4 {
     <div id="subContentUpadView" class="sub-section">
       <button type="button" class="btn-back" onclick="backToChoice('Upad')">⬅️ પાછળ જાઓ</button>
       <h3 style="text-align:center; color:#e67e22; margin-top:0;">📋 ઉપાડ લેજર રેકોર્ડ્સ</h3>
+      <div style="background:#f4f8ff;border:1px solid #cbdaf5;border-radius:10px;padding:12px;margin:10px 0;">
+        <h4 style="margin:0 0 10px;color:#23446b;font-size:14px;">📊 વ્યાજ ગણતરી — માસિક 3%</h4>
+        <div class="flex-row">
+          <div class="form-group"><label>👤 ખેડૂત / ભાગીદાર:</label><select id="interestFarmer"><option value="">-- પસંદ કરો --</option></select></div>
+          <div class="form-group"><label>📅 વ્યાજની અંતિમ તારીખ:</label><input type="date" id="interestFinalDate"></div>
+        </div>
+        <button type="button" onclick="calculateLedgerInterest()" style="width:100%;background:#2463a6;color:white;border:0;padding:10px;border-radius:7px;font-weight:bold;">🧮 કુલ વ્યાજ ગણો</button>
+        <div id="interestResult" style="margin-top:10px;padding:10px;background:#fff;border-radius:7px;font-weight:bold;color:#17365d;">અંતિમ તારીખ પસંદ કરીને વ્યાજ ગણો.</div>
+        <div id="interestBreakdown" style="margin-top:8px;"></div>
+        <small style="display:block;margin-top:7px;color:#667085;">દરેક ઉપાડ એન્ટ્રીની પોતાની તારીખ અને અલગ વ્યાજ પાત્ર રકમ લેવામાં આવશે. દરેક મહિનાના વાસ્તવિક દિવસો પ્રમાણે 3% વ્યાજ ગણાશે.</small>
+      </div>
       <div class="form-group"><input type="text" id="searchUpad" placeholder="🔍 નામ અથવા તારીખથી શોધો..." oninput="filterTable('Upad')"></div>
       <div id="actionBarUpad" class="table-actions-bar"></div>
       <div id="tableContainerUpad" style="overflow-x:auto;"></div>
@@ -1021,17 +1038,86 @@ body.light-mode .dash-box h4 {
 <div id="modalMpin" class="modal">
   <div class="modal-content" style="text-align:center;">
     <h3 style="color:#c0392b; margin-top:0;">🔒 સિક્યુરિટી MPIN</h3>
-    <p style="font-size:13px; color:#555;">આ ક્રિયા કરવા માટે ૪ આંકડાનો MPIN નાખો:</p>
-    <input type="password" id="inputMpin" maxlength="4" style="text-align:center; font-size:20px; letter-spacing:8px; margin-bottom:12px;" placeholder="••••">
+    <p style="font-size:13px; color:#555;">માલિકની ઓળખ માટે 6 Digit MPIN નાખો:</p>
+    <input type="password" id="inputMpin" maxlength="6" inputmode="numeric" style="text-align:center; font-size:20px; letter-spacing:8px; margin-bottom:12px;" placeholder="••••••">
     <button type="button" class="btn-submit" onclick="verifyMpinAndProceed()">કન્ફર્મ કરો</button>
     <button type="button" onclick="document.getElementById('modalMpin').style.display='none'" style="margin-top:8px; width:100%; padding:6px;">કેન્સલ</button>
   </div>
 </div>
 
+<div id="yearOwnerNoticeModal" class="modal" style="display:none;z-index:10050;align-items:center;justify-content:center;">
+  <div class="modal-content" style="max-width:420px;text-align:center;border-radius:16px;padding:24px;">
+    <div style="font-size:34px;">🌾</div>
+    <h3 style="margin:8px 0;color:#1f5134;">નવું નાણાકીય વર્ષ શરૂ થયું છે</h3>
+    <p style="color:#4b5563;line-height:1.6;">ખેડૂત / ભાગીદારોની વિગતો બદલવી છે?</p>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:18px;">
+      <button type="button" onclick="handleYearOwnerNotice(true)" style="background:#16834a;color:#fff;border:0;border-radius:9px;padding:10px 22px;font-weight:700;">હા</button>
+      <button type="button" onclick="handleYearOwnerNotice(false)" style="background:#64748b;color:#fff;border:0;border-radius:9px;padding:10px 22px;font-weight:700;">ના</button>
+    </div>
+  </div>
+</div>
+
+<div id="ownerEmailModal" class="modal" style="display:none;z-index:10070;align-items:center;justify-content:center;">
+ <div class="modal-content" style="max-width:390px;padding:22px;border-radius:16px;">
+  <h3 id="ownerEmailTitle" style="margin:0 0 8px;color:#1f5134;text-align:center;">👑 Owner Email</h3>
+  <p id="ownerEmailHelp" style="font-size:13px;color:#64748b;text-align:center;">માલિકનું નોંધાયેલ Email દાખલ કરો.</p>
+  <label for="ownerEmailInput">Registered Email</label><input id="ownerEmailInput" type="email" autocomplete="email" placeholder="owner@example.com">
+  <div style="display:flex;gap:8px;margin-top:14px;"><button type="button" onclick="submitOwnerEmailFlow()" style="flex:1;background:#16834a;color:#fff;border:0;border-radius:8px;padding:10px;font-weight:700;">આગળ વધો</button><button type="button" onclick="closeOwnerEmailFlow()" style="background:#64748b;color:#fff;border:0;border-radius:8px;padding:10px;">રદ કરો</button></div>
+  <p id="ownerEmailError" style="color:#b91c1c;font-size:12px;min-height:16px;"></p>
+ </div>
+</div>
+
+<div id="ownerLoginModal" class="modal" style="display:none;z-index:10060;align-items:center;justify-content:center;">
+ <div class="modal-content" style="max-width:390px;padding:22px;border-radius:16px;">
+  <h3 style="margin:0 0 8px;color:#1f5134;text-align:center;">👑 Owner Login</h3>
+  <p style="font-size:13px;color:#64748b;text-align:center;">Bhagiya_Master માં Role = માલિક ધરાવતો Registered Email દાખલ કરો.</p>
+  <label for="ownerLoginEmail">Email Address</label><input id="ownerLoginEmail" type="email" autocomplete="username" placeholder="owner@example.com">
+  <label for="ownerLoginMpin">6 Digit MPIN</label><input id="ownerLoginMpin" type="password" maxlength="6" inputmode="numeric" autocomplete="current-password" placeholder="••••••">
+  <p style="font-size:12px;color:#64748b;margin:8px 0 12px;">Login વધુમાં વધુ 30 મિનિટ માટે માન્ય રહેશે. દરેક Edit / Delete પહેલાં MPIN ફરીથી દાખલ કરવો પડશે.</p>
+  <div style="display:flex;gap:8px;margin-top:14px;"><button type="button" onclick="submitOwnerLogin()" style="flex:1;background:#16834a;color:#fff;border:0;border-radius:8px;padding:10px;font-weight:700;">Login</button><button type="button" onclick="cancelOwnerLogin()" style="background:#64748b;color:#fff;border:0;border-radius:8px;padding:10px;">Cancel</button></div>
+  <div style="display:flex;justify-content:space-between;gap:8px;margin-top:10px;"><button type="button" onclick="openOwnerEmailFlow('SETUP')" style="background:transparent;border:0;color:#0f766e;text-decoration:underline;">પ્રથમ વખત Owner Setup</button><button type="button" onclick="openOwnerEmailFlow('RESET')" style="background:transparent;border:0;color:#0f766e;text-decoration:underline;">Forgot / Reset MPIN</button></div>
+  <p id="ownerLoginError" style="color:#b91c1c;font-size:12px;min-height:16px;"></p>
+ </div>
+</div>
+
 <!-- JavaScript Section -->
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxwyqtiUSQNJxPe7q_kQLGjSugRY4fvpJGPeS767xBM__3oMhWxzkYGcyhtiFqxCNMxzg/exec";
-  const CORRECT_MPIN = "1234";
+  let ADMIN_VERIFICATION_TOKEN = "";
+  const OWNER_SESSION_KEY = 'jk_rao_farms_owner_session_v2';
+  function saveOwnerSession(token,email,expires){ ADMIN_VERIFICATION_TOKEN=token; try{localStorage.setItem(OWNER_SESSION_KEY,JSON.stringify({token:token,email:email,expires:expires}));}catch(e){} }
+  function getSavedOwnerEmail(){try{const x=JSON.parse(localStorage.getItem(OWNER_SESSION_KEY)||'null');return x&&x.email?String(x.email):'';}catch(e){return '';}}
+  function clearOwnerSession(){ const old=ADMIN_VERIFICATION_TOKEN; ADMIN_VERIFICATION_TOKEN=''; try{localStorage.removeItem(OWNER_SESSION_KEY);}catch(e){} if(old) appPost({action:'logoutOwnerSession',adminToken:old}).catch(()=>{}); }
+  let pendingYearNoticeValue='';
+  function showYearOwnerNotice(year){
+    pendingYearNoticeValue=String(year||'').trim();
+    const modal=document.getElementById('yearOwnerNoticeModal');
+    if(modal && pendingYearNoticeValue) modal.style.display='flex';
+  }
+  function handleYearOwnerNotice(changeDetails){
+    const year=pendingYearNoticeValue;
+    const modal=document.getElementById('yearOwnerNoticeModal');
+    if(modal)modal.style.display='none';
+    if(!year)return;
+    appPost({action:'acknowledgeYearNotice',year:year,adminToken:ADMIN_VERIFICATION_TOKEN})
+      .then(()=>{
+        pendingYearNoticeValue='';
+        if(changeDetails){
+          fetchData();
+          window.setTimeout(()=>openMasterModal('Bhagiya_Master'),700);
+        }
+      })
+      .catch(err=>{if(modal)modal.style.display='flex';alert('યાદ અપાવવાની સ્થિતિ સેવ થઈ નથી: '+err.message);});
+  }
+  function restoreOwnerSession(){ try{const x=JSON.parse(localStorage.getItem(OWNER_SESSION_KEY)||'null'); if(!x||!x.token||Number(x.expires)<=Date.now()){localStorage.removeItem(OWNER_SESSION_KEY);return;} ADMIN_VERIFICATION_TOKEN=x.token; appPost({action:'validateOwnerSession',adminToken:x.token}).then(res=>{ADMIN_VERIFICATION_TOKEN=x.token;refreshYearActionButtons();const pending=res.data&&res.data.pendingYearNotice;if(pending){window.setTimeout(()=>showYearOwnerNotice(pending),900);}}).catch(()=>{clearOwnerSession();});}catch(e){} }
+  const _nativeFetch = window.fetch.bind(window);
+  window.fetch = function(url, options) {
+    options = options || {};
+    if (options.method && String(options.method).toUpperCase() === "POST" && options.body && ADMIN_VERIFICATION_TOKEN) {
+      try { const bodyObj = JSON.parse(options.body); bodyObj.adminToken = ADMIN_VERIFICATION_TOKEN; options = Object.assign({}, options, {body: JSON.stringify(bodyObj)}); } catch(e) {}
+    }
+    return _nativeFetch(url, options);
+  };
   let pendingActionCallback = null;
   let appData = {};
   let currentActiveTab = 'Sales';
@@ -1039,16 +1125,27 @@ body.light-mode .dash-box h4 {
   let activeMasterSheet = '';
   let selectedMasterRowName = '';
 
+  document.addEventListener('input', function(e){ if(e.target && e.target.id==='farmOtpInput'){ const f=readFarmOtpFlow(); if(f){f.otp=e.target.value;saveFarmOtpFlow(f);} } });
+
   window.onload = function() {
     let now = new Date();
     let today = now.toISOString().split('T')[0];
-    ['sDate', 'mDate', 'fDate', 'tDate', 'uDate', 'uStartDate', 'uEndDate'].forEach(id => {
+    ['sDate', 'mDate', 'fDate', 'tDate', 'uDate', 'interestFinalDate'].forEach(id => {
       let el = document.getElementById(id);
       if(el) el.value = today;
     });
 
     setEntryIdDate(today);
     fetchData();
+    restoreOwnerSession();
+    // First screen: require Owner Login unless a valid saved 30-minute session is restored.
+    setTimeout(function(){
+      if(!ADMIN_VERIFICATION_TOKEN && !readFarmOtpFlow()){
+        const lm=document.getElementById('ownerLoginModal');
+        if(lm){lm.style.display='flex';const em=document.getElementById('ownerLoginEmail');if(em)em.value=getSavedOwnerEmail();}
+      }
+    },350);
+    restoreFarmOtpFlow();
     addSalesItemRow(); addMedItemRow(); addFertItemRow(); addTracItemRow();
   };
 
@@ -1121,8 +1218,9 @@ body.light-mode .dash-box h4 {
       .then(res => res.json())
       .then(res => {
         appData = (res && res.data) ? res.data : {}; 
-        populateData(); 
-        updateDashboard(); 
+        populateData();
+        populateDashboardYearFilter();
+        updateDashboard();
         renderGallery(); 
         renderBillRecordTable();
         populateBillRecordFilters(); 
@@ -1340,30 +1438,90 @@ body.light-mode .dash-box h4 {
     }
   }
 
-  function calculateDateWiseInterest() {
-    let principal = parseFloat(document.getElementById("uInterestAmt").value) || 0;
-    let startStr = document.getElementById("uStartDate").value;
-    let endStr = document.getElementById("uEndDate").value;
+  function escapeHtml(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
 
-    if(!startStr || !endStr) {
-      alert("કૃપા કરીને શરૂઆતની અને પૂરી થવાની બંને તારીખ પસંદ કરો!");
-      return;
+  // માસિક 3% વ્યાજ: દરેક કેલેન્ડર મહિનાના વાસ્તવિક દિવસોના આધારે
+  function getCalendarDate(value) {
+    if (!value) return null;
+    if (value instanceof Date && !isNaN(value)) return new Date(value.getFullYear(), value.getMonth(), value.getDate());
+    const str = String(value).trim();
+    let m = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+    if (m) return new Date(Number(m[1]), Number(m[2])-1, Number(m[3]));
+    m = str.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/);
+    if (m) return new Date(Number(m[3]), Number(m[2])-1, Number(m[1]));
+    const d = new Date(str);
+    return isNaN(d) ? null : new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+
+  function getRowInterestEligibleAmount(row) {
+    const aliases = ['વ્યાજ પાત્ર રકમ','વ્યાજપાત્ર રકમ','વ્યાજ પાત્ર','Interest Eligible Amount','Interest Amount','વ્યાજ રકમ'];
+    for (const key of aliases) {
+      if (row && row[key] !== undefined && row[key] !== '') return Number(String(row[key]).replace(/,/g,'')) || 0;
     }
-
-    let d1 = new Date(startStr);
-    let d2 = new Date(endStr);
-    let diffTime = d2 - d1;
-    let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if(diffDays <= 0) {
-      alert("પૂરી થવાની તારીખ શરૂઆતની તારીખ પછીની હોવી જોઈએ!");
-      return;
+    if (row) {
+      const key = Object.keys(row).find(k => String(k).includes('વ્યાજ') && String(k).includes('પાત્ર'));
+      if (key) return Number(String(row[key]).replace(/,/g,'')) || 0;
     }
+    return 0;
+  }
 
-    let dailyRate = 0.03 / 30;
-    let interest = principal * dailyRate * diffDays;
-    document.getElementById("uInterestCalc").value = "₹ " + interest.toFixed(2) + " (" + diffDays + " દિવસો)";
-    alert("વ્યાજ સફળતાપૂર્વક ગણાઈ ગયું છે: ₹ " + interest.toFixed(2));
+  function getRowEntryDate(row) {
+    return row['તારીખ'] || row['Date'] || row['Entry Date'] || row['એન્ટ્રી તારીખ'] || '';
+  }
+
+  function getRowFarmer(row) {
+    return String(row['ઉપાડ લેનાર'] || row['ભાગીદાર'] || row['ખેડૂનું નામ'] || row['ખેડૂતનું નામ'] || row['Farmer'] || '').trim();
+  }
+
+  function interestForCalendarMonths(principal, fromDate, toDate) {
+    if (!(principal > 0) || !fromDate || !toDate || toDate <= fromDate) return {interest:0, days:0};
+    let cursor = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
+    let total = 0, totalDays = 0;
+    while (cursor < toDate) {
+      const monthStart = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
+      const nextMonth = new Date(cursor.getFullYear(), cursor.getMonth()+1, 1);
+      const segmentEnd = toDate < nextMonth ? toDate : nextMonth;
+      const days = Math.round((segmentEnd - cursor) / 86400000);
+      const daysInMonth = new Date(cursor.getFullYear(), cursor.getMonth()+1, 0).getDate();
+      total += principal * 0.03 * days / daysInMonth;
+      totalDays += days;
+      cursor = segmentEnd;
+    }
+    return {interest:total, days:totalDays};
+  }
+
+  function populateInterestFarmerList() {
+    const select = document.getElementById('interestFarmer');
+    if (!select) return;
+    const rows = appData.Upad_Ledger || [];
+    const names = [...new Set(rows.map(getRowFarmer).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'gu'));
+    const previous = select.value;
+    select.innerHTML = '<option value="">-- ખેડૂત / ભાગીદાર પસંદ કરો --</option>' + names.map(n => `<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
+    if (names.includes(previous)) select.value = previous;
+  }
+
+  function calculateLedgerInterest() {
+    const farmer = document.getElementById('interestFarmer').value;
+    const endDate = getCalendarDate(document.getElementById('interestFinalDate').value);
+    const resultBox = document.getElementById('interestResult');
+    const detailBox = document.getElementById('interestBreakdown');
+    if (!farmer) { alert('કૃપા કરીને ખેડૂત / ભાગીદાર પસંદ કરો.'); return; }
+    if (!endDate) { alert('કૃપા કરીને વ્યાજની અંતિમ તારીખ પસંદ કરો.'); return; }
+    const rows = (appData.Upad_Ledger || []).filter(r => getRowFarmer(r) === farmer);
+    let total = 0, eligibleTotal = 0, detail = [], counted = 0;
+    rows.forEach(r => {
+      const principal = getRowInterestEligibleAmount(r);
+      const entryDate = getCalendarDate(getRowEntryDate(r));
+      if (!(principal > 0) || !entryDate || entryDate >= endDate) return;
+      const calc = interestForCalendarMonths(principal, entryDate, endDate);
+      if (calc.days <= 0) return;
+      total += calc.interest; eligibleTotal += principal; counted++;
+      detail.push(`<tr><td>${escapeHtml(String(getRowEntryDate(r)))}</td><td style="text-align:right">₹ ${principal.toFixed(2)}</td><td style="text-align:right">${calc.days}</td><td style="text-align:right">₹ ${calc.interest.toFixed(2)}</td></tr>`);
+    });
+    resultBox.innerHTML = `કુલ વ્યાજ: <strong>₹ ${total.toFixed(2)}</strong><br><small>${counted} એન્ટ્રી • વ્યાજ પાત્ર રકમ ₹ ${eligibleTotal.toFixed(2)} • અંતિમ તારીખ ${document.getElementById('interestFinalDate').value}</small>`;
+    detailBox.innerHTML = detail.length ? `<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr><th>એન્ટ્રી તારીખ</th><th>વ્યાજ પાત્ર રકમ</th><th>દિવસ</th><th>વ્યાજ</th></tr></thead><tbody>${detail.join('')}</tbody></table></div>` : '<small>આ ખેડૂત માટે પસંદ કરેલી અંતિમ તારીખ સુધી કોઈ વ્યાજ પાત્ર એન્ટ્રી મળી નથી.</small>';
   }
 
   function convertToGujaratiWords(amount) {
@@ -2020,32 +2178,201 @@ body.light-mode .dash-box h4 {
     document.getElementById("tFarmerTotal").value = "₹ " + totalFarmer.toFixed(2);
   }
 
+  function populateDashboardYearFilter() {
+    const select = document.getElementById('dashboardYearFilter');
+    if (!select) return;
+    const years = new Set();
+    ['Dashboard','Dashboard_History','Sales_Ledger','Pesticide_Items','Fertilizer_Items','Tractor_Expense','Upad_Ledger'].forEach(key => {
+      (appData[key] || []).forEach(r => {
+        const y = String((r && (r['વર્ષ'] || r['Year'])) || '').trim();
+        if (y) years.add(y);
+      });
+    });
+    const currentYear = getYear(new Date().toISOString().slice(0,10));
+    years.add(currentYear);
+    const previous = select.value;
+    const sorted = Array.from(years).sort((a,b) => {
+      const ay = parseInt(a,10) || 0, by = parseInt(b,10) || 0;
+      return by-ay;
+    });
+    select.innerHTML = sorted.map(y => `<option value="${y}">${y}</option>`).join('');
+    select.value = sorted.includes(previous) ? previous : (sorted.includes(currentYear) ? currentYear : (sorted[0] || ''));
+  }
+
+  function appPost(payload) {
+    return _nativeFetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(payload)}).then(r=>r.json()).then(res=>{
+      if(!res || res.status!=='success') throw new Error((res&&res.message)||'પ્રક્રિયા નિષ્ફળ.');
+      return res;
+    });
+  }
+  const FARM_OTP_FLOW_KEY = 'jk_rao_farms_pending_owner_otp_v1';
+  function saveFarmOtpFlow(flow) { try { localStorage.setItem(FARM_OTP_FLOW_KEY, JSON.stringify(flow)); } catch(e) {} }
+  function readFarmOtpFlow() { try { return JSON.parse(localStorage.getItem(FARM_OTP_FLOW_KEY) || 'null'); } catch(e) { return null; } }
+  function clearFarmOtpFlow() { try { localStorage.removeItem(FARM_OTP_FLOW_KEY); } catch(e) {} }
+  function showFarmOtpModal(flow) {
+    saveFarmOtpFlow(flow);
+    const modal=document.getElementById('farmOtpModal');
+    const input=document.getElementById('farmOtpInput');
+    const pinBox=document.getElementById('farmOtpPinFields');
+    const verifyBtn=document.getElementById('farmOtpVerifyBtn');
+    if(!modal||!input)return;
+    const isPin=flow.stage==='PIN';
+    document.getElementById('farmOtpTitle').innerText=flow.purpose==='SETUP'?'Owner Setup – Email OTP':'MPIN Reset – Email OTP';
+    document.getElementById('farmOtpHelp').innerText=isPin?'OTP ચકાસાઈ ગયો છે. હવે નવો 6 અંકનો MPIN બનાવો અને ફરી દાખલ કરો.':'OTP '+flow.email+' પર મોકલ્યો છે. Gmailમાંથી OTP વાંચીને અહીં દાખલ કરો. 5 મિનિટ સુધી માન્ય છે. App ફરી ખુલશે તો પણ આ ફોર્મ પાછું આવશે.';
+    input.style.display=isPin?'none':'block';
+    if(pinBox)pinBox.style.display=isPin?'block':'none';
+    if(isPin){document.getElementById('farmNewMpin').value=flow.newMpin||'';document.getElementById('farmConfirmMpin').value=flow.confirmMpin||'';}
+    verifyBtn.innerText=isPin?'MPIN સેટ કરો':'OTP Verify';
+    input.value=flow.otp||''; modal.style.display='flex'; setTimeout(()=>{(isPin?document.getElementById('farmNewMpin'):input).focus();},150);
+  }
+  function restoreFarmOtpFlow() { const flow=readFarmOtpFlow(); if(flow && (flow.stage==='OTP'||flow.stage==='PIN')) showFarmOtpModal(flow); }
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState==='visible'){
+      const flow=readFarmOtpFlow();
+      const modal=document.getElementById('farmOtpModal');
+      if(flow && modal && modal.style.display!=='flex') showFarmOtpModal(flow);
+    }
+  });
+  function cancelFarmOtpFlow() { clearFarmOtpFlow(); const modal=document.getElementById('farmOtpModal'); if(modal)modal.style.display='none'; }
+  function submitFarmOtpFlow() {
+    const flow=readFarmOtpFlow(); if(!flow)return alert('OTP પ્રક્રિયા મળી નથી. ફરીથી પ્રયાસ કરો.');
+    const btn=document.getElementById('farmOtpVerifyBtn'); btn.disabled=true;
+    if(flow.stage==='OTP'){
+      const otp=String(document.getElementById('farmOtpInput').value||'').trim();
+      if(!/^\d{6}$/.test(otp)){btn.disabled=false;return alert('6 Digit OTP દાખલ કરો.');}
+      flow.otp=otp; saveFarmOtpFlow(flow); btn.innerText='OTP ચકાસી રહ્યો છે...';
+      appPost({action:'verifyOwnerOtp',email:flow.email,otp:otp,purpose:flow.purpose})
+        .then(()=>{flow.stage='PIN';flow.otp=otp;saveFarmOtpFlow(flow);showFarmOtpModal(flow);})
+        .catch(err=>{const help=document.getElementById('farmOtpHelp');if(help)help.innerText='OTP ચકાસણીમાં ભૂલ: '+err.message;})
+        .finally(()=>{const liveBtn=document.getElementById('farmOtpVerifyBtn');if(liveBtn){liveBtn.disabled=false;const current=readFarmOtpFlow();liveBtn.innerText=current&&current.stage==='PIN'?'MPIN સેટ કરો':'OTP Verify';}});
+      return;
+    }
+    const pin=String(document.getElementById('farmNewMpin').value||'').trim();
+    const confirmPin=String(document.getElementById('farmConfirmMpin').value||'').trim();
+    if(!/^\d{6}$/.test(pin)||pin!==confirmPin){btn.disabled=false;return alert('બંને MPIN સરખા 6 અંકના હોવા જોઈએ.');}
+    flow.newMpin=pin;flow.confirmMpin=confirmPin;saveFarmOtpFlow(flow);btn.innerText='MPIN સેટ થઈ રહ્યો છે...';
+    const action=flow.purpose==='SETUP'?'completeOwnerSetup':'confirmMpinReset';
+    appPost({action:action,email:flow.email,otp:flow.otp,newMpin:pin,confirmMpin:confirmPin})
+      .then(res=>{clearFarmOtpFlow();document.getElementById('farmOtpModal').style.display='none';alert(res.message||'પ્રક્રિયા સફળ થઈ.');})
+      .catch(err=>{const help=document.getElementById('farmOtpHelp');if(help)help.innerText='MPIN સેટ કરવામાં ભૂલ: '+err.message;})
+      .finally(()=>{btn.disabled=false;btn.innerText='MPIN સેટ કરો';});
+  }
+  function startFarmOtpFlow(purpose,email) {
+    email=String(email||'').trim().toLowerCase(); if(!email)return;
+    if(!confirm(email+' પર '+(purpose==='SETUP'?'Owner Setup':'MPIN Reset')+' OTP મોકલવો છે?'))return;
+    appPost({action:purpose==='SETUP'?'requestOwnerSetupOtp':'requestMpinReset',email:email})
+      .then(res=>{showFarmOtpModal({purpose:purpose,email:email,stage:'OTP',otp:''});const help=document.getElementById('farmOtpHelp');if(help)help.innerText=res.message||('OTP '+email+' પર મોકલ્યો છે. Gmailમાંથી OTP વાંચીને અહીં દાખલ કરો.');})
+      .catch(err=>{const help=document.getElementById('farmOtpHelp');if(help)help.innerText='OTP મોકલવામાં ભૂલ: '+err.message;const modal=document.getElementById('farmOtpModal');if(modal)modal.style.display='flex';});
+  }
+  let ownerEmailFlowPurpose='SETUP';
+  function openOwnerEmailFlow(purpose){
+    ownerEmailFlowPurpose=purpose;
+    const modal=document.getElementById('ownerEmailModal');
+    document.getElementById('ownerEmailTitle').innerText=purpose==='SETUP'?'👑 Owner Setup':'🔑 MPIN Reset';
+    document.getElementById('ownerEmailHelp').innerText='માલિકનું નોંધાયેલ Email દાખલ કરો. Email Bhagiya_Master ના E-mail કોલમ અને Roll = માલિક સાથે મેળ ખાવું જોઈએ.';
+    document.getElementById('ownerEmailInput').value=getSavedOwnerEmail();
+    document.getElementById('ownerEmailError').innerText='';
+    if(modal)modal.style.display='flex';
+    setTimeout(()=>document.getElementById('ownerEmailInput').focus(),100);
+  }
+  function closeOwnerEmailFlow(){const m=document.getElementById('ownerEmailModal');if(m)m.style.display='none';}
+  function submitOwnerEmailFlow(){
+    const email=String(document.getElementById('ownerEmailInput').value||'').trim().toLowerCase();
+    const error=document.getElementById('ownerEmailError');
+    if(!/^\S+@\S+\.\S+$/.test(email)){if(error)error.innerText='યોગ્ય Email Address દાખલ કરો.';return;}
+    closeOwnerEmailFlow();startFarmOtpFlow(ownerEmailFlowPurpose,email);
+  }
+  function setupOwnerMpinFromApp(){openOwnerEmailFlow('SETUP');}
+  let ownerLoginResolve=null;
+  let criticalMpinMode=false;
+  let LAST_CRITICAL_MPIN='';
+  function getAdminConfirmation() {
+    if(ADMIN_VERIFICATION_TOKEN) return Promise.resolve({session:true});
+    return new Promise(resolve=>{ownerLoginResolve=resolve;const m=document.getElementById('ownerLoginModal');if(m)m.style.display='flex';const h=m&&m.querySelector('h3');if(h)h.innerText='👑 Owner Login';const e=document.getElementById('ownerLoginEmail');if(e){e.readOnly=false;e.value=getSavedOwnerEmail();e.focus();}});
+  }
+  function getFreshMpinForCriticalAction() {
+    return new Promise(resolve=>{
+      criticalMpinMode=true; LAST_CRITICAL_MPIN=''; ownerLoginResolve=resolve;
+      const m=document.getElementById('ownerLoginModal');
+      const h=m&&m.querySelector('h3'); if(h)h.innerText='🔐 Close Year / Undo માટે MPIN જરૂરી';
+      const e=document.getElementById('ownerLoginEmail'); if(e){e.value=getSavedOwnerEmail();e.readOnly=!!e.value;}
+      const p=document.getElementById('ownerLoginMpin'); if(p)p.value='';
+      const er=document.getElementById('ownerLoginError'); if(er)er.innerText='આ કાર્યવાહી માટે ફરીથી 6 અંકનો MPIN દાખલ કરો.';
+      if(m)m.style.display='flex'; if(p)p.focus();
+    });
+  }
+  function cancelOwnerLogin(){const m=document.getElementById('ownerLoginModal');if(m)m.style.display='none';const e=document.getElementById('ownerLoginEmail');if(e)e.readOnly=false;if(ownerLoginResolve){ownerLoginResolve(null);ownerLoginResolve=null;}criticalMpinMode=false;LAST_CRITICAL_MPIN='';pendingActionCallback=null;}
+  function submitOwnerLogin(){
+    const email=String(document.getElementById('ownerLoginEmail')?.value||'').trim().toLowerCase();
+    const mpin=String(document.getElementById('ownerLoginMpin')?.value||'').trim();
+    const stay=false;
+    const error=document.getElementById('ownerLoginError');
+    if(!/^\S+@\S+\.\S+$/.test(email)||!/^\d{6}$/.test(mpin)){if(error)error.innerText='યોગ્ય Email અને 6 અંકનો MPIN દાખલ કરો.';return;}
+    const btn=document.querySelector('#ownerLoginModal button[onclick="submitOwnerLogin()"]');if(btn){btn.disabled=true;btn.innerText='Login ચાલુ છે...';}
+    const wasCritical=criticalMpinMode;
+    verifyOwnerPin(email,mpin,stay).then((loginRes)=>{
+      const m=document.getElementById('ownerLoginModal');if(m)m.style.display='none';
+      const pin=document.getElementById('ownerLoginMpin');if(pin)pin.value='';
+      if(wasCritical)LAST_CRITICAL_MPIN=mpin;
+      if(ownerLoginResolve){const done=ownerLoginResolve;ownerLoginResolve=null;criticalMpinMode=false;done({session:true,mpin:mpin});}
+      // સામાન્ય Owner Login પછી pending Year Notice તપાસો. Close Year પછીના આગામી Login પર જ બતાવો.
+      if(!wasCritical){
+        appPost({action:'validateOwnerSession',adminToken:loginRes.token}).then(v=>{
+          refreshYearActionButtons();
+          const pending=v.data&&v.data.pendingYearNotice;
+          if(pending)window.setTimeout(()=>showYearOwnerNotice(pending),650);
+        }).catch(err=>{console.warn('Year notice check:',err.message);});
+      }
+    }).catch(err=>{if(error)error.innerText=err.message;}).finally(()=>{if(btn){btn.disabled=false;btn.innerText='Login';}});
+  }
+  function verifyOwnerPin(email,mpin,stayLoggedIn) {
+    return appPost({action:'verifyOwnerMpin',email:email,adminMpin:mpin,stayLoggedIn:stayLoggedIn!==false}).then(res=>{if(!res.token)throw new Error('Owner verification નિષ્ફળ.');saveOwnerSession(res.token,res.email,res.expires);return res;});
+  }
+  function resetAdminMpin(){openOwnerEmailFlow('RESET');}
+
+  function confirmCloseYear() {
+    const year = document.getElementById('dashboardYearFilter')?.value || '';
+    if (!year) return alert('વર્ષ પસંદ કરો.');
+    getFreshMpinForCriticalAction().then(auth=>{
+      if(!auth || !auth.mpin)return;
+      if (!confirm('⚠️ વર્ષ ' + year + ' બંધ કરવું છે? Dashboard History અને Carry Forward બનશે.')) return;
+      const btn = document.getElementById('closeYearButton');
+      if (btn) { btn.disabled = true; btn.innerText = 'પ્રક્રિયા ચાલુ છે...'; }
+      return _nativeFetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'closeYear',year:year,adminToken:ADMIN_VERIFICATION_TOKEN,adminMpin:auth.mpin})})
+        .then(r=>r.json()).then(result => { if (!result || result.status !== 'success') throw new Error((result && result.message) || 'Close Year નિષ્ફળ.'); alert(result.message); fetchData(); })
+        .catch(err => alert('Close Year માં ભૂલ: ' + err.message))
+        .finally(() => { if (btn) { btn.disabled = false; btn.innerText = '🔒 CLOSE YEAR'; } LAST_CRITICAL_MPIN=''; });
+    });
+  }
+
+  function confirmUndoCloseYear() {
+    const year = document.getElementById('dashboardYearFilter')?.value || '';
+    if (!year) return alert('વર્ષ પસંદ કરો.');
+    getFreshMpinForCriticalAction().then(auth=>{
+      if(!auth || !auth.mpin)return;
+      if (!confirm('⚠️ વર્ષ ' + year + ' ફરી ખોલવું છે? નવા વર્ષમાં એન્ટ્રી હશે તો Server Undo અટકાવશે.')) return;
+      const btn=document.getElementById('undoYearButton'); if(btn){btn.disabled=true;btn.innerText='Undo ચાલુ છે...';}
+      _nativeFetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({action:'undoCloseYear',year:year,adminToken:ADMIN_VERIFICATION_TOKEN,adminMpin:auth.mpin})})
+        .then(r=>r.json()).then(result=>{if(!result||result.status!=='success')throw new Error((result&&result.message)||'Undo નિષ્ફળ.');alert(result.message);fetchData();})
+        .catch(err=>alert('Undo માં ભૂલ: '+err.message)).finally(()=>{if(btn){btn.disabled=false;btn.innerText='↩ UNDO CLOSE';} LAST_CRITICAL_MPIN='';});
+    });
+  }
+
   function updateDashboard() {
     const num = (v) => {
       if (v === null || v === undefined || v === '') return 0;
       const n = parseFloat(String(v).replace(/[₹,\s]/g, '').replace(/[^0-9.\-]/g, ''));
       return Number.isFinite(n) ? n : 0;
     };
-    const sum = (rows, keys) => (rows || []).reduce((a, r) => a + num(keys.map(k => r[k]).find(v => v !== undefined && v !== null && v !== '')), 0);
-
-    const farmerSales = sum(appData.Sales_Ledger, ['ખેડૂ રકમ','ખેડૂત રકમ','ખેડૂ_રકમ','ખેડૂત_રકમ']);
-    const upadRows = appData.Upad_Ledger || [];
-    const upadDebit = sum(upadRows, ['ઉપાડ (Debit)','ઉપાડ','Debit']);
-    const upadCredit = sum(upadRows, ['જમા (Credit)','જમા','Credit']);
-    const interest = sum(upadRows, ['વ્યાજ રકમ','ગણતરી કરેલ વ્યાજ રકમ','વ્યાજ','Interest','Interest Amount']);
-    const medicineFarmer = sum(appData.Pesticide_Items, ['ખેડૂ રકમ','ખેડૂત રકમ','ખેડૂ_રકમ','ખેડૂત_રકમ']);
-    const fertilizerFarmer = sum(appData.Fertilizer_Items, ['ખેડૂ રકમ','ખેડૂત રકમ','ખેડૂ_રકમ','ખેડૂત_રકમ']);
-    const tractorFarmer = sum(appData.Tractor_Expense, ['ભાગિયાનો ખર્ચ','ખેડૂ રકમ','ખેડૂત રકમ','ખેડૂ_રકમ']);
-    const totalDeduction = upadDebit + tractorFarmer + medicineFarmer + fertilizerFarmer + interest;
-    const balance = farmerSales + upadCredit - totalDeduction;
-    const money = v => '₹ ' + v.toFixed(2);
-
-    // Main yearly dashboard: totals are sourced from Sales_Ledger, Pesticide_Items and Fertilizer_Items.
-    const fy = getYear(new Date().toISOString().slice(0,10));
+    const selectedYear = document.getElementById('dashboardYearFilter')?.value || getYear(new Date().toISOString().slice(0,10));
     const inYear = rows => (rows || []).filter(r => {
-      const rowYear = String(r['વર્ષ'] || r['Year'] || Object.values(r)[0] || '').trim();
-      return !rowYear || rowYear === fy;
+      const rowYear = String((r && (r['વર્ષ'] || r['Year'])) || '').trim();
+      return rowYear === selectedYear;
     });
+    const sum = (rows, keys) => inYear(rows).reduce((a, r) => {
+      const value = keys.map(k => r[k]).find(v => v !== undefined && v !== null && v !== '');
+      return a + num(value);
+    }, 0);
     const rowVal = (r, keys, index) => {
       for (const k of keys) if (r && r[k] !== undefined && r[k] !== null && r[k] !== '') return r[k];
       const vals = r ? Object.values(r) : [];
@@ -2054,9 +2381,24 @@ body.light-mode .dash-box h4 {
     const salesRows = inYear(appData.Sales_Ledger || []);
     const medRows = inYear(appData.Pesticide_Items || []);
     const fertRows = inYear(appData.Fertilizer_Items || []);
+    const upadRows = inYear(appData.Upad_Ledger || []);
+    const tracRows = inYear(appData.Tractor_Expense || []);
+
+    const farmerSales = sum(appData.Sales_Ledger, ['ખેડૂ રકમ','ખેડૂત રકમ','ખેડૂ_રકમ','ખેડૂત_રકમ']);
+    const upadDebit = sum(upadRows, ['ઉપાડ (Debit)','ઉપાડ','Debit']);
+    const upadCredit = sum(upadRows, ['જમા (Credit)','જમા','Credit']);
+    const interest = sum(upadRows, ['વ્યાજ રકમ','ગણતરી કરેલ વ્યાજ રકમ','વ્યાજ','Interest','Interest Amount']);
+    const openingBalance = sum(upadRows, ['પાછલી બાકી રકમ']);
+    const medicineFarmer = sum(appData.Pesticide_Items, ['ખેડૂ રકમ','ખેડૂત રકમ','ખેડૂ_રકમ','ખેડૂત_રકમ']);
+    const fertilizerFarmer = sum(appData.Fertilizer_Items, ['ખેડૂ રકમ','ખેડૂત રકમ','ખેડૂ_રકમ','ખેડૂત_રકમ']);
+    const tractorFarmer = sum(appData.Tractor_Expense, ['ભાગિયાનો ખર્ચ','ખેડૂ રકમ','ખેડૂત રકમ','ખેડૂ_રકમ']);
+    const totalDeduction = upadDebit + tractorFarmer + medicineFarmer + fertilizerFarmer + interest;
+    const balance = farmerSales + upadCredit - totalDeduction + openingBalance;
+    const money = v => '₹ ' + v.toFixed(2);
+
     const mainSales = salesRows.reduce((a,r)=>a+num(rowVal(r,['કુલ રકમ','કુલ રકમ (₹)','કુલ બિલ રકમ','રકમ','Amount','Total'],11)),0);
     const mainPaid = salesRows.reduce((a,r)=>{
-      const status = String(rowVal(r,['બિલની સ્થિતિ','સ્થિતિ','Status'],14) || '').trim();
+      const status = String(rowVal(r,['બિલની સ્થિતિ','બિલની સ્થિતિ (બાકી/જમા)','સ્થિતિ','Status'],14) || '').trim();
       const amount = num(rowVal(r,['કુલ રકમ','કુલ રકમ (₹)','કુલ બિલ રકમ','રકમ','Amount','Total'],11));
       return a + ((status.includes('જમા') || status.includes('રોકડા') || status.toLowerCase()==='paid') ? amount : 0);
     },0);
@@ -2066,7 +2408,7 @@ body.light-mode .dash-box h4 {
     const mainExpense = mainMedicine + mainFertilizer;
     const mainNet = mainSales - mainExpense;
     const setText = (id,value) => { const el=document.getElementById(id); if(el) el.innerText=value; };
-    setText('dashYearLabel','વર્ષ ('+fy+')');
+    setText('dashYearLabel','વર્ષ ('+selectedYear+')');
     setText('dashMainSales',money(mainSales));
     setText('dashMainPaid',money(mainPaid));
     setText('dashMainPending',money(mainPending));
@@ -2074,25 +2416,30 @@ body.light-mode .dash-box h4 {
     setText('dashMainFertilizer',money(mainFertilizer));
     setText('dashMainExpense',money(mainExpense));
     setText('dashMainNet',money(mainNet));
-
-    document.getElementById('dashFarmerSales').innerText = money(farmerSales);
-    document.getElementById('dashUpadCredit').innerText = money(upadCredit);
-    document.getElementById('dashUpadDebit').innerText = money(upadDebit);
-    document.getElementById('dashTractorFarmer').innerText = money(tractorFarmer);
-    document.getElementById('dashMedicineFarmer').innerText = money(medicineFarmer);
-    document.getElementById('dashFertilizerFarmer').innerText = money(fertilizerFarmer);
-    document.getElementById('dashInterest').innerText = money(interest);
-    document.getElementById('dashTotalDeduction').innerText = money(totalDeduction);
-    document.getElementById('dashFarmerBalance').innerText = money(balance);
+    setText('dashFarmerSales',money(farmerSales));
+    setText('dashUpadCredit',money(upadCredit));
+    setText('dashUpadDebit',money(upadDebit));
+    setText('dashTractorFarmer',money(tractorFarmer));
+    setText('dashMedicineFarmer',money(medicineFarmer));
+    setText('dashFertilizerFarmer',money(fertilizerFarmer));
+    setText('dashInterest',money(interest));
+    setText('dashTotalDeduction',money(totalDeduction));
+    setText('dashFarmerBalance',money(balance));
     const card = document.getElementById('farmerBalanceCard');
     const label = document.getElementById('dashFarmerBalanceLabel');
-    if (balance < 0) {
-      card.style.borderColor = '#df4b58';
-      label.innerText = 'ખેડૂત પાસેથી લેવાના';
-    } else {
-      card.style.borderColor = '#20a36a';
-      label.innerText = 'ખેડૂતને ચૂકવવાના';
+    if (card && label) {
+      if (balance < 0) { card.style.borderColor = '#df4b58'; label.innerText = 'ખેડૂત પાસેથી લેવાના'; }
+      else { card.style.borderColor = '#20a36a'; label.innerText = 'ખેડૂતને ચૂકવવાના'; }
     }
+    const closeBtn = document.getElementById('closeYearButton');
+    const undoBtn = document.getElementById('undoYearButton');
+if (
+  String(uData[ui][uYearCol] || '').trim() === year &&
+  flag === 'CLOSED'
+) triggerRows.push(ui + 1);
+    const hasHistory = (appData['Dashboard_History'] || []).some(r => String(r['વર્ષ'] || '').trim() === selectedYear);
+    if (closeBtn) closeBtn.style.display = (selectedCloseFlag && !hasHistory) ? 'inline-block' : 'none';
+    if (undoBtn) undoBtn.style.display = (selectedCloseFlag && hasHistory) ? 'inline-block' : 'none';
   }
 
   function renderTable(tabName) {
@@ -2123,6 +2470,7 @@ body.light-mode .dash-box h4 {
     } else if(tabName === 'Trac') {
       html += `<th>એન્ટ્રી Id</th><th>તારીખ</th><th>ટ્રેક્ટર માલિક</th><th>પાકનું નામ</th><th>કામની વિગત</th><th>કલાક</th><th>મિનિટ</th><th>કલાકનો ભાવ</th><th>મિનિટનો ભાવ</th><th>કુલ બિલ રકમ</th><th>બિલની સ્થિતિ</th><th>હસ્તે</th><th>ભાગિયાનો ખર્ચ</th><th>સ્ટેટસ</th><th>ફોટો</th>`;
     } else if(tabName === 'Upad') {
+      populateInterestFarmerList();
       html += `<th>એન્ટ્રી Id</th><th>તારીખ</th><th>ઉપાડ લેનાર</th><th>પ્રકાર</th><th>આપનાર</th><th>ઉપાડ (Debit)</th><th>જમા (Credit)</th><th>બિલ નં</th><th>કુલ બાકી (Outstanding)</th><th>Status</th><th>ફોટો</th>`;
     }
     html += `</tr>`;
@@ -2544,6 +2892,7 @@ let photoLink = billPhotoVal
           document.getElementById("uBillNo").value = found["બિલ નં"] || "";
           document.getElementById("uBillType").value = found["બિલ પ્રકાર"] || "";
           document.getElementById("uDetails").value = found["વિગત"] || "";
+          document.getElementById("uInterestAmt").value = found["વ્યાજ પાત્ર રકમ"] || found["વ્યાજ પાત્ર"] || found["Interest Eligible Amount"] || found["Interest Amount"] || 0;
           document.getElementById("uStatus").value = found["Status"] || "ઉધાર";
           document.getElementById("uCloseYear").value = found["Close Year"] || "N";
           document.getElementById("btnUpad").innerText = "અપડેટ કરો";
@@ -2825,7 +3174,7 @@ let billRow = [
 		
 let upadPhoto = formType === 'Sales'
   ? (itemRows[0] ? itemRows[0][17] : "")
-  : (billRow ? billRow[15] : "");
+  : (billRow ? billRow[(formType === "Fert") ? 16 : 15] : "");
 		  console.log("FORM TYPE:", formType);
 console.log("UPAD PHOTO:", upadPhoto);
 alert("Photo Data: " + (upadPhoto ? "મળ્યો" : "ખાલી છે")); 
@@ -2892,8 +3241,7 @@ alert("Photo Data: " + (upadPhoto ? "મળ્યો" : "ખાલી છે"));
     let billType = v("uBillType") || "-";
     let details = v("uDetails") || "-";
     let interestAmt = parseFloat(v("uInterestAmt")) || 0;
-    let interestCalcStr = document.getElementById("uInterestCalc").value;
-    let interestCalc = parseFloat(interestCalcStr.replace(/[^0-9.]/g, '')) || 0;
+    let interestCalc = 0;
     let status = v("uStatus");
     let closeYear = v("uCloseYear");
     let totalOutstanding = 0; 
@@ -2951,24 +3299,34 @@ alert("Photo Data: " + (upadPhoto ? "મળ્યો" : "ખાલી છે"));
   }
 
   function askMpinAndExecute(callback) {
+    // Every edit/delete operation requires a fresh MPIN, even during a valid 30-minute session.
     pendingActionCallback = callback;
-    document.getElementById("inputMpin").value = "";
-    document.getElementById("modalMpin").style.display = "block";
+    ownerLoginResolve = function(admin){
+      if(admin && typeof pendingActionCallback==='function'){ const run=pendingActionCallback; pendingActionCallback=null; run(); }
+      else { pendingActionCallback=null; }
+    };
+    const modal=document.getElementById('ownerLoginModal');
+    const title=modal?modal.querySelector('h3'):null;
+    if(title) title.innerText='🔐 Edit / Delete માટે MPIN પુષ્ટિ';
+    const email=document.getElementById('ownerLoginEmail');
+    if(email){email.value=getSavedOwnerEmail();email.readOnly=!!email.value;}
+    const pin=document.getElementById('ownerLoginMpin');if(pin)pin.value='';
+    const err=document.getElementById('ownerLoginError');if(err)err.innerText='';
+    if(modal)modal.style.display='flex';
+    if(pin)pin.focus();
   }
 
   function verifyMpinAndProceed() {
-    let enteredMpin = document.getElementById("inputMpin").value;
-    if(enteredMpin === CORRECT_MPIN) {
-      document.getElementById("modalMpin").style.display = "none";
-      if(pendingActionCallback) pendingActionCallback();
-      pendingActionCallback = null;
-    } else { alert("ખોટો પ્રોટેક્શન કોડ છે!"); }
+    // Legacy button compatibility: login is handled by the in-app Owner Login dialog.
+    getAdminConfirmation().then(admin=>{
+      if(admin){const modal=document.getElementById('modalMpin');if(modal)modal.style.display='none';if(pendingActionCallback)pendingActionCallback();pendingActionCallback=null;}
+    });
   }
 
   function v(id) { return document.getElementById(id).value; }
   function getYear(dateString) {
     let d = new Date(dateString), m = d.getMonth() + 1, y = d.getFullYear();
-    return (m >= 5) ? (y + "-" + (y + 1).toString().slice(-2)) : ((y - 1) + "-" + y.toString().slice(-2));
+    return (m >= 4) ? (y + "-" + (y + 1).toString().slice(-2)) : ((y - 1) + "-" + y.toString().slice(-2));
   }
 
   function renderGallery() {
@@ -3255,5 +3613,18 @@ function renderBillRecordTable() {
     console.log("Bill_Record Data:", appData.Bill_Record);
   } // 👈 આ ફંક્શનનો છેલ્લો કૌંસ
 </script>
+
+<div id="farmOtpModal" role="dialog" aria-modal="true" aria-labelledby="farmOtpTitle">
+  <div class="farm-otp-card">
+    <h3 id="farmOtpTitle">Email OTP Verification</h3>
+    <p id="farmOtpHelp">Gmailમાંથી OTP વાંચીને અહીં દાખલ કરો. Gmail ખોલવા માટે Appમાંથી બહાર જશો તો પણ આ ફોર્મ ફરી દેખાશે.</p>
+    <input id="farmOtpInput" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••" />
+    <div id="farmOtpPinFields" style="display:none;margin-top:10px;text-align:left;">
+      <label for="farmNewMpin">નવો 6 અંકનો MPIN</label><input id="farmNewMpin" type="password" inputmode="numeric" maxlength="6" placeholder="નવો MPIN" />
+      <label for="farmConfirmMpin">MPIN ફરી દાખલ કરો</label><input id="farmConfirmMpin" type="password" inputmode="numeric" maxlength="6" placeholder="MPIN પુષ્ટિ" />
+    </div>
+    <div class="otp-actions"><button id="farmOtpCancelBtn" type="button" onclick="cancelFarmOtpFlow()">રદ કરો</button><button id="farmOtpVerifyBtn" type="button" onclick="submitFarmOtpFlow()">OTP Verify</button></div>
+  </div>
+</div>
 </body>
 </html>

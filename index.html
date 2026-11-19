@@ -14,7 +14,7 @@
   <title>J K Rao Farms - POS Billing</title>
   <style>
     /* Default Dark Theme Settings */
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; padding: 5px; margin: 0; color: #e0e0e0; transition: background 0.3s, color 0.3s; }
+    body { font-family: 'Noto Sans Gujarati','Nirmala UI','Segoe UI',system-ui,sans-serif; background-color: #121212; padding: 5px; margin: 0; color: #e0e0e0; transition: background 0.3s, color 0.3s; }
     
     /* Soft Green Light Mode */
     body.light-mode { background-color: #e8f8f5 !important; color: #2f3640 !important; }
@@ -89,7 +89,10 @@ body.light-mode .dash-box h4 {
     body.light-mode #latestRecordSummary { background: #e8f7ee !important; color: #17452b !important; }
     body.light-mode .table-actions-bar { background: #f1f2f6 !important; border-color: #ced6e0 !important; }
 
-    .header-bar { display: flex; justify-content: space-between; align-items: center; max-width: 950px; margin: 5px auto; background: #1e1e1e; color: white; padding: 8px 15px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+    .header-bar { display: flex; justify-content: space-between; align-items: center; gap:10px; max-width: 950px; margin: 5px auto; background: #1e1e1e; color: white; padding: 8px 15px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+  .header-brand-wrap{display:flex;flex-direction:column;gap:3px;min-width:0}
+  #currentOwnerName{display:none;font-size:11px;font-weight:800;color:#a7f3d0;line-height:1.25;overflow-wrap:anywhere}
+  @media(max-width:480px){.header-bar{padding:7px 9px;gap:6px}.header-bar h2{font-size:13px!important}#currentOwnerName{font-size:10px}.header-bar>div{gap:5px!important}}
     
     .refresh-btn { 
       background: #16a085; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; display: flex; align-items: center; gap: 6px; 
@@ -303,16 +306,97 @@ body.light-mode .dash-box h4 {
 #farmOtpModal .otp-actions{display:flex;gap:10px;margin-top:12px}#farmOtpModal button{flex:1;border:0;border-radius:9px;padding:12px;font-weight:700;font-size:15px}
 #farmOtpVerifyBtn{background:#20a464;color:white}#farmOtpCancelBtn{background:#46515c;color:white}
 
+
+/* HARD LOGIN GATE: keep every application element hidden until owner authentication succeeds */
+html, body { min-height:100%; }
+body.login-locked { background:#101820 !important; color:#e8edf3 !important; padding:0 !important; margin:0 !important; overflow-x:hidden; }
+body.login-locked > :not(#loginPage) { display:none !important; visibility:hidden !important; }
+body.login-locked #loginPage { display:flex !important; visibility:visible !important; position:fixed !important; inset:0 !important; z-index:2147483000 !important; width:100vw !important; min-height:100vh !important; box-sizing:border-box !important; align-items:center !important; justify-content:center !important; padding:22px !important; margin:0 !important; background:#101820 !important; }
+#loginPage .login-card { width:100%; max-width:420px; box-sizing:border-box; padding:25px 22px; border-radius:18px; background:#1d2935; border:1px solid #354556; box-shadow:0 14px 42px rgba(0,0,0,.38); color:#f5f7fa; }
+#loginPage .login-brand { text-align:center; font-size:25px; font-weight:800; margin:0 0 8px; }
+#loginPage .login-sub { text-align:center; font-size:19px; margin:0 0 24px; color:#dbe5ef; }
+#loginPage label { display:block; margin:13px 0 6px; font-weight:700; color:#e5edf5; }
+#loginPage input { display:block; width:100%; box-sizing:border-box; padding:13px 12px; border-radius:9px; border:1px solid #607286; background:#2d3948; color:#fff; font-size:16px; }
+#loginPage button { cursor:pointer; border:0; border-radius:9px; padding:12px 10px; font-weight:700; font-size:15px; }
+#loginPage .login-main { display:block; width:100%; margin-top:17px; background:#16a085; color:#fff; }
+#loginPage .login-links { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:12px; }
+#loginPage .login-links button { background:#354455; color:#fff; }
+#loginPage .login-links button:first-child { grid-column:1 / -1; }
+#loginPageError { color:#ffb4ab; min-height:20px; margin:12px 0 0; font-size:14px; }
+body:not(.login-locked) #loginPage { display:none !important; }
+/* Login overlays remain visible while the app shell is locked */
+body.login-locked #farmOtpModal[style*="display: flex"], body.login-locked #loginRegisterModal[style*="display: flex"], body.login-locked #modernInputModal[style*="display: flex"] { display:flex !important; }
+body.login-locked #farmOtpModal { position:fixed !important; inset:0 !important; z-index:2147483600 !important; }
+body.login-locked #loginRegisterModal { position:fixed !important; inset:0 !important; z-index:2147483600 !important; }
+body.login-locked #modernInputModal { position:fixed !important; inset:0 !important; z-index:2147483647 !important; }
+body.login-locked #farmOtpModal[style*="display: flex"], body.login-locked #loginRegisterModal[style*="display: flex"], body.login-locked #modernInputModal[style*="display: flex"] { visibility:visible !important; opacity:1 !important; pointer-events:auto !important; }
+#loginRegisterModal{display:none;position:fixed;inset:0;z-index:2147483600;background:rgba(3,8,15,.88);align-items:center;justify-content:center;padding:18px;box-sizing:border-box}
+#loginRegisterModal .register-card{width:100%;max-width:440px;max-height:88vh;overflow:auto;background:#172536;color:#f7fafc;border:1px solid #3d536b;border-radius:22px;padding:22px;box-shadow:0 22px 65px rgba(0,0,0,.55)}
+#loginRegisterModal h3{margin:0 0 6px;text-align:center;font-size:23px;color:#7dd3fc}
+#loginRegisterModal .register-note{text-align:center;color:#b9c7d6;font-size:13px;margin:0 0 16px}
+#loginRegisterModal label{display:block;margin:12px 0 6px;font-weight:700;color:#e5edf5}
+#loginRegisterModal input{width:100%;box-sizing:border-box;padding:13px 14px;border-radius:11px;border:1px solid #52677f;background:#26384c;color:#fff;font-size:16px;outline:none}
+#loginRegisterModal .register-actions{display:flex;gap:10px;margin-top:18px}
+#loginRegisterModal button{flex:1;border:0;border-radius:11px;padding:13px 10px;font-size:15px;font-weight:800;color:white}
+#loginRegisterModal .register-save{background:linear-gradient(135deg,#0d9488,#16a34a)}
+#loginRegisterModal .register-cancel{background:#475569}
+#farmOtpModal{z-index:2147483601 !important}
+#farmOtpModal .farm-otp-card{border-radius:22px;background:#172536;border:1px solid #40566d}
+#farmOtpModal h3{color:#7dd3fc;font-size:22px}
+#farmOtpModal input{width:100%;box-sizing:border-box;border-radius:12px;background:#26384c;color:#fff;border:1px solid #60758d}
+#farmOtpModal button{border-radius:11px}
+
+
+
+/* Unified modern dialogs: clean cards, accessible spacing, mobile-first controls */
+#modernInputModal{display:none;position:fixed;inset:0;z-index:2147483647;background:rgba(2,8,18,.82);backdrop-filter:blur(7px);align-items:center;justify-content:center;padding:18px;box-sizing:border-box}
+#modernInputModal .modern-dialog{width:min(100%,430px);background:linear-gradient(160deg,#1b2b3d,#101b29);color:#f8fafc;border:1px solid #40566e;border-radius:24px;padding:25px;box-shadow:0 28px 90px rgba(0,0,0,.6);max-height:90vh;overflow:auto}
+#modernInputModal h3{font-size:23px;margin:0 0 8px;text-align:center;color:#7dd3fc}
+#modernInputModal .md-desc{font-size:14px;line-height:1.6;text-align:center;color:#bdc9d8;margin:0 0 20px}
+#modernInputModal label{display:block;color:#e7edf5;font-weight:750;margin:13px 0 7px}
+#modernInputModal input{width:100%;box-sizing:border-box;background:#26384c;color:#fff;border:1px solid #526b85;border-radius:13px;padding:15px;font-size:19px;letter-spacing:3px;text-align:center;outline:none}
+#modernInputModal input:focus{border-color:#38bdf8;box-shadow:0 0 0 3px rgba(56,189,248,.18)}
+#modernInputModal .md-actions{display:flex;gap:11px;margin-top:22px}
+#modernInputModal button{flex:1;border:0;border-radius:13px;padding:14px 12px;color:#fff;font-size:15px;font-weight:800}
+#modernInputModal .md-cancel{background:#475569}#modernInputModal .md-ok{background:linear-gradient(135deg,#0d9488,#16a34a)}
+#modernInputModal .md-error{min-height:20px;color:#fda4af;font-size:13px;margin:10px 0 0;text-align:center}
+#ownerLoginModal .modal-content,#modalMpin .modal-content,#yearOwnerNoticeModal .modal-content{border-radius:22px!important;padding:24px!important;box-shadow:0 22px 70px rgba(0,0,0,.28)!important}
+#ownerLoginModal input,#modalMpin input{width:100%;box-sizing:border-box;padding:14px;border-radius:12px;border:1px solid #b8c5d3;font-size:18px;letter-spacing:3px}
+#farmOtpModal .farm-otp-card{padding:25px!important;box-shadow:0 25px 75px rgba(0,0,0,.55)!important}
+#farmOtpModal .otp-actions button{min-height:48px}
+#loginRegisterModal .register-card{padding:25px!important}
+#loginRegisterModal input,#loginRegisterModal select{min-height:52px;font-size:16px}
+
 </style>
 </head>
-<body>
+<body class="login-locked">
+<div id="loginPage" aria-label="Owner Login">
+ <div class="login-card">
+  <div class="login-brand">🌾 J K Rao Farms</div>
+  <p class="login-sub">Owner Secure Login</p>
+  <label for="loginPageEmail">Registered Email</label>
+  <input id="loginPageEmail" type="email" autocomplete="username" placeholder="તમારું Email દાખલ કરો">
+  <label for="loginPageMpin">6 Digit MPIN</label>
+  <input id="loginPageMpin" type="password" maxlength="6" inputmode="numeric" autocomplete="current-password" placeholder="••••••">
+  <button class="login-main" id="loginPageButton" type="button" onclick="loginPageSubmit()">LOGIN</button>
+  <div class="login-links">
+   <button type="button" onclick="openLoginRegisterForm()">New Registration</button>
+   <button type="button" onclick="loginPageForgotEmail()">Forgot Email</button>
+   <button type="button" onclick="loginPageForgotMpin()">Forgot MPIN</button>
+  </div>
+  <p id="loginPageError"></p>
+ </div>
+</div>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">14/11/2026 -  18:54   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">19/11/2026 -  22:43   IST</span>
 </div>
 
 <div class="header-bar">
-  <h2 style="margin:0; font-size: 15px;">🌾 J K Rao Farms</h2>
+  <div class="header-brand-wrap">
+    <h2 style="margin:0; font-size: 15px;">🌾 J K Rao Farms</h2>
+    <span id="currentOwnerName" aria-live="polite"></span>
+  </div>
   
   <div style="display: flex; gap: 8px; align-items: center;">
     <!-- Small Slider Toggle Button -->
@@ -351,8 +435,7 @@ body.light-mode .dash-box h4 {
         <select id="dashboardYearFilter" onchange="updateDashboard()" style="width:auto;min-width:125px;padding:6px 10px;border-radius:8px;background:#26364d;color:#fff;border:1px solid #60758f;font-weight:bold;"></select>
         <button id="closeYearButton" type="button" onclick="confirmCloseYear()" style="display:none;background:#b91c1c;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:bold;cursor:pointer;">🔒 CLOSE YEAR</button>
         <button id="undoYearButton" type="button" onclick="confirmUndoCloseYear()" style="display:none;background:#d97706;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:bold;cursor:pointer;">↩ UNDO CLOSE</button>
-        <button type="button" onclick="setupOwnerMpinFromApp()" style="background:#0f766e;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:bold;cursor:pointer;">👑 OWNER SETUP</button>
-        <button type="button" onclick="resetAdminMpin()" style="background:#475569;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:bold;cursor:pointer;">🔑 RESET MPIN</button>
+        <button id="ownerApprovalButton" type="button" onclick="openOwnerApprovals()" style="display:none;background:#1d4ed8;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:bold;cursor:pointer;">👥 OWNER APPROVAL</button>
       </div>
       <div class="main-year-label" id="dashYearLabel">વર્ષ (2026-27)</div>
       <div class="main-year-grid">
@@ -979,6 +1062,7 @@ body.light-mode .dash-box h4 {
     <input type="hidden" id="masterOriginalName" value="">
     <div class="form-group"><label>નામ:</label><input type="text" id="mNameInput"></div>
     <div class="form-group"><label>મોબાઈલ નંબર:</label><input type="number" id="mPhoneInput"></div>
+    <div class="form-group" id="mEmailGroup"><label>Email:</label><input type="email" id="mEmailInput" placeholder="name@example.com"></div>
     <div class="form-group"><label>ગામ / સરનામું:</label><input type="text" id="mAddInput"></div>
     <div class="form-group" id="mRollGroup"><label>રોલ (દા.ત. ખેડૂ):</label><input type="text" id="mRollInput" value="ખેડૂ"></div>
     <div class="form-group" id="mCategoryGroup" style="display:none;"><label>પ્રકાર:</label><select id="mCategoryInput"><option value="Vegitable">શાકભાજી (વેચાણ)</option><option value="દવા">દવા</option><option value="ખાતર">ખાતર</option><option value="અન્ય વેપારી">અન્ય વેપારી</option></select></div>
@@ -1051,20 +1135,10 @@ body.light-mode .dash-box h4 {
     <h3 style="margin:8px 0;color:#1f5134;">નવું નાણાકીય વર્ષ શરૂ થયું છે</h3>
     <p style="color:#4b5563;line-height:1.6;">ખેડૂત / ભાગીદારોની વિગતો બદલવી છે?</p>
     <div style="display:flex;gap:10px;justify-content:center;margin-top:18px;">
-      <button type="button" onclick="handleYearOwnerNotice(true)" style="background:#16834a;color:#fff;border:0;border-radius:9px;padding:10px 22px;font-weight:700;">હા</button>
-      <button type="button" onclick="handleYearOwnerNotice(false)" style="background:#64748b;color:#fff;border:0;border-radius:9px;padding:10px 22px;font-weight:700;">ના</button>
+      <button type="button" onclick="handleYearOwnerNotice(true)" style="background:#16834a;color:#fff;border:0;border-radius:9px;padding:10px 22px;font-weight:700;">Update</button>
+      <button type="button" onclick="handleYearOwnerNotice(false)" style="background:#64748b;color:#fff;border:0;border-radius:9px;padding:10px 22px;font-weight:700;">Continue (ફેરફાર નહીં)</button>
     </div>
   </div>
-</div>
-
-<div id="ownerEmailModal" class="modal" style="display:none;z-index:10070;align-items:center;justify-content:center;">
- <div class="modal-content" style="max-width:390px;padding:22px;border-radius:16px;">
-  <h3 id="ownerEmailTitle" style="margin:0 0 8px;color:#1f5134;text-align:center;">👑 Owner Email</h3>
-  <p id="ownerEmailHelp" style="font-size:13px;color:#64748b;text-align:center;">માલિકનું નોંધાયેલ Email દાખલ કરો.</p>
-  <label for="ownerEmailInput">Registered Email</label><input id="ownerEmailInput" type="email" autocomplete="email" placeholder="owner@example.com">
-  <div style="display:flex;gap:8px;margin-top:14px;"><button type="button" onclick="submitOwnerEmailFlow()" style="flex:1;background:#16834a;color:#fff;border:0;border-radius:8px;padding:10px;font-weight:700;">આગળ વધો</button><button type="button" onclick="closeOwnerEmailFlow()" style="background:#64748b;color:#fff;border:0;border-radius:8px;padding:10px;">રદ કરો</button></div>
-  <p id="ownerEmailError" style="color:#b91c1c;font-size:12px;min-height:16px;"></p>
- </div>
 </div>
 
 <div id="ownerLoginModal" class="modal" style="display:none;z-index:10060;align-items:center;justify-content:center;">
@@ -1075,8 +1149,17 @@ body.light-mode .dash-box h4 {
   <label for="ownerLoginMpin">6 Digit MPIN</label><input id="ownerLoginMpin" type="password" maxlength="6" inputmode="numeric" autocomplete="current-password" placeholder="••••••">
   <p style="font-size:12px;color:#64748b;margin:8px 0 12px;">Login વધુમાં વધુ 30 મિનિટ માટે માન્ય રહેશે. દરેક Edit / Delete પહેલાં MPIN ફરીથી દાખલ કરવો પડશે.</p>
   <div style="display:flex;gap:8px;margin-top:14px;"><button type="button" onclick="submitOwnerLogin()" style="flex:1;background:#16834a;color:#fff;border:0;border-radius:8px;padding:10px;font-weight:700;">Login</button><button type="button" onclick="cancelOwnerLogin()" style="background:#64748b;color:#fff;border:0;border-radius:8px;padding:10px;">Cancel</button></div>
-  <div style="display:flex;justify-content:space-between;gap:8px;margin-top:10px;"><button type="button" onclick="openOwnerEmailFlow('SETUP')" style="background:transparent;border:0;color:#0f766e;text-decoration:underline;">પ્રથમ વખત Owner Setup</button><button type="button" onclick="openOwnerEmailFlow('RESET')" style="background:transparent;border:0;color:#0f766e;text-decoration:underline;">Forgot / Reset MPIN</button></div>
   <p id="ownerLoginError" style="color:#b91c1c;font-size:12px;min-height:16px;"></p>
+ </div>
+</div>
+
+
+<div id="ownerApprovalsModal" class="modal" style="display:none;z-index:10070;align-items:center;justify-content:center;">
+ <div class="modal-content" style="max-width:560px;width:94%;padding:20px;border-radius:16px;max-height:80vh;overflow:auto;">
+  <h3 style="margin-top:0;color:#1f5134;">👥 નવા માલિકની મંજૂરી</h3>
+  <p style="font-size:13px;color:#64748b;">કુલ 3 માલિકની મર્યાદા છે. મંજૂરી પછી નવા માલિકને સંપૂર્ણ ઍક્સેસ મળશે.</p>
+  <div id="ownerApprovalsList"></div>
+  <button type="button" onclick="document.getElementById('ownerApprovalsModal').style.display='none'" style="margin-top:12px;background:#64748b;color:white;border:0;border-radius:8px;padding:9px 16px;">બંધ કરો</button>
  </div>
 </div>
 
@@ -1085,31 +1168,16 @@ body.light-mode .dash-box h4 {
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxwyqtiUSQNJxPe7q_kQLGjSugRY4fvpJGPeS767xBM__3oMhWxzkYGcyhtiFqxCNMxzg/exec";
   let ADMIN_VERIFICATION_TOKEN = "";
   const OWNER_SESSION_KEY = 'jk_rao_farms_owner_session_v2';
-  function saveOwnerSession(token,email,expires){ ADMIN_VERIFICATION_TOKEN=token; try{localStorage.setItem(OWNER_SESSION_KEY,JSON.stringify({token:token,email:email,expires:expires}));}catch(e){} }
+  function saveOwnerSession(token,email,expires,name){ ADMIN_VERIFICATION_TOKEN=token; setCurrentOwnerName(name); try{localStorage.setItem(OWNER_SESSION_KEY,JSON.stringify({token:token,email:email,expires:expires,name:name||''}));}catch(e){} }
+  function setCurrentOwnerName(name){ const el=document.getElementById('currentOwnerName'); if(!el)return; const n=String(name||'').trim(); el.textContent=n?'👤: '+n:''; el.style.display=n?'block':'none'; }
   function getSavedOwnerEmail(){try{const x=JSON.parse(localStorage.getItem(OWNER_SESSION_KEY)||'null');return x&&x.email?String(x.email):'';}catch(e){return '';}}
-  function clearOwnerSession(){ const old=ADMIN_VERIFICATION_TOKEN; ADMIN_VERIFICATION_TOKEN=''; try{localStorage.removeItem(OWNER_SESSION_KEY);}catch(e){} if(old) appPost({action:'logoutOwnerSession',adminToken:old}).catch(()=>{}); }
-  let pendingYearNoticeValue='';
-  function showYearOwnerNotice(year){
-    pendingYearNoticeValue=String(year||'').trim();
-    const modal=document.getElementById('yearOwnerNoticeModal');
-    if(modal && pendingYearNoticeValue) modal.style.display='flex';
-  }
-  function handleYearOwnerNotice(changeDetails){
-    const year=pendingYearNoticeValue;
-    const modal=document.getElementById('yearOwnerNoticeModal');
-    if(modal)modal.style.display='none';
-    if(!year)return;
-    appPost({action:'acknowledgeYearNotice',year:year,adminToken:ADMIN_VERIFICATION_TOKEN})
-      .then(()=>{
-        pendingYearNoticeValue='';
-        if(changeDetails){
-          fetchData();
-          window.setTimeout(()=>openMasterModal('Bhagiya_Master'),700);
-        }
-      })
-      .catch(err=>{if(modal)modal.style.display='flex';alert('યાદ અપાવવાની સ્થિતિ સેવ થઈ નથી: '+err.message);});
-  }
-  function restoreOwnerSession(){ try{const x=JSON.parse(localStorage.getItem(OWNER_SESSION_KEY)||'null'); if(!x||!x.token||Number(x.expires)<=Date.now()){localStorage.removeItem(OWNER_SESSION_KEY);return;} ADMIN_VERIFICATION_TOKEN=x.token; appPost({action:'validateOwnerSession',adminToken:x.token}).then(res=>{ADMIN_VERIFICATION_TOKEN=x.token;refreshYearActionButtons();const pending=res.data&&res.data.pendingYearNotice;if(pending){window.setTimeout(()=>showYearOwnerNotice(pending),900);}}).catch(()=>{clearOwnerSession();});}catch(e){} }
+  function clearOwnerSession(){ const old=ADMIN_VERIFICATION_TOKEN; ADMIN_VERIFICATION_TOKEN=''; setCurrentOwnerName(''); try{localStorage.removeItem(OWNER_SESSION_KEY);}catch(e){} if(old) appPost({action:'logoutOwnerSession',adminToken:old}).catch(()=>{}); }
+  function unlockFarmApp(){document.body.classList.remove('login-locked');const pg=document.getElementById('loginPage');if(pg)pg.style.display='none';}
+  function restoreOwnerSession(){ /* SECURITY/UI FIX: never dismiss the login screen automatically. Always wait for explicit Email + MPIN entry. */ try{ const x=JSON.parse(localStorage.getItem(OWNER_SESSION_KEY)||'null'); if(x && x.expires && Number(x.expires)<=Date.now()) localStorage.removeItem(OWNER_SESSION_KEY); }catch(e){} ADMIN_VERIFICATION_TOKEN=''; document.body.classList.add('login-locked'); const pg=document.getElementById('loginPage'); if(pg) pg.style.display='flex'; }
+  function refreshYearActionButtons(){ try{ if(typeof populateDashboardYearFilter==='function') populateDashboardYearFilter(); if(typeof updateDashboard==='function') updateDashboard(); }catch(e){ console.warn('Year action refresh:',e); } }
+  let activeYearOwnerNotice='';
+  function showYearOwnerNotice(year){ activeYearOwnerNotice=String(year||''); const modal=document.getElementById('yearOwnerNoticeModal'); if(modal) modal.style.display='flex'; }
+  function handleYearOwnerNotice(yes){ const year=activeYearOwnerNotice; const modal=document.getElementById('yearOwnerNoticeModal'); if(modal) modal.style.display='none'; if(!year)return; appPost({action:'acknowledgeYearNotice',year:year}).then(()=>{activeYearOwnerNotice=''; const sel=document.getElementById('dashboardYearFilter'); if(sel){ if(![...sel.options].some(o=>o.value===year)){const op=document.createElement('option');op.value=year;op.textContent=year;sel.appendChild(op);} sel.value=year; updateDashboard(); } if(yes){ if(typeof openMasterModal==='function') openMasterModal('Bhagiya_Master'); else alert('Bhagiya_Master ખોલી શકાયું નથી.'); }}).catch(err=>alert('સૂચના સાચવવામાં ભૂલ: '+err.message)); }
   const _nativeFetch = window.fetch.bind(window);
   window.fetch = function(url, options) {
     options = options || {};
@@ -1136,15 +1204,7 @@ body.light-mode .dash-box h4 {
     });
 
     setEntryIdDate(today);
-    fetchData();
     restoreOwnerSession();
-    // First screen: require Owner Login unless a valid saved 30-minute session is restored.
-    setTimeout(function(){
-      if(!ADMIN_VERIFICATION_TOKEN && !readFarmOtpFlow()){
-        const lm=document.getElementById('ownerLoginModal');
-        if(lm){lm.style.display='flex';const em=document.getElementById('ownerLoginEmail');if(em)em.value=getSavedOwnerEmail();}
-      }
-    },350);
     restoreFarmOtpFlow();
     addSalesItemRow(); addMedItemRow(); addFertItemRow(); addTracItemRow();
   };
@@ -1214,10 +1274,11 @@ body.light-mode .dash-box h4 {
   function fetchData() {
     let icon = document.getElementById("refreshIcon");
     if(icon) icon.className = "spin";
-    fetch(SCRIPT_URL)
-      .then(res => res.json())
+    if(!ADMIN_VERIFICATION_TOKEN){ if(icon) icon.className=""; return; }
+    appPost({action:'getData',adminToken:ADMIN_VERIFICATION_TOKEN})
       .then(res => {
-        appData = (res && res.data) ? res.data : {}; 
+        appData = (res && res.data) ? res.data : {};
+        const ap=document.getElementById('ownerApprovalButton'); if(ap) ap.style.display=(appData.__isMasterOwner && Number(appData.__pendingOwnerCount||0)>0)?'inline-block':'none'; 
         populateData();
         populateDashboardYearFilter();
         updateDashboard();
@@ -1788,7 +1849,9 @@ body.light-mode .dash-box h4 {
 
     askMpinAndExecute(() => {
       let actionName = (sheetKey === 'Bhagiya_Master') ? 'saveBhagiya' : 'saveVepari';
-      let rowValues = (sheetKey === 'Bhagiya_Master') ? [getYear(new Date()), name, phone, add, document.getElementById("mRollInput").value] : [name, phone, add, document.getElementById("mCategoryInput").value];
+      let email = (document.getElementById("mEmailInput")?.value || "").trim();
+      if(sheetKey === "Bhagiya_Master" && email && !/^\S+@\S+\.\S+$/.test(email)) return alert("યોગ્ય Email દાખલ કરો.");
+      let rowValues = (sheetKey === 'Bhagiya_Master') ? [(document.getElementById('dashboardYearFilter')?.value || getYear(new Date())), name, phone, email, add, document.getElementById("mRollInput").value] : [name, phone, add, document.getElementById("mCategoryInput").value];
 
       fetch(SCRIPT_URL, {
         method: "POST",
@@ -1805,10 +1868,10 @@ body.light-mode .dash-box h4 {
     });
   }
 
-  function deleteSelectedMasterRecord() {
+  async function deleteSelectedMasterRecord() {
     if(!selectedMasterRowName) return alert("કૃપા કરીને ડિલીટ કરવા માટે કોઈ રેકોર્ડ સિલેક્ટ કરો!");
     askMpinAndExecute(() => {
-      if(!confirm("⚠️ શું તમે ખરેખર '" + selectedMasterRowName + "' ને ડિલીટ કરવા માંગો છો?")) return;
+      modernConfirm("શું તમે ખરેખર '" + selectedMasterRowName + "' ને ડિલીટ કરવા માંગો છો?", "રેકોર્ડ ડિલીટ કરો").then(ok=>{ if(!ok)return;
       fetch(SCRIPT_URL, {
         method: "POST",
         body: JSON.stringify({ action: "deleteMasterRecord", sheetName: activeMasterSheet, name: selectedMasterRowName })
@@ -1820,6 +1883,7 @@ body.light-mode .dash-box h4 {
         openMasterModal(activeMasterSheet);
       })
       .catch(err => alert("ભૂલ: " + err));
+      });
     });
   }
 
@@ -2199,90 +2263,205 @@ body.light-mode .dash-box h4 {
     select.value = sorted.includes(previous) ? previous : (sorted.includes(currentYear) ? currentYear : (sorted[0] || ''));
   }
 
+  function modernInputDialog(options) {
+    return new Promise(resolve=>{
+      const modal=document.getElementById('modernInputModal'), fields=document.getElementById('modernInputFields');
+      const title=document.getElementById('modernInputTitle'), desc=document.getElementById('modernInputDesc'), error=document.getElementById('modernInputError');
+      title.textContent=options.title||'વિગતો દાખલ કરો'; desc.textContent=options.description||''; error.textContent=''; fields.innerHTML='';
+      (options.fields||[]).forEach((f,i)=>{const wrap=document.createElement('div');const lab=document.createElement('label');lab.textContent=f.label;lab.htmlFor='mdField'+i;const inp=document.createElement('input');inp.id='mdField'+i;inp.type=f.type||'text';inp.placeholder=f.placeholder||'';inp.autocomplete=f.autocomplete||'off';if(f.maxLength)inp.maxLength=f.maxLength;if(f.inputMode)inp.inputMode=f.inputMode;wrap.append(lab,inp);fields.appendChild(wrap);});
+      const cancel=document.getElementById('modernInputCancel'), ok=document.getElementById('modernInputOk');
+      const finish=value=>{modal.style.display='none';cancel.onclick=null;ok.onclick=null;resolve(value);};
+      cancel.onclick=()=>finish(null);
+      ok.onclick=()=>{const values=[...fields.querySelectorAll('input')].map(x=>x.value.trim());if(options.validate){const msg=options.validate(values);if(msg){error.textContent=msg;return;}}finish(values);};
+      modal.style.setProperty('z-index','2147483647','important');
+      modal.removeAttribute('aria-hidden');
+      modal.style.setProperty('display','flex','important');
+      setTimeout(()=>fields.querySelector('input')?.focus(),100);
+    });
+  }
+  async function appAsk(label, isPin) {
+    const result=await modernInputDialog({title:isPin?'🔐 સુરક્ષા MPIN':'માહિતી દાખલ કરો',description:label,fields:[{label:isPin?'6 અંકનો MPIN':'જરૂરી માહિતી',type:isPin?'password':'text',maxLength:isPin?6:120,inputMode:isPin?'numeric':'text'}],validate:v=>isPin&&!/^\d{6}$/.test(v[0])?'કૃપા કરીને બરાબર 6 અંકનો MPIN દાખલ કરો.':''});
+    return result?result[0]:null;
+  }
+  async function askAndConfirmNewMpin(){
+    const values=await modernInputDialog({title:'🔐 નવો MPIN સેટ કરો',description:'તમારા એકાઉન્ટની સુરક્ષા માટે નવો 6 અંકનો MPIN બનાવો અને પુષ્ટિ માટે ફરી દાખલ કરો.',fields:[{label:'નવો 6 અંકનો MPIN',type:'password',placeholder:'••••••',maxLength:6,inputMode:'numeric',autocomplete:'new-password'},{label:'નવો MPIN ફરી દાખલ કરો',type:'password',placeholder:'••••••',maxLength:6,inputMode:'numeric',autocomplete:'new-password'}],validate:v=>{if(!/^\d{6}$/.test(v[0]||''))return'નવો MPIN બરાબર 6 અંકનો હોવો જોઈએ.';if(!/^\d{6}$/.test(v[1]||''))return'પુષ્ટિ MPIN પણ 6 અંકનો દાખલ કરો.';if(v[0]!==v[1])return'બંને MPIN સરખા નથી. ફરી તપાસો.';return '';}});
+    return values?{pin:values[0],confirm:values[1]}:null;
+  }
+  function modernConfirm(message,title='કૃપા કરીને પુષ્ટિ કરો'){
+    return new Promise(resolve=>{const modal=document.getElementById('modernInputModal');document.getElementById('modernInputTitle').textContent=title;document.getElementById('modernInputDesc').textContent=message;document.getElementById('modernInputFields').innerHTML='';document.getElementById('modernInputError').textContent='';const cancel=document.getElementById('modernInputCancel'),ok=document.getElementById('modernInputOk');ok.textContent='હા, આગળ વધો';cancel.textContent='રદ કરો';const done=v=>{modal.style.display='none';cancel.onclick=null;ok.onclick=null;ok.textContent='આગળ વધો';cancel.textContent='રદ કરો';resolve(v);};cancel.onclick=()=>done(false);ok.onclick=()=>done(true);modal.style.display='flex';});
+  }
+  function modernNotice(message,title='માહિતી'){
+    return new Promise(resolve=>{const modal=document.getElementById('modernInputModal');document.getElementById('modernInputTitle').textContent=title;document.getElementById('modernInputDesc').textContent=String(message??'');document.getElementById('modernInputFields').innerHTML='';document.getElementById('modernInputError').textContent='';const cancel=document.getElementById('modernInputCancel'),ok=document.getElementById('modernInputOk');cancel.style.display='none';ok.textContent='બરાબર';const done=()=>{modal.style.display='none';ok.onclick=null;cancel.style.display='';ok.textContent='આગળ વધો';resolve();};ok.onclick=done;modal.style.display='flex';});
+  }
+  // Route standard browser alerts through the same modern in-app dialog.
+  window.alert=function(message){ modernNotice(message,'J K Rao Farms'); };
   function appPost(payload) {
-    return _nativeFetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(payload)}).then(r=>r.json()).then(res=>{
+    const secured=Object.assign({},payload); if(ADMIN_VERIFICATION_TOKEN && !secured.adminToken) secured.adminToken=ADMIN_VERIFICATION_TOKEN; return _nativeFetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(secured)}).then(r=>r.json()).then(res=>{
       if(!res || res.status!=='success') throw new Error((res&&res.message)||'પ્રક્રિયા નિષ્ફળ.');
       return res;
     });
   }
-  const FARM_OTP_FLOW_KEY = 'jk_rao_farms_pending_owner_otp_v1';
-  function saveFarmOtpFlow(flow) { try { localStorage.setItem(FARM_OTP_FLOW_KEY, JSON.stringify(flow)); } catch(e) {} }
-  function readFarmOtpFlow() { try { return JSON.parse(localStorage.getItem(FARM_OTP_FLOW_KEY) || 'null'); } catch(e) { return null; } }
-  function clearFarmOtpFlow() { try { localStorage.removeItem(FARM_OTP_FLOW_KEY); } catch(e) {} }
-  function showFarmOtpModal(flow) {
+
+  const FARM_OTP_FLOW_KEY='jk_rao_farms_pending_owner_otp_v2';
+  let FARM_OTP_FLOW_VERSION=0;
+  function saveFarmOtpFlow(flow){try{localStorage.setItem(FARM_OTP_FLOW_KEY,JSON.stringify(flow));}catch(e){}}
+  function readFarmOtpFlow(){try{return JSON.parse(localStorage.getItem(FARM_OTP_FLOW_KEY)||'null');}catch(e){return null;}}
+  function clearFarmOtpFlow(){try{localStorage.removeItem(FARM_OTP_FLOW_KEY);}catch(e){}}
+  function closeLoginRegisterForm(){FARM_OTP_FLOW_VERSION++;clearFarmOtpFlow();const m=document.getElementById('loginRegisterModal');if(m)m.style.display='none';}
+  function openLoginRegisterForm(){
+    cancelFarmOtpFlow();
+    const m=document.getElementById('loginRegisterModal');if(m)m.style.display='flex';
+    const msg=document.getElementById('registerFormMessage');if(msg)msg.innerText='';
+  }
+  function showFarmOtpModal(flow){
     saveFarmOtpFlow(flow);
-    const modal=document.getElementById('farmOtpModal');
-    const input=document.getElementById('farmOtpInput');
-    const pinBox=document.getElementById('farmOtpPinFields');
-    const verifyBtn=document.getElementById('farmOtpVerifyBtn');
+    const modal=document.getElementById('farmOtpModal'),input=document.getElementById('farmOtpInput');
     if(!modal||!input)return;
-    const isPin=flow.stage==='PIN';
-    document.getElementById('farmOtpTitle').innerText=flow.purpose==='SETUP'?'Owner Setup – Email OTP':'MPIN Reset – Email OTP';
-    document.getElementById('farmOtpHelp').innerText=isPin?'OTP ચકાસાઈ ગયો છે. હવે નવો 6 અંકનો MPIN બનાવો અને ફરી દાખલ કરો.':'OTP '+flow.email+' પર મોકલ્યો છે. Gmailમાંથી OTP વાંચીને અહીં દાખલ કરો. 5 મિનિટ સુધી માન્ય છે. App ફરી ખુલશે તો પણ આ ફોર્મ પાછું આવશે.';
-    input.style.display=isPin?'none':'block';
-    if(pinBox)pinBox.style.display=isPin?'block':'none';
-    if(isPin){document.getElementById('farmNewMpin').value=flow.newMpin||'';document.getElementById('farmConfirmMpin').value=flow.confirmMpin||'';}
-    verifyBtn.innerText=isPin?'MPIN સેટ કરો':'OTP Verify';
-    input.value=flow.otp||''; modal.style.display='flex'; setTimeout(()=>{(isPin?document.getElementById('farmNewMpin'):input).focus();},150);
+    document.getElementById('farmOtpTitle').innerText=flow.purpose==='REGISTER'?'New Registration – Email OTP':'Forgot MPIN – Email OTP';
+    document.getElementById('farmOtpHelp').innerText='OTP '+flow.email+' પર મોકલ્યો છે. Emailમાંથી 6 અંકનો OTP અહીં દાખલ કરો.';
+    input.value='';modal.style.display='flex';setTimeout(()=>input.focus(),120);
   }
-  function restoreFarmOtpFlow() { const flow=readFarmOtpFlow(); if(flow && (flow.stage==='OTP'||flow.stage==='PIN')) showFarmOtpModal(flow); }
-  document.addEventListener('visibilitychange', function(){
-    if(document.visibilityState==='visible'){
-      const flow=readFarmOtpFlow();
-      const modal=document.getElementById('farmOtpModal');
-      if(flow && modal && modal.style.display!=='flex') showFarmOtpModal(flow);
+  function isFarmOtpFlowActive(version, expectedFlow){
+    if(version !== FARM_OTP_FLOW_VERSION) return false;
+    const current = readFarmOtpFlow();
+    if(!current) return false;
+    if(expectedFlow && (current.purpose !== expectedFlow.purpose || current.email !== expectedFlow.email)) return false;
+    return true;
+  }
+  function cancelFarmOtpFlow(){
+    // Invalidate every pending request/dialog continuation before closing the OTP UI.
+    FARM_OTP_FLOW_VERSION++;
+    clearFarmOtpFlow();
+    const modal=document.getElementById('farmOtpModal');if(modal)modal.style.display='none';
+    const input=document.getElementById('farmOtpInput');if(input)input.value='';
+    const btn=document.getElementById('farmOtpVerifyBtn');if(btn){btn.disabled=false;btn.innerText='OTP Verify';}
+  }
+  async function submitFarmOtpFlow(){
+    const flow=readFarmOtpFlow();if(!flow)return;
+    const version=FARM_OTP_FLOW_VERSION, input=document.getElementById('farmOtpInput');
+    const otp=String(input.value||'').trim();
+    if(!/^\d{6}$/.test(otp)){await modernNotice('6 અંકનો OTP દાખલ કરો.');return;}
+    const btn=document.getElementById('farmOtpVerifyBtn');btn.disabled=true;btn.innerText='ચકાસણી ચાલુ છે...';
+    try{
+      const verifyPurpose=flow.purpose==='REGISTER'?'REGISTER':'RESET';
+      if(flow.purpose==='REGISTER'){
+        await appPost({action:'verifyRegistrationOtp',email:flow.email,otp:otp});
+        if(!isFarmOtpFlowActive(version,flow))return;
+      }else if(flow.purpose==='EMAIL'){
+        await appPost({action:'verifyEmailRecoveryOtp',email:flow.email,phone:flow.phone,otp:otp});
+        if(!isFarmOtpFlowActive(version,flow))return;
+        clearFarmOtpFlow();document.getElementById('farmOtpModal').style.display='none';
+        await modernNotice('તમારો નોંધાયેલ Email: '+flow.email,'Email મળી ગયો');
+        return;
+      }else{
+        await appPost({action:'verifyOwnerOtp',email:flow.email,otp:otp,purpose:'RESET'});
+        if(!isFarmOtpFlowActive(version,flow))return;
+      }
+      if(!isFarmOtpFlowActive(version,flow))return;
+      // OTP is verified: close the OTP dialog before opening the MPIN dialog.
+      // Otherwise MPIN appears behind the still-open OTP dialog; tapping Cancel
+      // on OTP merely reveals the already-open MPIN dialog.
+      // OTP verification succeeded: close OTP modal first, then open MPIN entry.
+      // This transition is automatic and is never triggered by the Cancel button.
+      const verifiedOtpModal=document.getElementById('farmOtpModal');
+      if(verifiedOtpModal){
+        verifiedOtpModal.style.setProperty('display','none','important');
+        verifiedOtpModal.setAttribute('aria-hidden','true');
+      }
+      const mpinDialog=document.getElementById('modernInputModal');
+      if(mpinDialog){
+        mpinDialog.style.setProperty('z-index','2147483647','important');
+        mpinDialog.style.setProperty('display','none','important');
+      }
+      const pins=await askAndConfirmNewMpin();
+      if(!isFarmOtpFlowActive(version,flow))return;
+      if(!pins){cancelFarmOtpFlow();return;}
+      const action=flow.purpose==='REGISTER'?'completeRegistration':'confirmMpinReset';
+      const payload={action:action,email:flow.email,otp:otp,newMpin:pins.pin,confirmMpin:pins.confirm};
+      const result=await appPost(payload);
+      if(!isFarmOtpFlowActive(version,flow))return;
+      clearFarmOtpFlow();document.getElementById('farmOtpModal').style.display='none';
+      if(flow.purpose==='REGISTER'){const reg=document.getElementById('loginRegisterModal');if(reg)reg.style.display='none';}
+      await modernNotice(result.message||'પ્રક્રિયા સફળતાપૂર્વક પૂર્ણ થઈ.','✓ સફળ');
+    }catch(err){
+      if(version===FARM_OTP_FLOW_VERSION)await modernNotice(err.message||'OTP ચકાસણી નિષ્ફળ.','ભૂલ');
+    }finally{
+      if(version===FARM_OTP_FLOW_VERSION&&btn){btn.disabled=false;btn.innerText='OTP Verify';}
     }
-  });
-  function cancelFarmOtpFlow() { clearFarmOtpFlow(); const modal=document.getElementById('farmOtpModal'); if(modal)modal.style.display='none'; }
-  function submitFarmOtpFlow() {
-    const flow=readFarmOtpFlow(); if(!flow)return alert('OTP પ્રક્રિયા મળી નથી. ફરીથી પ્રયાસ કરો.');
-    const btn=document.getElementById('farmOtpVerifyBtn'); btn.disabled=true;
-    if(flow.stage==='OTP'){
-      const otp=String(document.getElementById('farmOtpInput').value||'').trim();
-      if(!/^\d{6}$/.test(otp)){btn.disabled=false;return alert('6 Digit OTP દાખલ કરો.');}
-      flow.otp=otp; saveFarmOtpFlow(flow); btn.innerText='OTP ચકાસી રહ્યો છે...';
-      appPost({action:'verifyOwnerOtp',email:flow.email,otp:otp,purpose:flow.purpose})
-        .then(()=>{flow.stage='PIN';flow.otp=otp;saveFarmOtpFlow(flow);showFarmOtpModal(flow);})
-        .catch(err=>{const help=document.getElementById('farmOtpHelp');if(help)help.innerText='OTP ચકાસણીમાં ભૂલ: '+err.message;})
-        .finally(()=>{const liveBtn=document.getElementById('farmOtpVerifyBtn');if(liveBtn){liveBtn.disabled=false;const current=readFarmOtpFlow();liveBtn.innerText=current&&current.stage==='PIN'?'MPIN સેટ કરો':'OTP Verify';}});
-      return;
+  }
+  function submitLoginRegisterForm(){
+    const name=String(document.getElementById('regName').value||'').trim();
+    const email=String(document.getElementById('regEmail').value||'').trim();
+    const phone=String(document.getElementById('regPhone').value||'').replace(/\D/g,'');
+    const address=String(document.getElementById('regAddress').value||'').trim();
+    const msg=document.getElementById('registerFormMessage');
+    if(!name){msg.innerText='નામ લખવું જરૂરી છે.';return;}
+    if(!/^\S+@\S+\.\S+$/.test(email)){msg.innerText='યોગ્ય Email દાખલ કરો.';return;}
+    if(!/^\d{10}$/.test(phone)){msg.innerText='મોબાઇલ નંબર 10 અંકનો હોવો જોઈએ.';return;}
+    const version=++FARM_OTP_FLOW_VERSION;
+    const btn=document.querySelector('#loginRegisterModal .register-save');btn.disabled=true;btn.innerText='OTP મોકલી રહ્યા છીએ...';
+    appPost({action:'requestRegistrationOtp',name:name,email:email,phone:phone,address:address})
+      .then(res=>{
+        if(version!==FARM_OTP_FLOW_VERSION)return;
+        const m=document.getElementById('loginRegisterModal');if(m)m.style.display='none';
+        showFarmOtpModal({purpose:'REGISTER',email:email,name:name,phone:phone,address:address,stage:'OTP'});
+        return;
+      }).catch(err=>{if(version===FARM_OTP_FLOW_VERSION)msg.innerText=err.message||'OTP મોકલી શકાયો નથી.';})
+      .finally(()=>{if(version===FARM_OTP_FLOW_VERSION&&btn){btn.disabled=false;btn.innerText='આગળ વધો';}});
+  }
+  async function loginPageForgotMpin(){
+    const vals=await modernInputDialog({
+      title:'Forgot MPIN – Owner પસંદ કરો',
+      description:'જે Owner નો MPIN બદલવો છે તેનું Bhagiya_Master માં નોંધાયેલું Email દાખલ કરો. OTP એ જ Owner ના Email પર આવશે.',
+      fields:[{label:'આ Owner નું Registered Email',type:'email',placeholder:'owner@example.com',autocomplete:'email'}],
+      validate:v=>/^\S+@\S+\.\S+$/.test(String(v[0]||'').trim())?'':'યોગ્ય Registered Email દાખલ કરો.'
+    });
+    if(!vals)return;
+    const email=String(vals[0]||'').trim().toLowerCase();
+    startFarmOtpFlow('RESET',email);
+  }
+
+  function startFarmOtpFlow(purpose,email){
+    email=String(email==null?'':email).trim();
+    if(!/^\S+@\S+\.\S+$/.test(email)){document.getElementById('loginPageError').innerText='યોગ્ય Registered Email દાખલ કરો.';return;}
+    const version=++FARM_OTP_FLOW_VERSION;
+    modernInputDialog({title:'Email OTP મોકલવો છે?',description:'આ Owner ('+email+') ના Registered Email પર જ Forgot MPIN OTP મોકલવામાં આવશે.',fields:[],validate:()=>''})
+      .then(ok=>{if(ok===null||version!==FARM_OTP_FLOW_VERSION)return null;return appPost({action:'requestMpinReset',email:email});})
+      .then(res=>{if(!res||version!==FARM_OTP_FLOW_VERSION)return;showFarmOtpModal({purpose:'RESET',email:email,stage:'OTP'});return modernNotice(res.message||'OTP મોકલ્યો છે.','OTP મોકલાયો');})
+      .catch(err=>{if(version===FARM_OTP_FLOW_VERSION)modernNotice(err.message||'OTP મોકલી શકાયો નથી.','ભૂલ');});
+  }
+  function loginPageSubmit(){
+    const email=String(document.getElementById('loginPageEmail').value||'').trim();
+    const mpin=String(document.getElementById('loginPageMpin').value||'').trim();
+    const err=document.getElementById('loginPageError'),btn=document.getElementById('loginPageButton');
+    if(!/^\S+@\S+\.\S+$/.test(email)||!/^\d{6}$/.test(mpin)){err.innerText='યોગ્ય Email અને 6 અંકનો MPIN દાખલ કરો.';return;}
+    btn.disabled=true;btn.innerText='લોગિન ચકાસી રહ્યા છીએ...';err.innerText='';
+    verifyOwnerPin(email,mpin,false).then(()=>{document.getElementById('loginPageMpin').value='';unlockFarmApp();fetchData();refreshYearActionButtons();appPost({action:'validateOwnerSession',adminToken:ADMIN_VERIFICATION_TOKEN}).then(r=>{const y=r.data&&r.data.pendingYearNotice;if(y)setTimeout(()=>showYearOwnerNotice(y),900);}).catch(()=>{});})
+    .catch(e=>{err.innerText=e.message||'Login નિષ્ફળ. વિગતો તપાસો.';})
+    .finally(()=>{btn.disabled=false;btn.innerText='LOGIN';});
+  }
+
+  async function loginPageForgotEmail(){
+    const vals=await modernInputDialog({
+      title:'Forgot Email',
+      description:'તમારો નોંધાયેલ 10 અંકનો મોબાઇલ નંબર દાખલ કરો.',
+      fields:[{label:'મોબાઇલ નંબર',type:'tel',placeholder:'10 અંકનો મોબાઇલ નંબર',maxLength:10,inputMode:'numeric'}],
+      validate:v=>/^\d{10}$/.test(String(v[0]||'').replace(/\D/g,''))?'':'યોગ્ય 10 અંકનો મોબાઇલ નંબર દાખલ કરો.'
+    });
+    if(!vals)return;
+    const phone=String(vals[0]||'').replace(/\D/g,'');
+    try{
+      const res=await appPost({action:'lookupOwnerEmailByPhone',phone:phone});
+      if(res && res.email){
+        await modernNotice('તમારું નોંધાયેલ Email છે:\n\n'+res.email,'Forgot Email');
+      }else{
+        await modernNotice((res&&res.message)||'આ મોબાઇલ નંબર સાથે Email મળ્યો નથી.','Forgot Email');
+      }
+    }catch(e){
+      await modernNotice(e.message||'Email શોધી શકાયો નથી.','Forgot Email');
     }
-    const pin=String(document.getElementById('farmNewMpin').value||'').trim();
-    const confirmPin=String(document.getElementById('farmConfirmMpin').value||'').trim();
-    if(!/^\d{6}$/.test(pin)||pin!==confirmPin){btn.disabled=false;return alert('બંને MPIN સરખા 6 અંકના હોવા જોઈએ.');}
-    flow.newMpin=pin;flow.confirmMpin=confirmPin;saveFarmOtpFlow(flow);btn.innerText='MPIN સેટ થઈ રહ્યો છે...';
-    const action=flow.purpose==='SETUP'?'completeOwnerSetup':'confirmMpinReset';
-    appPost({action:action,email:flow.email,otp:flow.otp,newMpin:pin,confirmMpin:confirmPin})
-      .then(res=>{clearFarmOtpFlow();document.getElementById('farmOtpModal').style.display='none';alert(res.message||'પ્રક્રિયા સફળ થઈ.');})
-      .catch(err=>{const help=document.getElementById('farmOtpHelp');if(help)help.innerText='MPIN સેટ કરવામાં ભૂલ: '+err.message;})
-      .finally(()=>{btn.disabled=false;btn.innerText='MPIN સેટ કરો';});
   }
-  function startFarmOtpFlow(purpose,email) {
-    email=String(email||'').trim().toLowerCase(); if(!email)return;
-    if(!confirm(email+' પર '+(purpose==='SETUP'?'Owner Setup':'MPIN Reset')+' OTP મોકલવો છે?'))return;
-    appPost({action:purpose==='SETUP'?'requestOwnerSetupOtp':'requestMpinReset',email:email})
-      .then(res=>{showFarmOtpModal({purpose:purpose,email:email,stage:'OTP',otp:''});const help=document.getElementById('farmOtpHelp');if(help)help.innerText=res.message||('OTP '+email+' પર મોકલ્યો છે. Gmailમાંથી OTP વાંચીને અહીં દાખલ કરો.');})
-      .catch(err=>{const help=document.getElementById('farmOtpHelp');if(help)help.innerText='OTP મોકલવામાં ભૂલ: '+err.message;const modal=document.getElementById('farmOtpModal');if(modal)modal.style.display='flex';});
-  }
-  let ownerEmailFlowPurpose='SETUP';
-  function openOwnerEmailFlow(purpose){
-    ownerEmailFlowPurpose=purpose;
-    const modal=document.getElementById('ownerEmailModal');
-    document.getElementById('ownerEmailTitle').innerText=purpose==='SETUP'?'👑 Owner Setup':'🔑 MPIN Reset';
-    document.getElementById('ownerEmailHelp').innerText='માલિકનું નોંધાયેલ Email દાખલ કરો. Email Bhagiya_Master ના E-mail કોલમ અને Roll = માલિક સાથે મેળ ખાવું જોઈએ.';
-    document.getElementById('ownerEmailInput').value=getSavedOwnerEmail();
-    document.getElementById('ownerEmailError').innerText='';
-    if(modal)modal.style.display='flex';
-    setTimeout(()=>document.getElementById('ownerEmailInput').focus(),100);
-  }
-  function closeOwnerEmailFlow(){const m=document.getElementById('ownerEmailModal');if(m)m.style.display='none';}
-  function submitOwnerEmailFlow(){
-    const email=String(document.getElementById('ownerEmailInput').value||'').trim().toLowerCase();
-    const error=document.getElementById('ownerEmailError');
-    if(!/^\S+@\S+\.\S+$/.test(email)){if(error)error.innerText='યોગ્ય Email Address દાખલ કરો.';return;}
-    closeOwnerEmailFlow();startFarmOtpFlow(ownerEmailFlowPurpose,email);
-  }
-  function setupOwnerMpinFromApp(){openOwnerEmailFlow('SETUP');}
+  document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.body.classList.contains('login-locked'))loginPageSubmit();});
   let ownerLoginResolve=null;
   let criticalMpinMode=false;
   let LAST_CRITICAL_MPIN='';
@@ -2303,59 +2482,59 @@ body.light-mode .dash-box h4 {
   }
   function cancelOwnerLogin(){const m=document.getElementById('ownerLoginModal');if(m)m.style.display='none';const e=document.getElementById('ownerLoginEmail');if(e)e.readOnly=false;if(ownerLoginResolve){ownerLoginResolve(null);ownerLoginResolve=null;}criticalMpinMode=false;LAST_CRITICAL_MPIN='';pendingActionCallback=null;}
   function submitOwnerLogin(){
-    const email=String(document.getElementById('ownerLoginEmail')?.value||'').trim().toLowerCase();
+    const email=String(document.getElementById('ownerLoginEmail')?.value||'').trim();
     const mpin=String(document.getElementById('ownerLoginMpin')?.value||'').trim();
     const stay=false;
     const error=document.getElementById('ownerLoginError');
     if(!/^\S+@\S+\.\S+$/.test(email)||!/^\d{6}$/.test(mpin)){if(error)error.innerText='યોગ્ય Email અને 6 અંકનો MPIN દાખલ કરો.';return;}
     const btn=document.querySelector('#ownerLoginModal button[onclick="submitOwnerLogin()"]');if(btn){btn.disabled=true;btn.innerText='Login ચાલુ છે...';}
-    const wasCritical=criticalMpinMode;
-    verifyOwnerPin(email,mpin,stay).then((loginRes)=>{
-      const m=document.getElementById('ownerLoginModal');if(m)m.style.display='none';
-      const pin=document.getElementById('ownerLoginMpin');if(pin)pin.value='';
-      if(wasCritical)LAST_CRITICAL_MPIN=mpin;
-      if(ownerLoginResolve){const done=ownerLoginResolve;ownerLoginResolve=null;criticalMpinMode=false;done({session:true,mpin:mpin});}
-      // સામાન્ય Owner Login પછી pending Year Notice તપાસો. Close Year પછીના આગામી Login પર જ બતાવો.
-      if(!wasCritical){
-        appPost({action:'validateOwnerSession',adminToken:loginRes.token}).then(v=>{
-          refreshYearActionButtons();
-          const pending=v.data&&v.data.pendingYearNotice;
-          if(pending)window.setTimeout(()=>showYearOwnerNotice(pending),650);
-        }).catch(err=>{console.warn('Year notice check:',err.message);});
-      }
-    }).catch(err=>{if(error)error.innerText=err.message;}).finally(()=>{if(btn){btn.disabled=false;btn.innerText='Login';}});
+    verifyOwnerPin(email,mpin,stay).then(()=>{const m=document.getElementById('ownerLoginModal');if(m)m.style.display='none';const pin=document.getElementById('ownerLoginMpin');if(pin)pin.value='';if(criticalMpinMode)LAST_CRITICAL_MPIN=mpin;if(ownerLoginResolve){const done=ownerLoginResolve;ownerLoginResolve=null;criticalMpinMode=false;done(criticalMpinMode?{session:true,mpin:mpin}:{session:true,mpin:mpin});}}).catch(err=>{if(error)error.innerText=err.message;}).finally(()=>{if(btn){btn.disabled=false;btn.innerText='Login';}});
   }
   function verifyOwnerPin(email,mpin,stayLoggedIn) {
-    return appPost({action:'verifyOwnerMpin',email:email,adminMpin:mpin,stayLoggedIn:stayLoggedIn!==false}).then(res=>{if(!res.token)throw new Error('Owner verification નિષ્ફળ.');saveOwnerSession(res.token,res.email,res.expires);return res;});
+    return appPost({action:'verifyOwnerMpin',email:email,adminMpin:mpin,stayLoggedIn:stayLoggedIn!==false}).then(res=>{if(!res.token)throw new Error('Owner verification નિષ્ફળ.');saveOwnerSession(res.token,res.email,res.expires,res.name);return res;});
   }
-  function resetAdminMpin(){openOwnerEmailFlow('RESET');}
+  async function resetAdminMpin(){ loginPageForgotMpin(); }
 
-  function confirmCloseYear() {
+  async function confirmCloseYear() {
     const year = document.getElementById('dashboardYearFilter')?.value || '';
     if (!year) return alert('વર્ષ પસંદ કરો.');
-    getFreshMpinForCriticalAction().then(auth=>{
+    getFreshMpinForCriticalAction().then(async auth=>{
       if(!auth || !auth.mpin)return;
-      if (!confirm('⚠️ વર્ષ ' + year + ' બંધ કરવું છે? Dashboard History અને Carry Forward બનશે.')) return;
+      if (!await modernConfirm('વર્ષ ' + year + ' બંધ કરવાથી Dashboard History અને Carry Forward બનશે.','વર્ષ બંધ કરવાની પુષ્ટિ')) return;
       const btn = document.getElementById('closeYearButton');
       if (btn) { btn.disabled = true; btn.innerText = 'પ્રક્રિયા ચાલુ છે...'; }
       return _nativeFetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'closeYear',year:year,adminToken:ADMIN_VERIFICATION_TOKEN,adminMpin:auth.mpin})})
-        .then(r=>r.json()).then(result => { if (!result || result.status !== 'success') throw new Error((result && result.message) || 'Close Year નિષ્ફળ.'); alert(result.message); fetchData(); })
+        .then(r=>r.json()).then(result => { if (!result || result.status !== 'success') throw new Error((result && result.message) || 'Close Year નિષ્ફળ.'); const nextYear=result.data&&result.data.nextYear; modernNotice(result.message,'Close Year પૂર્ણ').then(()=>{fetchData(); if(nextYear) setTimeout(()=>showYearOwnerNotice(nextYear),500);}); })
         .catch(err => alert('Close Year માં ભૂલ: ' + err.message))
         .finally(() => { if (btn) { btn.disabled = false; btn.innerText = '🔒 CLOSE YEAR'; } LAST_CRITICAL_MPIN=''; });
     });
   }
 
-  function confirmUndoCloseYear() {
+  async function confirmUndoCloseYear() {
     const year = document.getElementById('dashboardYearFilter')?.value || '';
     if (!year) return alert('વર્ષ પસંદ કરો.');
-    getFreshMpinForCriticalAction().then(auth=>{
+    getFreshMpinForCriticalAction().then(async auth=>{
       if(!auth || !auth.mpin)return;
-      if (!confirm('⚠️ વર્ષ ' + year + ' ફરી ખોલવું છે? નવા વર્ષમાં એન્ટ્રી હશે તો Server Undo અટકાવશે.')) return;
+      if (!await modernConfirm('વર્ષ ' + year + ' ફરી ખોલવું છે? નવા વર્ષમાં એન્ટ્રી હશે તો Undo અટકશે.','વર્ષ ફરી ખોલવાની પુષ્ટિ')) return;
       const btn=document.getElementById('undoYearButton'); if(btn){btn.disabled=true;btn.innerText='Undo ચાલુ છે...';}
       _nativeFetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({action:'undoCloseYear',year:year,adminToken:ADMIN_VERIFICATION_TOKEN,adminMpin:auth.mpin})})
         .then(r=>r.json()).then(result=>{if(!result||result.status!=='success')throw new Error((result&&result.message)||'Undo નિષ્ફળ.');alert(result.message);fetchData();})
         .catch(err=>alert('Undo માં ભૂલ: '+err.message)).finally(()=>{if(btn){btn.disabled=false;btn.innerText='↩ UNDO CLOSE';} LAST_CRITICAL_MPIN='';});
     });
+  }
+
+  function openOwnerApprovals(){
+    const rows=appData.Pending_Owner_Approvals||[];
+    const pending=rows.map((r,i)=>({r:r,row:i+2})).filter(x=>String(x.r.Status||'')==='Pending');
+    const box=document.getElementById('ownerApprovalsList'); if(!box)return;
+    if(!pending.length){box.innerHTML='<p style="color:#64748b;text-align:center;">હાલમાં કોઈ બાકી વિનંતી નથી.</p>';}
+    else box.innerHTML=pending.map(x=>`<div style="border:1px solid #cbd5e1;border-radius:10px;padding:12px;margin:9px 0;"><b>${escapeHtml(x.r.Name||'')}</b><div>${escapeHtml(x.r.Email||'')}</div><div>${escapeHtml(x.r.Mobile||'')} · ${escapeHtml(x.r.Address||'')}</div><button type="button" onclick="approveOwnerRequest(${x.row},this)" style="margin-top:9px;background:#15803d;color:white;border:0;border-radius:7px;padding:8px 14px;font-weight:bold;">મંજૂર કરો</button></div>`).join('');
+    document.getElementById('ownerApprovalsModal').style.display='flex';
+  }
+  function approveOwnerRequest(row,btn){
+    if(!confirm('આ Emailને સંપૂર્ણ માલિક ઍક્સેસ આપવી છે?'))return;
+    btn.disabled=true;btn.textContent='મંજૂરી ચાલુ છે...';
+    appPost({action:'approveOwnerRegistration',row:row}).then(r=>{alert(r.message);fetchData();setTimeout(openOwnerApprovals,500);}).catch(e=>{alert(e.message);btn.disabled=false;btn.textContent='મંજૂર કરો';});
   }
 
   function updateDashboard() {
@@ -2433,13 +2612,12 @@ body.light-mode .dash-box h4 {
     }
     const closeBtn = document.getElementById('closeYearButton');
     const undoBtn = document.getElementById('undoYearButton');
-if (
-  String(uData[ui][uYearCol] || '').trim() === year &&
-  flag === 'CLOSED'
-) triggerRows.push(ui + 1);
+    const selectedCloseFlag = upadRows.some(r => String(r['વર્ષ'] || '').trim() === selectedYear && ['YES','હા','TRUE','Y'].includes(String(r['Close Year'] || '').trim().toUpperCase()));
     const hasHistory = (appData['Dashboard_History'] || []).some(r => String(r['વર્ષ'] || '').trim() === selectedYear);
+    const hasCloseAudit = (appData['Year_Close_Audit'] || []).some(r => String(r['Year'] || r['વર્ષ'] || '').trim() === selectedYear);
     if (closeBtn) closeBtn.style.display = (selectedCloseFlag && !hasHistory) ? 'inline-block' : 'none';
-    if (undoBtn) undoBtn.style.display = (selectedCloseFlag && hasHistory) ? 'inline-block' : 'none';
+    // Undo is governed by the archived year + matching audit, not by a flag that may have been edited later.
+    if (undoBtn) undoBtn.style.display = (hasHistory && hasCloseAudit) ? 'inline-block' : 'none';
   }
 
   function renderTable(tabName) {
@@ -3614,15 +3792,38 @@ function renderBillRecordTable() {
   } // 👈 આ ફંક્શનનો છેલ્લો કૌંસ
 </script>
 
+<div id="modernInputModal" role="dialog" aria-modal="true" aria-labelledby="modernInputTitle">
+ <div class="modern-dialog">
+  <h3 id="modernInputTitle">સુરક્ષા ચકાસણી</h3>
+  <p class="md-desc" id="modernInputDesc">વિગતો દાખલ કરો</p>
+  <div id="modernInputFields"></div>
+  <p class="md-error" id="modernInputError"></p>
+  <div class="md-actions"><button type="button" class="md-cancel" id="modernInputCancel">રદ કરો</button><button type="button" class="md-ok" id="modernInputOk">આગળ વધો</button></div>
+ </div>
+</div>
+
+<div id="loginRegisterModal" role="dialog" aria-modal="true" aria-labelledby="loginRegisterTitle">
+ <div class="register-card">
+  <h3 id="loginRegisterTitle">🌾 ભાગીદાર નોંધણી</h3>
+  <p class="register-note">માલિકની નવી નોંધણી માટે વિગતો દાખલ કરો</p>
+  <label for="regName">નામ</label><input id="regName" type="text" placeholder="પૂરું નામ" autocomplete="name">
+  <label for="regEmail">Email</label><input id="regEmail" type="email" required placeholder="name@example.com" autocomplete="email">
+  <label for="regPhone">મોબાઇલ નંબર</label><input id="regPhone" type="tel" required inputmode="numeric" maxlength="10" placeholder="10 અંકનો મોબાઇલ નંબર">
+  <label for="regAddress">ગામ / સરનામું</label><input id="regAddress" type="text" placeholder="ગામ અથવા સરનામું">
+  
+  <div class="register-actions">
+   <button type="button" class="register-cancel" onclick="closeLoginRegisterForm()">રદ કરો</button>
+   <button type="button" class="register-save" onclick="submitLoginRegisterForm()">આગળ વધો</button>
+  </div>
+  <p id="registerFormMessage" style="color:#fbbf24;font-size:13px;line-height:1.5"></p>
+ </div>
+</div>
+
 <div id="farmOtpModal" role="dialog" aria-modal="true" aria-labelledby="farmOtpTitle">
   <div class="farm-otp-card">
     <h3 id="farmOtpTitle">Email OTP Verification</h3>
     <p id="farmOtpHelp">Gmailમાંથી OTP વાંચીને અહીં દાખલ કરો. Gmail ખોલવા માટે Appમાંથી બહાર જશો તો પણ આ ફોર્મ ફરી દેખાશે.</p>
     <input id="farmOtpInput" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••" />
-    <div id="farmOtpPinFields" style="display:none;margin-top:10px;text-align:left;">
-      <label for="farmNewMpin">નવો 6 અંકનો MPIN</label><input id="farmNewMpin" type="password" inputmode="numeric" maxlength="6" placeholder="નવો MPIN" />
-      <label for="farmConfirmMpin">MPIN ફરી દાખલ કરો</label><input id="farmConfirmMpin" type="password" inputmode="numeric" maxlength="6" placeholder="MPIN પુષ્ટિ" />
-    </div>
     <div class="otp-actions"><button id="farmOtpCancelBtn" type="button" onclick="cancelFarmOtpFlow()">રદ કરો</button><button id="farmOtpVerifyBtn" type="button" onclick="submitFarmOtpFlow()">OTP Verify</button></div>
   </div>
 </div>

@@ -389,7 +389,7 @@ body.login-locked #farmOtpModal[style*="display: flex"], body.login-locked #logi
 </div>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">19/11/2026 -  22:43   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">14/11/2026 -  18:54   IST</span>
 </div>
 
 <div class="header-bar">
@@ -1169,7 +1169,7 @@ body.login-locked #farmOtpModal[style*="display: flex"], body.login-locked #logi
   let ADMIN_VERIFICATION_TOKEN = "";
   const OWNER_SESSION_KEY = 'jk_rao_farms_owner_session_v2';
   function saveOwnerSession(token,email,expires,name){ ADMIN_VERIFICATION_TOKEN=token; setCurrentOwnerName(name); try{localStorage.setItem(OWNER_SESSION_KEY,JSON.stringify({token:token,email:email,expires:expires,name:name||''}));}catch(e){} }
-  function setCurrentOwnerName(name){ const el=document.getElementById('currentOwnerName'); if(!el)return; const n=String(name||'').trim(); el.textContent=n?'👤: '+n:''; el.style.display=n?'block':'none'; }
+  function setCurrentOwnerName(name){ const el=document.getElementById('currentOwnerName'); if(!el)return; const n=String(name||'').trim(); el.textContent=n?'👑 માલિક: '+n:''; el.style.display=n?'block':'none'; }
   function getSavedOwnerEmail(){try{const x=JSON.parse(localStorage.getItem(OWNER_SESSION_KEY)||'null');return x&&x.email?String(x.email):'';}catch(e){return '';}}
   function clearOwnerSession(){ const old=ADMIN_VERIFICATION_TOKEN; ADMIN_VERIFICATION_TOKEN=''; setCurrentOwnerName(''); try{localStorage.removeItem(OWNER_SESSION_KEY);}catch(e){} if(old) appPost({action:'logoutOwnerSession',adminToken:old}).catch(()=>{}); }
   function unlockFarmApp(){document.body.classList.remove('login-locked');const pg=document.getElementById('loginPage');if(pg)pg.style.display='none';}
@@ -2410,14 +2410,18 @@ body.login-locked #farmOtpModal[style*="display: flex"], body.login-locked #logi
       .finally(()=>{if(version===FARM_OTP_FLOW_VERSION&&btn){btn.disabled=false;btn.innerText='આગળ વધો';}});
   }
   async function loginPageForgotMpin(){
-    const vals=await modernInputDialog({
-      title:'Forgot MPIN – Owner પસંદ કરો',
-      description:'જે Owner નો MPIN બદલવો છે તેનું Bhagiya_Master માં નોંધાયેલું Email દાખલ કરો. OTP એ જ Owner ના Email પર આવશે.',
-      fields:[{label:'આ Owner નું Registered Email',type:'email',placeholder:'owner@example.com',autocomplete:'email'}],
-      validate:v=>/^\S+@\S+\.\S+$/.test(String(v[0]||'').trim())?'':'યોગ્ય Registered Email દાખલ કરો.'
-    });
-    if(!vals)return;
-    const email=String(vals[0]||'').trim().toLowerCase();
+    const loginEmail=String(document.getElementById('loginPageEmail')?.value||'').trim();
+    let email=loginEmail;
+    if(!/^\S+@\S+\.\S+$/.test(email)){
+      const vals=await modernInputDialog({
+        title:'Forgot MPIN',
+        description:'તમારું નોંધાયેલ Email દાખલ કરો.',
+        fields:[{label:'Registered Email',type:'email',placeholder:'તમારું Email'}],
+        validate:v=>/^\S+@\S+\.\S+$/.test(String(v[0]||'').trim())?'':'યોગ્ય Email દાખલ કરો.'
+      });
+      if(!vals)return;
+      email=String(vals[0]||'').trim();
+    }
     startFarmOtpFlow('RESET',email);
   }
 
@@ -2425,7 +2429,7 @@ body.login-locked #farmOtpModal[style*="display: flex"], body.login-locked #logi
     email=String(email==null?'':email).trim();
     if(!/^\S+@\S+\.\S+$/.test(email)){document.getElementById('loginPageError').innerText='યોગ્ય Registered Email દાખલ કરો.';return;}
     const version=++FARM_OTP_FLOW_VERSION;
-    modernInputDialog({title:'Email OTP મોકલવો છે?',description:'આ Owner ('+email+') ના Registered Email પર જ Forgot MPIN OTP મોકલવામાં આવશે.',fields:[],validate:()=>''})
+    modernInputDialog({title:'Email OTP મોકલવો છે?',description:email+' પર Forgot MPIN માટે OTP મોકલવામાં આવશે.',fields:[],validate:()=>''})
       .then(ok=>{if(ok===null||version!==FARM_OTP_FLOW_VERSION)return null;return appPost({action:'requestMpinReset',email:email});})
       .then(res=>{if(!res||version!==FARM_OTP_FLOW_VERSION)return;showFarmOtpModal({purpose:'RESET',email:email,stage:'OTP'});return modernNotice(res.message||'OTP મોકલ્યો છે.','OTP મોકલાયો');})
       .catch(err=>{if(version===FARM_OTP_FLOW_VERSION)modernNotice(err.message||'OTP મોકલી શકાયો નથી.','ભૂલ');});

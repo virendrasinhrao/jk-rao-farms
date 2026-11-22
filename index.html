@@ -397,7 +397,7 @@ body.login-locked #farmOtpModal[style*="display: flex"], body.login-locked #logi
 </div>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">23/11/2026 -  16:35   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">123/11/2026 -  09:30   IST</span>
 </div>
 
 <div class="header-bar">
@@ -3534,37 +3534,51 @@ alert("Photo Data: " + (upadPhoto ? "મળ્યો" : "ખાલી છે"));
   }
 
   function renderGallery() {
-    let container = document.getElementById("galleryContainer");
-    let actionBar = document.getElementById("actionBarGallery");
-    if(!container) return;
-    let photos = appData.Photo_Gallery || [];
-    if(photos.length === 0) { 
-      container.innerHTML = "<p style='text-align:center; color:#7f8c8d;'>કોઈ ફોટો ઉપલબ્ધ નથી.</p>"; 
-      if(actionBar) actionBar.style.display = "none";
-      return; 
+    const container = document.getElementById("galleryContainer");
+    const actionBar = document.getElementById("actionBarGallery");
+    if (!container) return;
+    const photos = Array.isArray(appData.Photo_Gallery) ? appData.Photo_Gallery : [];
+
+    // Gallery table should remain visible even when no photo records are loaded.
+    let html = `<table class="data-table photo-gallery-table"><thead><tr>
+      <th style="width:40px"><input type="checkbox" id="selectAll_Gallery" onclick="toggleSelectAll(this, 'Gallery')"></th>
+      <th>વર્ષ</th><th>તારીખ</th><th>બિલ નં</th><th>વેપારી</th><th>Bill To/નામ</th><th>બિલનો ફોટો</th><th>એન્ટ્રી Id</th>
+    </tr></thead><tbody>`;
+
+    if (!photos.length) {
+      html += `<tr><td colspan="8" style="text-align:center;color:#7f8c8d;padding:18px">Photo_Gallery માં કોઈ રેકોર્ડ મળ્યો નથી.</td></tr>`;
+      if (actionBar) actionBar.style.display = "none";
+    } else {
+      photos.forEach((p, index) => {
+        const dateRaw = p["તારીખ"] || p["Date"] || p["Bill Date"] || "";
+        const dateVal = String(dateRaw).split("T")[0];
+        let yearVal = p["વર્ષ"] || p["Year"] || p["ખેતી વર્ષ"] || "";
+        if (!yearVal && dateVal) {
+          try { yearVal = getYear(dateVal); } catch (e) { yearVal = ""; }
+        }
+        const billNoVal = p["બિલ નં"] || p["બિલ નંબર"] || p["Bill No"] || p["Bill_No"] || p["Bill Number"] || "-";
+        const merchantVal = p["વેપારી"] || p["વેપારીનું નામ"] || p["Merchant"] || p["Dealer"] || p["Seller"] || "-";
+        const billToVal = p["Bill To/નામ"] || p["Bill To / નામ"] || p["Bill To / નામ :"] || p["Bill To/નામ:"] || p["બિલ માલિક"] || p["Bill Owner"] || p["નામ"] || "-";
+        const photoVal = p["બિલનો ફોટો"] || p["બિલ નો ફોટો"] || p["Bill Photo"] || p["Photo_Link"] || p["ફોટો"] || p["Photo"] || "";
+        const entryId = p["એન્ટ્રી Id"] || p["એન્ટ્રી ID"] || p["Entry Id"] || p["Entry_ID"] || p["Entry ID"] || p["ID"] || index + 1;
+        const photoButton = photoVal
+          ? `<button type="button" onclick="openImageModal(${JSON.stringify(String(photoVal)).replace(/</g,'\\u003c')})" style="background:#2980b9;color:white;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;font-weight:bold">📷 ફોટો જુઓ</button>`
+          : `<span style="color:#888">ફોટો ઉપલબ્ધ નથી</span>`;
+        html += `<tr>
+          <td><input type="checkbox" class="row-select-Gallery" value="${escapeHtml(String(entryId))}" onclick="updateTableActionBar('Gallery')"></td>
+          <td>${escapeHtml(String(yearVal || "-"))}</td>
+          <td>${escapeHtml(String(dateVal || "-"))}</td>
+          <td><b>${escapeHtml(String(billNoVal))}</b></td>
+          <td>${escapeHtml(String(merchantVal))}</td>
+          <td>${escapeHtml(String(billToVal))}</td>
+          <td>${photoButton}</td>
+          <td>${escapeHtml(String(entryId))}</td>
+        </tr>`;
+      });
+      if (actionBar) actionBar.style.display = "";
     }
-    
-    let html = `<table><tr>
-      <th style="width: 40px;"><input type="checkbox" id="selectAll_Gallery" onclick="toggleSelectAll(this, 'Gallery')"></th>
-      <th>તારીખ</th><th>બિલ નં</th><th>વેપારી</th><th>Bill To / નામ</th><th>ફોટો</th>
-    </tr>`;
-
-    photos.forEach((p, index) => {
-      let link = p["Photo_Link"] || p["ફોટો"] || "";
-      let imgTag = link ? `<button type="button" onclick="openImageModal('${link}')" style="background:#2980b9; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">🖼️ ફોટો જુઓ</button>` : '<span style="color:#888;">ફોટો ઉપલબ્ધ નથી</span>';
-      let dateVal = String(p["Date"] || p["તારીખ"] || '').split('T')[0];
-      let billNoVal = p["Bill_No"] || p["બિલ નં"] || '';
-      let vepariVal = p["વેપારી"] || p["Merchant"] || '-';
-      let billOwnerVal = p["Bill To / નામ :"] || p["Bill To/નામ:"] || p["બિલ માલિક"] || '-';
-      let entryId = p["એન્ટ્રી Id"] || p["Entry_ID"] || index;
-
-      html += `<tr>
-        <td><input type="checkbox" class="row-select-Gallery" value="${entryId}" onclick="updateTableActionBar('Gallery')"></td>
-        <td>${dateVal}</td><td><b>${billNoVal}</b></td><td>${vepariVal}</td><td>${billOwnerVal}</td><td>${imgTag}</td>
-      </tr>`;
-    });
-    container.innerHTML = html + `</table>`;
-    updateTableActionBar('Gallery');
+    container.innerHTML = html + `</tbody></table>`;
+    if (photos.length) updateTableActionBar('Gallery');
   }
 
   function filterGallery() {

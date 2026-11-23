@@ -3617,9 +3617,11 @@ alert("Photo Data: " + (upadPhoto ? "મળ્યો" : "ખાલી છે"));
         const billToVal = p["Bill To/નામ"] || p["Bill To / નામ"] || p["Bill To / નામ :"] || p["Bill To/નામ:"] || p["બિલ માલિક"] || p["Bill Owner"] || p["નામ"] || "-";
         const photoVal = p["બિલનો ફોટો"] || p["બિલ નો ફોટો"] || p["Bill Photo"] || p["Photo_Link"] || p["ફોટો"] || p["Photo"] || "";
         const entryId = p["એન્ટ્રી Id"] || p["એન્ટ્રી ID"] || p["Entry Id"] || p["Entry_ID"] || p["Entry ID"] || p["ID"] || index + 1;
-        const photoButton = photoVal
-          ? `<button type="button" onclick="openImageModal(${JSON.stringify(String(photoVal)).replace(/</g,'\\u003c')})" style="background:#2980b9;color:white;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;font-weight:bold">📷 ફોટો જુઓ</button>`
-          : `<span style="color:#888">ફોટો ઉપલબ્ધ નથી</span>`;
+        const safePhotoEncoded = encodeURIComponent(String(photoVal));
+const photoButton = photoVal
+  ? `<button type="button" onclick="openImageModal(decodeURIComponent('${safePhotoEncoded}'))" style="background:#2980b9;color:white;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;font-weight:bold">📷 ફોટો જુઓ</button>`
+  : `<span style="color:#888">ફોટો ઉપલબ્ધ નથી</span>`;
+
         html += `<tr>
           <td><input type="checkbox" class="row-select-Gallery" value="${escapeHtml(String(entryId))}" onclick="updateTableActionBar('Gallery')"></td>
           <td>${escapeHtml(String(yearVal || "-"))}</td>

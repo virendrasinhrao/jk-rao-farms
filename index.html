@@ -375,6 +375,89 @@ body.login-locked #farmOtpModal[style*="display: flex"], body.login-locked #logi
   .owner-profile-button{width:38px;height:38px;border-radius:50%;border:2px solid #8bd3b0;background:#24364a;color:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:0;font-size:20px;cursor:pointer}
   .owner-profile-button img{width:100%;height:100%;object-fit:cover;display:none}
   .owner-logout-btn{background:#b91c1c;color:#fff;border:0;border-radius:8px;padding:8px 10px;font-weight:700;cursor:pointer;font-size:12px}
+@keyframes modalPopIn {
+  0% { opacity: 0; transform: scale(0.92) translateY(12px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.jk-modern-overlay {
+  display: none; position: fixed; inset: 0; z-index: 10060;
+  background: rgba(6, 12, 24, 0.78); backdrop-filter: blur(6px);
+  align-items: center; justify-content: center; padding: 16px; box-sizing: border-box;
+}
+.jk-modern-card {
+  width: 100%; max-width: 470px; max-height: 88vh; overflow-y: auto;
+  background: linear-gradient(165deg, #1b2838 0%, #111927 100%);
+  color: #f1f5f9; border: 1px solid #334155; border-radius: 22px;
+  padding: 22px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  animation: modalPopIn 0.25s ease-out; text-align: left;
+}
+body.light-mode .jk-modern-card {
+  background: linear-gradient(165deg, #ffffff 0%, #f4fbf7 100%);
+  color: #1e293b; border: 1px solid #cbd5e1;
+}
+.jk-modal-badge {
+  width: 56px; height: 56px; margin: 0 auto 10px; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center; font-size: 28px;
+  background: linear-gradient(135deg, #16a34a, #0d9488);
+  box-shadow: 0 8px 20px rgba(22, 163, 74, 0.35);
+}
+.jk-modal-badge.warn {
+  background: linear-gradient(135deg, #f59e0b, #dc2626);
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.35);
+}
+.jk-status-pills {
+  display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 12px 0;
+}
+.jk-pill {
+  padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 700;
+}
+.jk-pill.ok { background: rgba(22, 163, 74, 0.2); color: #4ade80; border: 1px solid #16a34a; }
+.jk-pill.miss { background: rgba(220, 38, 38, 0.2); color: #fca5a5; border: 1px solid #dc2626; }
+body.light-mode .jk-pill.ok { background: #dcfce7; color: #15803d; }
+body.light-mode .jk-pill.miss { background: #fee2e2; color: #b91c1c; }
+.jk-partner-list {
+  max-height: 230px; overflow-y: auto; border: 1px solid #334155;
+  border-radius: 14px; padding: 6px; background: rgba(15, 23, 42, 0.45);
+}
+body.light-mode .jk-partner-list { background: #f8fafc; border-color: #cbd5e1; }
+.jk-partner-item {
+  display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; align-items: center;
+  gap: 10px; padding: 10px 10px; margin-bottom: 6px; border-radius: 11px;
+  background: rgba(30, 41, 59, 0.7); border: 1px solid transparent; cursor: pointer;
+  transition: all 0.2s;
+}
+.jk-partner-item:last-child { margin-bottom: 0; }
+.jk-partner-item:hover { border-color: #22c55e; transform: translateY(-1px); }
+body.light-mode .jk-partner-item { background: #ffffff; border-color: #e2e8f0; }
+.jk-role-tag {
+  font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 8px;
+  background: rgba(56, 189, 248, 0.16); color: #7dd3fc;
+}
+.jk-role-tag.owner { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+body.light-mode .jk-role-tag { background: #e0f2fe; color: #0369a1; }
+body.light-mode .jk-role-tag.owner { background: #fef3c7; color: #b45309; }
+.jk-inline-add {
+  display: none; margin-top: 12px; padding: 14px; border-radius: 14px;
+  background: rgba(15, 23, 42, 0.65); border: 1px dashed #38bdf8;
+}
+body.light-mode .jk-inline-add { background: #f0f9ff; border-color: #0284c7; }
+.jk-inline-add input, .jk-inline-add select {
+  width: 100%; padding: 9px 11px; margin-top: 4px; margin-bottom: 10px;
+  border-radius: 9px; border: 1px solid #475569; box-sizing: border-box;
+}
+.jk-btn-row { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 16px; }
+.jk-btn {
+  border: 0; border-radius: 11px; padding: 11px 14px; font-weight: 800;
+  font-size: 14px; cursor: pointer; transition: transform 0.15s, opacity 0.15s;
+}
+.jk-btn:active { transform: scale(0.97); }
+.jk-btn-green { flex: 1; background: linear-gradient(135deg, #16a34a, #15803d); color: #fff; box-shadow: 0 6px 16px rgba(22, 163, 74, 0.35); }
+.jk-btn-blue { flex: 1; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35); }
+.jk-btn-gray { flex: 1; background: #475569; color: #fff; }
+.jk-btn-sm {
+  flex: 1; padding: 7px 10px; border-radius: 8px; font-size: 12px; font-weight: 700;
+  border: 1px solid #475569; background: transparent; color: inherit; cursor: pointer;
+}
 </style>
 </head>
 <body class="login-locked">
@@ -397,7 +480,7 @@ body.login-locked #farmOtpModal[style*="display: flex"], body.login-locked #logi
 </div>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">23/11/2026 -  23:54   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">24/11/2026 -  08:27   IST</span>
 </div>
 
 <div class="header-bar">
@@ -1140,17 +1223,68 @@ body.login-locked #farmOtpModal[style*="display: flex"], body.login-locked #logi
   </div>
 </div>
 
-<div id="yearOwnerNoticeModal" class="modal" style="display:none;z-index:10050;align-items:center;justify-content:center;">
-  <div class="modal-content" style="max-width:460px;width:94%;text-align:left;border-radius:16px;padding:20px;max-height:82vh;overflow:auto;">
-    <div style="font-size:30px;text-align:center">🌾</div>
-    <h3 style="margin:8px 0;color:#1f5134;text-align:center">નવું નાણાકીય વર્ષ શરૂ થયું છે</h3>
-    <p style="color:#4b5563;line-height:1.5;text-align:center">આગળ ચાલુ રાખવાના ભાગીદારો પસંદ કરો. પસંદ કરેલા ભાગીદારો જ નવા વર્ષમાં સેવ થશે.</p>
-    <div style="display:flex;gap:8px;margin:10px 0"><button type="button" onclick="toggleYearPartnerSelection(true)" style="flex:1">બધા પસંદ કરો</button><button type="button" onclick="toggleYearPartnerSelection(false)" style="flex:1">બધા દૂર કરો</button></div>
-    <div id="yearPartnerSelectionList" style="max-height:300px;overflow:auto;border:1px solid #d5dfd8;border-radius:10px;padding:8px"></div>
-    <div style="display:flex;gap:8px;margin-top:14px"><button type="button" onclick="saveYearPartnerSelection()" style="flex:1;background:#16834a;color:#fff;border:0;border-radius:9px;padding:11px;font-weight:700">પસંદ કરેલા સેવ કરો</button><button type="button" onclick="handleYearOwnerNotice(false)" style="background:#64748b;color:#fff;border:0;border-radius:9px;padding:11px">ખાલી રાખો</button></div>
+<!-- 1. રીમાઇન્ડર મોડલ ("હા" / "પછી") -->
+<div id="yearPartnerReminderModal" class="jk-modern-overlay">
+  <div class="jk-modern-card" style="max-width:420px; text-align:center;">
+    <div class="jk-modal-badge warn">🔔</div>
+    <h3 style="margin:0 0 6px; font-size:20px; color:#fbbf24;">નવા વર્ષ માટે ભાગીદાર રેકોર્ડ Update કરો</h3>
+    <p id="yearReminderMissingMsg" style="font-size:13.5px; line-height:1.6; opacity:0.9; margin:8px 0 18px;"></p>
+    <div class="jk-btn-row">
+      <button type="button" class="jk-btn jk-btn-gray" onclick="dismissYearPartnerReminder()">⏳ પછી</button>
+      <button type="button" class="jk-btn jk-btn-green" onclick="openYearPartnerSetupFromReminder()">✅ હા, અપડેટ કરો</button>
+    </div>
   </div>
 </div>
+
+<!-- 2. Bhagiya_Master સિલેક્શન + નવો ભાગીદાર ઉમેરો મોડલ -->
+<div id="yearOwnerNoticeModal" class="jk-modern-overlay">
+  <div class="jk-modern-card">
+    <div class="jk-modal-badge">🌾</div>
+    <h3 id="yearSetupModalTitle" style="margin:0; text-align:center; font-size:19px;">નવા વર્ષના ભાગીદારો</h3>
+    <p style="font-size:12.5px; text-align:center; opacity:0.85; margin:6px 0 0;">
+      નવા વર્ષ માટે <strong>ઓછામાં ઓછો 1 માલિક</strong> અને <strong>ઓછામાં ઓછો 1 ખેડૂ</strong> જરૂરી છે.
+    </p>
+
+    <div class="jk-status-pills" id="yearRoleLiveStatus"></div>
+
+    <div style="display:flex; gap:8px; margin-bottom:8px;">
+      <button type="button" class="jk-btn-sm" onclick="toggleYearPartnerSelection(true)">☑️ બધા પસંદ કરો</button>
+      <button type="button" class="jk-btn-sm" onclick="toggleYearPartnerSelection(false)">⬜ બધા દૂર કરો</button>
+    </div>
+
+    <div id="yearPartnerSelectionList" class="jk-partner-list"></div>
+
+    <div id="newYearPartnerInlineBox" class="jk-inline-add">
+      <div style="font-weight:800; margin-bottom:8px; color:#38bdf8;">➕ નવા વર્ષમાં નવો ભાગીદાર ઉમેરો</div>
+      <label>નામ:</label>
+      <input type="text" id="nyPartnerName" placeholder="પૂરું નામ લખો">
+      <div style="display:flex; gap:8px;">
+        <div style="flex:1;">
+          <label>મોબાઈલ નંબર:</label>
+          <input type="number" id="nyPartnerPhone" placeholder="મોબાઈલ">
+        </div>
+        <div style="flex:1;">
+          <label>Role:</label>
+          <select id="nyPartnerRole">
+            <option value="ખેડૂ">ખેડૂ</option>
+            <option value="માલિક">માલિક</option>
+          </select>
+        </div>
+      </div>
+      <label>Email (માલિક માટે):</label>
+      <input type="email" id="nyPartnerEmail" placeholder="name@example.com">
+      <label>ગામ / સરનામું:</label>
+      <input type="text" id="nyPartnerAddress" placeholder="ગામ / સરનામું">
+      <button type="button" class="jk-btn jk-btn-blue" style="width:100%;" onclick="saveNewYearPartnerInline()">💾 નવો ભાગીદાર સેવ કરો</button>
+    </div>
+
+    <div class="jk-btn-row">
+      <button type="button" class="jk-btn jk-btn-blue" onclick="toggleNewYearPartnerInlineBox()">➕ ઉમેરો</button>
+      <button type="button" class="jk-btn jk-btn-green" onclick="saveYearPartnerSelection()">Continue ➡️</button>
+      <button type="button" class="jk-btn jk-btn-gray" style="flex:0 0 auto;" onclick="closeYearOwnerNoticeModalOnly()">✕</button>
+    </div>
   </div>
+</div>
 </div>
 
 <div id="ownerLoginModal" class="modal" style="display:none;z-index:10060;align-items:center;justify-content:center;">
@@ -1191,21 +1325,85 @@ body.login-locked #farmOtpModal[style*="display: flex"], body.login-locked #logi
   function unlockFarmApp(){document.body.classList.remove('login-locked');const pg=document.getElementById('loginPage');if(pg)pg.style.display='none';}
   function restoreOwnerSession(){ /* SECURITY/UI FIX: never dismiss the login screen automatically. Always wait for explicit Email + MPIN entry. */ try{ const x=JSON.parse(localStorage.getItem(OWNER_SESSION_KEY)||'null'); if(x && x.expires && Number(x.expires)<=Date.now()) localStorage.removeItem(OWNER_SESSION_KEY); }catch(e){} ADMIN_VERIFICATION_TOKEN=''; document.body.classList.add('login-locked'); const pg=document.getElementById('loginPage'); if(pg) pg.style.display='flex'; }
   function refreshYearActionButtons(){ try{ if(typeof populateDashboardYearFilter==='function') populateDashboardYearFilter(); if(typeof updateDashboard==='function') updateDashboard(); }catch(e){ console.warn('Year action refresh:',e); } }
-  let activeYearOwnerNotice='';
-  function showYearOwnerNotice(year) {
-  activeYearOwnerNotice = String(year || '').trim();
+  let activeYearOwnerNotice = '';
+let pendingPostPartnerAction = null;
+
+function classifyYearRole(roleVal) {
+  const r = String(roleVal || '').trim().toLowerCase();
+  if (r.includes('માલિક') || r.includes('owner')) return 'owner';
+  if (r.includes('ખેડૂ') || r.includes('ભાગીદાર') || r.includes('farmer') || r.includes('partner')) return 'khedu';
+  return 'other';
+}
+
+function getYearPartnerStatus(year) {
+  const y = String(year || document.getElementById('dashboardYearFilter')?.value || getYear(new Date().toISOString().slice(0, 10))).trim();
+  const rows = (appData.Bhagiya_Master || []).filter(r => String(r['વર્ષ'] || r['Year'] || '').trim() === y);
+  const owners = rows.filter(r => classifyYearRole(r['રોલ'] || r['Role'] || r['Roll']) === 'owner');
+  const khedus = rows.filter(r => classifyYearRole(r['રોલ'] || r['Role'] || r['Roll']) === 'khedu');
+  const missing = [];
+  if (owners.length < 1) missing.push('ઓછામાં ઓછો 1 માલિક');
+  if (khedus.length < 1) missing.push('ઓછામાં ઓછો 1 ખેડૂ');
+  return {
+    year: y,
+    rows,
+    owners,
+    khedus,
+    isValid: owners.length >= 1 && khedus.length >= 1,
+    missingText: missing.join(' અને ')
+  };
+}
+
+function updateYearRoleLiveStatusUI(year) {
+  const box = document.getElementById('yearRoleLiveStatus');
+  if (!box) return;
+  const st = getYearPartnerStatus(year);
+  box.innerHTML = `
+    <span class="jk-pill ${st.owners.length >= 1 ? 'ok' : 'miss'}">
+      👑 માલિક: ${st.owners.length} ${st.owners.length >= 1 ? '✓' : '(જરૂરી)'}
+    </span>
+    <span class="jk-pill ${st.khedus.length >= 1 ? 'ok' : 'miss'}">
+      👨‍🌾 ખેડૂ: ${st.khedus.length} ${st.khedus.length >= 1 ? '✓' : '(જરૂરી)'}
+    </span>
+  `;
+}
+
+function showYearOwnerNotice(year, afterReadyCallback = null) {
+  activeYearOwnerNotice = String(year || getYear(new Date().toISOString().slice(0, 10))).trim();
+  if (typeof afterReadyCallback === 'function') pendingPostPartnerAction = afterReadyCallback;
+
+  const st = getYearPartnerStatus(activeYearOwnerNotice);
+  const msgEl = document.getElementById('yearReminderMissingMsg');
+  if (msgEl) {
+    msgEl.textContent = st.missingText
+      ? `વર્ષ ${activeYearOwnerNotice} માટે ${st.missingText} જરૂરી છે. શું તમે અત્યારે ભાગીદાર રેકોર્ડ Update કરવા માંગો છો?`
+      : `વર્ષ ${activeYearOwnerNotice} માટે ભાગીદાર રેકોર્ડ Update કરો.`;
+  }
+  const rem = document.getElementById('yearPartnerReminderModal');
+  if (rem) rem.style.display = 'flex';
+}
+
+function dismissYearPartnerReminder() {
+  const rem = document.getElementById('yearPartnerReminderModal');
+  if (rem) rem.style.display = 'none';
+}
+
+function openYearPartnerSetupFromReminder() {
+  const rem = document.getElementById('yearPartnerReminderModal');
+  if (rem) rem.style.display = 'none';
+
   const modal = document.getElementById('yearOwnerNoticeModal');
   const list = document.getElementById('yearPartnerSelectionList');
   if (!list || !activeYearOwnerNotice) return;
+
+  const titleEl = document.getElementById('yearSetupModalTitle');
+  if (titleEl) titleEl.textContent = `નવા વર્ષ (${activeYearOwnerNotice}) ના ભાગીદારો`;
 
   const start = parseInt(activeYearOwnerNotice.split('-')[0], 10);
   if (isNaN(start)) return;
 
   const prev = (start - 1) + '-' + String(start).slice(-2);
-  const rows = (appData.Bhagiya_Master || []).filter(r => {
-    const y = String(r['વર્ષ'] || r['Year'] || '').trim();
-    return y === prev;
-  });
+  const rows = (appData.Bhagiya_Master || []).filter(r => String(r['વર્ષ'] || r['Year'] || '').trim() === prev);
+  const curNames = new Set(getYearPartnerStatus(activeYearOwnerNotice).rows.map(r => String(r['નામ'] || r['Name'] || '').trim().toLowerCase()));
 
   const seen = new Set();
   const partners = rows.filter(r => {
@@ -1220,37 +1418,108 @@ body.login-locked #farmOtpModal[style*="display: flex"], body.login-locked #logi
     list.innerHTML = partners.map(r => {
       const n = String(r['નામ'] || r['Name'] || '').trim();
       const role = String(r['રોલ'] || r['Role'] || r['Roll'] || '').trim();
+      const checked = curNames.has(n.toLowerCase()) ? 'checked' : '';
+      const isOwner = classifyYearRole(role) === 'owner';
       return `
-        <label style="
-          display:grid;
-          grid-template-columns:40px minmax(0,1fr) auto;
-          align-items:center;
-          gap:10px;
-          width:100%;
-          box-sizing:border-box;
-          padding:12px 8px;
-          border-bottom:1px solid #edf1ed;
-          text-align:left;
-        ">
-          <input type="checkbox" class="year-partner-check" value="${escapeHtml(n)}" style="width:22px;height:22px;margin:0;justify-self:center;">
-          <span style="display:block;min-width:0;font-weight:600;line-height:1.5;overflow-wrap:anywhere;color:inherit;">${escapeHtml(n)}</span>
-          <small style="display:block;max-width:75px;text-align:right;line-height:1.4;color:#64748b;overflow-wrap:anywhere;">${escapeHtml(role)}</small>
+        <label class="jk-partner-item">
+          <input type="checkbox" class="year-partner-check" value="${escapeHtml(n)}" ${checked} style="width:20px;height:20px;margin:0;accent-color:#16a34a;">
+          <span style="font-weight:700;overflow-wrap:anywhere;">${escapeHtml(n)}</span>
+          <span class="jk-role-tag ${isOwner ? 'owner' : ''}">${escapeHtml(role)}</span>
         </label>
       `;
     }).join('');
   } else {
-    list.innerHTML = `
-      <p style="text-align:center;color:#64748b;padding:15px">
-        પાછલા વર્ષના ભાગીદારો મળ્યા નથી.
-      </p>
-    `;
+    list.innerHTML = `<p style="text-align:center;color:#64748b;padding:15px">પાછલા વર્ષના ભાગીદારો મળ્યા નથી. નીચે "+ ઉમેરો" પરથી નવા વર્ષમાં ઉમેરો.</p>`;
   }
 
+  updateYearRoleLiveStatusUI(activeYearOwnerNotice);
+  const addBox = document.getElementById('newYearPartnerInlineBox');
+  if (addBox) addBox.style.display = 'none';
   if (modal) modal.style.display = 'flex';
 }
 
-  function toggleYearPartnerSelection(checked){document.querySelectorAll('.year-partner-check').forEach(x=>x.checked=!!checked);}
-  function finishYearNotice(year){activeYearOwnerNotice='';const modal=document.getElementById('yearOwnerNoticeModal');if(modal)modal.style.display='none';const sel=document.getElementById('dashboardYearFilter');if(sel){if(![...sel.options].some(o=>o.value===year)){const op=document.createElement('option');op.value=year;op.textContent=year;sel.appendChild(op);}sel.value=year;updateDashboard();}}
+function toggleYearPartnerSelection(checked) {
+  document.querySelectorAll('.year-partner-check').forEach(x => x.checked = !!checked);
+}
+
+function toggleNewYearPartnerInlineBox() {
+  const box = document.getElementById('newYearPartnerInlineBox');
+  if (box) box.style.display = box.style.display === 'block' ? 'none' : 'block';
+}
+
+function closeYearOwnerNoticeModalOnly() {
+  const modal = document.getElementById('yearOwnerNoticeModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function saveNewYearPartnerInline() {
+  const year = activeYearOwnerNotice || getYear(new Date().toISOString().slice(0, 10));
+  const name = (document.getElementById('nyPartnerName')?.value || '').trim();
+  const phone = (document.getElementById('nyPartnerPhone')?.value || '').trim();
+  const email = (document.getElementById('nyPartnerEmail')?.value || '').trim();
+  const add = (document.getElementById('nyPartnerAddress')?.value || '').trim();
+  const role = document.getElementById('nyPartnerRole')?.value || 'ખેડૂ';
+
+  if (!name) return alert('નામ લખવું જરૂરી છે!');
+  if (email && !/^\S+@\S+\.\S+$/.test(email)) return alert('યોગ્ય Email દાખલ કરો.');
+
+  const rowValues = [year, name, phone, email, add, role];
+  appPost({ action: 'saveBhagiya', rowValues: rowValues, originalName: '', originalYear: year })
+    .then(() => {
+      if (!Array.isArray(appData.Bhagiya_Master)) appData.Bhagiya_Master = [];
+      appData.Bhagiya_Master.push({ 'વર્ષ': year, 'નામ': name, 'મોબાઈલ': phone, 'Email': email, 'ગામ': add, 'Roll': role });
+      document.getElementById('nyPartnerName').value = '';
+      document.getElementById('nyPartnerPhone').value = '';
+      document.getElementById('nyPartnerEmail').value = '';
+      document.getElementById('nyPartnerAddress').value = '';
+      populateData();
+      updateYearRoleLiveStatusUI(year);
+      alert(`"${name}" (${role}) વર્ષ ${year} માં ઉમેરાઈ ગયા છે.`);
+    })
+    .catch(err => alert('ભાગીદાર ઉમેરવામાં ભૂલ: ' + err.message));
+}
+
+function finishYearNotice(year) {
+  activeYearOwnerNotice = '';
+  const modal = document.getElementById('yearOwnerNoticeModal');
+  if (modal) modal.style.display = 'none';
+  const sel = document.getElementById('dashboardYearFilter');
+  if (sel) {
+    if (![...sel.options].some(o => o.value === year)) {
+      const op = document.createElement('option');
+      op.value = year;
+      op.textContent = year;
+      sel.appendChild(op);
+    }
+    sel.value = year;
+    updateDashboard();
+  }
+  if (typeof pendingPostPartnerAction === 'function') {
+    const fn = pendingPostPartnerAction;
+    pendingPostPartnerAction = null;
+    fn();
+  }
+}
+
+function saveYearPartnerSelection() {
+  const year = activeYearOwnerNotice;
+  if (!year) return;
+  const selected = [...document.querySelectorAll('.year-partner-check:checked')].map(x => x.value);
+
+  appPost({ action: 'acknowledgeYearNotice', year: year, continueExisting: true, selectedNames: selected })
+    .then(res => fetchData().then(() => {
+      const st = getYearPartnerStatus(year);
+      updateYearRoleLiveStatusUI(year);
+      if (!st.isValid) {
+        alert(`વર્ષ ${year} માટે ${st.missingText} હોવું જરૂરી છે! કૃપા કરીને પસંદ કરો અથવા "+ ઉમેરો" પરથી ઉમેરો.`);
+        return;
+      }
+      finishYearNotice(year);
+      alert((res.copiedCount || 0) + ' ભાગીદાર નવા વર્ષમાં સેવ થયા.');
+    }))
+    .catch(err => alert('ભાગીદાર સેવ કરવામાં ભૂલ: ' + err.message));
+}
+
   function saveYearPartnerSelection(){const year=activeYearOwnerNotice;if(!year)return;const selected=[...document.querySelectorAll('.year-partner-check:checked')].map(x=>x.value);appPost({action:'acknowledgeYearNotice',year:year,continueExisting:true,selectedNames:selected}).then(res=>{finishYearNotice(year);alert((res.copiedCount||0)+' ભાગીદાર નવા વર્ષમાં સેવ થયા.');fetchData();}).catch(err=>alert('ભાગીદાર સેવ કરવામાં ભૂલ: '+err.message));}
   function handleYearOwnerNotice(yes){const year=activeYearOwnerNotice;if(!year)return;if(!yes){appPost({action:'acknowledgeYearNotice',year:year,continueExisting:true,selectedNames:[]}).then(()=>finishYearNotice(year)).catch(err=>alert('સૂચના સાચવવામાં ભૂલ: '+err.message));return;}saveYearPartnerSelection();}
   const _nativeFetch = window.fetch.bind(window);
@@ -1465,6 +1734,12 @@ body.login-locked #farmOtpModal[style*="display: flex"], body.login-locked #logi
     if(choiceDiv) choiceDiv.style.display = 'none';
 
     if(subType === 'New') {
+const checkYr = getYear(new Date().toISOString().slice(0, 10));
+if (!getYearPartnerStatus(checkYr).isValid) {
+  showYearOwnerNotice(checkYr, () => switchSubTab(tabName, 'New'));
+  return;
+}
+
       if(contentNew) contentNew.style.display = 'block';
       if(contentView) contentView.style.display = 'none';
       if(tabName === 'Upad') {
@@ -2515,7 +2790,9 @@ body.login-locked #farmOtpModal[style*="display: flex"], body.login-locked #logi
     const err=document.getElementById('loginPageError'),btn=document.getElementById('loginPageButton');
     if(!/^\S+@\S+\.\S+$/.test(email)||!/^\d{6}$/.test(mpin)){err.innerText='યોગ્ય Email અને 6 અંકનો MPIN દાખલ કરો.';return;}
     btn.disabled=true;btn.innerText='લોગિન ચકાસી રહ્યા છીએ...';err.innerText='';
-    verifyOwnerPin(email,mpin,false).then(()=>{document.getElementById('loginPageMpin').value='';unlockFarmApp();return fetchData().then(()=>appPost({action:'validateOwnerSession',adminToken:ADMIN_VERIFICATION_TOKEN})).then(r=>{refreshYearActionButtons();const y=r.data&&r.data.pendingYearNotice;if(y)showYearOwnerNotice(y);});})
+    verifyOwnerPin(email,mpin,false).then(()=>{document.getElementById('loginPageMpin').value='';unlockFarmApp();return fetchData().then(()=>appPost({action:'validateOwnerSession',adminToken:ADMIN_VERIFICATION_TOKEN})).then(r=>{refreshYearActionButtons();const y = (r.data && r.data.pendingYearNotice) || getYear(new Date().toISOString().slice(0, 10));
+if (!getYearPartnerStatus(y).isValid) showYearOwnerNotice(y);
+
     .catch(e=>{err.innerText=e.message||'Login નિષ્ફળ. વિગતો તપાસો.';})
     .finally(()=>{btn.disabled=false;btn.innerText='LOGIN';});
   }

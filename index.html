@@ -397,7 +397,7 @@ body.login-locked #farmOtpModal[style*="display: flex"], body.login-locked #logi
 </div>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">24/11/2026 -  23:50   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">25/11/2026 -  00:30   IST</span>
 </div>
 
 <div class="header-bar">
@@ -3655,11 +3655,13 @@ alert("Photo Data: " + (upadPhoto ? "મળ્યો" : "ખાલી છે"));
     return "https://drive.google.com/thumbnail?id=" + encodeURIComponent(ref) + "&sz=w1600";
   }
 
-  async function openImageModal(photoRef) {
+    async function openImageModal(photoRef) {
     let raw = String(photoRef || "").trim();
-    if (!raw) return;
-    let match = raw.match(/(?:\/d\/|[?&]id=)([a-zA-Z0-9_-]{10,})/);
-    let fileId = match ? match[1] : raw;
+    if (!raw) {
+      alert("ફોટો ઉપલબ્ધ નથી.");
+      return;
+    }
+
     let image = document.getElementById("viewerImage");
     let modal = document.getElementById("modalImageViewer");
     let download = document.getElementById("downloadPhotoBtn");
@@ -3671,7 +3673,36 @@ alert("Photo Data: " + (upadPhoto ? "મળ્યો" : "ખાલી છે"));
     image.onerror = null;
     image.style.display = "none";
     image.removeAttribute("src");
+    image.alt = "બિલ ફોટો";
+
+    const showDataUrl = (dataUrl, fileName = "Bill_Photo.jpg") => {
+      image.onload = function () {
+        image.style.display = "block";
+        if (loader) loader.style.display = "none";
+      };
+      image.onerror = function () {
+        if (loader) loader.style.display = "none";
+        image.alt = "ફોટો બતાવી શકાયો નથી.";
+      };
+      image.src = dataUrl;
+      if (download) {
+        download.href = dataUrl;
+        download.download = fileName;
+      }
+    };
+
+    // 1. જો ફોટો Base64 (data:image/...) હોય તો સીધો બતાવો
+    if (/^data:image\//i.test(raw)) {
+      if (loader) loader.style.display = "none";
+      showDataUrl(raw, "Bill_Photo.jpg");
+      return;
+    }
+
     if (loader) loader.style.display = "flex";
+
+    // 2. Drive URL અથવા File ID હોય તો getPhoto થી લોડ કરો
+    let match = raw.match(/(?:\/d\/|[?&]id=)([a-zA-Z0-9_-]{10,})/);
+    let fileId = match ? match[1] : raw;
 
     try {
       const response = await fetch(SCRIPT_URL, {
@@ -3685,26 +3716,20 @@ alert("Photo Data: " + (upadPhoto ? "મળ્યો" : "ખાલી છે"));
       }
 
       const dataUrl = "data:" + (result.mimeType || "image/jpeg") + ";base64," + result.base64;
-      image.onload = function () {
-        image.style.display = "block";
-        if (loader) loader.style.display = "none";
-      };
-      image.onerror = function () {
-        if (loader) loader.style.display = "none";
-        image.alt = "ફોટો બતાવી શકાયો નથી.";
-      };
-      image.src = dataUrl;
-      if (download) {
-        download.href = dataUrl;
-        download.download = result.fileName || "Bill_Photo.jpg";
-      }
+      showDataUrl(dataUrl, result.fileName || "Bill_Photo.jpg");
     } catch (err) {
+      // 3. જો સીધી http/https URL હોય તો fallback તરીકે બતાવો
+      if (/^https?:\/\//i.test(raw)) {
+        showDataUrl(raw, "Bill_Photo.jpg");
+        return;
+      }
       if (loader) loader.style.display = "none";
       image.style.display = "none";
       image.alt = "ફોટો લોડ કરવામાં ભૂલ: " + err.message;
       alert("ફોટો લોડ થઈ શક્યો નથી: " + err.message);
     }
   }
+
 
   function closeImageModal() { document.getElementById("modalImageViewer").style.display = "none"; }
 

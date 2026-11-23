@@ -397,7 +397,7 @@ body.login-locked #farmOtpModal[style*="display: flex"], body.login-locked #logi
 </div>
 <!-- Time & Update Status Banner -->
 <div style="background: #1abc9c; color: #000; text-align: center; font-size: 14px; padding: 6px; font-weight: bold;">
-  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">23/11/2026 -  23:54   IST</span>
+  🚀 છેલ્લું અપડેટ: <span id="auto-timestamp">23/11/2026 -  23:05   IST</span>
 </div>
 
 <div class="header-bar">
@@ -1192,63 +1192,7 @@ body.login-locked #farmOtpModal[style*="display: flex"], body.login-locked #logi
   function restoreOwnerSession(){ /* SECURITY/UI FIX: never dismiss the login screen automatically. Always wait for explicit Email + MPIN entry. */ try{ const x=JSON.parse(localStorage.getItem(OWNER_SESSION_KEY)||'null'); if(x && x.expires && Number(x.expires)<=Date.now()) localStorage.removeItem(OWNER_SESSION_KEY); }catch(e){} ADMIN_VERIFICATION_TOKEN=''; document.body.classList.add('login-locked'); const pg=document.getElementById('loginPage'); if(pg) pg.style.display='flex'; }
   function refreshYearActionButtons(){ try{ if(typeof populateDashboardYearFilter==='function') populateDashboardYearFilter(); if(typeof updateDashboard==='function') updateDashboard(); }catch(e){ console.warn('Year action refresh:',e); } }
   let activeYearOwnerNotice='';
-  function showYearOwnerNotice(year) {
-  activeYearOwnerNotice = String(year || '').trim();
-  const modal = document.getElementById('yearOwnerNoticeModal');
-  const list = document.getElementById('yearPartnerSelectionList');
-  if (!list || !activeYearOwnerNotice) return;
-
-  const start = parseInt(activeYearOwnerNotice.split('-')[0], 10);
-  if (isNaN(start)) return;
-
-  const prev = (start - 1) + '-' + String(start).slice(-2);
-  const rows = (appData.Bhagiya_Master || []).filter(r => {
-    const y = String(r['વર્ષ'] || r['Year'] || '').trim();
-    return y === prev;
-  });
-
-  const seen = new Set();
-  const partners = rows.filter(r => {
-    const n = String(r['નામ'] || r['Name'] || '').trim();
-    const k = n.toLowerCase();
-    if (!n || seen.has(k)) return false;
-    seen.add(k);
-    return true;
-  });
-
-  if (partners.length) {
-    list.innerHTML = partners.map(r => {
-      const n = String(r['નામ'] || r['Name'] || '').trim();
-      const role = String(r['રોલ'] || r['Role'] || r['Roll'] || '').trim();
-      return `
-        <label style="
-          display:grid;
-          grid-template-columns:40px minmax(0,1fr) auto;
-          align-items:center;
-          gap:10px;
-          width:100%;
-          box-sizing:border-box;
-          padding:12px 8px;
-          border-bottom:1px solid #edf1ed;
-          text-align:left;
-        ">
-          <input type="checkbox" class="year-partner-check" value="${escapeHtml(n)}" style="width:22px;height:22px;margin:0;justify-self:center;">
-          <span style="display:block;min-width:0;font-weight:600;line-height:1.5;overflow-wrap:anywhere;color:inherit;">${escapeHtml(n)}</span>
-          <small style="display:block;max-width:75px;text-align:right;line-height:1.4;color:#64748b;overflow-wrap:anywhere;">${escapeHtml(role)}</small>
-        </label>
-      `;
-    }).join('');
-  } else {
-    list.innerHTML = `
-      <p style="text-align:center;color:#64748b;padding:15px">
-        પાછલા વર્ષના ભાગીદારો મળ્યા નથી.
-      </p>
-    `;
-  }
-
-  if (modal) modal.style.display = 'flex';
-}
-
+  function showYearOwnerNotice(year){ activeYearOwnerNotice=String(year||''); const modal=document.getElementById('yearOwnerNoticeModal'), list=document.getElementById('yearPartnerSelectionList'); if(!list)return; const start=parseInt(activeYearOwnerNotice.split('-')[0],10), prev=(start-1)+'-'+String(start).slice(-2); const rows=(appData.Bhagiya_Master||[]).filter(r=>String(r['વર્ષ']||r['Year']||'').trim()===prev); const seen=new Set(); const partners=rows.filter(r=>{const n=String(r['નામ']||r['Name']||'').trim(),k=n.toLowerCase();if(!n||seen.has(k))return false;seen.add(k);return true;}); list.innerHTML=partners.length?partners.map((r,i)=>{const n=String(r['નામ']||r['Name']||'').trim();return `<label style="display:flex;align-items:center;gap:9px;padding:9px;border-bottom:1px solid #edf1ed"><input type="checkbox" class="year-partner-check" value="${escapeHtml(n)}"><span>${escapeHtml(n)}</span><small style="margin-left:auto;color:#64748b">${escapeHtml(String(r['રોલ']||r['Role']||r['Roll']||''))}</small></label>`;}).join(''):'<p style="text-align:center;color:#64748b">પાછલા વર્ષના ભાગીદારો મળ્યા નથી.</p>'; if(modal)modal.style.display='flex'; }
   function toggleYearPartnerSelection(checked){document.querySelectorAll('.year-partner-check').forEach(x=>x.checked=!!checked);}
   function finishYearNotice(year){activeYearOwnerNotice='';const modal=document.getElementById('yearOwnerNoticeModal');if(modal)modal.style.display='none';const sel=document.getElementById('dashboardYearFilter');if(sel){if(![...sel.options].some(o=>o.value===year)){const op=document.createElement('option');op.value=year;op.textContent=year;sel.appendChild(op);}sel.value=year;updateDashboard();}}
   function saveYearPartnerSelection(){const year=activeYearOwnerNotice;if(!year)return;const selected=[...document.querySelectorAll('.year-partner-check:checked')].map(x=>x.value);appPost({action:'acknowledgeYearNotice',year:year,continueExisting:true,selectedNames:selected}).then(res=>{finishYearNotice(year);alert((res.copiedCount||0)+' ભાગીદાર નવા વર્ષમાં સેવ થયા.');fetchData();}).catch(err=>alert('ભાગીદાર સેવ કરવામાં ભૂલ: '+err.message));}
